@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <title>Settings</title>
+  </head>
+  <body>
+    <h1>Settings</h1>
+    <table>
+     <tr>
+      <td valign="top">:app_file</td>
+      <td valign="top"><%= opts[:app_file] %></td>
+      <td valign="top">
+The :app_file setting is used to calculate the default :root, :public, and :views setting values. A common idiom is to override the default detection heuristic by setting the :app_file  explicitly from within the main application file:
+<code>set :app_file, __FILE__</code>
+It’s also used to detect whether Sinatra should boot a web server when using classic-style applications.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:clean_trace</td>
+      <td valign="top"><%= opts[:clean_trace] %></td>
+      <td valign="top">
+When the :clean_trace setting is enabled, library/framework entries are removed from exception backtraces before being written to STDERR (see :dump_errors setting) or being displayed on the development mode error page.  The :clean_trace setting is enabled by default in all environments. Disable it to get full exception backtraces
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:dump_errors</td>
+      <td valign="top"><%= opts[:dump_errors] %></td>
+      <td valign="top">
+Boolean specifying whether backtraces are written to STDERR  when an exception is raised from a route or filter. This setting is enabled by default in classic style apps.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:environment</td>
+      <td valign="top"><%= opts[:environment] %></td>
+      <td valign="top">
+A symbol specifying the deployment environment; typically set to one of :development, :test, or :production. The :environment  defaults to the value of the RACK_ENV environment variable (ENV['RACK_ENV']), or :development when no RACK_ENV  environment variable is set.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:host</td>
+      <td valign="top"><%= opts[:host] %></td>
+      <td valign="top">
+String specifying the hostname or IP address of the interface to listen on when the :run setting is enabled. The default value – '0.0.0.0'  – causes the server to listen on all available interfaces. 
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:lock</td>
+      <td valign="top"><%= opts[:lock] %></td>
+      <td valign="top">
+Sinatra can be used in threaded environments where more than a single request is processed at a time. However, not all applications and libraries are thread-safe and may cause intermittent errors or general weirdness. Enabling the :lock setting causes all requests to synchronize on a mutex lock, ensuring that only a single request is processed at a time.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:logging</td>
+      <td valign="top"><%= opts[:logging] %></td>
+      <td valign="top">
+Writes a single line to STDERR in Apache common log format when enabled. This setting is enabled by default in classic style apps and disabled by default in Sinatra::Base subclasses. Internally, the Rack::CommonLogger component is used to generate log messages.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:method_override</td>
+      <td valign="top"><%= opts[:method_override] %></td>
+      <td valign="top">
+Boolean specifying whether the HTTP POST _method parameter hack should be enabled. When true, the actual HTTP request method is overridden by the value of the _method  parameter included in the POST body. The _method hack is used to make POST requests look like other request methods (e.g., PUT, DELETE) and is typically only needed in shitty environments – like HTML form submission – that do not support the full range of HTTP methods. The POST _method hack is implemented by inserting the Rack::MethodOverride component into the middleware pipeline.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:port</td>
+      <td valign="top"><%= opts[:port] %></td>
+      <td valign="top">
+The port that should be used when starting the built-in web server when the :run setting is enabled. The default port is 4567.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:public</td>
+      <td valign="top"><%= opts[:public] %></td>
+      <td valign="top">
+A string specifying the directory where static files should be served from. By default, this is assumed to be a directory named “public” within the root directory (see the :root setting).
+The best way to specify an alternative directory name within the root of the application is to use a deferred value that references the :root setting: <code>set :public, Proc.new { File.join(root, "static") }</code>
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:raise_errors</td>
+      <td valign="top"><%= opts[:raise_errors] %></td>
+      <td valign="top">
+Boolean specifying whether exceptions raised from routes and filters should escape the application. When disabled, exceptions are rescued and mapped to error handlers which typically set a 5xx status code and render a custom error page. Enabling the :raise_errors setting causes exceptions to be raised outside of the application where it may be handled by the server handler or Rack middleware, such as Rack::ShowExceptions  or Rack::MailExceptions.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:root</td>
+      <td valign="top"><%= opts[:root] %></td>
+      <td valign="top">
+The directory used as a base for the application. By default, this is assumed to be the directory containing the main application file (:app_file  setting). The root directory is used to construct the default :public  and :views settings. A common idiom is to set the :root  setting explicitly in the main application file as follows:
+<code>set :root, File.dirname(__FILE__)</code>
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:run</td>
+      <td valign="top"><%= opts[:run] %></td>
+      <td valign="top">
+Boolean specifying whether the built-in web server is started after the app is fully loaded. By default, this setting is enabled only when the :app_file  matches $0. i.e., when running a Sinatra app file directly with ruby myapp.rb. To disable the built-in web server: <code>set :run, false</code>
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:server</td>
+      <td valign="top"><%= opts[:server] %></td>
+      <td valign="top">
+String or Array of Rack server handler names. When the :run  setting is enabled, Sinatra will run through the list and start a server with the first available handler. The :server setting is set as follows by default:
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:sessions</td>
+      <td valign="top"><%= opts[:sessions] %></td>
+      <td valign="top">
+Support for encrypted, cookie-based sessions are included with Sinatra but are disabled by default. Enable them with:
+<code>set :sessions, true</code>
+Sessions are implemented by inserting the Rack::Session::Cookie component into the application’s middleware pipeline.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:show_exceptions</td>
+      <td valign="top"><%= opts[:show_exceptions] %></td>
+      <td valign="top">
+Enable error pages that show backtrace and environment information when an unhandled exception occurs. Enabled in development environments by default.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:static</td>
+      <td valign="top"><%= opts[:static] %></td>
+      <td valign="top">
+Boolean that determines whether static files should be served from the application’s public directory (see the :public setting). When :static is truthy, Sinatra will check if a static file exists and serve it before checking for a matching route.
+The :static setting is enabled by default when the public directory exists.
+      </td>
+     </tr>
+     <tr>
+      <td valign="top">:views</td>
+      <td valign="top"><%= opts[:views] %></td>
+      <td valign="top">
+A string specifying the directory where view templates are located. By default, this is assumed to be a directory named “views” within the application’s root directory (see the :root setting). The best way to specify an alternative directory name within the root of the application is to use a deferred value that references the :root setting, e.g. <code>set :views, Proc.new { File.join(root, "templates") }</code>
+      </td>
+     </tr>
+    </table>
+  </body>
+</html>
+
+
+

@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>
+    Welcome to the StoreMaster service
+  </title>
+  <style type="text/css" media="screen">
+    @import "/std.css";
+  </style>
+</head>
+
+
+<body>
+<h1>A Guide to the Store Master Service on <%= @env['SERVER_NAME'] %></h1>
+
+<p>
+This document describes <%= revision %>.
+</p>
+
+<p>
+Packages are stored to this system via POSTs in a two-step procedure.
+The first POST is made to <code><%= @env['SERVER_NAME'] %>/store</code>
+using the <code>enctype=multipart/form-data</code> technique.
+</p>
+
+<h2>Details on <code>POST</code></h2>
+
+<form action="/update/" enctype="multipart/form-data" method="post">
+<p>
+  Select a package to upload: <input type="file" name="ieid" size="32">
+</p>
+<div>
+<input type="submit" value="Send">
+</div>
+</form>
+
+
+</body>

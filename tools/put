@@ -1,0 +1,12 @@
+#!/bin/sh
+
+
+put_to=http://store-master.local/update
+                                                                                                                                                                 
+for file in $*; do
+    ieid=`echo $file | sed  -e 's|.tar$||' -e 's|^.*/||'`
+    echo curl -sv -X PUT -H "Content-MD5: `md5-base64 $file`" --upload-file $file  $put_to/$ieid
+    curl -sv -X PUT -H "Content-Type: application/x-tar"  -H "Content-MD5: `md5-base64 $file`" --upload-file $file  $put_to/$ieid
+done                                                                                                                                                             
+
+

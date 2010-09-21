@@ -1,0 +1,74 @@
+ -- -*- mode:sql -*-
+ -- 
+ -- The DDL for creating the MySQL silo-side database that tracks packages.
+ -- 
+
+create table silos (
+  id   	     	 integer unsigned not null AUTO_INCREMENT,
+  url        	 varchar(255) not null,
+  pool_id	 integer unsigned not null,
+  version        integer    default 1 not null,          -- version fields enable optimistic locking at rows
+  
+  primary key (id),
+  unique (url),
+
+  key index_silos_url       (url),
+  key index_silos_pool_id   (pool_id),
+  key index_silos_version   (version)
+  
+) engine=InnoDB default charset=utf8;
+
+
+create table silo_pool (
+  id   	     	   integer unsigned not null AUTO_INCREMENT,
+  name             varchar(127)     not null,
+  read_preference  integer unsigned not null default 0,
+  version          integer          default 1 not null,
+
+) engine=InnoDB default charset=utf8;
+
+
+create table packages (
+  id integer unsigned not null auto_increment,
+
+  name               varchar(127)      not null,
+  extant             boolean           default false not null,
+  size               bigint unsigned   not null,
+  type               varchar(127)      not null,
+
+  sha1               char(40)          not null,
+  md5                char(32)          not null,
+  timestamp          datetime          not null,
+
+  silo_id           integer unsigned   not null,
+  version           integer            default 1 not null,
+
+  primary key (id),
+  unique(name),
+
+  foreign key (silo_id) references silos (id) on update cascade on delete cascade,
+
+  key index_packages_name              (name),
+  key index_packages_size              (size),
+  key index_packages_extant            (extant),
+  key index_packages_sha1              (initial_sha1),
+  key index_packages_md5               (initial_md5),
+  key index_packages_timestamp         (initial_timestamp),
+
+  key index_packages_silo_id           (silo_id),
+  key index_packages_version           (version)
+) engine=innodb default charset=utf8;
+
+
+
+create table copies (
+  id int(10)    unsigned not null auto_increment,
+  package_id    int(10) unsigned not null,
+  silo_id       int(10) unsigned not null,
+  timestamp     datetime default null,
+  primary key (id),
+  key index_copies_package (package_record_id)
+) engine=innodb  default charset=utf8;
+
+
+

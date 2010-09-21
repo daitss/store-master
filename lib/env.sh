@@ -1,0 +1,1 @@
+export RUBYLIB=`pwd`:$RUBYLIB
