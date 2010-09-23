@@ -49,7 +49,6 @@ load 'lib/app/errors.rb'
 
 
 
-
 put  '/updates/:ieid' do |ieid|
 
   # TODO: check to make sure the old package exists.
@@ -153,10 +152,6 @@ post '/updates/:ieid'  do |ieid|
   headers 'Location' => web_location("/packages/#{ieid}"), 'Content-Type' => 'application/x-tar'
   xml.target!
 end
-
-
-
-
 
 
 get '/settings/?' do

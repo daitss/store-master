@@ -1,8 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))  # for spec_helpers
 
-
 require 'store/diskstore'
-# require 'store/exceptions'
 require 'fileutils'
 require 'tempfile'
 require 'find'
