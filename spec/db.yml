@@ -1,0 +1,4 @@
+# The databases and access that must exist prior to doing the db-based spec tests:
+#
+store_master_mysql:     { vendor: mysql,    hostname: localhost, database: store_master, username: root, password: }
+store_master_postgres:  { vendor: postgres, hostname: localhost, database: store_master, username: fischer, password: }

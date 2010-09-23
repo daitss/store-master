@@ -1,0 +1,14 @@
+shared
+*~
+*-
+.#*
+\#*
+.emacs*
+.yardoc
+REVISION
+Notes
+spec/reports
+coverage
+junk
+# .bundle
+# vendor/bundle
