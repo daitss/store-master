@@ -13,7 +13,7 @@ HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
 TMPDIR  = File.join(HOME, 'tmp')
 
-FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
+FILES   = FileList["#{LIBDIR}/**/*.rb", "views/**/*erb", "public/*",'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
 def dev_host
@@ -51,7 +51,7 @@ Spec::Rake::SpecTask.new do |task|
   task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.
   task.libs << 'lib'
   task.libs << 'spec'
-  task.rcov = true if dev_host   # do coverage tests on my devlopment box
+  task.rcov = true if false and dev_host   # do coverage tests on my devlopment box
 end
 
 
