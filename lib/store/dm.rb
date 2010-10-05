@@ -6,6 +6,7 @@ require 'dm-transactions'
 require 'dm-migrations'
 require 'store/exceptions'
 require 'store/diskstore'
+require 'time'
 
 module DM
 
@@ -94,7 +95,7 @@ module DM
     end
     
     property   :id,        Serial
-    property   :timestamp, DateTime,       :key => true,   :default => lambda { |resource, property| DateTime.now }
+    property   :datetime,  DateTime,       :key => true,   :default => lambda { |resource, property| DateTime.now }
     property   :type,      Enum[ *types],  :key => true,   :required => true
     property   :outcome,   Boolean,        :key => true,   :default => true
     property   :note,      String,         :length => 255, :default => ''
@@ -116,7 +117,7 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
     
-    property   :timestamp,  DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
+    property   :datetime,   DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
     belongs_to :silo,      :key => true
     belongs_to :package,   :key => true
     
