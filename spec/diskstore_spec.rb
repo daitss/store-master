@@ -27,7 +27,7 @@ describe Store::DiskStore do
     Find.find(@disk_root) do |filename|
       File.chmod(0777, filename)
     end
-  FileUtils::rm_rf @disk_root
+    FileUtils::rm_rf @disk_root
   end
   
   it "should create a diskstore based on a directory" do
@@ -47,13 +47,13 @@ describe Store::DiskStore do
   it "should take a object name and some data to store an object" do
     name = "test object"
     data =  "some data"
-    lambda { @diskstore.put name, data }.should_not raise_error
+    lambda { @diskstore.put name, data, 'my-type' }.should_not raise_error
   end
 
   it "should find an existing object given an object name" do
     name = "test object"
     data = "some data"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.get(name).should == data
   end
 
@@ -64,35 +64,35 @@ describe Store::DiskStore do
   it "should store an object with slashes in the name" do
     name = "foo/bar/baz"
     data = "some data!"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.get(name).should == data
   end
 
   it "should store an object with dots in the name" do
     name = ".."
     data = "some data!"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.get(name).should == data
   end
 
   it "should not allow duplication of a name" do
     name = some_name
     data = some_data
-    @diskstore.put name, data
-    lambda {@diskstore.put(name, data)}.should raise_error(Store::DiskStoreResourceExists)
+    @diskstore.put name, data, 'my-type'
+    lambda {@diskstore.put(name, data, 'my-type')}.should raise_error(Store::DiskStoreResourceExists)
   end
 
   it "should have size for an object" do
     name = some_name
     data = some_data
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.size(name).should_not be_nil
   end
 
   it "should generate an etag for an object" do
     name = some_name
     data = some_data
-    @diskstore.put(name, data)
+    @diskstore.put(name, data, 'my-type')
     @diskstore.etag(name).class.should == String
   end
 
@@ -104,28 +104,22 @@ describe Store::DiskStore do
   it "should return size of zero, empty string, and specific md5 checksum on reading a zero length file" do
     name = some_name
     data = ""
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
 
     @diskstore.size(name).should == 0
     @diskstore.get(name).should == ""
     @diskstore.md5(name).should == "d41d8cd98f00b204e9800998ecf8427e"
   end
 
-  it "should default type to 'application/octet-stream" do
-    name = some_name
-    @diskstore.put(name, some_data)
-    @diskstore.type(name).should == 'application/octet-stream'
-  end
-
   it "should allow us to set a type" do
     name = some_name
-    @diskstore.put(name, some_data, 'x-application/tar')    
-    @diskstore.type(name).should == 'x-application/tar'
+    @diskstore.put(name, some_data, 'application/x-tar')    
+    @diskstore.type(name).should == 'application/x-tar'
   end
 
   it "should provide last_access time, a DateTime object" do
     name = some_name
-    @diskstore.put(name, some_data)
+    @diskstore.put(name, some_data, 'my-type')
     @diskstore.last_access(name).class.should == DateTime
     (@diskstore.last_access(name) - DateTime.now).should be_close(0, 0.0001)
   end
@@ -133,7 +127,7 @@ describe Store::DiskStore do
   it "should have date for an object" do
     name = "the name"
     data = "some data!"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.datetime(name).should_not be_nil    
   end
 
@@ -145,14 +139,14 @@ describe Store::DiskStore do
   it "datetime should not raise error if the object does exist"	do
     name = "the name"
     data = "some data"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     lambda{ @diskstore.datetime(name)}.should_not raise_error(Store::DiskStoreError)				
   end
 
   it "datetime should return the time an object was created" do
     name = "the name"
     data = "some data!"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     t = @diskstore.datetime(name)
     (DateTime.now - t).should be_close(0, 0.0001)
   end
@@ -165,9 +159,9 @@ describe Store::DiskStore do
     name2 = "Franklin/Delano/Roosevelt"
     name3 = "Yo' Mama sez!"
 
-    @diskstore.put name1, data
-    @diskstore.put name2, data
-    @diskstore.put name3, data
+    @diskstore.put name1, data, 'my-type'
+    @diskstore.put name2, data, 'my-type'
+    @diskstore.put name3, data, 'my-type'
 
     bag = []
 
@@ -186,16 +180,16 @@ describe Store::DiskStore do
     data  = "Now is the time for all good men to come to the aid of their country!\n"
     name  = "George Washington!?"
 
-    lambda{ @diskstore.put(name, data)}.should raise_error(Store::DiskStoreBadName)
+    lambda{ @diskstore.put(name, data, 'my-type')}.should raise_error(Store::BadName)
   end  			
 
   it "should allow grep of all the names in the collection" do
 
     data = "This Is A Test. It Is Only A TEST."
 
-    @diskstore.put "this", data
-    @diskstore.put "that", data
-    @diskstore.put "that other one over there", data
+    @diskstore.put "this", data, 'my-type'
+    @diskstore.put "that", data, 'my-type'
+    @diskstore.put "that other one over there", data, 'my-type'
 
     results = @diskstore.grep(/that/)
 
@@ -212,7 +206,7 @@ describe Store::DiskStore do
     data_in = ''
     (1..1000).each { data_in += some_data }  # currently we read in 4096 byte chunks, this should exceed that
 
-    @diskstore.put(name, data_in)
+    @diskstore.put(name, data_in, 'my-type')
 
     data_out = ''
     @diskstore.get(name) do |buff| 
@@ -221,6 +215,28 @@ describe Store::DiskStore do
 
     data_in.should == data_out
   end
+
+
+  it "should provide an io object to getting data out in reads" do
+    name = some_name
+
+    data_in = ''
+    (1..1000).each { data_in += some_data }  # currently we read in 4096 byte chunks, this should exceed that
+
+    @diskstore.put(name, data_in, 'my-type')
+
+    data_out = ''
+
+    @diskstore.dopen(name) do |io| 
+      while buff = io.read(4096)
+        data_out += buff
+      end
+    end
+
+    data_in.should == data_out
+
+  end
+
 
   it "should accept puting data from a file object" do
 
@@ -233,7 +249,7 @@ describe Store::DiskStore do
 
     file = File.open(tf.path)
 
-    @diskstore.put(name, file)
+    @diskstore.put(name, file, 'my-type')
 
     retrieved_data = @diskstore.get(name)
     retrieved_data.should == input_data
@@ -247,7 +263,7 @@ describe Store::DiskStore do
     sha1 = "0828324174b10cc867b7255a84a8155cf89e1b8b"
     name = some_name
     
-    @diskstore.put(name, data)    
+    @diskstore.put(name, data, 'my-type')    
     @diskstore.md5(name).should  == md5
     @diskstore.sha1(name).should == sha1
   end
@@ -261,14 +277,14 @@ describe Store::DiskStore do
     tf.puts(data)
     tf.close
     
-    @diskstore.put(name, File.open(tf.path))
+    @diskstore.put(name, File.open(tf.path), 'my-type')
     @diskstore.md5(name).should == md5
   end
 
   it "should delete an object given an object name" do
     name = "test object"
     data = "some data!"
-    @diskstore.put name, data
+    @diskstore.put name, data, 'my-type'
     @diskstore.delete name
     @diskstore.get(name).should be_nil
   end
@@ -278,7 +294,7 @@ describe Store::DiskStore do
     data = some_data
 
     @diskstore.exists?(name).should == false
-    @diskstore.put(name, data)
+    @diskstore.put(name, data, 'my-type')
     @diskstore.exists?(name).should == true
   end
 

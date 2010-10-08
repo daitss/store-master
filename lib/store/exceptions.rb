@@ -162,7 +162,6 @@ module Store
     def status_code; 505; end
     def status_text; "HTTP Version Not Supported"; end
   end
-  
 
   # ConfigurationError exception, server's fault (subclasses Http500): Something wasn't set up correctly
 
@@ -186,10 +185,6 @@ module Store
 
   # Client tried to create a package using an invalid name, subclasses 409 Conflict.
 
-  class DiskStoreBadName           < Http409; end
+  class BadName                    < Http409; end
 
 end # of module
-
-
-
-

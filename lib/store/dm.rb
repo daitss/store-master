@@ -50,12 +50,25 @@ module DM
     end
   end
 
-
   def self.recreate_tables
-    Silo.auto_migrate!
+    Reservation.auto_migrate!
+    Pool.auto_migrate!
     Package.auto_migrate!
     Copy.auto_migrate!
     Event.auto_migrate!
+  end
+
+  # A database for reserving names for URLs based on IEIDs.
+
+  class Reservation
+    include DataMapper::Resource
+    storage_names[:default] = 'reservations'    # don't want dm_packages
+    
+    property   :id,         Serial
+    property   :ieid,       String,   :required => true, :index => true, :length => (16..16)
+    property   :name,       String,   :required => true, :index => true, :length => (20..20) # unique name, used as part of a url
+
+    validates_uniqueness_of  :name
   end
   
   class Package
@@ -65,19 +78,20 @@ module DM
     
     property   :id,         Serial
     property   :extant,     Boolean,  :default  => true, :index => true
-    property   :name,       String,   :required => true, :index => true
+    property   :ieid,       String,   :required => true, :index => true
+    property   :name,       String,   :required => true, :index => true      # unique name, used as part of a url
     
     property   :sha1,       String,   :required => true, :length => (40..40), :index => true
     property   :md5,        String,   :required => true, :length => (32..32), :index => true
-    property   :datetime,   DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
+    property   :datetime,   DateTime, :index => true,    :default => lambda { |resource, property| DateTime.now }
     
     property   :size,       Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1  # (2**63 - 1 for postgress, 2**64 -1 for mysql)
     property   :type,       String,   :required => true, :default => 'application/x-tar'
     
-    # many-to-many  relationship - a package can (and should) have copies on several different silos
+    # many-to-many  relationship - a package can (and should) have copies on several different pools
     
     has n,      :copies
-    has n,      :silos,     'Silo', :through => :copies, :via => :silo
+    has n,      :pools,     'Pool', :through => :copies, :via => :pool
     
     # all sorts of things can happen to a package, events is where we keep them.
     
@@ -103,22 +117,22 @@ module DM
     belongs_to :package
   end # of Event
   
-  class Silo
+  class Pool
     include DataMapper::Resource
-    storage_names[:default] = 'silos'           # don't want dm_silos
+    storage_names[:default] = 'pools'           # don't want dm_pools
     
     property   :id,         Serial
-    property   :retired,    Boolean,  :default  => false
-    property   :active,     Boolean,  :default  => true
-    property   :location,   String,   :required => true, :index => true, :format => :url
-  end # of Silo
+    property   :required,   Boolean,  :required => true, :default => true
+    property   :preference, Integer,  :required => true, :default => 0, :min => 0
+    property   :location,   String,   :required => true, :format => :url
+  end # of Pool
   
   class Copy
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
     
     property   :datetime,   DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
-    belongs_to :silo,      :key => true
+    belongs_to :pool,      :key => true
     belongs_to :package,   :key => true
     
   end # of Copy

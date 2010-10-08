@@ -26,5 +26,10 @@ helpers do
   def web_location path
     service_name + (path =~ %r{^/} ?  path : '/' + path)
   end
+
+  def this_resource 
+    web_location @env['SCRIPT_NAME'].gsub(%r{/+$}, '') + '/' + @env['PATH_INFO'].gsub(%r{^/+}, '')
+  end
+
 end
 

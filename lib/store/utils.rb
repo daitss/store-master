@@ -55,6 +55,9 @@ module StoreUtils
     return string.gsub(/#{File::SEPARATOR}+$/, "")
   end
 
+
+  ### change to E{A-Z0-9}8_{A-Z0-9}6
+
   def StoreUtils.valid_ieid_name? string
      string =~ /^E20\d{2}[0-1]\d[0-3]\d_[A-Z]{6}$/ ? true : false
   end 

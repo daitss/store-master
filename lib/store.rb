@@ -4,6 +4,9 @@ require 'time'
 require 'store/exceptions'
 require 'store/logger'
 require 'store/diskstore'
+require 'store/dm'
+require 'store/package'
+require 'store/reservation'
 require 'store/utils'
 
 # When we deploy with Capistrano it checks out the code using Git
