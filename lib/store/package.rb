@@ -8,7 +8,6 @@ require 'dm-types'
 # A package name (IEID) - a string; and  local storage - a DiskStore.
 # A package name, and remote silos where copies are storem
 
-
 module Store
   class Package
 
@@ -51,17 +50,9 @@ module Store
       pkg
     end
 
-
-
-
-
     # def self.find_in_cloud name
     #   raise PackageMissingError, "Can't find package #{name}, it already exists" unless Package.exists? name
-      
-
     # end
-
-
 
     def self.names
       DM::Package.all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
@@ -92,6 +83,7 @@ module Store
     # Get basic DB data about a package
          
     def datetime; dm_record.datetime;  end
+    def ieid;     dm_record.ieid;      end
     def md5;      dm_record.md5;       end
     def sha1;     dm_record.sha1;      end
     def size;     dm_record.size;      end

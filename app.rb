@@ -27,7 +27,7 @@ configure do
   use Rack::CommonLogger, Logger.new
 
   Logger.info "Starting #{StoreMaster.version.rev} with disk storage at #{ENV['DISK_STORE_ROOT']}."
-  Logger.info "Connecting to DB keyed by #{ENV['DATABASE_CONFIG_KEY']} in file #{ENV['DATABASE_CONFIG_FILE']}."
+  Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
   begin
     # Make sure our diskstores are correctly setup - the constructor will throw errors otherwise.
@@ -51,55 +51,9 @@ end
 
 load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'
-
-post '/reserve/?' do
-  raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
-  res = Store::Reservation.new ieid
-  
-  xml = Builder::XmlMarkup.new(:indent => 2)
-  xml.instruct!(:xml, :encoding => 'UTF-8')
-  xml.reserved(:ieid => ieid, :location => web_location("/packages/#{res.name}"))
-  xml.target!
-
-  status 201
-  content_type 'application/xml'
-  headers 'Location' => web_location("/packages/#{res.name}"), 'Content-Type' => 'application/xml'
-  xml.target!
-end
-
-get '/pacakges/:name' do |name|
-  name
-end
-
-delete '/pacakges/:name' do |name|
-  name
-end
-
-put '/packages/:name' do |name|
-
-  ieid = Store::Reservation.lookup_ieid(name)
-  raise Http404, "The resource #{name} must first be reserved" unless ieid
-
-  
-  # Store::Package.lookup(name)
-
-  # does it exist already?  Die!
-  # do we have a reservation to create it? Die!
-  # lock here....
-
-  '
-huh. Seemed to
-work'
-
-end
-
-
-
-
-
+load 'lib/app/packages.rb'
 
 # load 'lib/app/updates.rb'
-# load 'lib/app/packages.rb'
 
 # get '/' do
 #  redirect '/updates/', 302
