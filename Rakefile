@@ -91,6 +91,15 @@ task :restart do
   end
 end
 
+# Rebuild bundler
+
+desc "Reset bundles"
+task :bundle do
+  `rm -rf #{HOME}/vendor/bundle`
+  `mkdir -p #{HOME}/vendor/bundle`
+  `cd #{HOME}; bundle install --path vendor/bundle`
+end
+
 desc "Make emacs tags files"
 task :etags do
   files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..

@@ -10,5 +10,5 @@ Notes
 spec/reports
 coverage
 junk
-# .bundle
-# vendor/bundle
+.bundle
+vendor/bundle
