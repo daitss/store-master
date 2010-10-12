@@ -11,4 +11,4 @@ spec/reports
 coverage
 junk
 .bundle
-vendor/bundle
+vendor
