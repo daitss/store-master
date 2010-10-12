@@ -52,13 +52,7 @@ load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'
 load 'lib/app/packages.rb'
 
-# load 'lib/app/updates.rb'
-
-# get '/' do
-#  redirect '/updates/', 302
-# end
-
-# testing
+# testing stuff:
 
 get '/foo/:bar' do |bar|
   erb :dump, :locals => { :params => params, :at_env => @env, :env => ENV, :revision => REVISION }

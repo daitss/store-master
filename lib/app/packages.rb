@@ -50,7 +50,7 @@ put '/packages/:name' do |name|
     raise Http409, "The request indicated the MD5 was #{supplied_md5}, but the server computed #{computed_md5}"
   end
 
-  if ds.size(name) != content_length.to_1
+  if ds.size(name) != request.content_length.to_i
     begin
       ds.delete(name)
     rescue => e

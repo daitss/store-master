@@ -43,15 +43,11 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-
     # shared directory creation, if necessary:
 
-    [ 'diskstore' ].each do |subdir|
-      pathname = File.join(shared_path, subdir)
-      run "mkdir -p #{pathname}"
-      run "chmod 2775 #{pathname}"
-    end
-
+    pathname = File.join(shared_path, 'diskstore')
+    run "mkdir -p #{pathname}"
+    run "chmod 2775 #{pathname}"
 
     # documentation directories
 
@@ -62,8 +58,6 @@ namespace :deploy do
     # make everything group ownership daitss, for easy maintenance.
    
     run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"
-
-
   end
   
   desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
