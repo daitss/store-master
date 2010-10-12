@@ -10,6 +10,8 @@ require 'time'
 
 module DM
 
+  ENV['TZ'] = 'UTC'  ### TODO: huh?
+
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
   def self.setup yaml_file, key

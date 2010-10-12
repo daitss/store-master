@@ -40,7 +40,7 @@ module StoreMaster
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '0.0.1'
+  VERSION  = '0.3.14'
   NAME     = 'StoreMaster'
 
 

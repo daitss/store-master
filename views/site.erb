@@ -69,7 +69,8 @@
       <pre>
      curl -sv  -X PUT  -H 'Content-Type: application/x-tar' -H "Content-MD5: `md5-base64 package.tar`" --upload-file package.tar <%= base_url %>/packages/E20100727_AAAAAA.001
       </pre>
-      The result of storing the 
+
+      The StoreMaster service only returns success when it has stored multiple copies of the package.
     </p>
 
 
