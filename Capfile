@@ -46,7 +46,7 @@ namespace :deploy do
 
     # shared directory creation, if necessary:
 
-    [ 'diskstore', 'vendor' ].each do |subdir|
+    [ 'diskstore' ].each do |subdir|
       pathname = File.join(shared_path, subdir)
       run "mkdir -p #{pathname}"
       run "chmod 2775 #{pathname}"

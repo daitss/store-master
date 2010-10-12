@@ -32,8 +32,7 @@ configure do
   begin
     # Make sure our diskstores are correctly setup - the constructor will throw errors otherwise.
 
-    set :staged_root,  DiskStore.new(File.join(ENV['DISK_STORE_ROOT'], 'staged')).filesystem
-    set :updates_root, DiskStore.new(File.join(ENV['DISK_STORE_ROOT'], 'updates')).filesystem
+    set :staged_root,  ENV['DISK_STORE_ROOT']
 
     # Get connected to db.
 
