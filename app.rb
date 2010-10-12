@@ -52,6 +52,12 @@ load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'
 load 'lib/app/packages.rb'
 
+
+
+get '/' do
+  erb :site, :locals => { :base_url => service_name, :revision => REVISION }
+end
+
 # testing stuff:
 
 get '/foo/:bar' do |bar|
