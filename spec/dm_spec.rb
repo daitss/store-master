@@ -8,11 +8,18 @@ require 'spec_helpers'
 
 ENV['TZ'] = 'UTC'
 
-MD5  = 'd3b07384d113edec49eaa6238ad5ff00'
-SHA  = 'f1d2d2f924e986ac86fdf7b36c94bcdf32beec15'
-IEID = 'E20100921_AAAAAA'
+MD5   = 'd3b07384d113edec49eaa6238ad5ff00'
+SHA   = 'f1d2d2f924e986ac86fdf7b36c94bcdf32beec15'
+IEID  = 'E20100921_AAAAAA'
+
 NAME1 = IEID + '.000'
 NAME2 = IEID + '.001'
+NAME3 = IEID + '.002'
+
+
+def pool id
+  "http://pool#{id}.foo.com/packages/"
+end
 
 
 def postgres_setup
@@ -37,7 +44,7 @@ share_examples_for "DataMapper Package class using any database" do
     package.md5.should      == MD5
     package.sha1.should     == SHA
     package.size.should     == 10000
-    package.name.should == NAME1
+    package.name.should     == NAME1
   end
 
   it "should let us a retrieve a previously created package record by name" do
@@ -45,7 +52,7 @@ share_examples_for "DataMapper Package class using any database" do
     package.md5.should      == MD5
     package.sha1.should     == SHA
     package.size.should     == 10000
-    package.name.should == NAME1
+    package.name.should     == NAME1
   end
 
   it "should create new packages with a default time stamp of now" do
@@ -57,6 +64,7 @@ share_examples_for "DataMapper Package class using any database" do
   end
 
   it "should create new packages with a default type of application/x-tar" do
+
     package  = DM::Package.first(:name => NAME1)
     package.type.should == 'application/x-tar'
   end
@@ -92,7 +100,6 @@ share_examples_for "DataMapper Package class using any database" do
     package.saved?.should == true
   end
 
-
   it "should let us create an event and associate it with a package, retreiving it" do
     
     pkg1  = DM::Package.first(:name => NAME1)
@@ -116,29 +123,71 @@ share_examples_for "DataMapper Package class using any database" do
     (DateTime.now - ev2.datetime).should be_close(0, 0.0001)
   end
 
-  it "should let us create a pool and associate it with a pacakge, retreiving it and its defaults" do
+  it "should let us create pools with differing read preferences, and order them " do
 
-    pool1 = DM::Pool.create(:location => "http://foo.com/pkg1")
-  
-    pkg1 = DM::Package.first(:name => NAME1)
-    pkg1.pools.push pool1
+    pool1 = DM::Pool.create(:put_location => pool('a'), :read_preference => 10)
+    pool2 = DM::Pool.create(:put_location => pool('b'))
+
+    pool1.save.should == true
+    pool2.save.should == true
+
+    pool1.read_preference.should > pool2.read_preference
+  end
+
+  it "should not let us create pools with the same location" do
+
+    pool1 = DM::Pool.create(:put_location => pool('c'), :read_preference => 10)
+    pool2 = DM::Pool.create(:put_location => pool('c'))
+
+    pool1.save.should == true
+    pool2.save.should == false
+  end
+
+  it "should let us associate a copy URL with a pacakge, storing and retreiving it" do
+
+    pool1 = DM::Pool.create(:put_location => pool('d'))
+    pool2 = DM::Pool.create(:put_location => pool('e'))
+
+    pool1.save.should == true
+    pool2.save.should == true
+
+    bar = 'http://bar.example.com/bar'
+    foo = 'http://foo.example.com/foo'
+
+    pkg1  = DM::Package.first(:name => NAME1)
+
+    copy1 = DM::Copy.create(:store_location => foo, :pool => pool1)
+    copy2 = DM::Copy.create(:store_location => bar, :pool => pool2)
+
+    pkg1.copies << copy1
+    pkg1.copies << copy2
+
     pkg1.save.should == true
-                            
-    # re-read via pools method on package
 
     pkg2 = DM::Package.first(:name => NAME1)
-  
-    pool2 = pkg2.pools[0]
-    pool2.location.should == "http://foo.com/pkg1"
-    pool2.preference.should  == 0
-    pool2.required.should    == true
 
-    # re-read via copies method on package
+    pkg2.copies.length.should == 2
+    pkg2.copies.map { |elt| elt.store_location }.include?(foo).should == true
+    pkg2.copies.map { |elt| elt.store_location }.include?(bar).should == true
+   
+    (DateTime.now - pkg2.copies[0].datetime).should be_close(0, 0.0001)
+  end
 
-    pool3 = DM::Package.first(:name => NAME1)
-    pool3.copies.length.should == 1
-    pool3.copies.pools.length.should == 1
-    (DateTime.now - pool3.copies[0].datetime).should be_close(0, 0.0001)
+  it "should not let us create copies within the same pool for a given package" do
+
+    pkg  = DM::Package.create(:ieid => IEID, :name => NAME3, :md5 => MD5, :sha1 => SHA, :size => 10000)
+    pool = DM::Pool.first(:put_location => pool('d'))
+
+    baz  = 'http://bar.example.com/baz'
+    quux = 'http://bar.example.com/quxx'
+
+    copy1 = DM::Copy.create(:store_location => quux, :pool => pool)
+    copy2 = DM::Copy.create(:store_location => baz,  :pool => pool)
+
+    pkg.copies << copy1
+    pkg.copies << copy2
+
+    pkg.save.should == false
   end
 
   it "should allow us to create reserved names based on an IEID" do
@@ -158,17 +207,19 @@ share_examples_for "DataMapper Package class using any database" do
   end
 end
 
-describe "DataMapper Package using MySQL" do
+
+describe "DataMapper Package using Postgress" do
   before(:all) do
-    mysql_setup
+    postgres_setup
   end
 
   it_should_behave_like "DataMapper Package class using any database"
 end 
 
-describe "DataMapper Package using Postgress" do
+
+describe "DataMapper Package using MySQL" do
   before(:all) do
-    postgres_setup
+    mysql_setup
   end
 
   it_should_behave_like "DataMapper Package class using any database"

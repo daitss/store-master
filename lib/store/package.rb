@@ -89,18 +89,6 @@ module Store
     def size;     dm_record.size;      end
     def type;     dm_record.type;      end
 
-    def put *silos
-    end
-
-    # here we delete the original, and update the new one
-
-    def update *new_silos
-      delete
-      put *new_silos
-      dm_record.silos.push *new_silos
-      dm_record.save or
-        raise DataBaseError, "Can't save DB record for update of package #{name}"
-    end
 
     def delete      
       # TODO: run down silos
@@ -110,8 +98,10 @@ module Store
     end
 
 
-    def fixity silo, checksums
-    end
+    # def put *pools
+    # end
+    # def fixity silo, checksums
+    # end
 
 
       

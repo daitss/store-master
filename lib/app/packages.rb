@@ -17,8 +17,10 @@ post '/reserve/?' do
   xml.target!
 end
 
+
 put '/packages/:name' do |name|
-  ds = DiskStore.new(settings.staged_root)
+
+  ds   = DiskStore.new(settings.staged_root)
   ieid = Store::Reservation.lookup_ieid(name)
 
   raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"       unless ieid
@@ -28,8 +30,8 @@ put '/packages/:name' do |name|
   supplied_md5 = request_md5()
   
   raise Http400, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_name ieid
-  raise Http400, "Missing the Content-MD5 header, required for PUTs to #{web_location('/pacakges/')}" unless supplied_md5
-  raise Http400, "This site only accepts content types of application/x-tar"   unless (request.content_type and request.content_type == 'application/x-tar')
+  raise Http400, "Missing the Content-MD5 header, required for PUTs to #{web_location('/pacakges/')}"       unless supplied_md5
+  raise Http400, "This site only accepts content types of application/x-tar"                                unless (request.content_type and request.content_type == 'application/x-tar')
 
   # Save a temporary local copy here....
 
@@ -57,12 +59,15 @@ put '/packages/:name' do |name|
       Logger.err "Failure in cleanup of disk store after failed PUT to #{this_resource}: #{e.message}", @env
       e.backtrace.each { |line| Logger.err line }
     end
-    raise Http409, "The request indicated the MD5 was #{supplied_md5}, but the server computed #{computed_md5}"
+    raise Http409, "The request indicated the file size was #{request.content_length.to_i}, but the server computed #{ds.size(name)}"
   end
 
-  #### TODO: forward to pools here.
+  # TODO: forward to pools here.
 
-  p = Package.new_from_diskstore(ieid, name, ds)    
+  pkg = Package.new_from_diskstore(ieid, name, ds)    
+
+# pools = Pool.list_active
+# pools.each { |pool| pkg.copy_to pool }
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
@@ -106,7 +111,6 @@ get '/packages/:name' do |name|
   headers 'Content-MD5' => StoreUtils.md5hex_to_base64(ds.md5 name), 'Content-Type' => ds.type(name)
   send_file ds.data_path(name), :filename => "#{name}.tar"
 end
-
 
 
 get '/packages/?' do 

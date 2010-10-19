@@ -10,7 +10,7 @@ require 'time'
 
 module DM
 
-  ENV['TZ'] = 'UTC'  ### TODO: huh?
+  ENV['TZ'] = 'UTC'  ### TODO: meh.
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
@@ -34,12 +34,12 @@ module DM
     
     # Example string: 'mysql://root:topsecret@localhost/silos'
     
-    connection_string = 
-      dbinfo['vendor'] + 
-      '://' + 
-      (dbinfo['username'] or '') +
-      (dbinfo['password'] ? ':' + dbinfo['password'] : '') +
-      '@' + dbinfo['hostname'] + '/' + dbinfo['database']
+    connection_string =                                               # e.g.
+      dbinfo['vendor']    + '://' +                                   # mysql://
+      dbinfo['username']  +                                           # mysql://fischer
+     (dbinfo['password']  ? ':' + dbinfo['password'] : '') + '@' +    # mysql://fischer:topsecret@  (or mysql://fischer@)
+      dbinfo['hostname']  + '/' +                                     # mysql://fischer:topsecret@localhost/
+      dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
 
     begin
       dm = DataMapper.setup(:default, connection_string)
@@ -51,6 +51,9 @@ module DM
       "Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}"
     end
   end
+
+  # Recreate tables for test.  We also keep mysql.ddl and psql.ddl for creating
+  # the tables, which gives us a bit more flexibility (e.g., cascading deletes)
 
   def self.recreate_tables
     Reservation.auto_migrate!
@@ -70,7 +73,7 @@ module DM
     property   :ieid,       String,   :required => true, :index => true, :length => (16..16)
     property   :name,       String,   :required => true, :index => true, :length => (20..20) # unique name, used as part of a url
 
-    validates_uniqueness_of  :name
+    validates_uniqueness_of :name
   end
   
   class Package
@@ -93,10 +96,6 @@ module DM
     # many-to-many  relationship - a package can (and should) have copies on several different pools
     
     has n,      :copies
-    has n,      :pools,     'Pool', :through => :copies, :via => :pool
-    
-    # all sorts of things can happen to a package, events is where we keep them.
-    
     has n,      :events
         
     validates_uniqueness_of  :name
@@ -111,10 +110,10 @@ module DM
     end
     
     property   :id,        Serial
-    property   :datetime,  DateTime,       :key => true,   :default => lambda { |resource, property| DateTime.now }
-    property   :type,      Enum[ *types],  :key => true,   :required => true
-    property   :outcome,   Boolean,        :key => true,   :default => true
-    property   :note,      String,         :length => 255, :default => ''
+    property   :datetime,  DateTime,       :index => true,   :default  => lambda { |resource, property| DateTime.now }
+    property   :type,      Enum[ *types],  :index => true,   :required => true
+    property   :outcome,   Boolean,        :index => true,   :default  => true
+    property   :note,      String,         :length => 255,   :default  => ''
     
     belongs_to :package
   end # of Event
@@ -123,20 +122,29 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'pools'           # don't want dm_pools
     
-    property   :id,         Serial
-    property   :required,   Boolean,  :required => true, :default => true
-    property   :preference, Integer,  :required => true, :default => 0, :min => 0
-    property   :location,   String,   :required => true, :format => :url
+    property   :id,                Serial
+    property   :required,          Boolean,      :required => true, :default => true
+    property   :put_location,      String,       :required => true, :format => :url
+    property   :read_preference,   Integer,      :default  => 0
+
+    has n, :copies
+
+    validates_uniqueness_of :put_location
   end # of Pool
   
   class Copy
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
     
+    property   :id,         Serial
     property   :datetime,   DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
-    belongs_to :pool,      :key => true
-    belongs_to :package,   :key => true
-    
+    property   :store_location,   String,   :required => true, :index => true, :format => :url
+
+    belongs_to :pool,      :index => true
+    belongs_to :package,   :index => true
+
+    validates_uniqueness_of :pool, :scope => :package
   end # of Copy
+
 end # of Module DM
 
