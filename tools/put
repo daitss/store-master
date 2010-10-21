@@ -1,20 +1,42 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
 require 'optparse'
 require 'time'
+require 'net/http'
+require 'uri'
+require 'xml'
+require 'store/utils'
 
-Struct.new('Config', :server, :silo)
+
+# Put a file to a silo server, in exactly the way store-master might
+#
+# Content-Type: application/x-tar
+# Content-MD5: 
+#
+# Example silo url to which we can PUT:
+#
+# http://silos.sake.fcla.edu/002/E20051012_AAAAAB
+
+
+Struct.new('Config', :put_location, :filepath)
 
 def parse_command args
   conf = Struct::Config.new
 
   opts   = OptionParser.new do |opt|
-    opt.on("--server hostname",  String, "webserver name, e.g. 'storage.local'") do |server|
-      conf.server = server
+    opt.on("--put_location url",  String, "The location to PUT a file to, e.g. http://silos.sake.fcla.edu/002/E20051012_AAAAAB") do |url|
+      conf.put_location = url
+    end
+    opt.on("--filepath filepath",  String, "The path to the file to put to the webserver") do |path|
+      conf.filepath = path
     end
   end
   opts.parse!(args)
-  raise "no server specified." unless conf.server
+  raise "no put_location specified."      unless conf.put_location
+  raise "no filepath specified."          unless conf.filepath
+  raise "#{conf.filepath} doesn't exist." unless File.exists? conf.filepath
 rescue => e
   STDERR.puts "Error in command line options: #{e.message}\n#{opts}"
   exit
@@ -23,15 +45,73 @@ else
 end
 
 
+def md5 filepath
+  `md5 #{filepath}`.split(/\s+/).pop
+end
+
+# TODO:  figure out what timeout to use
+
+def put conf  # data_io, md5_hexstring, size, type
+  
+  put_location = conf.put_location
+
+  uri = URI.parse(put_location)
+  md5_hexstring =  md5(conf.filepath)
+  size = File.stat(conf.filepath).size.to_s
+  type = 'application/x-tar'
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.open_timeout = 5
+  http.read_timeout = 60 * 30  # thirty minute timeout for PUTs
+
+  # TODO: request.basic_auth("silo-writer", "top secret")
+
+  request = Net::HTTP::Put.new(uri.request_uri)  # testing with netcat -l -p 6969
+  request.body_stream = File.open(conf.filepath)
+  request.initialize_http_header({ 
+                                   "Content-MD5"    => StoreUtils.md5hex_to_base64(md5_hexstring), 
+                                   "Content-Length" => size.to_s, 
+                                   "Content-Type"   => type,
+                                 })
+  
+  response = http.request(request)
+
+  if response.code.to_i >= 300
+    err   = "#{response.code} #{response.message} was returned for failed package PUT request to #{put_location}"
+    errr += "; body text: #{response.body}" if response.body.length > 0
+    raise err
+  end
+
+  if response['content-type'] != 'application/xml'
+    raise "Media type #{response['content-type']} returned for package PUT request to #{put_location}, expected applicatio/xml"
+  end
+
+  # Example XML document returned from PUT
+  #
+  #  <?xml version="1.0" encoding="UTF-8"?>
+  #  <created type="application/x-tar" 
+  #           time="2010-10-21T10:29:19-04:00" 
+  #           sha1="ac4d813081e066422bc1dc7e7997ace1bfb858b2" 
+  #           etag="a3f07bc57127112f2a2c40d026b1abe1" 
+  #           md5="32e2ce3af2f98a115e121285d042c9bd" 
+  #           size="6031360" 
+  #           location="http://storage.local/b/data/E20101021_LJLAMU" 
+  #           name="E20101021_LJLAMU"/>
+
+  begin 
+    parser = XML::Parser.string(response.body).parse
+    parser.find('/created')[0]['location']
+  rescue => e
+    raise "Can't find the package location in the XML document returned from a successful package PUT request to #{put_location}: #{e.message}"
+  end
+end
+
+
 conf = parse_command ARGV
 
-ARGV.each do |filename|
-  md5 = `md5-base64 #{filename}`.chomp
-  id = File.basename(filename).gsub(/\..*$/, '')
-  cmd = "curl -sv -X PUT  -H 'Content-Type: application/x-tar' -H 'Content-MD5: #{md5}' --upload-file #{filename} http://#{conf.server}/packages/#{id} 2>&1"
-  puts cmd
-  puts cmd.gsub(/./, '=')
-  puts `#{cmd}`
-  puts ''
-  puts ''
+begin
+  mess = put conf
+  puts  mess
+rescue => e
+  puts e.message
 end
