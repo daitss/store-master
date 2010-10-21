@@ -9,7 +9,6 @@ require 'yaml'
 
 module StoreUtils
 
-
   # mysql_config (KEY, [filename]) returns an object with hostname,
   # password, username and database methods, all of which return a
   # string or nil. This is used for  MySQL connection information
@@ -160,15 +159,16 @@ module StoreUtils
     return conf
   end
 
+
   def StoreUtils.hashpath name
     md5  =  Digest::MD5.hexdigest name
     File.join(md5[0..2], md5[3..-1])      
   end
 
+
   def StoreUtils.hashpath_parent name
     Digest::MD5.hexdigest(name)[0..2]
   end
-
   
   # Without argument, give the name of the user running this process
   # as a string.  With argument PATH, a string, assume it is a

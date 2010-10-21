@@ -6,6 +6,7 @@ require 'store/logger'
 require 'store/diskstore'
 require 'store/dm'
 require 'store/package'
+require 'store/pool'
 require 'store/reservation'
 require 'store/utils'
 

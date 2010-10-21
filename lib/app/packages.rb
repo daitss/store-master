@@ -33,7 +33,8 @@ put '/packages/:name' do |name|
   raise Http400, "Missing the Content-MD5 header, required for PUTs to #{web_location('/pacakges/')}"       unless supplied_md5
   raise Http400, "This site only accepts content types of application/x-tar"                                unless (request.content_type and request.content_type == 'application/x-tar')
 
-  # Save a temporary local copy here....
+
+  # Save a temporary local copy here....TODO: we can work directly 
 
   data = request.body                                          # singleton method to provide content length. (ds.put needs
   eval "def data.size; #{request.content_length.to_i}; end"    # to garner size; but that's not provided by 'rewindable' body object)
@@ -66,8 +67,9 @@ put '/packages/:name' do |name|
 
   pkg = Package.new_from_diskstore(ieid, name, ds)    
 
-# pools = Pool.list_active
-# pools.each { |pool| pkg.copy_to pool }
+  Pool.list_active.each do pool
+    pkg.copies << pool.put(name, ds)
+  end
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'

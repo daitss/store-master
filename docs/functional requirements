@@ -1,0 +1,201 @@
+
+= !StoreMaster Specification =
+
+
+This document is a specification for the storage master service.
+!StoreMaster provides a one-point interface for ingest, dissemination and
+withdrawal to create, access and delete packages.
+
+
+== Overview ==
+
+
+The !StoreMaster web service mediates the storage of package tarfiles kept by DAITSS.
+It accepts tarfiles from DAITSS and copies them to multiple locations.
+
+The smallest unit of storage discussed in this document is a package,
+a tarfile.  DAITSS creates the data and stores the metadata about
+those packages; from the store master service it receives a location
+for later retrieval of the package.
+
+Then next unit of storage is a silo.  A silo is a large chunk of
+storage, typically 2TB and initially kept on a uniquely named partition
+on a particular server (e.g. /datiss/034 on silos.fda.fcla.edu). The
+server-name/partition-name is used to uniquely identify the silo even
+when it has migrated to tape storage.  Silos have a web service interface
+as described in the <mumble> document.
+
+The final and largest unit of storage is a pool.  A pool is an
+administrative collection of silos.  The FDA requires a copy of each
+package to be stored on POOL-NUMBER geographically separated pools
+(currently, POOL-NUMBER = 2).
+
+
+== Procedural Description ==
+
+
+=== Acquire a MASTER-LOCATION for a Package ===
+
+....
+
+=== Successfully PUT a Package ===
+
+!StoreMaster has previously received a request for a location for an IEID to be stored.  !StoreMaster has returned and reserved this MASTER-LOCATION, and recorded the associated IEID.
+After the successful storage of a package tarfile to a MASTER-LOCATION,  that MASTER-LOCATION can be used by DAITSS for subsequent retrieval.
+Here we describe the steps by which a package tarfile is successfully stored to that MASTER-LOCATION; see the functional specification for specific error conditions.
+
+[[Image(source:trunk/documentation/storage/storemaster-put-procedure.png)]]
+
+See figure above.  Gray boxes indicate individual servers, which can be individual physical hosts. The procedural description that follows corresponds to the numbered sequence 
+in the diagram:
+
+  1)  DAITSS PUTs a tarfile to MASTER-LOCATION, also sending the package tarfile's  size and MD5 checksum.  The request is logged on the !StoreMaster.
+ 
+  2)  The contents of the package tarfile are saved to a temporary disk store, and its size checksums are computed.
+
+  3)  Two active pool servers are selected (we use 2 but the number is configurable). The copy of the package tarfile is PUT to the first of these.  The PUT is logged on the !StoreMaster and Pool server
+
+  4)  Pools are made up of disk silos; one active silo with adequate disk space is selected and the package tarfile is written to it.  Its checksums and sizes are computed and compared to those in the PUT request from step 3.
+
+  5)  Information about the package tarfile and the associated SILO-LOCATION is recorded to a database on the Pool server.
+
+  6)  The SILO-LOCATION of the stored  package tarfile is returned in the OK response to the !StoreMaster.  A success is logged on the Pool server and on the !StoreMaster
+
+  7)  A store to the second selected pool server is performed as in 3)
+
+  8)  As in 4)
+
+  9)  As in 5)
+
+  10) As in 6)
+
+  11) After having received the location addresses of the two successful stores, the temporary tarfile is deleted.
+
+  12) Information about the package tarfile, including MASTER-LOCATION, the datetime, checksums, IEID, the pool id and SILO-LOCATIONs addresses are stored to the !StoreMaster database.  A success is logged.
+
+  13) A success message is returned to DAITSS;  MASTER-LOCATION is now accessible to DAITSS.
+
+===  GET a Package ===
+
+...
+
+===  DELETE a Package ===
+
+...
+
+== Functional Requirements ==
+
+Functional requirements are described in terms of DAITSS interactions
+with the !StoreMaster web service; with interactions of the !StoreMaster with
+Silos; and finally, direct querying of the !StoreMaster for information
+such as fixity reports.
+
+Note that the !StoreMaster logs an entry for the result of each
+request. Typically, 400-class responses are logged as warnings; 200-
+and 300-class responses are logged as informational, and 500-class
+responses are logged as errors.  Additional entries may of course be
+logged.  It is assumed throughout the rest of this document that 
+on !StoreMaster errors a __500 Service Error__ is returned.
+
+=== DAITSS/!StoreMaster ===
+
+The DAITSS interface includes the initial submission of a package,
+done through PUT and POST requests using basic authentication.
+
+  * submit a POST request using the parameter IEID, receive a response containing LOCATION for a unique location to store a package. Responses include
+    * __201 Created__ on success
+    * __412 Expectation Failed__ if the IEID is malformed.
+    
+  * submit a PUT request to the above resource LOCATION, containing Content-Length, Content-MD5, and a Content-Type of __application/x-tar__. Possible response codes include:
+    * __404 No Such Resource__ the LOCATION was not reserved
+    * __403 Forbidden__ the LOCATION has already been used to store a package
+    * __400 Bad Request__ the LOCATION was previously used and deleted
+    * __400 Bad Request__ Content-MD5, Content-Length or Content-Type was missing
+    * __409 Conflict__ the Content-MD5 check failed, or Content-Length did not match [409 is not appropriate]
+    * __201 Created__ for a PUT is only returned after the successful storage to silos in the POOL-NUMBER pools. On error the !StoreMaster logs an error and attempts to delete partially stored packages.  The !StoreMaster maintains a mapping from a LOCATION to the resources stored on POOL-NUMBER silos.
+
+The DAITSS interface for retrieval of packages is performed via
+authenticated GET requests to the !StoreMaster on successfully stored
+LOCATIONs.  The following actions can result:
+
+  * __410 Gone Away__ is returned when requested LOCATION has previously been deleted
+  * __404 No Such Resource__ is returned when LOCATION has never been created.
+  * The !StoreMaster performs a HEAD with a short timeout for all copies, attempting to find the best available POOL that contains the requested package.
+  * An error condition is logged if one or more of the copies is not accessible (the GET request itself may still succeed)
+  * An error condition is logged by the !StoreMaster service if only one copy, or more than POOL-NUMBER copies, are found (the GET request itself may still succeed)
+  * __303 See Other__ redirect to an actual SILO resource is returned;  that silo supports the GET web service protocol, which may itself result in a redirect. 
+
+The DAITSS interface for deletion of a package proceeds via an authenticated DELETE  request on a previously
+successfully stored LOCATION:
+
+  * __410 Gone Away__ is returned when requested LOCATION has previously been deleted
+  * __404 No Such Resource__ is returned when LOCATION has never been created.
+  * __204 No Content__ is returned when all copies for LOCATION have been successfully deleted; otherwise a __500 Service Failed__ response is returned.
+
+Note that:
+
+  * A LOCATION, once having been used for storage, can never be reused for subsequent storage.
+  * Storage metadata, including tombstone data and the results of fixity checks on silo storage locations, is made available by the store master.
+
+=== !StoreMaster/Silo ===
+
+
+Silos are collected into pool servers (currently, there are 2 pool servers; one on
+darchive and one on tarchive).  When DAITSS successfully completes the PUT request on a LOCATION, !StoreMaster
+
+  * A list of pools is checked; each entry in the list includes a flag indicating whether that pool should be used to store a copy of the package. There should be POOL-NUMBER so marked.
+  * A PUT is attempted for each marked pool; a successful PUT returns the location of that copy, COPY-URL
+  * The COPY-URLs are associated with the package LOCATION for subsequent retrieval
+  * On error, attempt to clean up, deleting the created COPY_URLs
+  * Log the results of the operation
+
+A pool server is merely a collection of silos; its sole behavior is as follows:
+
+  * Accept an authenticated PUT request using the LOCATION name from the !StoreMaster
+  * Check to make sure this resource does not exist on any silos in the pool, returning a __400 Bad Request__
+  * Find a silo that can accept the package, store it there, using the LOCATION name
+  * On success, return a __201 Created__ and return the COPY_URL to the !StoreMaster
+  * Log the results of the operation.
+
+The pool server never overwrites an existing LOCATION resource.  It is not necessary for database
+records to be associated with the LOCATION/COPY-URL on the pool server, since that data is maintained
+on the !StoreMaster.  All subsequent GETs and DELETEs are fielded by the !StoreMaster via direct
+requests to the silo storage.
+
+
+=== !StoreMaster and Fixity ===
+
+DAITSS may PUT an XML file to a specific reporting URL on the !StoreMaster.  This document contains a list of packages in the following
+form:
+
+{{{   LOCATION, MD5, SHA1, SIZE, DATE  }}}
+
+The !StoreMaster server will contact silos for the most recent fixity check, and
+from these two data sets will assemble a report similar to the existing report,
+listing:
+
+ * Stale copies (not recently fixity checked)
+ * Missing or extra copies of packages
+ * Incorrect fixity checksums
+ * Untracked packages
+
+
+
+=== !StoreMaster and Events === 
+
+
+!StoreMaster maintains a historical list of copy-events in a database table.
+These include the events PUT, DELETE, INTEGRITY and FIXITY.
+Associated with each event is the package identifier LOCATION, the
+COPY-URL, the datetime stored as a boolean indicating success or
+failure, and a notes field.
+
+Tasks 
+
+2   * Accept authenticated package
+6   * Fixity and integrity
+5   * Silo
+5   * Pool Server
+7   * Migration
+
+25 days

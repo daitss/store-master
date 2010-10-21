@@ -35,7 +35,7 @@ end
 share_examples_for "DataMapper Package class using any database" do
   
   it "should let us a create a new package" do
-    package  = DM::Package.create(:ieid => IEID, :name => NAME1, :md5 => MD5, :sha1 => SHA, :size => 10000)
+    package  = DM::Package.create(:ieid => IEID, :name => NAME1, :md5 => MD5, :size => 10000, :sha1 => SHA)
     package.saved?.should == true
   end
 
