@@ -78,7 +78,8 @@ def put conf  # data_io, md5_hexstring, size, type
 
   if response.code.to_i >= 300
     err   = "#{response.code} #{response.message} was returned for failed package PUT request to #{put_location}"
-    errr += "; body text: #{response.body}" if response.body.length > 0
+    err  += "; body text: #{response.body}" if response.body.length > 0
+    
     raise err
   end
 

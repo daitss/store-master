@@ -15,8 +15,8 @@ helpers do
       (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
-  def good_name name
-    name =~ /^E\d{8}_[A-Z]{6}$/
+  def good_ieid name
+    name =~ /^E[A-Z0-9]{8}_[A-Z0-9]{6}$/    # ieid or ieid.vers  accepted
   end
 
   def request_md5
@@ -31,5 +31,5 @@ helpers do
     web_location @env['SCRIPT_NAME'].gsub(%r{/+$}, '') + '/' + @env['PATH_INFO'].gsub(%r{^/+}, '')
   end
 
-end
+end # of helpers do
 

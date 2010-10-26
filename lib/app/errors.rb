@@ -39,7 +39,7 @@ error do
   else
     Logger.err "Internal Server Error - #{e.message}", @env
     e.backtrace.each { |line| Logger.err line, @env }
-    [ halt 500, { 'Content-Type' => 'text/plain' }, "Internal Server Error\n" ]
+    [ halt 500, { 'Content-Type' => 'text/plain' }, "500 Internal Service Error\n" ]
   end
 end
 
@@ -49,6 +49,9 @@ end
 
 not_found  do
   e = @env['sinatra.error']
+  request.body.rewind if request.body.respond_to?(:rewind)  
+
+
   message = if e.is_a? Store::Http404 
               e.client_message
             else

@@ -32,7 +32,7 @@ configure do
   begin
     # Make sure our diskstores are correctly setup - the constructor will throw errors otherwise.
 
-    set :staged_root,  ENV['DISK_STORE_ROOT']
+    set :staged_root,  ENV['DISK_STORE_ROOT']   ## TODO: remove this when we work on 
 
     # Get connected to db.
 

@@ -169,6 +169,8 @@ share_examples_for "DataMapper Package class using any database" do
     pkg2.copies.length.should == 2
     pkg2.copies.map { |elt| elt.store_location }.include?(foo).should == true
     pkg2.copies.map { |elt| elt.store_location }.include?(bar).should == true
+
+    STDERR.puts "\n\n" + pkg2.copies.map { |elt| elt.store_location }.join(', ')
    
     (DateTime.now - pkg2.copies[0].datetime).should be_close(0, 0.0001)
   end

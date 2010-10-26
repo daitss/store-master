@@ -1,15 +1,13 @@
-# This is where we keep track of submitted packages.  Right now, I'm
-# merely staging them locallly to allow Franco to code to the API; in the near
-# future we'll actually find external silos to store them to.
 
 post '/reserve/?' do
   raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
-  res = Store::Reservation.new ieid
+  raise Http400, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
+
+  res = Reservation.new ieid
   
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
   xml.reserved(:ieid => ieid, :location => web_location("/packages/#{res.name}"))
-  xml.target!
 
   status 201
   content_type 'application/xml'
@@ -20,103 +18,67 @@ end
 
 put '/packages/:name' do |name|
 
-  ds   = DiskStore.new(settings.staged_root)
-  ieid = Store::Reservation.lookup_ieid(name)
+  ieid = Reservation.lookup_ieid(name)
 
-  raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"       unless ieid
+  raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"   unless ieid
   raise Http403, "The resource #{this_resource} already exists"                                     if Package.exists?(name)
   raise Http400, "Can't use resource #{this_resource}: it has been previously created and deleted"  if Package.was_deleted?(name)
+  raise Http400, "Missing the Content-MD5 header, required for PUTs to #{this_resource}"  unless request_md5
+  raise Http400, "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar' 
 
-  supplied_md5 = request_md5()
-  
-  raise Http400, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_name ieid
-  raise Http400, "Missing the Content-MD5 header, required for PUTs to #{web_location('/pacakges/')}"       unless supplied_md5
-  raise Http400, "This site only accepts content types of application/x-tar"                                unless (request.content_type and request.content_type == 'application/x-tar')
+  pools = Pool.list_active
 
+  raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
 
-  # Save a temporary local copy here....TODO: we can work directly 
+  ### TODO: *number* of pools to store to against settings...
 
-  data = request.body                                          # singleton method to provide content length. (ds.put needs
-  eval "def data.size; #{request.content_length.to_i}; end"    # to garner size; but that's not provided by 'rewindable' body object)
-  ds.put(name, data, request.content_type)
-  computed_md5 = ds.md5(name)
+  metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  # WET:
-
-  if ds.md5(name) != supplied_md5
-    begin
-      ds.delete(name)
-    rescue => e
-      Logger.err "Failure in cleanup of disk store after failed PUT to #{this_resource}: #{e.message}", @env
-      e.backtrace.each { |line| Logger.err line }
-    end
-    raise Http409, "The request indicated the MD5 was #{supplied_md5}, but the server computed #{computed_md5}"
-  end
-
-  if ds.size(name) != request.content_length.to_i
-    begin
-      ds.delete(name)
-    rescue => e
-      Logger.err "Failure in cleanup of disk store after failed PUT to #{this_resource}: #{e.message}", @env
-      e.backtrace.each { |line| Logger.err line }
-    end
-    raise Http409, "The request indicated the file size was #{request.content_length.to_i}, but the server computed #{ds.size(name)}"
-  end
-
-  # TODO: forward to pools here.
-
-  pkg = Package.new_from_diskstore(ieid, name, ds)    
-
-  Pool.list_active.each do pool
-    pkg.copies << pool.put(name, ds)
-  end
+  pkg = Package.create(request.body, metadata, pools)
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
-  xml.created(:name     => name,
-              :ieid     => ieid,
-              :etag     => ds.etag(name),
-              :md5      => ds.md5(name),
-              :sha1     => ds.sha1(name),
-              :size     => ds.size(name),
-              :type     => ds.type(name),
-              :time     => ds.datetime(name).to_s,
-              :location => this_resource)
-  xml.target!
+  xml.created(:ieid     => pkg.ieid,
+              :location => this_resource,
+              :md5      => pkg.md5,
+              :name     => pkg.name,
+              :sha1     => pkg.sha1,
+              :size     => pkg.size,
+              :time     => pkg.datetime,
+              :type     => pkg.type)
+  xml.target!  
 end
 
 
 delete '/packages/:name' do |name|
-  ds = DiskStore.new(settings.staged_root)
-
-  ds.delete(name) if ds.exists?(name)
-
   raise Http410, "Resource #{this_resource} has already been deleted"  if Package.was_deleted?(name)
-  raise Http404, "There is no such resource #{this_resource}." unless Package.exists?(name)
+  raise Http404, "No such resource #{this_resource}." unless Package.exists?(name)
 
-  Package.delete(name) 
+  pkg = Package.lookup(name)
+  pkg.delete
   status 204
 end
 
 
 get '/packages/:name' do |name|
-  ds = DiskStore.new(settings.staged_root)
+  raise Http410, "Resource #{this_resource} has already been deleted"  if Package.was_deleted?(name)
+  raise Http404, "No such resource #{this_resource}."     unless Package.exists?(name)
 
-  raise Http410, "Resource #{this_resource} has been deleted"  if Package.was_deleted?(name)
-  raise Http404, "There is no such resource #{this_resource}." unless Package.exists?(name)
-  raise DiskStoreError, "Our database indicates we have the resource #{this_resource}, but it isn't present on any silo." unless ds.exists?(name)
-  
-  etag ds.etag(name)
-  headers 'Content-MD5' => StoreUtils.md5hex_to_base64(ds.md5 name), 'Content-Type' => ds.type(name)
-  send_file ds.data_path(name), :filename => "#{name}.tar"
+  pkg = Package.lookup(name)
+
+  # TODO: check that a location has been returned;  ping them (via head) in order,  using first that responds.
+
+  # redirect locations[0], 303
+
+  content_type 'text/plain'
+  pkg.inspect + ' .. ' + pkg.locations.join('  ') + "\n"
 end
 
 
 get '/packages/?' do 
-  ds = DiskStore.new(settings.staged_root)
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -136,5 +98,4 @@ get '/packages/?' do
   }
   content_type 'application/xml'
   xml.target!
-
 end

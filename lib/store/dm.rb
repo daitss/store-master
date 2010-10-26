@@ -124,7 +124,7 @@ module DM
     
     property   :id,                Serial
     property   :required,          Boolean,      :required => true, :default => true
-    property   :put_location,      String,       :required => true, :format => :url
+    property   :put_location,      String,       :required => true   # , :format => :url broken, broke, broked!
     property   :read_preference,   Integer,      :default  => 0
 
     has n, :copies

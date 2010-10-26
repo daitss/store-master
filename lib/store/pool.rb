@@ -7,7 +7,7 @@ module Store
 
     attr_reader :dm_record
 
-    # Create a new pool object.  Mostly a wrapper over the DM::Pool datamapper class.
+    # Create a new pool object.  Almost entirely a wrapper over the DM::Pool datamapper class.
 
     def initialize dm_record
       @dm_record = dm_record
@@ -15,7 +15,7 @@ module Store
 
     def self.create put_location
       rec = DM::Pool.create(:put_location => put_location)
-      rec.saved? or raise "Can't create new pool recrord #{put_location}; DB errors: " + rec.errors.join('; ')
+      rec.saved? or raise "Can't create new pool recrord #{put_location}; DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
       Pool.new rec
     end
 
