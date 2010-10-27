@@ -196,8 +196,9 @@ module Store
       forwarded_request.initialize_http_header({ "Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size], "Content-Type"   => metadata[:type], })
 
       response = http.request(forwarded_request)
+      status = response.code.to_i
 
-      if response.code.to_i >= 300
+      if status >= 300
         err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{remote_location}"
         err  += "; body text: #{response.body}" if response.body.length > 0
         if status >= 500   
