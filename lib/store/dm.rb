@@ -123,9 +123,9 @@ module DM
     storage_names[:default] = 'pools'           # don't want dm_pools
     
     property   :id,                Serial
-    property   :required,          Boolean,      :required => true, :default => true
-    property   :put_location,      String,       :required => true   # , :format => :url broken, broke, broked!
-    property   :read_preference,   Integer,      :default  => 0
+    property   :required,          Boolean,  :required => true, :default => true
+    property   :put_location,      String,   :length => 255, :required => true   # , :format => :url broken, broke, broked!
+    property   :read_preference,   Integer,  :default  => 0
 
     has n, :copies
 
@@ -136,9 +136,9 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
     
-    property   :id,         Serial
-    property   :datetime,   DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
-    property   :store_location,   String,   :required => true, :index => true, :format => :url
+    property   :id,               Serial
+    property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
+    property   :store_location,   String,   :length => 255, :required => true, :index => true  #, :format => :url
 
     belongs_to :pool,      :index => true
     belongs_to :package,   :index => true

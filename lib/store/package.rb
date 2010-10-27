@@ -200,7 +200,7 @@ module Store
 
       if status >= 300
         err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{remote_location}"
-        err  += "; body text: #{response.body}" if response.body.length > 0
+        err  += "; message was #{response.body}" if response.body.length > 0
         if status >= 500   
           raise err
         elsif status >= 400 

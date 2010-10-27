@@ -22,6 +22,8 @@ end
 
 def active_silos
   [ 'http://storage.local/b/data/', 'http://storage.local/c/data/' ]
+  [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
+
 end
 
 def ieid
