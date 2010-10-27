@@ -74,10 +74,10 @@ module Store
           begin
             delete_copy(loc)
           rescue => e2
-            hell += "; failure deleting copy at #{loc}: #{e2.message}"
+            hell += "; also, failure deleting copy at #{loc}: #{e2.message}"
           end
         end
-        raise hell
+        raise e1, hell  # note that we re-raise the error that got us here - it might not be an internal server error
       end
 
       pkg.dm_record.sha1  = metadata[:sha1]  # pick up data that put_copy added
@@ -88,10 +88,10 @@ module Store
           begin
             pkg.delete_copy(loc)
           rescue => e2
-            cane += "; failure deleting copy at #{loc}: #{e2.message}"
+            cane += "; also, failure deleting copy at #{loc}: #{e2.message}"
           end
         end
-        raise cane
+        raise DataBaseError, cane
       end
 
       pkg
@@ -142,7 +142,7 @@ module Store
       
     def delete
       dm_record.extant = false
-      raise "DB error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}" unless dm_record.save
+      raise  DataBaseError, "error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}" unless dm_record.save
 
       errors = []
       locations.each do |loc| 
