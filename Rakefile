@@ -6,8 +6,8 @@ require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
 
-### require 'bundler'             # We need this for remote deploys where we want to run the spec tests.
-### Bundler.setup
+require 'bundler'             # We need this for remote deploys where we want to run the spec tests.
+Bundler.setup
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -51,7 +51,7 @@ Spec::Rake::SpecTask.new do |task|
   task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.
   task.libs << 'lib'
   task.libs << 'spec'
-  task.rcov = true if false and dev_host   # do coverage tests on my devlopment box
+  task.rcov = true if dev_host   # do coverage tests on my devlopment box
 end
 
 
@@ -81,6 +81,8 @@ task :docs do
   end
 end
 
+# Following used for development:
+
 desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt)."
 task :restart do
   mkdir TMPDIR unless File.directory? TMPDIR
@@ -91,7 +93,7 @@ task :restart do
   end
 end
 
-# Rebuild bundler
+# Rebuild bundler.
 
 desc "Reset bundles"
 task :bundle do

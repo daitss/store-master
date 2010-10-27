@@ -12,6 +12,8 @@ module Store
     attr_reader   :name
     attr_accessor :dm_record
 
+    # Package.new(name) should only be called internally
+
     def initialize name
       @name      = name
       @dm_record = nil
@@ -130,35 +132,29 @@ module Store
     def sha1;     dm_record.sha1;      end
     def size;     dm_record.size;      end
     def type;     dm_record.type;      end
-
-
-    #### need locations...;  need pools?
     
     def locations
-      dm_record.copies.map { |cp| cp.store_location }
+      dm_record.copies.map { |cp| cp.store_location }  # TODO: check that if there are no copies, it is [] and not nil here
     end
+
+
+    # delete tries to fail safe here, leaving orphans if necessary
       
-
     def delete
-
-      if not dm_record.save
-        cane = "DB error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}"
-        locations.each do |loc| 
-          begin
-            pkg.delete_copy(loc)
-          rescue => e2
-            cane += "; failure deleting copy at #{loc}: #{e2.message}"
-          end
-        end
-        raise cane
-      end
-
-      # run down copies here....
-            
       dm_record.extant = false
-      dm_record.save or raise DataBaseError, "Can't save DB record for update of package #{name}"            
-    end
+      raise "DB error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}" unless dm_record.save
 
+      errors = []
+      locations.each do |loc| 
+        begin
+          delete_copy(loc)
+        rescue => e
+          errors.push "failed to delete remote storage at #{loc}: #{e.message}"
+        end
+      end
+      
+      raise DriveByError, errors.join('; ') unless errors.empty?
+    end
 
 
 

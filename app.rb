@@ -2,7 +2,7 @@ require 'store'
 require 'builder'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
-# TODO: Authentication
+# TODO: Authentications on this service, and for remote services.
 
 REVISION = StoreMaster.version.rev
 
@@ -30,11 +30,7 @@ configure do
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
   begin
-    # Make sure our diskstores are correctly setup - the constructor will throw errors otherwise.
-
-    set :staged_root,  ENV['DISK_STORE_ROOT']   ## TODO: remove this when we work on 
-
-    # Get connected to db.
+    # Get connected to db; this will let us fail fast.
 
     DM.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 
@@ -52,17 +48,11 @@ load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'
 load 'lib/app/packages.rb'
 
-
-
 get '/' do
   erb :site, :locals => { :base_url => service_name, :revision => REVISION }
 end
 
 # testing stuff:
-
-get '/foo/:bar' do |bar|
-  erb :dump, :locals => { :params => params, :at_env => @env, :env => ENV, :revision => REVISION }
-end
 
 get '/settings/?' do
   myopts = {}

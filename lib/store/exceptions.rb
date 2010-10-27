@@ -187,4 +187,8 @@ module Store
 
   class BadName                    < Http409; end
 
+  # DriveByError is just meant to be caught and the message logged somewhere appropriate
+
+  class DriveByError             < StandardError; end
+
 end # of module

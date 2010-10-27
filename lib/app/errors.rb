@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# TODO: if we get a message with embedded newlines, break them out for the logging.
+# TODO, maybe: if we get a message with embedded newlines, break them out for the logging.
 
 error do
   e = @env['sinatra.error']
@@ -50,7 +50,6 @@ end
 not_found  do
   e = @env['sinatra.error']
   request.body.rewind if request.body.respond_to?(:rewind)  
-
 
   message = if e.is_a? Store::Http404 
               e.client_message

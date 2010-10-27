@@ -1,3 +1,6 @@
+# Handling packages
+
+# Reserve a new name to PUT to.  Requires an IEID.
 
 post '/reserve/?' do
   raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
@@ -16,8 +19,9 @@ post '/reserve/?' do
 end
 
 
-put '/packages/:name' do |name|
+# Put a tarfile package to previously reserved name.
 
+put '/packages/:name' do |name|
   ieid = Reservation.lookup_ieid(name)
 
   raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"   unless ieid
@@ -30,7 +34,7 @@ put '/packages/:name' do |name|
 
   raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
 
-  ### TODO: *number* of pools to store to against settings...
+  ### TODO: *number* of pools to store needs to be checked against a configuration variable... <=
 
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
@@ -52,34 +56,40 @@ put '/packages/:name' do |name|
   xml.target!  
 end
 
+# Deletes a package.
 
 delete '/packages/:name' do |name|
   raise Http410, "Resource #{this_resource} has already been deleted"  if Package.was_deleted?(name)
-  raise Http404, "No such resource #{this_resource}." unless Package.exists?(name)
+  raise Http404, "No such resource #{this_resource}."              unless Package.exists?(name)
 
-  pkg = Package.lookup(name)
-  pkg.delete
+  begin
+    Package.lookup(name).delete
+  rescue DriveByError => e
+    Logger.err "DELETE of resource #{this_resource} partially failed:  #{e.message}"
+  end
+
   status 204
 end
 
 
+# Gets a package via redirect.
+
 get '/packages/:name' do |name|
-  raise Http410, "Resource #{this_resource} has already been deleted"  if Package.was_deleted?(name)
-  raise Http404, "No such resource #{this_resource}."     unless Package.exists?(name)
+  raise Http410, "Resource #{this_resource} has been deleted"  if Package.was_deleted?(name)
+  raise Http404, "No such resource #{this_resource}."      unless Package.exists?(name)
 
-  pkg = Package.lookup(name)
+  locations = Package.lookup(name).locations
 
-  # TODO: check that a location has been returned;  ping them (via head) in order,  using first that responds.
+  # TODO: check that a location has been returned;  ping them (via head) in order,  using first that responds (need to streamline heads for this to work)
+  # TODO: get locations returned in read_preference order
 
-  # redirect locations[0], 303
-
-  content_type 'text/plain'
-  pkg.inspect + ' .. ' + pkg.locations.join('  ') + "\n"
+  raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
+  redirect locations[0], 303
 end
 
+# Get an XML file of all the packages we know about.  This is so slow as to be impractical, right now.
 
 get '/packages/?' do 
-
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
   

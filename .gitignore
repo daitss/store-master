@@ -5,6 +5,7 @@ shared
 \#*
 .emacs*
 .yardoc
+TAGS
 REVISION
 Notes
 spec/reports

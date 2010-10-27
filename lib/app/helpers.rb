@@ -16,7 +16,7 @@ helpers do
   end
 
   def good_ieid name
-    name =~ /^E[A-Z0-9]{8}_[A-Z0-9]{6}$/    # ieid or ieid.vers  accepted
+    name =~ /^E[A-Z0-9]{8}_[A-Z0-9]{6}$/    # Allowed IEID format
   end
 
   def request_md5

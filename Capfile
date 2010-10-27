@@ -13,7 +13,7 @@ set :user,         "silo"
 set :group,        "daitss" 
 
 
-set :bundle_flags,       "--deployment"
+set :bundle_flags,       "--deployment"   # --deployment is a default, we set ot to remove --quiet
 set :bundle_without,      []
 
 
@@ -27,7 +27,6 @@ def usage(*messages)
 end
 
 usage('The domain was not set (e.g., domain=ripple.fcla.edu).') unless variables[:domain]
-
 
 role :app, domain
 
