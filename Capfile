@@ -30,7 +30,12 @@ usage('The domain was not set (e.g., domain=ripple.fcla.edu).') unless variables
 
 role :app, domain
 
-after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
+# currently I'm building the docs and checking them into git;  bundling yard with 
+# the other stuff may make this unecessary.
+
+# after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
+
+after "deploy:update", "deploy:layout", "deploy:restart"
 
 namespace :deploy do
 

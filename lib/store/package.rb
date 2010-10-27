@@ -167,11 +167,18 @@ module Store
 
       forwarded_request = Net::HTTP::Delete.new(uri.request_uri)
       response = http.request(forwarded_request)
+      status = response.code.to_i
 
-      if response.code.to_i >= 300
+      if status >= 300
         err   = "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{remote_location}"
         err  += "; #{response.body}" if response.body.length > 0
-        raise err
+        if status >= 500   
+          raise err
+        elsif status >= 400 
+          raise Silo400Error, err
+        elsif status >= 300    
+          raise err
+        end          
       end
     end
 
@@ -193,7 +200,13 @@ module Store
       if response.code.to_i >= 300
         err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{remote_location}"
         err  += "; body text: #{response.body}" if response.body.length > 0
-        raise err
+        if status >= 500   
+          raise err
+        elsif status >= 400 
+          raise Silo400Error, err
+        elsif status >= 300    
+          raise err
+        end          
       end
     
       # Example XML document returned from PUT:    <?xml version="1.0" encoding="UTF-8"?>

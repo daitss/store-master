@@ -135,6 +135,12 @@ describe Store::Package do
     end    
   end
 
+  it "should list all of the package names we've stored" do
+    Store::Package.names.each do |name|
+      @@to_delete.include?(name).should == true
+    end
+  end
+
 
   it "should allow us to delete packages" do
 

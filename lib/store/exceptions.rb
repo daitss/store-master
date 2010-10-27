@@ -187,8 +187,16 @@ module Store
 
   class BadName                    < Http409; end
 
-  # DriveByError is just meant to be caught and the message logged somewhere appropriate
+  # DriveByError is just meant to be caught so the message logged somewhere appropriate; the
+  # error is non-fatal and should not be percolated to the top...
 
-  class DriveByError             < StandardError; end
+  class DriveByError              < StandardError; end
+
+  # Some Precondition failed on storing to a silo, likely to be the client's fault
+
+  class Silo400Error              < Http400;  
+    def status_code; 400; end
+    def status_text; "Pool 400 Error"; end
+  end
 
 end # of module
