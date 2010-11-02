@@ -17,8 +17,8 @@ config file using 'rackup config.ru' if you desired, though.
 
 In apache-speak, the environment:
 
-  * SetEnv LOG_FACILITY         LOG_LOCAL1              - syslog setup, or nothing if you want STDERR
-  * SetEnv DATABASE_CONFIG_FILE /opt/fda/etc/db.yml     - database YAML file
+  * SetEnv LOG_FACILITY         LOG_LOCAL1              - syslog setup, or nothing if you want logging toSTDERR
+  * SetEnv DATABASE_CONFIG_FILE /opt/fda/etc/db.yml     - YAML file describing database access
   * SetEnv DATABASE_CONFIG_KEY  store_master            - the key into the above for this service
   * SetEnv TMPDIR               /var/tmp                - need plenty of headroom here 
   * PassengerUploadBufferDir    /var/tmp/phusion        - and here
@@ -32,7 +32,7 @@ Quickstart
 ----------
 
  1. Retrieve the package from this repository
- 2. Setup a database use the <mumble> tools provided; adjust the configuration file in the spec directory
+ 2. Setup a MySQL or Postgres database use the (mumble) tools provided; adjust the configuration file in the spec directory
  3. Run 'rake spec'
  4. Adjust the capistrano configuration file; run 'cap deploy'
 
@@ -54,8 +54,8 @@ the top few lines in that file to match your installation.
 
 Usage
 -----
-Configure with backend storage services; see the daitss <mumble> project; add the
-following to you pools configuration table with the <mumble> tool.
+Configure with backend storage services; see the daitss (mumble) project; add the
+following to you pools configuration table with the (mumble) tool.
 
 
 Documentation
