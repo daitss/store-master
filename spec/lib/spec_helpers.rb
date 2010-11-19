@@ -64,3 +64,24 @@ def recreate_database
   DB.setup yaml_filename, 'silo_spec_test'
   DB::DM.automigrate!
 end
+
+
+def ieid
+  range = 26 ** 6
+  sleep (60.0 * 60.0 * 24.0) / range   # make sure we're unique, and we pause
+
+  now  = Time.now
+  mid  = Time.mktime(now.year.to_s, now.month.to_s, now.day.to_s)
+  point_in_day  = ((now.to_i - mid.to_i) + now.usec/1_000_000.0) / 86400.0  # fraction of day to microsecond resolution
+  point_in_ieid = (point_in_day * range).to_i    # fraction of day in fixed point, base 26: 'AAAAAA' .. 'ZZZZZZ'
+
+  # horner's algorithm on point_in_ieid
+
+  letters = ('A'..'Z').to_a
+  frac = ''
+  6.times do |i|
+    point_in_ieid, rem = point_in_ieid / 26, point_in_ieid % 26
+    frac += letters[rem]
+  end
+  sprintf('E%04d%02d%02d_%s', now.year, now.month, now.day, frac.reverse)
+end

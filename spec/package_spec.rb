@@ -21,13 +21,17 @@ def datamapper_setup
 end
 
 def active_silos
-  [ 'http://storage.local/b/data/', 'http://storage.local/c/data/' ]
-  [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
+  # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
+  # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
+  [ 'http://storage.local/a/data/', 'http://storage.local/b/data/' ]
 end
 
+@@IEID = ieid()
+
 def ieid
-  'E20080805_AAAAAM'
+  # 'E20080805_AAAAAM'
+  @@IEID
 end
 
 def sample_tarfile_path 
@@ -69,8 +73,6 @@ def nimby
     pending "No active silos are available; can't run this test"
   end
 end
-
-
 
 #### TODO: let datamapper folks know that URL validation doesn't accept dotted quads or localhost.
 

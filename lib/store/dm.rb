@@ -1,11 +1,12 @@
 require 'dm-core'
 require 'dm-types'
-require 'dm-validations'
 require 'dm-aggregates'
-require 'dm-transactions'
+require 'dm-constraints'
 require 'dm-migrations'
-require 'store/exceptions'
+require 'dm-transactions'
+require 'dm-validations'
 require 'store/diskstore'
+require 'store/exceptions'
 require 'time'
 
 module DM
@@ -43,6 +44,7 @@ module DM
 
     begin
       dm = DataMapper.setup(:default, connection_string)
+      DataMapper.finalize
       dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
       return dm
       
@@ -81,7 +83,7 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'packages'    # don't want dm_packages
     
-    property   :id,         Serial
+    property   :id,         Serial,   :min => 1
     property   :extant,     Boolean,  :default  => true, :index => true
     property   :ieid,       String,   :required => true, :index => true
     property   :name,       String,   :required => true, :index => true      # unique name, used as part of a url
@@ -109,20 +111,20 @@ module DM
       [ :put, :delete, :fixity, :update ]
     end
     
-    property   :id,        Serial
+    property   :id,        Serial,         :min => 1
     property   :datetime,  DateTime,       :index => true,   :default  => lambda { |resource, property| DateTime.now }
     property   :type,      Enum[ *types],  :index => true,   :required => true
     property   :outcome,   Boolean,        :index => true,   :default  => true
     property   :note,      String,         :length => 255,   :default  => ''
     
-    belongs_to :package
+    belongs_to :package,  :key => true
   end # of Event
   
   class Pool
     include DataMapper::Resource
     storage_names[:default] = 'pools'           # don't want dm_pools
     
-    property   :id,                Serial
+    property   :id,                Serial,   :min => 1
     property   :required,          Boolean,  :required => true, :default => true
     property   :put_location,      String,   :length => 255, :required => true   # , :format => :url broken, broke, broked!
     property   :read_preference,   Integer,  :default  => 0
@@ -136,7 +138,7 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
     
-    property   :id,               Serial
+    property   :id,               Serial,   :min => 1
     property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
     property   :store_location,   String,   :length => 255, :required => true, :index => true  #, :format => :url
 

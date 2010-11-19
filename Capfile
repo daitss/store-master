@@ -5,7 +5,7 @@ require 'railsless-deploy'
 require 'bundler/capistrano'
 
 set :application,  "storemaster"
-set :repository,   "ssh://retsina.fcla.edu/home/fischer/repos/store-master.git"
+set :repository,   "http://github.com/daitss/store-master.git"
 set :use_sudo,     false
 set :deploy_to,    "/opt/web-services/sites/#{application}"
 set :scm,          "git"

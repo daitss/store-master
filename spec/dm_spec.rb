@@ -143,7 +143,7 @@ share_examples_for "DataMapper Package class using any database" do
     pool2.save.should == false
   end
 
-  it "should let us associate a copy URL with a pacakge, storing and retreiving it" do
+  it "should let us associate copies URL with a pacakge, setting the time or defaulting it, storing and retreiving it" do
 
     pool1 = DM::Pool.create(:put_location => pool('d'))
     pool2 = DM::Pool.create(:put_location => pool('e'))
@@ -156,8 +156,9 @@ share_examples_for "DataMapper Package class using any database" do
 
     pkg1  = DM::Package.first(:name => NAME1)
 
+    copy2time = DateTime.now - 100
     copy1 = DM::Copy.create(:store_location => foo, :pool => pool1)
-    copy2 = DM::Copy.create(:store_location => bar, :pool => pool2)
+    copy2 = DM::Copy.create(:store_location => bar, :pool => pool2, :datetime => copy2time)
 
     pkg1.copies << copy1
     pkg1.copies << copy2
@@ -170,7 +171,8 @@ share_examples_for "DataMapper Package class using any database" do
     pkg2.copies.map { |elt| elt.store_location }.include?(foo).should == true
     pkg2.copies.map { |elt| elt.store_location }.include?(bar).should == true
 
-    (DateTime.now - pkg2.copies[0].datetime).should be_close(0, 0.0001)
+    (DateTime.now - pkg2.copies[0].datetime).should be_close(0, 0.0001)   # default time
+    (copy2time - pkg2.copies[1].datetime).should be_close(0, 0.0001)      # spec
   end
 
   it "should not let us create copies within the same pool for a given package" do
