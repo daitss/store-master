@@ -11,7 +11,7 @@ def datamapper_setup
   DM.recreate_tables
 end
 
-BAD_IEID  = 'E19561201_HAPPYB'
+BAD_IEID  = 'X-RAY'
 GOOD_IEID = 'E20100101_FOOBAR'
 
 describe Store::Reservation do

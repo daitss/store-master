@@ -17,7 +17,7 @@ describe Store::Pool do
     datamapper_setup
   end
 
-  it "should let us determine when a package doesn't exist" do
+  it "should let us determine when a pool doesn't exist" do
     Store::Pool.exists?('http://first.example.com/packages/').should == false
   end
 
@@ -28,6 +28,10 @@ describe Store::Pool do
 
   it "should let us determine when a package does exist" do
     Store::Pool.exists?('http://first.example.com/packages/').should == true
+  end
+
+  it "should let us determine when a package doesn't exist" do
+    Store::Pool.exists?('http://bogus.example.com/packages/').should == false
   end
 
   it "should have created new pool servers with sensible defaults" do

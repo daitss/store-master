@@ -100,6 +100,8 @@ share_examples_for "DataMapper Package class using any database" do
     package.saved?.should == true
   end
 
+
+
   it "should let us create an event and associate it with a package, retreiving it" do
     
     pkg1  = DM::Package.first(:name => NAME1)
