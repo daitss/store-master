@@ -9,6 +9,8 @@ module Store
 
     # Create a new pool object.  Almost entirely a wrapper over the DM::Pool datamapper class.
 
+    # The constructor is only meant for internal use.
+
     def initialize dm_record
       @dm_record = dm_record
     end
@@ -38,7 +40,7 @@ module Store
 
     def required= bool
       @dm_record.required = bool
-      @dm_record.save or raise "Can't set pool #{put_location} to 'required' flag of #{bool};  DB errors: " + rec.errors.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} to 'required' flag of #{bool};  DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
     end
 
     def put_location
@@ -47,7 +49,7 @@ module Store
 
     def put_location= url
       @dm_record.put_location = bool
-      @dm_record.save or raise "Can't set pool #{put_location} to 'put_location' of #{url};  DB errors: " + rec.errors.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} to 'put_location' of #{url};  DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
     end
 
     def read_preference
@@ -56,7 +58,7 @@ module Store
 
     def read_preference= int
       @dm_record.read_preference = int
-      @dm_record.save or raise "Can't set pool #{put_location} to 'read_preference' of #{int};  DB errors:  " + rec.errors.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} to 'read_preference' of #{int};  DB errors:  " + rec.errors.map{ |e| e.to_s }.join('; ')
     end
 
     def self.list_active

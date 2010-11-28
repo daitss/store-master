@@ -13,7 +13,7 @@ set :user,         "silo"
 set :group,        "daitss" 
 
 
-set :bundle_flags,       "--deployment"   # --deployment is a default, we set ot to remove --quiet
+set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
 set :bundle_without,      []
 
 

@@ -41,7 +41,6 @@ module Store
       not DM::Package.first(:name => name, :extant => false).nil?
     end
 
-
     def self.create io, metadata, pools
 
       pkg = Package.new metadata[:name]
@@ -137,7 +136,6 @@ module Store
       dm_record.copies.map { |cp| cp.store_location }  # TODO: check that if there are no copies, it is [] and not nil here
     end
 
-
     # delete tries to fail safe here, leaving orphans if necessary
       
     def delete
@@ -155,7 +153,6 @@ module Store
       
       raise DriveByError, errors.join('; ') unless errors.empty?
     end
-
 
 
     def delete_copy remote_location
