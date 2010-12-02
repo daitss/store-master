@@ -6,7 +6,7 @@ require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
 
-#  require 'bundler/setup'
+require 'bundler/setup'
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')

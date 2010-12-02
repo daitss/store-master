@@ -36,9 +36,7 @@ put '/packages/:name' do |name|
 
   ### TODO: *number* of pools to store needs to be checked against a configuration variable... <=
 
-  metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
-
-  pkg = Package.create(request.body, metadata, pools)
+  pkg = Package.create(request.body, { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }, pools)
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
