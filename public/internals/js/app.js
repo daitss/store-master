@@ -31,12 +31,14 @@ function createFullTreeLinks() {
     var tHeight = 0;
     $('.inheritanceTree').toggle(function() {
         tHeight = $(this).parent().prev().height();
-        $(this).parent().toggleClass('showAll');
+        $(this).prev().prev().hide();
+        $(this).prev().show();
         $(this).text("(hide)");
         $(this).parent().prev().height($(this).parent().height());
     },
     function() {
-        $(this).parent().toggleClass('showAll');
+        $(this).prev().prev().show();
+        $(this).prev().hide();
         $(this).parent().prev().height(tHeight);
         $(this).text("show all")
     });
@@ -152,7 +154,7 @@ function generateTOC() {
     show = true;
     var thisTag = parseInt(this.tagName[1]);
     if (this.id.length == 0) {
-      var proposedId = $(this).text().replace(/[^a-z0-9:'"\.()=-]/ig, '_');
+      var proposedId = $(this).text().replace(/[^a-z]/ig, '_');
       if ($('#' + proposedId).length > 0) proposedId += counter++;
       this.id = proposedId;
     }

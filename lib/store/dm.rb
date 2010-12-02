@@ -1,7 +1,7 @@
 require 'dm-core'
 require 'dm-types'
 require 'dm-aggregates'
-require 'dm-constraints'
+# require 'dm-constraints'  doesn't seem to work
 require 'dm-migrations'
 require 'dm-transactions'
 require 'dm-validations'
@@ -11,7 +11,7 @@ require 'time'
 
 module DM
 
-  ENV['TZ'] = 'UTC'  ### TODO: meh.
+  ENV['TZ'] = 'UTC'  ### meh
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
@@ -87,14 +87,7 @@ module DM
     property   :extant,     Boolean,  :default  => true, :index => true
     property   :ieid,       String,   :required => true, :index => true
     property   :name,       String,   :required => true, :index => true      # unique name, used as part of a url
-    
-    property   :sha1,       String,   :required => true, :length => (40..40), :index => true
-    property   :md5,        String,   :required => true, :length => (32..32), :index => true
-    property   :datetime,   DateTime, :index => true,    :default => lambda { |resource, property| DateTime.now }
-    
-    property   :size,       Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1  # (2**63 - 1 for postgress, 2**64 -1 for mysql)
-    property   :type,       String,   :required => true, :default => 'application/x-tar'
-    
+        
     # many-to-many  relationship - a package can (and should) have copies on several different pools
     
     has n,      :copies
@@ -108,7 +101,7 @@ module DM
     storage_names[:default] = 'events'          # don't want dm_events
     
     def self.types
-      [ :put, :delete, :fixity, :update ]
+      [ :put, :delete ]
     end
     
     property   :id,        Serial,         :min => 1
@@ -117,7 +110,7 @@ module DM
     property   :outcome,   Boolean,        :index => true,   :default  => true
     property   :note,      String,         :length => 255,   :default  => ''
     
-    belongs_to :package,  :key => true
+    belongs_to :package
   end # of Event
   
   class Pool
@@ -126,7 +119,7 @@ module DM
     
     property   :id,                Serial,   :min => 1
     property   :required,          Boolean,  :required => true, :default => true
-    property   :put_location,      String,   :length => 255, :required => true   # , :format => :url broken, broke, broked!
+    property   :put_location,      String,   :length => 255, :required => true   # :format => :url broken - use uri?
     property   :read_preference,   Integer,  :default  => 0
 
     has n, :copies
@@ -142,8 +135,8 @@ module DM
     property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
     property   :store_location,   String,   :length => 255, :required => true, :index => true  #, :format => :url
 
-    belongs_to :pool,      :index => true
-    belongs_to :package,   :index => true
+    belongs_to :pool
+    belongs_to :package
 
     validates_uniqueness_of :pool, :scope => :package
   end # of Copy

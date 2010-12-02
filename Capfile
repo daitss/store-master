@@ -9,7 +9,7 @@ set :repository,   "http://github.com/daitss/store-master.git"
 set :use_sudo,     false
 set :deploy_to,    "/opt/web-services/sites/#{application}"
 set :scm,          "git"
-set :user,         "silo"
+set :user,         "daitss"
 set :group,        "daitss" 
 
 
@@ -64,9 +64,11 @@ namespace :deploy do
     run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"
   end
   
-  desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
-  task :doc, :roles => :app do
-    run "cd #{current_path}; rake docs"
-    run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
-  end
+  # We're going to try including the docs in the repostitory for now..
+  
+  # desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
+  # task :doc, :roles => :app do
+  #   run "cd #{current_path}; rake docs"
+  #   run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
+  # end
 end

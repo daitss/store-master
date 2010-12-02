@@ -15,5 +15,5 @@ gem 'ci_reporter',         '>= 1.6.2'
 
 # development
 
-gem 'yard',                '>= 0.6.0'
+gem 'yard',                '>= 0.6.3'
 gem 'rcov',                '>= 0.9.8'    

@@ -490,7 +490,7 @@ A new instance of DiskStore.
 
   
     <span class="summary_desc"><div class='inline'><p>
-What&#8217;s in a name? no embedded control characters, that&#8217;s for
+What&#8217;s in a name?  no embedded control characters, that&#8217;s for
 sure.
 </p>
 </div></span>
@@ -1393,7 +1393,7 @@ Get data identified by name from the silo. Takes an optional block for
 reading.
 </p>
 <p>
-open(&quot;MyStuff/MyFile&quot;, &quot;w&quot;) do |output|
+open(&#8220;MyStuff/MyFile&#8221;, &#8220;w&#8221;) do |output|
 </p>
 <pre class="code">
   <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
@@ -1479,7 +1479,7 @@ data = silo.get(name)
 </p><div class="docstring">
   <div class="discussion">
     <p>
-What&#8217;s in a name? no embedded control characters, that&#8217;s for
+What&#8217;s in a name?  no embedded control characters, that&#8217;s for
 sure.
 </p>
 
@@ -1720,19 +1720,20 @@ object identified by name.
 </p>
 <p>
 Here are the directories and file layouts: say we have an object named
-&quot;my/stuff.txt&quot; and silo.filesystem is &quot;/tmp/store/&quot;.
-The the md5 checksum of &quot;my/stuff.txt&quot; (of the string itself, not
-the contents of a file) is &quot;9203e38408ebed690ecdf40953558dbb&quot;. We
-have the following:
+&#8220;my/stuff.txt&#8221; and silo.filesystem is
+&#8220;/tmp/store/&#8221;.  The the md5 checksum of
+&#8220;my/stuff.txt&#8221; (of the string itself, not the contents of a
+file) is &#8220;9203e38408ebed690ecdf40953558dbb&#8221;. We have the
+following:
 </p>
 <p>
-parent_path /tmp/store/920/ (this is where we create lock files) path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/ data_path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/data datetime_path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/datetime md5_path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/md5 sha1_path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/sha1 name_path
-/tmp/store/920/3e38408ebed690ecdf40953558dbb/name type_path
+parent_path     /tmp/store/920/  (this is where we create lock files) path 
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/ data_path      
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/data datetime_path  
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/datetime md5_path       
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/md5 sha1_path      
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/sha1 name_path      
+/tmp/store/920/3e38408ebed690ecdf40953558dbb/name type_path      
 /tmp/store/920/3e38408ebed690ecdf40953558dbb/type
 </p>
 
@@ -1775,8 +1776,8 @@ parent_path /tmp/store/920/ (this is where we create lock files) path
 </p><div class="docstring">
   <div class="discussion">
     <p>
-Put data identified by name in the silo. Normally data will be some kind of
-IO object, but strings (or anything with a to_s method) will work fine.
+Put data identified by name in the silo.  Normally data will be some kind
+of IO object, but strings (or anything with a to_s method) will work fine.
 </p>
 
 
@@ -2386,9 +2387,9 @@ time.
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:31 2010 by 
+  Generated on Thu Dec  2 14:52:48 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

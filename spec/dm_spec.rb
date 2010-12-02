@@ -8,8 +8,6 @@ require 'spec_helpers'
 
 ENV['TZ'] = 'UTC'
 
-MD5   = 'd3b07384d113edec49eaa6238ad5ff00'
-SHA   = 'f1d2d2f924e986ac86fdf7b36c94bcdf32beec15'
 IEID  = 'E20100921_AAAAAA'
 
 NAME1 = IEID + '.000'
@@ -35,71 +33,32 @@ end
 share_examples_for "DataMapper Package class using any database" do
   
   it "should let us a create a new package" do
-    package  = DM::Package.create(:ieid => IEID, :name => NAME1, :md5 => MD5, :size => 10000, :sha1 => SHA)
+    package  = DM::Package.create(:ieid => IEID, :name => NAME1) 
     package.saved?.should == true
   end
 
   it "should let us a retrieve a previously created package record by ieid" do
     package  = DM::Package.first(:ieid => IEID)
-    package.md5.should      == MD5
-    package.sha1.should     == SHA
-    package.size.should     == 10000
     package.name.should     == NAME1
   end
 
   it "should let us a retrieve a previously created package record by name" do
     package  = DM::Package.first(:name => NAME1)
-    package.md5.should      == MD5
-    package.sha1.should     == SHA
-    package.size.should     == 10000
     package.name.should     == NAME1
   end
 
-  it "should create new packages with a default time stamp of now" do
-
-    package  = DM::Package.first(:name => NAME1)
-    (DateTime.now - package.datetime).should  be_close(0, 0.0001)
-
-    # (Time.now - package.datetime).should  < 1  # if using Time
-  end
-
-  it "should create new packages with a default type of application/x-tar" do
-
-    package  = DM::Package.first(:name => NAME1)
-    package.type.should == 'application/x-tar'
-  end
 
   it "should let not let us create a new package without a ieid" do
 
-    package  = DM::Package.create(:name => NAME2, :md5 => MD5, :sha1 => SHA, :size => 10000)
-    package.saved?.should == false
-  end
-
-  it "should let not let us create a new package without an md5" do
-
-    package  = DM::Package.create(:name => NAME2, :ieid => IEID, :sha1 => SHA, :size => 10000)
-    package.saved?.should == false
-  end
-
-  it "should let not let us create a new package without a sha1" do
-
-    package  = DM::Package.create(:name => NAME2, :ieid => IEID, :md5 => MD5, :size => 10000)
-    package.saved?.should == false
-
-  end
-
-  it "should let not let us create a new package without a size" do
-
-    package  = DM::Package.create(:name => NAME2, :ieid => IEID, :md5 => MD5, :sha1 => SHA)
+    package  = DM::Package.create(:name => NAME2)
     package.saved?.should == false
   end
 
   it "should let us create a new package with the same ieid as an old package, with a new name" do
 
-    package  = DM::Package.create(:name => NAME2, :ieid => IEID, :md5 => MD5, :sha1 => SHA, :size => 10000)
+    package  = DM::Package.create(:name => NAME2, :ieid => IEID)
     package.saved?.should == true
   end
-
 
 
   it "should let us create an event and associate it with a package, retreiving it" do
@@ -179,7 +138,7 @@ share_examples_for "DataMapper Package class using any database" do
 
   it "should not let us create copies within the same pool for a given package" do
 
-    pkg  = DM::Package.create(:ieid => IEID, :name => NAME3, :md5 => MD5, :sha1 => SHA, :size => 10000)
+    pkg  = DM::Package.create(:ieid => IEID, :name => NAME3) 
     pool = DM::Pool.first(:put_location => pool('d'))
 
     baz  = 'http://bar.example.com/baz'

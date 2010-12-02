@@ -85,22 +85,22 @@
   <div class="discussion">
     <p>
 Most named exceptions in the XmlResolution service we assign here to one of
-the HTTP classes. Libraries are designed specifically to be unaware of this
-mapping: they only use their specific low level exceptions classes.
+the HTTP classes.  Libraries are designed specifically to be unaware of
+this mapping: they only use their specific low level exceptions classes.
 </p>
 <p>
 In general, if we catch an HttpError at our top level app, we can blindly
-return the error message to the client as a diagnostic, and log it. The
+return the error message to the client as a diagnostic, and log it.  The
 fact that we&#8217;re naming these exceptions means we&#8217;re being
-careful not to leak information, and still be helpful to the Client. They
+careful not to leak information, and still be helpful to the Client.  They
 are very specific messages; tracebacks will not be required.
 </p>
 <p>
 When we get an un-named exception, however, the appropriate thing to do is
 to just supply a very terse message to the client (e.g., we wouldn&#8217;t
-like to expose errors from an ORM that said something like &quot;password
-&#8216;topsecret&#8217; failed in mysql open&quot;). We <b>will</b> want to
-log the full error message, and probably a backtrace to boot.
+like to expose errors from an ORM that said something like &#8220;password
+&#8216;topsecret&#8217; failed in mysql open&#8221;).  We <b>will</b> want
+to log the full error message, and probably a backtrace to boot.
 </p>
 
 
@@ -189,9 +189,9 @@ log the full error message, and probably a backtrace to boot.
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:32 2010 by 
+  Generated on Thu Dec  2 14:52:42 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

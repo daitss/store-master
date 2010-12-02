@@ -255,7 +255,7 @@ Returns the value of attribute dm_record.
 
   
     <span class="summary_desc"><div class='inline'><p>
-Create a new pool object.
+The constructor is only meant for internal use.
 </p>
 </div></span>
   
@@ -362,7 +362,10 @@ Create a new pool object.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+higher the preference, the more it should be preferred.
+</p>
+</div></span>
   
 </li>
 
@@ -404,8 +407,7 @@ Create a new pool object.
 </p><div class="docstring">
   <div class="discussion">
     <p>
-Create a new pool object. Almost entirely a wrapper over the DM::Pool
-datamapper class.
+The constructor is only meant for internal use.
 </p>
 
 
@@ -419,12 +421,12 @@ datamapper class.
       <pre class="lines">
 
 
-12
-13
-14</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 12</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 14</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='dm_record identifier id'>dm_record</span>
   <span class='@dm_record ivar id'>@dm_record</span> <span class='assign token'>=</span> <span class='dm_record identifier id'>dm_record</span>
@@ -503,14 +505,14 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-16
-17
 18
 19
-20</pre>
+20
+21
+22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 16</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='put_location identifier id'>put_location</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Pool constant id'>Pool</span><span class='dot token'>.</span><span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='symbol val'>:put_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='put_location identifier id'>put_location</span><span class='rparen token'>)</span>
@@ -557,12 +559,12 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-22
-23
-24</pre>
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 22</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='put_location identifier id'>put_location</span>
   <span class='not not kw'>not</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Pool constant id'>Pool</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:put_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='put_location identifier id'>put_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
@@ -586,16 +588,16 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-62
-63
-64
-65
 66
 67
-68</pre>
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 62</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 66</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span>
   <span class='pools identifier id'>pools</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -623,13 +625,13 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-26
-27
 28
-29</pre>
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 26</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='put_location identifier id'>put_location</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Pool constant id'>Pool</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:put_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='put_location identifier id'>put_location</span><span class='rparen token'>)</span>
@@ -660,12 +662,12 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-31
-32
-33</pre>
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 31</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='datamapper_record identifier id'>datamapper_record</span>
   <span class='@dm_record ivar id'>@dm_record</span>
@@ -689,12 +691,12 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-44
-45
-46</pre>
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='put_location identifier id'>put_location</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='put_location identifier id'>put_location</span>      
@@ -718,17 +720,17 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-48
-49
-50
-51</pre>
+52
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 48</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='put_location= identifier id'>put_location=</span> <span class='url identifier id'>url</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='put_location identifier id'>put_location</span> <span class='assign token'>=</span> <span class='bool identifier id'>bool</span>
-  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'put_location' of #{url};  DB errors: &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
+  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'put_location' of #{url};  DB errors: &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='e identifier id'>e</span><span class='bitor op'>|</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -749,12 +751,12 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-53
-54
-55</pre>
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 53</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 57</span>
 
 <span class='def def kw'>def</span> <span class='read_preference identifier id'>read_preference</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span>      
@@ -778,17 +780,17 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-57
-58
-59
-60</pre>
+61
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 57</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 61</span>
 
 <span class='def def kw'>def</span> <span class='read_preference= identifier id'>read_preference=</span> <span class='int identifier id'>int</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span> <span class='assign token'>=</span> <span class='int identifier id'>int</span>
-  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'read_preference' of #{int};  DB errors:  &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
+  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'read_preference' of #{int};  DB errors:  &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='e identifier id'>e</span><span class='bitor op'>|</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -803,18 +805,29 @@ Returns the value of attribute dm_record
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+higher the preference, the more it should be preferred.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-35
-36
-37</pre>
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 35</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 39</span>
 
 <span class='def def kw'>def</span> <span class='required identifier id'>required</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='required identifier id'>required</span>      
@@ -838,17 +851,17 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-39
-40
-41
-42</pre>
+43
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 39</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/pool.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='required= identifier id'>required=</span> <span class='bool identifier id'>bool</span>
   <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='required identifier id'>required</span> <span class='assign token'>=</span> <span class='bool identifier id'>bool</span>
-  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'required' flag of #{bool};  DB errors: &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
+  <span class='@dm_record ivar id'>@dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't set pool #{put_location} to 'required' flag of #{bool};  DB errors: &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='e identifier id'>e</span><span class='bitor op'>|</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -861,9 +874,9 @@ Returns the value of attribute dm_record
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:33 2010 by 
+  Generated on Thu Dec  2 14:52:56 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

@@ -6,6 +6,8 @@ require 'uri'
 require 'net/http'
 require 'xml'
 
+# TO DO:  Add PUT/DELETE event records.
+
 module Store
   class Package
 
@@ -50,12 +52,8 @@ module Store
 
       pkg.dm_record = DM::Package.create
 
-      pkg.dm_record.datetime  = DateTime.now
       pkg.dm_record.ieid      = metadata[:ieid]
-      pkg.dm_record.md5       = metadata[:md5]
       pkg.dm_record.name      = metadata[:name]
-      pkg.dm_record.size      = metadata[:size]
-      pkg.dm_record.type      = metadata[:type]
 
       locations = []        # TODO: add events here
 
@@ -78,8 +76,6 @@ module Store
         end
         raise e1, hell  # note that we re-raise the error that got us here - it might not be an internal server error
       end
-
-      pkg.dm_record.sha1  = metadata[:sha1]  # pick up data that put_copy added
 
       if not pkg.dm_record.save
         cane = "DB error recording #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}"
@@ -110,11 +106,6 @@ module Store
     #
     #   rec.name      = name
     #   rec.ieid      = ieid
-    #   rec.md5       = diskstore.md5(name)
-    #   rec.sha1      = diskstore.sha1(name)
-    #   rec.type      = diskstore.type(name)
-    #   rec.size      = diskstore.size(name)
-    #   rec.datetime  = diskstore.datetime(name)
     #
     #   rec.save or raise DataBaseError, "Can't save DB record for package #{name} - #{rec.errors.map { |e| e.to_s }.join('; ')}"
     #
@@ -125,15 +116,14 @@ module Store
 
     # Get basic DB data about a package
          
-    def datetime; dm_record.datetime;  end
-    def ieid;     dm_record.ieid;      end
-    def md5;      dm_record.md5;       end
-    def sha1;     dm_record.sha1;      end
-    def size;     dm_record.size;      end
-    def type;     dm_record.type;      end
-    
+    def ieid
+      dm_record.ieid
+    end
+
     def locations
-      dm_record.copies.map { |cp| cp.store_location }  # TODO: check that if there are no copies, it is [] and not nil here
+      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+
+      # TODO: check that if there are no copies, it is [] and not nil here
     end
 
     # delete tries to fail safe here, leaving orphans if necessary
@@ -238,8 +228,6 @@ module Store
       metadata[:location] = returned_data["location"]   # the location it was actually store to
       metadata[:sha1]     = returned_data["sha1"]
     end
-
-
 
   end # of class Package
 end  # of module Store

@@ -34,6 +34,8 @@ module Store
       @dm_record
     end
 
+    # higher the preference, the more it should be preferred.
+
     def required
       @dm_record.required      
     end

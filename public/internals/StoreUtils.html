@@ -67,7 +67,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     <p>
-You know the drawer in your kitchen that has all the junk in it? This
+You know the drawer in your kitchen that has all the junk in it?  This
 module is like that&#8230;
 </p>
 
@@ -331,7 +331,7 @@ string.
 
   
     <span class="summary_desc"><div class='inline'><p>
-We need to provide the base64 of the original binary md5 checksum; however
+We need to provide the base64 of the original binary md5 checksum; however 
 we typically have only the hexstring.
 </p>
 </div></span>
@@ -356,7 +356,7 @@ we typically have only the hexstring.
 
   
     <span class="summary_desc"><div class='inline'><p>
-TODO: default pathname should be required - also, error messages here on
+TODO:  default pathname should be required - also, error messages here on
 missing yaml, etc.
 </p>
 </div></span>
@@ -426,10 +426,7 @@ string.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-change to E{A-Z0-9}8_{A-Z0-9}6.
-</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -468,13 +465,13 @@ returning the corresponding hex string.
       <pre class="lines">
 
 
-98
-99
-100
-101</pre>
+95
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 98</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='base64_to_md5hex identifier id'>base64_to_md5hex</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span> <span class='and and kw'>and</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>24</span><span class='rparen token'>)</span>
@@ -510,12 +507,12 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-201
-202
-203</pre>
+198
+199
+200</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 201</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 198</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
@@ -610,6 +607,9 @@ N.B. We depend on a trailing slash being removed
       <pre class="lines">
 
 
+66
+67
+68
 69
 70
 71
@@ -622,13 +622,10 @@ N.B. We depend on a trailing slash being removed
 78
 79
 80
-81
-82
-83
-84</pre>
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 69</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 66</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_mount_point identifier id'>disk_mount_point</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -697,7 +694,7 @@ StoreUtils.get_silo_options ARGS
 </p>
 <p>
 Parse the command line argments used for various silo fixity utility
-programs. Returns nil on error, after having written a message on STDERR
+programs.  Returns nil on error, after having written a message on STDERR
 (usually you just want to exit with a non-zero exit status on a nil
 return); on success returns a struct with the following
 </p>
@@ -720,6 +717,9 @@ return); on success returns a struct with the following
       <pre class="lines">
 
 
+114
+115
+116
 117
 118
 119
@@ -760,13 +760,10 @@ return); on success returns a struct with the following
 154
 155
 156
-157
-158
-159
-160</pre>
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 117</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 114</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='get_silo_options identifier id'>get_silo_options</span> <span class='args identifier id'>args</span>
   <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:hostname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='symbol val'>:silo_path</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='symbol val'>:syslog_facility</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span>
@@ -829,7 +826,7 @@ return); on success returns a struct with the following
   <div class="discussion">
     <p>
 Without argument, return the group of the user running this process as a
-string. With argument PATH, a string, assume it is a readble filepath and
+string.  With argument PATH, a string, assume it is a readble filepath and
 return the group name who owns it as a string.
 </p>
 
@@ -844,16 +841,16 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
+188
+189
+190
 191
 192
 193
-194
-195
-196
-197</pre>
+194</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 191</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 188</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='group identifier id'>group</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
@@ -881,13 +878,13 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-163
-164
-165
-166</pre>
+160
+161
+162
+163</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 163</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 160</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath identifier id'>hashpath</span> <span class='name identifier id'>name</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -912,12 +909,12 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-169
-170
-171</pre>
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 169</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 166</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath_parent identifier id'>hashpath_parent</span> <span class='name identifier id'>name</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>2</span><span class='rbrack token'>]</span>
@@ -938,8 +935,8 @@ return the group name who owns it as a string.
 </p><div class="docstring">
   <div class="discussion">
     <p>
-We need to provide the base64 of the original binary md5 checksum; however
-we typically have only the hexstring. This funtion takes the hexstring,
+We need to provide the base64 of the original binary md5 checksum; however 
+we typically have only the hexstring.  This funtion takes the hexstring,
 packs it into the binary representation, then encodes that into a base64
 representation.
 </p>
@@ -955,13 +952,13 @@ representation.
       <pre class="lines">
 
 
-90
-91
-92
-93</pre>
+87
+88
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 90</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='hexstring identifier id'>hexstring</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='hexstring identifier id'>hexstring</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>32</span>
@@ -983,7 +980,7 @@ representation.
 </p><div class="docstring">
   <div class="discussion">
     <p>
-TODO: default pathname should be required - also, error messages here on
+TODO:  default pathname should be required - also, error messages here on
 missing yaml, etc
 </p>
 
@@ -1062,7 +1059,7 @@ missing yaml, etc
   <div class="discussion">
     <p>
 Without argument, give the name of the user running this process as a
-string. With argument PATH, a string, assume it is a readable filepath and
+string.  With argument PATH, a string, assume it is a readable filepath and
 return the user name who owns it as a string.
 </p>
 
@@ -1077,16 +1074,16 @@ return the user name who owns it as a string.
       <pre class="lines">
 
 
+175
+176
+177
 178
 179
 180
-181
-182
-183
-184</pre>
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 178</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 175</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -1110,10 +1107,7 @@ return the user name who owns it as a string.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-change to E{A-Z0-9}8_{A-Z0-9}6
-</p>
-
+    
 
   </div>
 </div>
@@ -1138,15 +1132,15 @@ change to E{A-Z0-9}8_{A-Z0-9}6
       <pre class="lines">
 
 
-60
-61
-62</pre>
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 60</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/utils.rb', line 57</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='valid_ieid_name? fid id'>valid_ieid_name?</span> <span class='string identifier id'>string</span>
-   <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/^E20\d{2}[0-1]\d[0-3]\d_[A-Z]{6}$/</span> <span class='question op'>?</span> <span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span>
+  <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/^E[A-Z0-9]{8}_[A-Z0-9]{6}$/</span> <span class='question op'>?</span> <span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1159,9 +1153,9 @@ change to E{A-Z0-9}8_{A-Z0-9}6
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:34 2010 by 
+  Generated on Thu Dec  2 14:52:44 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

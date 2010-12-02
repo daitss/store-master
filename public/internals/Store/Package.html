@@ -273,30 +273,6 @@ in practice; need to rethink chunking this up.&#8230;
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#datetime-instance_method" title="#datetime (instance method)">- (Object) <strong>datetime</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-Get basic DB data about a package.
-</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#delete-instance_method" title="#delete (instance method)">- (Object) <strong>delete</strong> </a>
     
 
@@ -355,7 +331,10 @@ delete tries to fail safe here, leaving orphans if necessary.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+Get basic DB data about a package.
+</p>
+</div></span>
   
 </li>
 
@@ -410,91 +389,7 @@ Package.new(name) should only be called internally.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#md5-instance_method" title="#md5 (instance method)">- (Object) <strong>md5</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#put_copy-instance_method" title="#put_copy (instance method)">- (Object) <strong>put_copy</strong>(io, metadata, remote_location) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#sha1-instance_method" title="#sha1 (instance method)">- (Object) <strong>sha1</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#size-instance_method" title="#size (instance method)">- (Object) <strong>size</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#type-instance_method" title="#type (instance method)">- (Object) <strong>type</strong> </a>
     
 
     
@@ -542,13 +437,13 @@ Package.new(name) should only be called internally
       <pre class="lines">
 
 
-17
-18
 19
-20</pre>
+20
+21
+22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 17</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 19</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='name identifier id'>name</span>
   <span class='@name ivar id'>@name</span>      <span class='assign token'>=</span> <span class='name identifier id'>name</span>
@@ -592,12 +487,12 @@ Returns the value of attribute dm_record
       <pre class="lines">
 
 
-13
-14
-15</pre>
+15
+16
+17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 15</span>
 
 <span class='def def kw'>def</span> <span class='dm_record identifier id'>dm_record</span>
   <span class='@dm_record ivar id'>@dm_record</span>
@@ -635,12 +530,12 @@ Returns the value of attribute name
       <pre class="lines">
 
 
-12
-13
-14</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 12</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 14</span>
 
 <span class='def def kw'>def</span> <span class='name identifier id'>name</span>
   <span class='@name ivar id'>@name</span>
@@ -671,7 +566,6 @@ Returns the value of attribute name
       <pre class="lines">
 
 
-45
 46
 47
 48
@@ -719,15 +613,10 @@ Returns the value of attribute name
 90
 91
 92
-93
-94
-95
-96
-97
-98</pre>
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 45</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span><span class='comma token'>,</span> <span class='pools identifier id'>pools</span>
 
@@ -738,12 +627,8 @@ Returns the value of attribute name
 
   <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span> <span class='assign token'>=</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='create identifier id'>create</span>
 
-  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='datetime identifier id'>datetime</span>  <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
   <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='ieid identifier id'>ieid</span>      <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:ieid</span><span class='rbrack token'>]</span>
-  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>       <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span>
   <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='name identifier id'>name</span>      <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
-  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='size identifier id'>size</span>      <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span>
-  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='type identifier id'>type</span>      <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span>
 
   <span class='locations identifier id'>locations</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>        <span class='comment val'># TODO: add events here</span>
 
@@ -761,13 +646,11 @@ Returns the value of attribute name
       <span class='begin begin kw'>begin</span>
         <span class='delete_copy identifier id'>delete_copy</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span>
       <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e2 identifier id'>e2</span>
-        <span class='hell identifier id'>hell</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; failure deleting copy at #{loc}: #{e2.message}&quot;</span>
+        <span class='hell identifier id'>hell</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; also, failure deleting copy at #{loc}: #{e2.message}&quot;</span>
       <span class='end end kw'>end</span>
     <span class='end end kw'>end</span>
-    <span class='raise identifier id'>raise</span> <span class='hell identifier id'>hell</span>
+    <span class='raise identifier id'>raise</span> <span class='e1 identifier id'>e1</span><span class='comma token'>,</span> <span class='hell identifier id'>hell</span>  <span class='comment val'># note that we re-raise the error that got us here - it might not be an internal server error</span>
   <span class='end end kw'>end</span>
-
-  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span>  <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:sha1</span><span class='rbrack token'>]</span>  <span class='comment val'># pick up data that put_copy added</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
     <span class='cane identifier id'>cane</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;DB error recording #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}&quot;</span>
@@ -775,10 +658,10 @@ Returns the value of attribute name
       <span class='begin begin kw'>begin</span>
         <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='delete_copy identifier id'>delete_copy</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span>
       <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e2 identifier id'>e2</span>
-        <span class='cane identifier id'>cane</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; failure deleting copy at #{loc}: #{e2.message}&quot;</span>
+        <span class='cane identifier id'>cane</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; also, failure deleting copy at #{loc}: #{e2.message}&quot;</span>
       <span class='end end kw'>end</span>
     <span class='end end kw'>end</span>
-    <span class='raise identifier id'>raise</span> <span class='cane identifier id'>cane</span>
+    <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='cane identifier id'>cane</span>
   <span class='end end kw'>end</span>
 
   <span class='pkg identifier id'>pkg</span>
@@ -823,12 +706,12 @@ Returns the value of attribute name
       <pre class="lines">
 
 
-22
-23
-24</pre>
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 22</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='name identifier id'>name</span>
   <span class='not not kw'>not</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -863,14 +746,14 @@ Find a previously saved package
       <pre class="lines">
 
 
-34
-35
 36
 37
-38</pre>
+38
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 34</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='name identifier id'>name</span>
   <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='name identifier id'>name</span>
@@ -908,12 +791,12 @@ in practice; need to rethink chunking this up.&#8230;
       <pre class="lines">
 
 
-28
-29
-30</pre>
+30
+31
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 30</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='names identifier id'>names</span>
   <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:name</span><span class='dot token'>.</span><span class='asc identifier id'>asc</span> <span class='rbrack token'>]</span> <span class='rparen token'>)</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='rbrace token'>}</span>
@@ -958,12 +841,12 @@ in practice; need to rethink chunking this up.&#8230;
       <pre class="lines">
 
 
-40
-41
-42</pre>
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 42</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='was_deleted? fid id'>was_deleted?</span> <span class='name identifier id'>name</span>
   <span class='not not kw'>not</span> <span class='DM constant id'>DM</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='false false kw'>false</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -981,43 +864,7 @@ in practice; need to rethink chunking this up.&#8230;
     
     
       <div class="method_details first">
-  <p class="signature first" id="datetime-instance_method">
-  
-    - (<tt>Object</tt>) <strong>datetime</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-Get basic DB data about a package
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-129</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 129</span>
-
-<span class='def def kw'>def</span> <span class='datetime identifier id'>datetime</span><span class='semicolon token'>;</span> <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='datetime identifier id'>datetime</span>  <span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="delete-instance_method">
+  <p class="signature first" id="delete-instance_method">
   
     - (<tt>Object</tt>) <strong>delete</strong> 
   
@@ -1038,7 +885,7 @@ delete tries to fail safe here, leaving orphans if necessary
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="DriveByError.html" title="Store::DriveByError (class)">DriveByError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="DataBaseError.html" title="Store::DataBaseError (class)">DataBaseError</a></span></tt>)</span>
       
       
       
@@ -1053,28 +900,28 @@ delete tries to fail safe here, leaving orphans if necessary
       <pre class="lines">
 
 
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
 143
 144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157</pre>
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 143</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 131</span>
 
 <span class='def def kw'>def</span> <span class='delete identifier id'>delete</span>
   <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='extant identifier id'>extant</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;DB error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+  <span class='raise identifier id'>raise</span>  <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
 
   <span class='errors identifier id'>errors</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   <span class='locations identifier id'>locations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='loc identifier id'>loc</span><span class='bitor op'>|</span> 
@@ -1106,6 +953,19 @@ delete tries to fail safe here, leaving orphans if necessary
       <pre class="lines">
 
 
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
 161
 162
 163
@@ -1115,16 +975,10 @@ delete tries to fail safe here, leaving orphans if necessary
 167
 168
 169
-170
-171
-172
-173
-174
-175
-176</pre>
+170</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 161</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 148</span>
 
 <span class='def def kw'>def</span> <span class='delete_copy identifier id'>delete_copy</span> <span class='remote_location identifier id'>remote_location</span>
 
@@ -1135,11 +989,18 @@ delete tries to fail safe here, leaving orphans if necessary
 
   <span class='forwarded_request identifier id'>forwarded_request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Delete constant id'>Delete</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='uri identifier id'>uri</span><span class='dot token'>.</span><span class='request_uri identifier id'>request_uri</span><span class='rparen token'>)</span>
   <span class='response identifier id'>response</span> <span class='assign token'>=</span> <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='forwarded_request identifier id'>forwarded_request</span><span class='rparen token'>)</span>
+  <span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
 
-  <span class='if if kw'>if</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
+  <span class='if if kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
     <span class='err identifier id'>err</span>   <span class='assign token'>=</span> <span class='dstring node'>&quot;#{response.code} #{response.message} was returned for a failed delete of the package copy at #{remote_location}&quot;</span>
     <span class='err identifier id'>err</span>  <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; #{response.body}&quot;</span> <span class='if if_mod kw'>if</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='body identifier id'>body</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
-    <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='if if kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>500</span>   
+      <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>400</span> 
+      <span class='raise identifier id'>raise</span> <span class='Silo400Error constant id'>Silo400Error</span><span class='comma token'>,</span> <span class='err identifier id'>err</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>    
+      <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='end end kw'>end</span>          
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -1155,18 +1016,33 @@ delete tries to fail safe here, leaving orphans if necessary
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Get basic DB data about a package
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-130</pre>
+119
+120
+121</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 130</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 119</span>
 
-<span class='def def kw'>def</span> <span class='ieid identifier id'>ieid</span><span class='semicolon token'>;</span>     <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='ieid identifier id'>ieid</span>      <span class='end end kw'>end</span>
+<span class='def def kw'>def</span> <span class='ieid identifier id'>ieid</span>
+  <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='ieid identifier id'>ieid</span>
+<span class='end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -1186,41 +1062,20 @@ delete tries to fail safe here, leaving orphans if necessary
       <pre class="lines">
 
 
-136
-137
-138</pre>
+123
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 136</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 123</span>
 
 <span class='def def kw'>def</span> <span class='locations identifier id'>locations</span>
-  <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cp identifier id'>cp</span><span class='bitor op'>|</span> <span class='cp identifier id'>cp</span><span class='dot token'>.</span><span class='store_location identifier id'>store_location</span> <span class='rbrace token'>}</span>  <span class='comment val'># TODO: check that if there are no copies, it is [] and not nil here</span>
+  <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span> <span class='b identifier id'>b</span><span class='dot token'>.</span><span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span> <span class='cmp op'>&lt;=&gt;</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cp identifier id'>cp</span><span class='bitor op'>|</span> <span class='cp identifier id'>cp</span><span class='dot token'>.</span><span class='store_location identifier id'>store_location</span> <span class='rbrace token'>}</span>
+
+  <span class='comment val'># TODO: check that if there are no copies, it is [] and not nil here</span>
 <span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="md5-instance_method">
-  
-    - (<tt>Object</tt>) <strong>md5</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-131</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 131</span>
-
-<span class='def def kw'>def</span> <span class='md5 identifier id'>md5</span><span class='semicolon token'>;</span>      <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>       <span class='end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -1240,6 +1095,12 @@ delete tries to fail safe here, leaving orphans if necessary
       <pre class="lines">
 
 
+172
+173
+174
+175
+176
+177
 178
 179
 180
@@ -1291,10 +1152,11 @@ delete tries to fail safe here, leaving orphans if necessary
 226
 227
 228
-229</pre>
+229
+230</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 178</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 172</span>
 
 <span class='def def kw'>def</span> <span class='put_copy identifier id'>put_copy</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span><span class='comma token'>,</span> <span class='remote_location identifier id'>remote_location</span>
 
@@ -1310,11 +1172,18 @@ delete tries to fail safe here, leaving orphans if necessary
   <span class='forwarded_request identifier id'>forwarded_request</span><span class='dot token'>.</span><span class='initialize_http_header identifier id'>initialize_http_header</span><span class='lparen token'>(</span><span class='lbrace token'>{</span> <span class='string val'>&quot;Content-MD5&quot;</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;Content-Length&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>&quot;Content-Type&quot;</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
 
   <span class='response identifier id'>response</span> <span class='assign token'>=</span> <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='forwarded_request identifier id'>forwarded_request</span><span class='rparen token'>)</span>
+  <span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
 
-  <span class='if if kw'>if</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
+  <span class='if if kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
     <span class='err identifier id'>err</span>   <span class='assign token'>=</span> <span class='dstring node'>&quot;#{response.code} #{response.message} was returned for a failed forward of package to #{remote_location}&quot;</span>
-    <span class='err identifier id'>err</span>  <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; body text: #{response.body}&quot;</span> <span class='if if_mod kw'>if</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='body identifier id'>body</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
-    <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='err identifier id'>err</span>  <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; message was #{response.body}&quot;</span> <span class='if if_mod kw'>if</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='body identifier id'>body</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+    <span class='if if kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>500</span>   
+      <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>400</span> 
+      <span class='raise identifier id'>raise</span> <span class='Silo400Error constant id'>Silo400Error</span><span class='comma token'>,</span> <span class='err identifier id'>err</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>    
+      <span class='raise identifier id'>raise</span> <span class='err identifier id'>err</span>
+    <span class='end end kw'>end</span>          
   <span class='end end kw'>end</span>
 
   <span class='comment val'># Example XML document returned from PUT:    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
@@ -1354,89 +1223,14 @@ delete tries to fail safe here, leaving orphans if necessary
 </table>
 </div>
     
-      <div class="method_details ">
-  <p class="signature " id="sha1-instance_method">
-  
-    - (<tt>Object</tt>) <strong>sha1</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-132</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 132</span>
-
-<span class='def def kw'>def</span> <span class='sha1 identifier id'>sha1</span><span class='semicolon token'>;</span>     <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span>      <span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="size-instance_method">
-  
-    - (<tt>Object</tt>) <strong>size</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-133</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 133</span>
-
-<span class='def def kw'>def</span> <span class='size identifier id'>size</span><span class='semicolon token'>;</span>     <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='size identifier id'>size</span>      <span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="type-instance_method">
-  
-    - (<tt>Object</tt>) <strong>type</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-134</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/package.rb', line 134</span>
-
-<span class='def def kw'>def</span> <span class='type identifier id'>type</span><span class='semicolon token'>;</span>     <span class='dm_record identifier id'>dm_record</span><span class='dot token'>.</span><span class='type identifier id'>type</span>      <span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
   </div>
 
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:35 2010 by 
+  Generated on Thu Dec  2 14:52:50 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

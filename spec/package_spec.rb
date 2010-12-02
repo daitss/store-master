@@ -53,6 +53,47 @@ def resource_exists? url
   $? == 0
 end
 
+
+# size of longest common substring from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_subsequence
+
+def lcs_size(s1, s2)
+  num=Array.new(s1.size){Array.new(s2.size)}
+  len,ans=0 
+  s1.scan(/./).each_with_index do |l1,i |
+    s2.scan(/./).each_with_index do |l2,j |
+ 
+      unless l1==l2
+        num[i][j]=0
+      else
+        (i==0 || j==0)? num[i][j]=1 : num[i][j]=1 + num[i-1][j-1]
+        len = ans = num[i][j] if num[i][j] > len
+      end
+    end
+  end 
+  ans
+end
+
+def index_of_pool_that_best_matches_url(pools, url)
+
+  # get a list of [ index, length ] pairs, where length is the size of
+  # the longest-common-substring computed between the pool location
+  # and the url passed as argument.
+
+  pool_ranks    = []
+  pools.each_with_index { |p, i| pool_ranks.push [ i, lcs_size(p.put_location, url) ] }
+
+  # sort list by length longest common substring, largest first - so:
+  # [ [0, 23], [1, 28], [3, 0] ]    =>     [ [1, 28], [0, 23], [3, 0] ]
+
+  pool_ranks.sort! { |a, b|   b[1] <=> a[1] }  
+
+  # return the pool index that had the best (longest) match:
+  pool_ranks[0][0]
+end
+
+
+
+
 @@to_delete = []
 
 @@silos_available = nil
@@ -139,15 +180,41 @@ describe Store::Package do
     end    
   end
 
-  it "should list all of the package names we've stored" do
-    Store::Package.names.each do |name|
-      @@to_delete.include?(name).should == true
-    end
+
+
+  it "should order the list of locations for a package based on the pool's read_preference" do
+    nimby
+
+    # setup some package data
+
+    pools = Store::Pool.list_active
+    @@name   = Store::Reservation.new(ieid).name
+    pkg = Store::Package.create(sample_tarfile, sample_metadata(:name => @@name), pools)
+    pkg.name.should == @@name
+    @@to_delete.push @@name
+
+    pools.length.should >= 2  # test won't mean much with out at least two pools
+
+    # adjust preferences - higher value means more preferred - and check to see
+    # if that forces the pool to the top of the list
+
+    pools.each { |p| p.read_preference = 0 }
+
+    pools[0].read_preference = 10
+    index_of_pool_that_best_matches_url(pools, pkg.locations.shift).should == 0
+
+    pools[1].read_preference = 20
+    index_of_pool_that_best_matches_url(pools, pkg.locations.shift).should == 1
+
+  end
+
+  it "should list all of the package names we've stored" do    
+    (Store::Package.names - @@to_delete).should == []
+    (@@to_delete - Store::Package.names).should == []
   end
 
 
   it "should allow us to delete packages" do
-
     # actual silo locations 
 
     locations = []
@@ -162,6 +229,6 @@ describe Store::Package do
       pkg.delete
       Store::Package.exists?(name).should == false
     end
-
   end
+
 end

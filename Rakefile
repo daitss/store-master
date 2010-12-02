@@ -6,7 +6,7 @@ require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
 
-require 'bundler/setup'             # We need this for remote deploys where we want to run the spec tests.
+#  require 'bundler/setup'
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')

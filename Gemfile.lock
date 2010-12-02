@@ -1,9 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.2.1)
-    builder (2.1.2)
-    ci_reporter (1.6.2)
+    addressable (2.2.2)
+    builder (3.0.0)
+    ci_reporter (1.6.3)
       builder (>= 2.1.2)
     data_mapper (1.0.2)
       dm-aggregates (= 1.0.2)
@@ -60,16 +60,17 @@ GEM
     fastercsv (1.5.3)
     json_pure (1.4.6)
     libxml-ruby (1.1.4)
-    log4r (1.1.8)
+    log4r (1.1.9)
     rack (1.2.1)
     rcov (0.9.9)
-    sinatra (1.0)
-      rack (>= 1.0)
+    sinatra (1.1.0)
+      rack (~> 1.1)
+      tilt (~> 1.1)
     stringex (1.1.0)
-    sys-filesystem (0.3.3)
+    sys-filesystem (0.3.4)
     tilt (1.1)
     uuidtools (2.1.1)
-    yard (0.6.1)
+    yard (0.6.3)
 
 PLATFORMS
   ruby
@@ -86,4 +87,4 @@ DEPENDENCIES
   sinatra (>= 1.0.0)
   sys-filesystem (>= 0.3.2)
   tilt (>= 1.0.1)
-  yard (>= 0.6.0)
+  yard (>= 0.6.3)

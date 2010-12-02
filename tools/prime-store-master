@@ -15,41 +15,51 @@ ENV['TZ'] = 'UTC'  # ?
 
 # Our data - we don't use field 5 here:
 #
-# E20051213_AAAAAA	5541877401c9195db13337be810a088d	028d9ecae596c73e6917dd38be3f6561ac42f4f2	6161367040	http://silos.ripple.fcla.edu/001/data/E20051213_AAAAAA	2008-05-23 16:54:50
-# E20060108_AAAAAA	f144338b97a12dcb8a45893e5f046b2b	a045b847770239f9e03e9d855fdc3440759cf5dc	9851709440	http://silos.ripple.fcla.edu/001/data/E20060108_AAAAAA	2008-05-24 03:29:18
+# E20051213_AAAAAA	http://silos.darchive.fcla.edu/001/data/E20051213_AAAAAA
+# E20060108_AAAAAA	http://silos.tarchive.fcla.edu/003/data/E20060108_AAAAAA
 
 
-
-loc   = 'http://silos.ripple.fcla.edu/001/data/'
+loc   = 'http://silos.darchive.fcla.edu/'
 pool1 =  Store::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
-
-loc   = 'http://silos.ripple.fcla.edu/002/data/'
+loc   = 'http://silos.tarchive.fcla.edu/'
 pool2 =  Store::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
 
+pool2.read_preference = 10
+
+puts pool1.put_location
+puts pool2.put_location
 
 
 while line = STDIN.gets do
 
-  ieid, md5, sha1, size, loc, date = line.strip.split(/\s+/, 6)
+  ieid, loc = line.strip.split(/\s+/, 6)
+
   unless ieid =~ /^E2/
     STDERR.puts "Unexpected line '#{line.strip}', skipping"
     next
   end
 
-  if pkg = DM::Package.first(:name => ieid)
-    if not pkg.destroy 
-      STDERR.puts "Unable to remove pre-exising package record for name '#{ieid}', skipping"
-      next
-    end
+  # if pkg = DM::Package.first(:name => ieid)
+  #   if not pkg.destroy 
+  #     STDERR.puts "Unable to remove pre-exising package record for name '#{ieid}', skipping"
+  #     next
+  #   end
+  # end
+
+  if loc =~ /#{pool1.put_location}/
+    pool = pool1
+  elsif loc =~ /#{pool2.put_location}/
+    pool = pool2
+  else
+    STDERR.puts "Can't find pool for location '#{loc}', skipping."
+    next
   end
 
-
-  pkg  = DM::Package.create(:ieid => ieid, :name => ieid, :md5 => md5, :sha1 => sha1, :size => size)
-  pkg.copies << DM::Copy.create(:store_location => "http://silos.ripple.fcla.edu/001/data/#{ieid}", :pool => pool1.dm_record)
-  pkg.copies << DM::Copy.create(:store_location => "http://silos.ripple.fcla.edu/002/data/#{ieid}", :pool => pool2.dm_record)
+  pkg  = DM::Package.first_or_create(:ieid => ieid, :name => ieid)
+  pkg.copies << DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
 
   if not pkg.save
-    STDERR.puts "Error saving #{ieid}"
+    STDERR.puts "Error saving #{ieid}: " + pkg.errors.map{ |e| e.to_s }.join("\n -- ")
   end
 
 end

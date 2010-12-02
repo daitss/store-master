@@ -84,9 +84,9 @@ describe Store::Pool do
     pools = Store::Pool.list_active  # the first shall be last, and the last shall be first
 
     pools.length.should == 3
-    pools[0].put_location.should == 'http://third.example.com/packages/'
-    pools[1].put_location.should == 'http://second.example.com/packages/'
-    pools[2].put_location.should == 'http://zero.example.com/packages/'
+    pools[0].put_location.should == 'http://third.example.com/packages/'    # 3
+    pools[1].put_location.should == 'http://second.example.com/packages/'   # 2
+    pools[2].put_location.should == 'http://zero.example.com/packages/'     # 0
   end
 
 

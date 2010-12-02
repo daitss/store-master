@@ -86,14 +86,14 @@ Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
 </p>
 <p>
 Logging web service actions using using log4r with a Rack::CommonLogger
-tie-in.
+tie-in. 
 </p>
 <p>
 Example use:
 </p>
 <pre class="code">
  <span class='require identifier id'>require</span> <span class='string val'>'logger'</span>
-
+ 
  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='logname identifier id'>logname</span>  <span class='assign token'>=</span> <span class='string val'>&quot;XmlResolution&quot;</span>
  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='string val'>&quot;myfile.log&quot;</span>
  <span class='dot3 op'>...</span>
@@ -108,7 +108,7 @@ Example use:
  <span class='end end kw'>end</span>
 </pre>
 <p>
-This might produce in &quot;myfile.log&quot; the following:
+This might produce in &#8220;myfile.log&#8221; the following:
 </p>
 <pre class="code">
   <span class='WARN constant id'>WARN</span> <span class='XmlResolution constant id'>XmlResolution</span><span class='colon op'>:</span> <span class='string val'>&quot;GET /tmp&quot;</span> <span class='can identifier id'>can</span><span class='string val'>'t create temporary file for request.
@@ -116,9 +116,9 @@ This might produce in &quot;myfile.log&quot; the following:
 </span></pre>
 <p>
 The env variable is a hash, typically you&#8217;ll use @env from the
-Sinatra environment. Anything that provides the PEP 333 standard set of CGI
-environment variables is best (HTTP_SERVER, PATH_INFO, etc), but an empty
-hash will work in a pinch (and is the default).
+Sinatra environment.  Anything that provides the PEP 333 standard set of
+CGI environment variables is   best (HTTP_SERVER, PATH_INFO, etc), but an
+empty hash will work in a pinch (and is the default).
 </p>
 <p>
 Here&#8217;s an example of using a Logger object to direct
@@ -126,7 +126,7 @@ Rack::CommonLogger to write to both a file and syslog.
 </p>
 <pre class="code">
  <span class='require identifier id'>require</span> <span class='string val'>'logger'</span>
-
+ 
  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='logname identifier id'>logname</span>  <span class='assign token'>=</span> <span class='string val'>'XmlResolution'</span>
  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span> <span class='assign token'>=</span> <span class='string val'>'/tmp/myfile.log'</span>
  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='facility identifier id'>facility</span> <span class='assign token'>=</span> <span class='symbol val'>:LOG_LOCAL2</span>
@@ -148,9 +148,9 @@ Rack::CommonLogger to write to both a file and syslog.
   <div class="discussion">
     <p>
 This class variable lets us know if is safe to proceed; a Log4r logging
-object has been set up and registered. It must be set by a call to
+object has been set up and registered.  It must be set by a call to
 Logger.initialize_maybe - which one of the class initializers -
-Logger.filename=, Logger.facility= or Logger.stderr - will take care of.
+Logger.filename=, Logger.facility= or Logger.stderr -  will take care of.
 </p>
 
 
@@ -424,7 +424,7 @@ Logger.warn MESSAGE, [ ENV ].
   
     <span class="summary_desc"><div class='inline'><p>
 While we normally use the class methods to write our own log entries, we
-also have an object we can instantiate for Rack::CommonLogger to use.
+also have an object we can instantiate for Rack::CommonLogger to  use.
 </p>
 </div></span>
   
@@ -472,7 +472,7 @@ log.write MESSAGE.
   <div class="discussion">
     <p>
 While we normally use the class methods to write our own log entries, we
-also have an object we can instantiate for Rack::CommonLogger to use. For
+also have an object we can instantiate for Rack::CommonLogger to  use. For
 example:
 </p>
 <pre class="code">
@@ -588,11 +588,11 @@ A typical syslog.conf entry using :LOG_LOCAL2 might look like this:
 <p>
 In the case of Mac OSX Snow Leopard, the above syslog.conf entry means that
 a Logger.error(message) will get logged to xmlresolution.error.log,
-xmlresolution.warn.log, and xmlresolution.info.log. Logger.warn(message)
-gets logged to xmlresolution.warn.log and xmlresolution.info.log.
-Logger.info(message) will go to xmlresolution.info.log. Other syslog
-deamons on other systems and alternative configurations behave
-significantly differently. But that&#8217;s not your problem.
+xmlresolution.warn.log, and xmlresolution.info.log.  Logger.warn(message)
+gets logged to xmlresolution.warn.log and xmlresolution.info.log. 
+Logger.info(message) will go to xmlresolution.info.log.  Other syslog
+deamons on other systems and alternative configurations  behave
+significantly differently.  But that&#8217;s not your problem.
 </p>
 
 
@@ -782,7 +782,7 @@ anything else is done.
 prefix ENV
 </p>
 <p>
-Create an apache-style &quot;METHOD /uri&quot; string, if possible, from
+Create an apache-style &#8220;METHOD /uri&#8221;  string, if possible, from
 the environment ENV. ENV is expected to be @env from a rack application,
 </p>
 <p>
@@ -994,9 +994,9 @@ write method on it. See the Logger#new method for an example of its use.
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:32 2010 by 
+  Generated on Thu Dec  2 14:52:54 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>

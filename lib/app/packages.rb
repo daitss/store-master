@@ -98,11 +98,6 @@ get '/packages/?' do
       pkg = Package.lookup name
       xml.package(:name     => name,
                   :ieid     => pkg.ieid,
-                  :md5      => pkg.md5,
-                  :sha1     => pkg.sha1,
-                  :size     => pkg.size,
-                  :type     => pkg.type,
-                  :time     => pkg.datetime.to_s,
                   :location => web_location("/packages/#{name}"))
     end
   }

@@ -153,7 +153,7 @@ configuration file + key technique;.
 </p><div class="docstring">
   <div class="discussion">
     <p>
-Recreate tables for test. We also keep mysql.ddl and psql.ddl for creating
+Recreate tables for test.  We also keep mysql.ddl and psql.ddl for creating
 the tables, which gives us a bit more flexibility (e.g., cascading deletes)
 </p>
 
@@ -168,16 +168,16 @@ the tables, which gives us a bit more flexibility (e.g., cascading deletes)
       <pre class="lines">
 
 
-58
-59
 60
 61
 62
 63
-64</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/dm.rb', line 58</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/dm.rb', line 60</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='recreate_tables identifier id'>recreate_tables</span>
   <span class='Reservation constant id'>Reservation</span><span class='dot token'>.</span><span class='auto_migrate! fid id'>auto_migrate!</span>
@@ -230,7 +230,6 @@ configuration file + key technique;
       <pre class="lines">
 
 
-17
 18
 19
 20
@@ -266,10 +265,12 @@ configuration file + key technique;
 50
 51
 52
-53</pre>
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/dm.rb', line 17</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store/dm.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
   <span class='oops identifier id'>oops</span> <span class='assign token'>=</span> <span class='string val'>&quot;DB setup can't&quot;</span>
@@ -300,6 +301,7 @@ configuration file + key technique;
 
   <span class='begin begin kw'>begin</span>
     <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:default</span><span class='comma token'>,</span> <span class='connection_string identifier id'>connection_string</span><span class='rparen token'>)</span>
+    <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='finalize identifier id'>finalize</span>
     <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>  <span class='comment val'># if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.</span>
     <span class='return return kw'>return</span> <span class='dm identifier id'>dm</span>
     
@@ -319,9 +321,9 @@ configuration file + key technique;
 </div>
     
     <div id="footer">
-  Generated on Wed Oct 27 15:46:34 2010 by 
+  Generated on Thu Dec  2 14:52:44 2010 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.1 (ruby-1.8.7).
+  0.6.0 (ruby-1.8.7).
 </div>
 
   </body>
