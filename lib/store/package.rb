@@ -12,20 +12,22 @@ module Store
   class Package
 
     attr_reader   :name
-    attr_accessor :dm_record
+    attr_accessor :dm_record, :md5, :size, :type, :sha1, :etag, :locations, :ieid
 
-    # Package.new(name) should only be called internally
+    # Package.new(name) really meant to only be called internally.  Use lookup or create
 
     def initialize name
       @name      = name
       @dm_record = nil
+      @locations = []
     end
 
     def self.exists? name
       not DM::Package.first(:name => name, :extant => true).nil?
     end
 
-    # TODO: This next is likely to result in such a long list as to be unusable in practice; need to rethink chunking this up....
+    # TODO: This next is likely to result in such a long list as to be unusable in practice; need to rethink chunking this up,
+    # perhaps with yield
 
     def self.names
       DM::Package.all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
@@ -36,7 +38,10 @@ module Store
     def self.lookup name
       pkg = Package.new name
       pkg.dm_record = DM::Package.first(:name => name, :extant => true)
-      pkg.dm_record.nil? ? nil : pkg
+      return nil if pkg.dm_record.nil?
+      pkg.ieid = pkg.dm_record.ieid
+      pkg.locations = pkg.dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+      pkg
     end
 
     def self.was_deleted? name
@@ -46,47 +51,44 @@ module Store
     def self.create io, metadata, pools
 
       pkg = Package.new metadata[:name]
+      pkg.ieid = metadata[:ieid]
 
       raise "Can't create new package #{name}, it already exists"                   if Package.exists? name
       raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted?(name)
 
       pkg.dm_record = DM::Package.create
-
-      pkg.dm_record.ieid      = metadata[:ieid]
-      pkg.dm_record.name      = metadata[:name]
-
-      locations = []        # TODO: add events here
+      pkg.dm_record.ieid = pkg.ieid
+      pkg.dm_record.name = pkg.name
 
       begin
         pools.each do |pool|
           loc = pool.put_location.gsub(%r{/+$}, '')  +  '/'  +  pkg.name
           pkg.dm_record.copies << DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
-
-          pkg.put_copy(io, metadata, loc)  # N.B. put_copy adds stuff to metadata
-          locations << loc
+          ### TODO: record events here? transact?
+          pkg.put_copy(io, metadata, loc)
         end
       rescue => e1
-        hell = "Failure making copy of #{pkg.name}: #{e1.message}"
-        locations.each do |loc| 
+        msg = "Failure storing copy of #{pkg.name}: #{e1.message}"
+        pkg.locations.each do |loc| 
           begin
             delete_copy(loc)
           rescue => e2
-            hell += "; also, failure deleting copy at #{loc}: #{e2.message}"
+            msg += "; also, failure deleting copy at #{loc}: #{e2.message}"
           end
         end
-        raise e1, hell  # note that we re-raise the error that got us here - it might not be an internal server error
+        raise e1, msg # re-raise error
       end
 
       if not pkg.dm_record.save
-        cane = "DB error recording #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}"
-        locations.each do |loc| 
+        msg = "DB error recording #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}"
+        pkg.locations.each do |loc| 
           begin
             pkg.delete_copy(loc)
-          rescue => e2
-            cane += "; also, failure deleting copy at #{loc}: #{e2.message}"
+          rescue => e
+            msg += "; also, failure deleting copy at #{loc}: #{e.message}"
           end
         end
-        raise DataBaseError, cane
+        raise DataBaseError, msg
       end
 
       pkg
@@ -113,18 +115,6 @@ module Store
     #   pkg
     # end
 
-
-    # Get basic DB data about a package
-         
-    def ieid
-      dm_record.ieid
-    end
-
-    def locations
-      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
-
-      # TODO: check that if there are no copies, it is [] and not nil here
-    end
 
     # delete tries to fail safe here, leaving orphans if necessary
       
@@ -171,18 +161,20 @@ module Store
 
     def put_copy io, metadata, remote_location
 
-      uri = URI.parse(remote_location)
+      uri  = URI.parse(remote_location)
       http = Net::HTTP.new(uri.host, uri.port)
+
       http.open_timeout = 5
       http.read_timeout = 60 * 30  # thirty minute timeout for PUTs
 
       io.rewind if io.respond_to?('rewind')
-    
+
       forwarded_request = Net::HTTP::Put.new(uri.request_uri)
       forwarded_request.body_stream = io
-      forwarded_request.initialize_http_header({ "Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size], "Content-Type"   => metadata[:type], })
+      forwarded_request.initialize_http_header({ "Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
 
       response = http.request(forwarded_request)
+
       status = response.code.to_i
 
       if status >= 300
@@ -196,6 +188,7 @@ module Store
           raise err
         end          
       end
+
     
       # Example XML document returned from PUT:    <?xml version="1.0" encoding="UTF-8"?>
       #                                            <created type="application/x-tar" 
@@ -221,13 +214,21 @@ module Store
       # check the md5, size, type vs. our request to that returned by remotely created copy.
 
       raise "Error storing to #{remote_location} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
-      raise "Error storing to #{remote_location} - size mismatch"  if returned_data["size"] != metadata[:size]
+      raise "Error storing to #{remote_location} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
       raise "Error storing to #{remote_location} - type mismatch"  if returned_data["type"] != metadata[:type]
 
-      metadata[:etag]     = returned_data["etag"]
-      metadata[:location] = returned_data["location"]   # the location it was actually store to
-      metadata[:sha1]     = returned_data["sha1"]
+      @md5  = returned_data["md5"]
+      @sha1 = returned_data["sha1"]
+      @type = returned_data["type"]
+      @size = returned_data["size"].to_i
+      @etag = returned_data["etag"]
+      @locations << returned_data["location"]
     end
 
   end # of class Package
 end  # of module Store
+
+
+
+# curl -sv -d ieid=E000019QB_BZ81F4  http://localhost:2000/reserve/
+# curl -sv -X PUT -H "Content-Type: application/x-tar" -H "Content-MD5: `md5-base64 E20080805_AAAAAM`" --upload-file E20080805_AAAAAM http://localhost:2000/packages/E000019QB_BZ81F4.003

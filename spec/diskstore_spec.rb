@@ -121,7 +121,7 @@ describe Store::DiskStore do
     name = some_name
     @diskstore.put(name, some_data, 'my-type')
     @diskstore.last_access(name).class.should == DateTime
-    (@diskstore.last_access(name) - DateTime.now).should be_close(0, 0.0001)
+    (@diskstore.last_access(name) - DateTime.now).should be_within(0.0001).of(0)
   end
 
   it "should have date for an object" do
@@ -148,7 +148,7 @@ describe Store::DiskStore do
     data = "some data!"
     @diskstore.put name, data, 'my-type'
     t = @diskstore.datetime(name)
-    (DateTime.now - t).should be_close(0, 0.0001)
+    (DateTime.now - t).should be_within(0.0001).of(0)
   end
     
   it "should enumerate all of the names of the objects stored" do

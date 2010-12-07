@@ -81,7 +81,7 @@ share_examples_for "DataMapper Package class using any database" do
     ev2.note.should    == 'This is a test'
     ev2.outcome.should == true               # default value
 
-    (DateTime.now - ev2.datetime).should be_close(0, 0.0001)
+    (DateTime.now - ev2.datetime).should be_within(0.0001).of(0)
   end
 
   it "should let us create pools with differing read preferences, and order them " do
@@ -132,8 +132,8 @@ share_examples_for "DataMapper Package class using any database" do
     pkg2.copies.map { |elt| elt.store_location }.include?(foo).should == true
     pkg2.copies.map { |elt| elt.store_location }.include?(bar).should == true
 
-    (DateTime.now - pkg2.copies[0].datetime).should be_close(0, 0.0001)   # default time
-    (copy2time - pkg2.copies[1].datetime).should be_close(0, 0.0001)      # spec
+    (DateTime.now - pkg2.copies[0].datetime).should  be_within(0.0001).of(0)   # default time
+    (copy2time - pkg2.copies[1].datetime).should  be_within(0.0001).of(0)      # spec
   end
 
   it "should not let us create copies within the same pool for a given package" do

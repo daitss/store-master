@@ -36,7 +36,11 @@ put '/packages/:name' do |name|
 
   ### TODO: *number* of pools to store needs to be checked against a configuration variable... <=
 
-  pkg = Package.create(request.body, { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }, pools)
+  # Package.create augments this with sha1, etag, others (TODO: make the new stuff methods instead in package.rb)
+
+  metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
+
+  pkg = Package.create(request.body, metadata, pools)
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
@@ -45,13 +49,13 @@ put '/packages/:name' do |name|
   xml.instruct!(:xml, :encoding => 'UTF-8')
   xml.created(:ieid     => pkg.ieid,
               :location => this_resource,
-              :md5      => pkg.md5,
               :name     => pkg.name,
+              :md5      => pkg.md5,
               :sha1     => pkg.sha1,
               :size     => pkg.size,
-              :time     => pkg.datetime,
-              :type     => pkg.type)
-  xml.target!  
+              :type     => pkg.type
+        )
+  xml.target!
 end
 
 # Deletes a package.

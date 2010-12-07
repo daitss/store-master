@@ -6,6 +6,8 @@ require 'store/pool'
 require 'store/reservation'
 require 'fileutils'
 require 'spec_helpers'
+require 'digest/md5'
+require 'digest/sha1'
 
 
 # Note that failing tests can leave orphaned junk on the silos that will need to bne cleaned
@@ -24,13 +26,12 @@ def active_silos
   # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
-  [ 'http://storage.local/a/data/', 'http://storage.local/b/data/' ]
+  [ 'http://storage.local:2001/a/data/', 'http://storage.local:2001/b/data/' ]
 end
 
 @@IEID = ieid()
 
 def ieid
-  # 'E20080805_AAAAAM'
   @@IEID
 end
 
@@ -42,17 +43,18 @@ def sample_tarfile
   File.open sample_tarfile_path
 end
 
-def sample_metadata more = {}
-  md = { :ieid => ieid, :type => 'application/x-tar', :size => '6031360', :md5 => '32e2ce3af2f98a115e121285d042c9bd' }
-  more.each { |k, v| md[k] = v }
-  md
+@@MD5  = Digest::MD5.hexdigest(sample_tarfile.read)
+@@SHA1 = Digest::SHA1.hexdigest(sample_tarfile.read)
+@@SIZE = File.stat(sample_tarfile_path).size
+
+def sample_metadata name
+  { :ieid => ieid, :type => 'application/x-tar', :size => @@SIZE, :md5 => @@MD5, :name => name }
 end
 
 def resource_exists? url
   `curl -s #{url} >& /dev/null`
   $? == 0
 end
-
 
 # size of longest common substring from http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_subsequence
 
@@ -92,9 +94,7 @@ def index_of_pool_that_best_matches_url(pools, url)
 end
 
 
-
-
-@@to_delete = []
+@@all_package_names = []
 
 @@silos_available = nil
 
@@ -114,8 +114,6 @@ def nimby
     pending "No active silos are available; can't run this test"
   end
 end
-
-#### TODO: let datamapper folks know that URL validation doesn't accept dotted quads or localhost.
 
 describe Store::Package do
 
@@ -138,48 +136,51 @@ describe Store::Package do
   it "should let us create a package" do
     nimby
 
-    @@name   = Store::Reservation.new(ieid).name
-    metadata = sample_metadata(:name => @@name)
-    io       = sample_tarfile
+    name   = Store::Reservation.new(ieid).name
+    metadata = sample_metadata(name)
 
+    io  = sample_tarfile
     pkg = Store::Package.create(io, metadata, Store::Pool.list_active)
-    pkg.name.should == @@name
+    pkg.name.should == name
+    pkg.md5.should   == @@MD5
+    pkg.sha1.should  == @@SHA1
+    pkg.size.should  == @@SIZE
 
-    @@to_delete.push @@name
+    @@all_package_names.push name
   end
 
   it "should let us determine that a recorded package exists" do
     nimby
-    Store::Package.exists?(@@name).should == true
+    last_saved_package = @@all_package_names[-1]
+    Store::Package.exists?(last_saved_package).should == true
   end
+
 
   it "should let us retrieve a saved package" do
     nimby
-    pkg = Store::Package.lookup(@@name)
-    pkg.name.should == @@name
+    last_saved_package = @@all_package_names[-1]
+    pkg = Store::Package.lookup(last_saved_package)
+    pkg.name.should == last_saved_package
   end
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { Store::Package.create(sample_tarfile, sample_metadata(:name => @@name), Store::Pool.list_active) }.should raise_error
+    lambda { Store::Package.create(sample_tarfile, sample_metadata(name), Store::Pool.list_active) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
-    res = Store::Reservation.new(ieid);  @@to_delete.push res.name
-    pkg = Store::Package.create(sample_tarfile, sample_metadata(:name => res.name), Store::Pool.list_active)
+    res = Store::Reservation.new(ieid);  @@all_package_names.push res.name
+    pkg = Store::Package.create(sample_tarfile, sample_metadata(res.name), Store::Pool.list_active)
 
-    locs = pkg.locations
+    pkg.locations.length.should == active_silos.length
 
-    locs.length.should == active_silos.length
-
-    locs.each do |copy| 
+    pkg.locations.each do |copy| 
       found = false
       active_silos.each { |silo|  found ||= (not (copy =~ /^#{silo}/).nil?) }   # found stays true once 'copy' includes the silo
       found.should == true   
     end    
   end
-
 
 
   it "should order the list of locations for a package based on the pool's read_preference" do
@@ -188,10 +189,10 @@ describe Store::Package do
     # setup some package data
 
     pools = Store::Pool.list_active
-    @@name   = Store::Reservation.new(ieid).name
-    pkg = Store::Package.create(sample_tarfile, sample_metadata(:name => @@name), pools)
-    pkg.name.should == @@name
-    @@to_delete.push @@name
+    name   = Store::Reservation.new(ieid).name
+    pkg = Store::Package.create(sample_tarfile, sample_metadata(name), pools)
+    pkg.name.should == name
+    @@all_package_names.push name
 
     pools.length.should >= 2  # test won't mean much with out at least two pools
 
@@ -209,20 +210,16 @@ describe Store::Package do
   end
 
   it "should list all of the package names we've stored" do    
-    (Store::Package.names - @@to_delete).should == []
-    (@@to_delete - Store::Package.names).should == []
+    (Store::Package.names - @@all_package_names).should == []
+    (@@all_package_names - Store::Package.names).should == []
   end
 
 
   it "should allow us to delete packages" do
-    # actual silo locations 
 
-    locations = []
-    @@to_delete.each { |name| locations.push(Store::Package.lookup(name).locations) }
+    # get all the locations for all the names
 
-    locations.length.should > 0
-   
-    @@to_delete.each do |name|
+    @@all_package_names.each do |name|
       Store::Package.exists?(name).should == true
       pkg = Store::Package.lookup(name)
       pkg.nil?.should == false

@@ -2,11 +2,11 @@
 
 require 'fileutils'
 require 'rake'
-require 'rake/rdoctask'
 require 'socket'
+require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
-require 'bundler/setup'
+# require 'bundler/setup'
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -93,9 +93,16 @@ task :restart do
 end
 
 # Build local (not deployed) bundled files for in-place development.
+# This doesn't really work because of a chicken/egg issue (we now
+# include bundler/setup above so we can use the rakefile against
+# the bundled gems), but at it shows what you have to do.  Note
+# that capistrano will use the Gemfile.lock file created (and 
+# committed to the repository) to maintain bundled gems in a 
+# a shared directory on the deployed host.
 
 desc "Reset bundles"
 task :bundle do
+  `rm -f #{HOME}/Gemfile.lock`
   `rm -rf #{HOME}/vendor/bundle`
   `mkdir -p #{HOME}/vendor/bundle`
   `cd #{HOME}; bundle install --path vendor/bundle`

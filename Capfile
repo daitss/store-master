@@ -47,17 +47,12 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-    # shared directory creation, if necessary:
 
-    pathname = File.join(shared_path, 'diskstore')
-    run "mkdir -p #{pathname}"
-    run "chmod 2775 #{pathname}"
-
-    # documentation directories
-
-    pathname = File.join(current_path, 'public', 'internals')
-    run "mkdir -p #{pathname}"       
-    run "chmod -R ug+rwX #{pathname}" 
+    # documentation directories now kept in repository
+    #
+    # pathname = File.join(current_path, 'public', 'internals')
+    # run "mkdir -p #{pathname}"       
+    # run "chmod -R ug+rwX #{pathname}" 
 
     # make everything group ownership daitss, for easy maintenance.
    

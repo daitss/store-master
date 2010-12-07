@@ -26,7 +26,7 @@ configure do
 
   use Rack::CommonLogger, Logger.new
 
-  Logger.info "Starting #{StoreMaster.version.rev} with disk storage at #{ENV['DISK_STORE_ROOT']}."
+  Logger.info "Starting #{StoreMaster.version.rev}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
   begin
