@@ -18,11 +18,9 @@ configure do
   set :environment,  :production  # Get some exceptional defaults.
   set :raise_errors, false        # Handle our own exceptions.
 
-  if ENV['LOG_FACILITY'].nil?
-    Logger.stderr
-  else
-    Logger.facility  = ENV['LOG_FACILITY']
-  end
+  Logger.setup('StoreMaster')
+
+  ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
   use Rack::CommonLogger, Logger.new
 

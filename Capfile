@@ -4,21 +4,20 @@ require 'rubygems'
 require 'railsless-deploy'
 require 'bundler/capistrano'
 
-set :application,  "storemaster"
 set :repository,   "http://github.com/daitss/store-master.git"
-set :use_sudo,     false
-set :deploy_to,    "/opt/web-services/sites/#{application}"
 set :scm,          "git"
+set :branch,       "master"
+
+set :use_sudo,     false
 set :user,         "daitss"
 set :group,        "daitss" 
-
 
 set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
 set :bundle_without,      []
 
 
 def usage(*messages)
-  STDERR.puts "Usage: cap deploy -S domain=<target domain>"  
+  STDERR.puts "Usage: cap deploy -S target=<host:filesystem>"  
   STDERR.puts messages.join("\n")
   STDERR.puts "You may set the remote user and group similarly (defaults to #{user} and #{group}, respectively)."
   STDERR.puts "If you set the user, you must be able to ssh to the domain as that user."
@@ -26,7 +25,13 @@ def usage(*messages)
   exit
 end
 
-usage('The domain was not set (e.g., domain=ripple.fcla.edu).') unless variables[:domain]
+usage('The deployment target was not set (e.g., target=ripple.fcla.edu:/opt/web-services/sites/silos).') unless (variables[:target] and variables[:target] =~ %r{.*:.*})
+
+_domain, _filesystem = variables[:target].split(':', 2)
+
+set :deploy_to,  _filesystem
+set :domain,     _domain
+
 
 role :app, domain
 

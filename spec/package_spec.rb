@@ -9,24 +9,41 @@ require 'spec_helpers'
 require 'digest/md5'
 require 'digest/sha1'
 
+# store-master needs a few pools, on my development host I've set two up,
+# pool.a.local and pool.b.local - each is made up of two silos, defined
+# as .dmg images 
+#
 
-# Note that failing tests can leave orphaned junk on the silos that will need to bne cleaned
+
+# Note that failing tests can leave orphaned junk on the silos that will need to be cleaned
 # out before proceeding, e.g.
 #
 #  curl -X DELETE http://storage.local/b/data/E20080805_AAAAAM.000
 #  curl -X DELETE http://storage.local/b/data/E20080805_AAAAAM.001
 #  ...
+#
+# something like this may help:
+#
+# #!/bin/sh
+#
+# for s in http://pool.a.local/silo-pool.a.1 http://pool.a.local/silo-pool.a.2 http://pool.b.local/silo-pool.b.1  http://pool.b.local/silo-pool.b.2; do
+#   for p in `curl -s $s/fixity/ | grep FIXITY  | cut -d\" -f2`; do
+#     echo curl -s -X DELETE $s/data/$p
+#     curl -s -X DELETE $s/data/$p
+#   done
+# done
+
 
 def datamapper_setup
   DM.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
   DM.recreate_tables
 end
 
-def active_silos
+def active_pools
   # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
-  [ 'http://storage.local:2001/a/data/', 'http://storage.local:2001/b/data/' ]
+  [ 'http://pool.a.local/create/', 'http://pool.b.local/create/' ]
 end
 
 @@IEID = ieid()
@@ -96,30 +113,19 @@ end
 
 @@all_package_names = []
 
-@@silos_available = nil
-
 def nimby
-  case @@silos_available
-
-  when nil
-    @@silos_available = true
-    active_silos.each do |silo|
-      @@silos_available &&= resource_exists?(silo)
-    end
-    nimby
-
-  when true
-    
-  when false
-    pending "No active silos are available; can't run this test"
+  pending "No active pools are available; can't run this test" unless active_pools
+  active_pools.each do |p| 
+    pending "Configured pool #{p} is not reachable" unless resource_exists? p
   end
 end
+
 
 describe Store::Package do
 
   before(:all) do
     datamapper_setup
-    active_silos.each { |silo| Store::Pool.create(silo) }
+    active_pools.each { |pool| Store::Pool.create(pool) }
   end
 
   it "should let us determine that a package doesn't exist" do
@@ -170,31 +176,24 @@ describe Store::Package do
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
+
     res = Store::Reservation.new(ieid);  @@all_package_names.push res.name
     pkg = Store::Package.create(sample_tarfile, sample_metadata(res.name), Store::Pool.list_active)
-
-    pkg.locations.length.should == active_silos.length
-
-    pkg.locations.each do |copy| 
-      found = false
-      active_silos.each { |silo|  found ||= (not (copy =~ /^#{silo}/).nil?) }   # found stays true once 'copy' includes the silo
-      found.should == true   
-    end    
+    pkg.locations.length.should == active_pools.length
   end
 
 
   it "should order the list of locations for a package based on the pool's read_preference" do
     nimby
 
-    # setup some package data
-
     pools = Store::Pool.list_active
+
+    pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
+
     name   = Store::Reservation.new(ieid).name
     pkg = Store::Package.create(sample_tarfile, sample_metadata(name), pools)
     pkg.name.should == name
     @@all_package_names.push name
-
-    pools.length.should >= 2  # test won't mean much with out at least two pools
 
     # adjust preferences - higher value means more preferred - and check to see
     # if that forces the pool to the top of the list

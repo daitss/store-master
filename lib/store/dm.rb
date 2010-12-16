@@ -117,10 +117,12 @@ module DM
     include DataMapper::Resource
     storage_names[:default] = 'pools'           # don't want dm_pools
     
-    property   :id,                Serial,   :min => 1
-    property   :required,          Boolean,  :required => true, :default => true
-    property   :put_location,      String,   :length => 255, :required => true   # :format => :url broken - use uri?
-    property   :read_preference,   Integer,  :default  => 0
+    property   :id,                   Serial,   :min => 1
+    property   :required,             Boolean,  :required => true, :default => true
+    property   :put_location,         String,   :length => 255, :required => true   # :format => :url broken - use uri?
+    property   :read_preference,      Integer,  :default  => 0
+#    property   :basic_auth_username,  String,   :default  => nil
+#    property   :basic_auth_password,  String,   :default  => nil
 
     has n, :copies
 

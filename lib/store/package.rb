@@ -8,13 +8,19 @@ require 'xml'
 
 # TO DO:  Add PUT/DELETE event records.
 
+
+# pkg = Package.lookup(name)
+# pkg.locations
+# pkg.ieid
+# pkg.name
+
 module Store
   class Package
 
     attr_reader   :name
     attr_accessor :dm_record, :md5, :size, :type, :sha1, :etag, :locations, :ieid
 
-    # Package.new(name) really meant to only be called internally.  Use lookup or create
+    # Package.new(name) really meant to only be called internally.  Use lookup or create.
 
     def initialize name
       @name      = name
@@ -48,7 +54,9 @@ module Store
       not DM::Package.first(:name => name, :extant => false).nil?
     end
 
-    def self.create io, metadata, pools
+    def self.create data_io, metadata, pools
+
+      ## TODO: handle empty pools array here? or at caller?
 
       pkg = Package.new metadata[:name]
       pkg.ieid = metadata[:ieid]
@@ -62,11 +70,20 @@ module Store
 
       begin
         pools.each do |pool|
-          loc = pool.put_location.gsub(%r{/+$}, '')  +  '/'  +  pkg.name
-          pkg.dm_record.copies << DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
-          ### TODO: record events here? transact?
-          pkg.put_copy(io, metadata, loc)
+
+          post_addr = pool.put_location.gsub(%r{/+$}, '')  +  '/'  +  pkg.name
+          store_info = pkg.post_copy(data_io, metadata, post_addr)
+     
+          pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
+
+          pkg.md5  = store_info['md5']
+          pkg.sha1 = store_info['sha1']
+          pkg.type = store_info['type']
+          pkg.size = store_info['size'].to_i
+          pkg.etag = store_info['etag']
+          pkg.locations << store_info['location']
         end
+
       rescue => e1
         msg = "Failure storing copy of #{pkg.name}: #{e1.message}"
         pkg.locations.each do |loc| 
@@ -159,7 +176,7 @@ module Store
       end
     end
 
-    def put_copy io, metadata, remote_location
+    def post_copy io, metadata, remote_location
 
       uri  = URI.parse(remote_location)
       http = Net::HTTP.new(uri.host, uri.port)
@@ -169,7 +186,7 @@ module Store
 
       io.rewind if io.respond_to?('rewind')
 
-      forwarded_request = Net::HTTP::Put.new(uri.request_uri)
+      forwarded_request = Net::HTTP::Post.new(uri.request_uri)
       forwarded_request.body_stream = io
       forwarded_request.initialize_http_header({ "Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
 
@@ -200,7 +217,6 @@ module Store
       #                                                     location="http://storage.local/b/data/E20101021_LJLAMU.001" 
       #                                                     name="E20101021_LJLAMU.001"/>
 
-
       returned_data = {}
 
       begin 
@@ -217,18 +233,12 @@ module Store
       raise "Error storing to #{remote_location} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
       raise "Error storing to #{remote_location} - type mismatch"  if returned_data["type"] != metadata[:type]
 
-      @md5  = returned_data["md5"]
-      @sha1 = returned_data["sha1"]
-      @type = returned_data["type"]
-      @size = returned_data["size"].to_i
-      @etag = returned_data["etag"]
-      @locations << returned_data["location"]
+      returned_data
     end
 
   end # of class Package
 end  # of module Store
 
 
-
-# curl -sv -d ieid=E000019QB_BZ81F4  http://localhost:2000/reserve/
-# curl -sv -X PUT -H "Content-Type: application/x-tar" -H "Content-MD5: `md5-base64 E20080805_AAAAAM`" --upload-file E20080805_AAAAAM http://localhost:2000/packages/E000019QB_BZ81F4.003
+# curl -sv -d ieid=E000019QB_BZ81F4  http://store-master.local/reserve/
+# curl -sv -X PUT -H "Content-Type: application/x-tar" -H "Content-MD5: `md5-base64 E20080805_AAAAAM`" --upload-file E20080805_AAAAAM http://store-master.local/packages/E000019QB_BZ81F4.003

@@ -3,8 +3,10 @@
 # Reserve a new name to PUT to.  Requires an IEID.
 
 post '/reserve/?' do
+  # TODO: use named exceptions...
+
   raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
-  raise Http400, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
+  raise BadName, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
 
   res = Reservation.new ieid
   
@@ -17,7 +19,6 @@ post '/reserve/?' do
   headers 'Location' => web_location("/packages/#{res.name}"), 'Content-Type' => 'application/xml'
   xml.target!
 end
-
 
 # Put a tarfile package to previously reserved name.
 
@@ -34,16 +35,9 @@ put '/packages/:name' do |name|
 
   raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
 
-  ### TODO: *number* of pools to store needs to be checked against a configuration variable... <=
-
-  # Package.create augments this with sha1, etag, others (TODO: make the new stuff methods instead in package.rb)
-
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
   pkg = Package.create(request.body, metadata, pools)
-
-  status 201
-  headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -55,6 +49,9 @@ put '/packages/:name' do |name|
               :size     => pkg.size,
               :type     => pkg.type
         )
+
+  status 201
+  headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
   xml.target!
 end
 
@@ -73,7 +70,6 @@ delete '/packages/:name' do |name|
   status 204
 end
 
-
 # Gets a package via redirect.
 
 get '/packages/:name' do |name|
@@ -82,10 +78,11 @@ get '/packages/:name' do |name|
 
   locations = Package.lookup(name).locations
 
-  # TODO: check that a location has been returned;  ping them (via head) in order,  using first that responds (need to streamline heads for this to work)
-  # TODO: get locations returned in read_preference order
+  # TODO: ping them (via head) in order with an aggressive timeout,  using first that responds.
+  # needs to wait on silo rework to make sure we can do HEADs on tape-based systems quickly.
 
   raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
+
   redirect locations[0], 303
 end
 
@@ -103,6 +100,7 @@ get '/packages/?' do
                   :location => web_location("/packages/#{name}"))
     end
   }
+
   content_type 'application/xml'
   xml.target!
 end

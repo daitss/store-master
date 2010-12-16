@@ -185,7 +185,7 @@ module Store
 
   # Client tried to create a package using an invalid name, subclasses 409 Conflict.
 
-  class BadName                    < Http409; end
+  class BadName                    < Http412; end
 
   # DriveByError is just meant to be caught so the message logged somewhere appropriate; the
   # error is non-fatal and should not be percolated to the top...

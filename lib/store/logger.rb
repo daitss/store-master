@@ -1,11 +1,11 @@
 require 'log4r'
+require 'socket'
 require 'syslog'
 require 'log4r/outputter/syslogoutputter'
 require 'log4r/outputter/fileoutputter'
 require 'log4r/outputter/rollingfileoutputter'
 
 # TODO:  the whole prefix thing is lame - rip it out, and rip out the environment requirement.
-
 
 # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
 # 
@@ -16,7 +16,7 @@ require 'log4r/outputter/rollingfileoutputter'
 #
 #  require 'logger'
 #  
-#  Logger.logname  = "XmlResolution"
+#  Logger.setup("XmlResolution", "xmlresolution.example.com")
 #  Logger.filename = "myfile.log"
 #  ...
 #  get '/tmp' do
@@ -45,7 +45,7 @@ require 'log4r/outputter/rollingfileoutputter'
 #
 #  require 'logger'
 #  
-#  Logger.logname  = 'XmlResolution'
+#  Logger.logname  = 'xmlresolution.example.com'
 #  Logger.filename = '/tmp/myfile.log'
 #  Logger.facility = :LOG_LOCAL2
 #  use Rack::CommonLogger, Logger.new
@@ -58,22 +58,30 @@ class Logger
   # initializers - Logger.filename=, Logger.facility= or Logger.stderr - 
   # will take care of.
   
-  @@initialized = false
-  @@logname     = 'Storage'
-  
-  # Logger.logname = NAME
+  @@log_name     = nil
+  @@process_name = nil
+
+  # Logger.setup process_name, service_name
   #
-  # Intialize the logging system with the identifier NAME, required
-  # before anything else is done.
+  # Intialize the logging system.  Until called, all logging is 
+  # a no-op.
   #
-  
-  def Logger.initialize_maybe
-    if not @@initialized
-      Log4r::Logger.new @@logname
-      @@initialized = true
-    end
+  # In logging the arguments are used as follows:
+  #
+  # Dec 15 09:32:21 romeo-foxtrot PROCESS_NAME[45933]:  INFO SERVICE_NAME...
+  #
+  # It is recommented the virtual host name be used for service_name
+  # and the general type service for process_name (e.g. XmlResolution,
+  # SiloPool, StoreMaster), so you might see a log entry like:
+  #
+  # Dec 15 12:38:26 romeo-foxtrot SiloPool[51470]:  INFO silos.test.fcla.edu: 
+
+  def Logger.setup(process_name, service_name = Socket.gethostname)
+    @@log_name     = service_name
+    @@process_name = process_name
+    Log4r::Logger.new @@log_name
   end
-  
+      
   # Logger.filename = FILEPATH
   #
   # Intialize the logging system to write to the file named by
@@ -85,8 +93,8 @@ class Logger
   # logging occurs.  
   
   def Logger.filename= filepath
-    Logger.initialize_maybe
-    Log4r::Logger[@@logname].add Log4r::FileOutputter.new(Logger.process_name, { :filename => filepath, :trunc => false })
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].add Log4r::FileOutputter.new(@@process_name, { :filename => filepath, :trunc => false })
     filepath
   end
   
@@ -95,8 +103,8 @@ class Logger
   # Initialize the logging system to write to STDERR.
   
   def Logger.stderr
-    Logger.initialize_maybe
-    Log4r::Logger[@@logname].add Log4r::StderrOutputter.new(Logger.process_name)
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].add Log4r::StderrOutputter.new(@@process_name)
   end
   
   # Logger.facility = FACILITY
@@ -126,8 +134,8 @@ class Logger
   # behave significantly differently.  But that's not your problem.
   
   def Logger.facility= facility
-    Logger.initialize_maybe
-    Log4r::Logger[@@logname].add Log4r::SyslogOutputter.new(Logger.process_name, 'facility' => eval("Syslog::#{facility.to_s.upcase}"))
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].add Log4r::SyslogOutputter.new(@@process_name, 'facility' => eval("Syslog::#{facility.to_s.upcase}"))
     facility
   end
   
@@ -138,7 +146,8 @@ class Logger
   # common PEP 333 keys could be used.
   
   def Logger.err message, env = {}
-    Log4r::Logger[@@logname].error prefix(env) + message.chomp
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].error prefix(env) + message.chomp
   end
   
   # Logger.warn MESSAGE, [ ENV ]
@@ -148,7 +157,8 @@ class Logger
   # common PEP 333 keys could be used.
   
   def Logger.warn message, env = {}
-    Log4r::Logger[@@logname].warn  prefix(env) + message.chomp
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].warn  prefix(env) + message.chomp
   end
   
   # Logger.info MESSAGE, [ ENV ]
@@ -158,18 +168,20 @@ class Logger
   # common PEP 333 keys could be used.
   
   def Logger.info message, env = {}
-    Log4r::Logger[@@logname].info  prefix(env) + message.chomp
+    return unless (@@log_name and @@process_name)
+    Log4r::Logger[@@log_name].info  prefix(env) + message.chomp
   end
   
   # While we normally use the class methods to write our own log entries, we
   # also have an object we can instantiate for Rack::CommonLogger to 
   # use. For example:
   #
-  #  Logger.logname  = 'XmlResolutionService'
+  #  Logger.setup('XmlResolutionService', 'xrez.example.com')
   #  Logger.filename = 'my.log'
   #  use Rack:CommonLogger, Logger.new
 
   def initialize
+    raise "The logging system has not been setup: use Logger.setup(service, hostname)." if (@@log_name.nil? or @@process_name.nil?)
   end  
   
   # log.write MESSAGE
@@ -178,7 +190,7 @@ class Logger
   # it. See the Logger#new method for an example of its use.
   
   def write message
-    Log4r::Logger[@@logname].info message.chomp
+    Log4r::Logger[@@log_name].info message.chomp
   end
   
   private
@@ -197,9 +209,6 @@ class Logger
             env['PATH_INFO'],
             (env['QUERY_STRING'].nil? or env['QUERY_STRING'].empty?) ? '' : '?' + env['QUERY_STRING'])
   end
-  
-  def Logger.process_name
-    'StoreMaster'
-  end
+
   
 end # of class
