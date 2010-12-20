@@ -10,22 +10,27 @@ require 'xml'
 
 
 # pkg = Package.lookup(name)
-# pkg.locations
-# pkg.ieid
-# pkg.name
+#
+# pkg.locations  => 
+# pkg.ieid       => 
+# pkg.name       => 
+#
+#
+# pkg = Package.create(
+
+
 
 module Store
   class Package
 
     attr_reader   :name
-    attr_accessor :dm_record, :md5, :size, :type, :sha1, :etag, :locations, :ieid
+    attr_accessor :dm_record, :md5, :size, :type, :sha1, :etag, :ieid
 
     # Package.new(name) really meant to only be called internally.  Use lookup or create.
 
     def initialize name
       @name      = name
       @dm_record = nil
-      @locations = []
     end
 
     def self.exists? name
@@ -39,14 +44,17 @@ module Store
       DM::Package.all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
     end
 
+    def locations
+      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+    end
+
     # Find a previously saved package
 
     def self.lookup name
       pkg = Package.new name
       pkg.dm_record = DM::Package.first(:name => name, :extant => true)
-      return nil if pkg.dm_record.nil?
-      pkg.ieid = pkg.dm_record.ieid
-      pkg.locations = pkg.dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+      return nil   if pkg.dm_record.nil?
+      pkg.ieid      = pkg.dm_record.ieid
       pkg
     end
 
@@ -81,14 +89,13 @@ module Store
           pkg.type = store_info['type']
           pkg.size = store_info['size'].to_i
           pkg.etag = store_info['etag']
-          pkg.locations << store_info['location']
         end
 
       rescue => e1
         msg = "Failure storing copy of #{pkg.name}: #{e1.message}"
         pkg.locations.each do |loc| 
           begin
-            delete_copy(loc)
+            pkg.delete_copy(loc)
           rescue => e2
             msg += "; also, failure deleting copy at #{loc}: #{e2.message}"
           end
@@ -97,7 +104,7 @@ module Store
       end
 
       if not pkg.dm_record.save
-        msg = "DB error recording #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}"
+        msg = "DB error recording #{name} - #{pkg.dm_record.errors.full_messages.join('; ')}"
         pkg.locations.each do |loc| 
           begin
             pkg.delete_copy(loc)
@@ -126,7 +133,7 @@ module Store
     #   rec.name      = name
     #   rec.ieid      = ieid
     #
-    #   rec.save or raise DataBaseError, "Can't save DB record for package #{name} - #{rec.errors.map { |e| e.to_s }.join('; ')}"
+    #   rec.save or raise DataBaseError, "Can't save DB record for package #{name} - #{rec.errors.full_messages.join('; ')}"
     #
     #   pkg.dm_record = rec
     #   pkg
@@ -137,7 +144,7 @@ module Store
       
     def delete
       dm_record.extant = false
-      raise  DataBaseError, "error deleting #{name} - #{pkg.dm_record.errors.map { |e| e.to_s }.join('; ')}" unless dm_record.save
+      raise  DataBaseError, "error deleting #{name} - #{pkg.dm_record.errors.full_messages.join('; ')}" unless dm_record.save
 
       errors = []
       locations.each do |loc| 
