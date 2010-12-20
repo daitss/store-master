@@ -190,7 +190,7 @@ describe Store::Package do
 
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
-    name   = Store::Reservation.new(ieid).name
+    name  = Store::Reservation.new(ieid).name
     pkg = Store::Package.create(sample_tarfile, sample_metadata(name), pools)
     pkg.name.should == name
     @@all_package_names.push name
@@ -201,10 +201,10 @@ describe Store::Package do
     pools.each { |p| p.read_preference = 0 }
 
     pools[0].read_preference = 10
-    index_of_pool_that_best_matches_url(pools, pkg.locations.shift).should == 0
+    index_of_pool_that_best_matches_url(pools, pkg.locations[0]).should == 0
 
     pools[1].read_preference = 20
-    index_of_pool_that_best_matches_url(pools, pkg.locations.shift).should == 1
+    index_of_pool_that_best_matches_url(pools, pkg.locations[0]).should == 1
 
   end
 

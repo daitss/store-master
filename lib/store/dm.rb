@@ -121,8 +121,8 @@ module DM
     property   :required,             Boolean,  :required => true, :default => true
     property   :put_location,         String,   :length => 255, :required => true   # :format => :url broken - use uri?
     property   :read_preference,      Integer,  :default  => 0
-#    property   :basic_auth_username,  String,   :default  => nil
-#    property   :basic_auth_password,  String,   :default  => nil
+    property   :basic_auth_username,  String
+    property   :basic_auth_password,  String
 
     has n, :copies
 

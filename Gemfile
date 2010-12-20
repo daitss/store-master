@@ -13,7 +13,6 @@ gem 'sys-filesystem',      '>= 0.3.2'
 
 # development
 
-gem 'yard',             '>= 0.6.3'
 gem 'rcov',             '>= 0.9.8'    
 gem 'ci_reporter',      '>= 1.6.2'
 gem 'cucumber',		'>= 0.8.5'

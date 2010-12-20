@@ -17,7 +17,7 @@ module Store
 
     def self.create put_location
       rec = DM::Pool.create(:put_location => put_location)
-      rec.saved? or raise "Can't create new pool recrord #{put_location}; DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
+      rec.saved? or raise "Can't create new pool recrord #{put_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
       Pool.new rec
     end
 
@@ -42,7 +42,7 @@ module Store
 
     def required= bool
       @dm_record.required = bool
-      @dm_record.save or raise "Can't set pool #{put_location} to 'required' flag of #{bool};  DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} 'required' flag to #{bool};  DB errors: " + @dm_record.errors.full_messages.join('; ')
     end
 
     def put_location
@@ -51,16 +51,34 @@ module Store
 
     def put_location= url
       @dm_record.put_location = bool
-      @dm_record.save or raise "Can't set pool #{put_location} to 'put_location' of #{url};  DB errors: " + rec.errors.map{ |e| e.to_s }.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} 'put_location' to#{url};  DB errors: " + @dm_record.errors.full_messages.join('; ')
     end
 
     def read_preference
-      @dm_record.read_preference      
+      @dm_record.read_preference
     end
 
     def read_preference= int
       @dm_record.read_preference = int
-      @dm_record.save or raise "Can't set pool #{put_location} to 'read_preference' of #{int};  DB errors:  " + rec.errors.map{ |e| e.to_s }.join('; ')
+      @dm_record.save or raise "Can't set pool #{put_location} 'read_preference' to #{int};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
+    end
+
+    def password
+      @dm_record.password
+    end
+
+    def password= password
+      @dm_record.basic_auth_password = password
+      @dm_record.save or raise "Can't set pool #{put_location} 'basic_auth_password' to #{password};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
+    end
+
+    def username
+      @dm_record.username
+    end
+
+    def username= username
+      @dm_record.basic_auth_username = username
+      @dm_record.save or raise "Can't set pool #{put_location} 'basic_auth_username' to #{username};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
     end
 
     def self.list_active
