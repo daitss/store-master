@@ -14,7 +14,7 @@ require 'bundler/capistrano'
 
 set :repository,   "http://github.com/daitss/store-master.git"
 set :scm,          "git"
-set :branch,       "master"
+# set :branch,       "master"
 
 set :use_sudo,     false
 set :user,         "daitss"

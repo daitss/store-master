@@ -5,33 +5,6 @@ require 'find'
 
 describe StoreUtils do
 
-  def new_yaml text
-    f = Tempfile.new("mysgl_test_config")
-    f.puts text + "\n"
-    f.close
-    f.path
-  end
-
-  it "should get mysql configuration information from a yaml file" do
-    name = new_yaml("test: { hostname: localhost,  database: db, username: me, password: }")
-    mydata = StoreUtils.mysql_config 'test', name
-    mydata.password.should == nil
-    mydata.hostname.should == 'localhost'
-    mydata.username.should == 'me'
-    mydata.database.should == 'db'
-  end
-
-  it "should get nil if configuration information from a yaml file is not available." do
-    name = new_yaml("test: { hostname: localhost,  database: db, username: me, password: topsecret }")
-    mydata = StoreUtils.mysql_config 'foo', name
-    mydata.should == nil
-  end
-
-  it "should get nil if the yaml configuration file does not exist." do
-    mydata = StoreUtils.mysql_config 'foo', "/some/random/file"
-    mydata.should == nil
-  end
-
   it "should show some free space in bytes" do
     StoreUtils.disk_free("/").should > 1024
   end

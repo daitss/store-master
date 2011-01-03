@@ -36,7 +36,7 @@ module Store
         return res.name if res.saved?
         vers.succ!
       end
-      raise Store::DatabaseError, "Can't create a new name for IEID '#{ieid}'."
+      raise Store::DataBaseError, "Can't create a new name for IEID '#{ieid}'."
     end
 
 

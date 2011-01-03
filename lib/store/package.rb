@@ -8,7 +8,8 @@ require 'xml'
 
 # TO DO:  Add PUT/DELETE event records.
 
-
+# Two basic ways to instantiate package objects, which 
+#
 # pkg = Package.lookup(name)
 #
 # pkg.locations  => 
@@ -33,6 +34,10 @@ module Store
       @dm_record = nil
     end
 
+    def locations
+      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+    end
+
     def self.exists? name
       not DM::Package.first(:name => name, :extant => true).nil?
     end
@@ -42,10 +47,6 @@ module Store
 
     def self.names
       DM::Package.all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
-    end
-
-    def locations
-      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
     end
 
     # Find a previously saved package
@@ -163,8 +164,8 @@ module Store
 
       uri = URI.parse(remote_location)
       http = Net::HTTP.new(uri.host, uri.port)
-      http.open_timeout = 5
-      http.read_timeout = 60 * 30  # thirty minute timeout for delete (since PUTs can block us from a full silo for this long!)
+      http.open_timeout = 10
+      http.read_timeout = 60 * 2  # deletes are relatively fast
 
       forwarded_request = Net::HTTP::Delete.new(uri.request_uri)
       response = http.request(forwarded_request)
@@ -179,7 +180,7 @@ module Store
           raise Silo400Error, err
         elsif status >= 300    
           raise err
-        end          
+        end
       end
     end
 
@@ -188,8 +189,8 @@ module Store
       uri  = URI.parse(remote_location)
       http = Net::HTTP.new(uri.host, uri.port)
 
-      http.open_timeout = 5
-      http.read_timeout = 60 * 30  # thirty minute timeout for PUTs
+      http.open_timeout = 10
+      http.read_timeout = 60 * 60  # sixty minute timeout for PUTs
 
       io.rewind if io.respond_to?('rewind')
 
