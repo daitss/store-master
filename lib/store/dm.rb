@@ -94,6 +94,13 @@ module DM
     has n,      :events
         
     validates_uniqueness_of  :name
+
+    # return URI objects for all of the copies we have, in preference order
+
+    def locations
+      copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.url }
+    end
+
   end # of Package
   
   class Event
@@ -127,6 +134,16 @@ module DM
     has n, :copies
 
     validates_uniqueness_of :put_location
+
+    def post_url name
+      url = URI.parse(put_location.gsub(%r{/+$}, '')  +  '/'  +  name)
+      if basic_auth_username or basic_auth_password
+        url.user     = URI.encode basic_auth_username
+        url.password = URI.encode basic_auth_password
+      end
+      url
+    end
+      
   end # of Pool
   
   class Copy
@@ -141,6 +158,16 @@ module DM
     belongs_to :package
 
     validates_uniqueness_of :pool, :scope => :package
+
+    def url
+      url = URI.parse store_location
+      if pool.basic_auth_username or pool.basic_auth_password
+        url.user     = URI.encode pool.basic_auth_username
+        url.password = URI.encode pool.basic_auth_password
+      end
+      url
+    end
+
   end # of Copy
 
 end # of Module DM

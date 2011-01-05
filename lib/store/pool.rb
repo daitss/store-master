@@ -81,6 +81,11 @@ module Store
       @dm_record.save or raise "Can't set pool #{put_location} 'basic_auth_username' to #{username};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
     end
 
+    def post_url name
+      @dm_record.post_url name
+    end
+
+
     def self.list_active
       pools = []
       DM::Pool.all(:required => true, :order => [ :read_preference.desc ]).each do |rec|

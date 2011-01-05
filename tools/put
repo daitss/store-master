@@ -10,14 +10,21 @@ require 'xml'
 require 'store/utils'
 
 
-# Put a file to a silo server, in exactly the way store-master might
+# Put a file to a store-master server, in exactly the way store-master might
 #
-# Content-Type: application/x-tar
-# Content-MD5: 
+# Example URL to which we can PUT:
 #
-# Example silo url to which we can PUT:
+# http://store-master.fcla.edu/packages/E20051012_AAAAAB.001
 #
-# http://silos.sake.fcla.edu/002/E20051012_AAAAAB
+# you have to obtain the above url by performing a reservation:
+#
+#  curl -sv -d ieid=E20051012_AAAAAB  http://store-master.fcla.edu/reserve/
+#
+# which nmight return something like:
+#
+# <?xml version="1.0" encoding="UTF-8"?>
+# <reserved ieid="E20100727_AAAAAA" location="http://store-master.fcla.edu/packages/E20051012_AAAAAB.001"/>
+    
 
 
 Struct.new('Config', :put_location, :filepath)
@@ -26,10 +33,10 @@ def parse_command args
   conf = Struct::Config.new
 
   opts   = OptionParser.new do |opt|
-    opt.on("--put_location url",  String, "The location to PUT a file to, e.g. http://silos.sake.fcla.edu/002/E20051012_AAAAAB") do |url|
+    opt.on("--put-location url",  String, "The location to PUT a file to, e.g. http://store-master.fcla.edu/packages/E20051012_AAAAAB.001") do |url|
       conf.put_location = url
     end
-    opt.on("--filepath filepath",  String, "The path to the file to put to the webserver") do |path|
+    opt.on("--filepath filepath",  String, "The path to the file you want put to the webserver") do |path|
       conf.filepath = path
     end
   end

@@ -10,10 +10,9 @@ ENV['TZ'] = 'UTC'
 
 IEID  = 'E20100921_AAAAAA'
 
-NAME1 = IEID + '.000'
-NAME2 = IEID + '.001'
-NAME3 = IEID + '.002'
-
+def name n
+  IEID + sprintf('.%03d', n)
+end
 
 def pool id
   "http://pool#{id}.foo.com/packages/"
@@ -33,37 +32,37 @@ end
 share_examples_for "DataMapper Package class using any database" do
   
   it "should let us a create a new package" do
-    package  = DM::Package.create(:ieid => IEID, :name => NAME1) 
+    package  = DM::Package.create(:ieid => IEID, :name => name(1)) 
     package.saved?.should == true
   end
 
   it "should let us a retrieve a previously created package record by ieid" do
     package  = DM::Package.first(:ieid => IEID)
-    package.name.should     == NAME1
+    package.name.should     == name(1)
   end
 
   it "should let us a retrieve a previously created package record by name" do
-    package  = DM::Package.first(:name => NAME1)
-    package.name.should     == NAME1
+    package  = DM::Package.first(:name => name(1))
+    package.name.should     == name(1)
   end
 
 
   it "should let not let us create a new package without a ieid" do
 
-    package  = DM::Package.create(:name => NAME2)
+    package  = DM::Package.create(:name => name(2))
     package.saved?.should == false
   end
 
   it "should let us create a new package with the same ieid as an old package, with a new name" do
 
-    package  = DM::Package.create(:name => NAME2, :ieid => IEID)
+    package  = DM::Package.create(:name => name(2), :ieid => IEID)
     package.saved?.should == true
   end
 
 
   it "should let us create an event and associate it with a package, retreiving it" do
     
-    pkg1  = DM::Package.first(:name => NAME1)
+    pkg1  = DM::Package.first(:name => name(1))
   
     ev1 = DM::Event.create(:type => :put, :note => 'This is a test')
 
@@ -72,7 +71,7 @@ share_examples_for "DataMapper Package class using any database" do
     pkg1.events << ev1
     pkg1.save.should == true
 
-    pkg2 = DM::Package.first(:name => NAME1)
+    pkg2 = DM::Package.first(:name => name(1))
     ev1.saved?.should == true
 
     ev2 = pkg2.events[0]
@@ -104,6 +103,13 @@ share_examples_for "DataMapper Package class using any database" do
     pool2.save.should == false
   end
 
+  it "should allow us to get a posting URL for a pool" do
+    pool = DM::Pool.create(:put_location => pool('poster'))
+    pool.post_url('name').class.should == URI::HTTP    
+  end
+
+
+
   it "should let us associate copies URL with a pacakge, setting the time or defaulting it, storing and retreiving it" do
 
     pool1 = DM::Pool.create(:put_location => pool('d'))
@@ -115,7 +121,7 @@ share_examples_for "DataMapper Package class using any database" do
     bar = 'http://bar.example.com/bar'
     foo = 'http://foo.example.com/foo'
 
-    pkg1  = DM::Package.first(:name => NAME1)
+    pkg1  = DM::Package.first(:name => name(1))
 
     copy2time = DateTime.now - 100
     copy1 = DM::Copy.create(:store_location => foo, :pool => pool1)
@@ -126,7 +132,7 @@ share_examples_for "DataMapper Package class using any database" do
 
     pkg1.save.should == true
 
-    pkg2 = DM::Package.first(:name => NAME1)
+    pkg2 = DM::Package.first(:name => name(1))
 
     pkg2.copies.length.should == 2
     pkg2.copies.map { |elt| elt.store_location }.include?(foo).should == true
@@ -136,9 +142,10 @@ share_examples_for "DataMapper Package class using any database" do
     (copy2time - pkg2.copies[1].datetime).should  be_within(0.0001).of(0)      # spec
   end
 
+
   it "should not let us create copies within the same pool for a given package" do
 
-    pkg  = DM::Package.create(:ieid => IEID, :name => NAME3) 
+    pkg  = DM::Package.create(:ieid => IEID, :name => name(3)) 
     pool = DM::Pool.first(:put_location => pool('d'))
 
     baz  = 'http://bar.example.com/baz'
@@ -153,19 +160,30 @@ share_examples_for "DataMapper Package class using any database" do
     pkg.save.should == false
   end
 
-  it "should allow us to create reserved names based on an IEID" do
 
-    res1 = DM::Reservation.create(:ieid => IEID, :name => NAME1)
-    res1.saved?.should == true
-    res1.name.should == NAME1
+  it "should provide a uri method for a copy record that includes basic authentication information from the pool" do
+    pass = 'top secret'
+    user = 'fischer'
 
-    res2 = DM::Reservation.create(:ieid => IEID, :name => NAME2)
-    res2.saved?.should == true
-    res2.name.should == NAME2
+    pool = DM::Pool.create(:put_location => pool('e'), :basic_auth_password => pass, :basic_auth_username => user)
+    copy = DM::Copy.create(:store_location => 'http://example.com/', :pool => pool)
+
+    copy.url.to_s.should =~ /#{user}:#{URI.encode pass}@/
   end
 
-  it "should not allow us to reuse reserved names based on an IEID" do
-    res = DM::Reservation.create(:ieid => IEID, :name => NAME1)
+  it "should allow us to create reserved names based on an IEID" do
+
+    res1 = DM::Reservation.create(:ieid => IEID, :name => name(1))
+    res1.saved?.should == true
+    res1.name.should == name(1)
+
+    res2 = DM::Reservation.create(:ieid => IEID, :name => name(2))
+    res2.saved?.should == true
+    res2.name.should == name(2)
+  end
+
+  it "should not allow us to reuse reserved names" do
+    res = DM::Reservation.create(:ieid => IEID, :name => name(1))
     res.saved?.should == false
   end
 end

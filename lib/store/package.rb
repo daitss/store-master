@@ -7,6 +7,7 @@ require 'net/http'
 require 'xml'
 
 # TO DO:  Add PUT/DELETE event records.
+# TO DO:  Move everything into DM::Package and use those methods....
 
 # Two basic ways to instantiate package objects, which 
 #
@@ -35,7 +36,7 @@ module Store
     end
 
     def locations
-      dm_record.copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.store_location }
+      dm_record.locations
     end
 
     def self.exists? name
@@ -80,8 +81,7 @@ module Store
       begin
         pools.each do |pool|
 
-          post_addr = pool.put_location.gsub(%r{/+$}, '')  +  '/'  +  pkg.name
-          store_info = pkg.post_copy(data_io, metadata, post_addr)
+          store_info = pkg.store_copy(data_io, metadata, pool.post_url(pkg.name))
      
           pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
 
@@ -148,7 +148,7 @@ module Store
       raise  DataBaseError, "error deleting #{name} - #{pkg.dm_record.errors.full_messages.join('; ')}" unless dm_record.save
 
       errors = []
-      locations.each do |loc| 
+      dm_record.locations.each do |loc| 
         begin
           delete_copy(loc)
         rescue => e
@@ -160,19 +160,21 @@ module Store
     end
 
 
-    def delete_copy remote_location
+    def sanitized_location url
+      url.password ?  url.to_s.gsub(url.userinfo + '@', '') + ' (using password)' : url.to_s
+    end
 
-      uri = URI.parse(remote_location)
-      http = Net::HTTP.new(uri.host, uri.port)
+    def delete_copy url
+      http = Net::HTTP.new(url.host, url.port)
       http.open_timeout = 10
       http.read_timeout = 60 * 2  # deletes are relatively fast
 
-      forwarded_request = Net::HTTP::Delete.new(uri.request_uri)
+      forwarded_request = Net::HTTP::Delete.new(url.request_uri)
       response = http.request(forwarded_request)
       status = response.code.to_i
 
       if status >= 300
-        err   = "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{remote_location}"
+        err   = "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{sanitized_location(url)}"
         err  += "; #{response.body}" if response.body.length > 0
         if status >= 500   
           raise err
@@ -184,26 +186,27 @@ module Store
       end
     end
 
-    def post_copy io, metadata, remote_location
-
-      uri  = URI.parse(remote_location)
-      http = Net::HTTP.new(uri.host, uri.port)
+    def store_copy io, metadata, url
+      http = Net::HTTP.new(url.host, url.port)
 
       http.open_timeout = 10
       http.read_timeout = 60 * 60  # sixty minute timeout for PUTs
 
       io.rewind if io.respond_to?('rewind')
 
-      forwarded_request = Net::HTTP::Post.new(uri.request_uri)
+      forwarded_request = Net::HTTP::Post.new(url.request_uri)      
+      
       forwarded_request.body_stream = io
-      forwarded_request.initialize_http_header({ "Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
+      forwarded_request.initialize_http_header({"Content-MD5" => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
 
       response = http.request(forwarded_request)
 
       status = response.code.to_i
+      location = sanitized_location(url)
+
 
       if status >= 300
-        err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{remote_location}"
+        err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{location}"
         err  += "; message was #{response.body}" if response.body.length > 0
         if status >= 500   
           raise err
@@ -213,7 +216,6 @@ module Store
           raise err
         end          
       end
-
     
       # Example XML document returned from PUT:    <?xml version="1.0" encoding="UTF-8"?>
       #                                            <created type="application/x-tar" 
@@ -232,14 +234,14 @@ module Store
         node   = parser.find('/created')[0]
         node.each_attr { |attr| returned_data[attr.name] = attr.value }
       rescue => e
-        raise "Invalid XML document returned in response to forward of package to #{remote_location}: #{e.message}"
+        raise "Invalid XML document returned in response to forward of package to #{location}: #{e.message}"
       end
 
       # check the md5, size, type vs. our request to that returned by remotely created copy.
 
-      raise "Error storing to #{remote_location} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
-      raise "Error storing to #{remote_location} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
-      raise "Error storing to #{remote_location} - type mismatch"  if returned_data["type"] != metadata[:type]
+      raise "Error storing to #{location} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
+      raise "Error storing to #{location} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
+      raise "Error storing to #{location} - type mismatch"  if returned_data["type"] != metadata[:type]
 
       returned_data
     end

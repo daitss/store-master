@@ -201,10 +201,10 @@ describe Store::Package do
     pools.each { |p| p.read_preference = 0 }
 
     pools[0].read_preference = 10
-    index_of_pool_that_best_matches_url(pools, pkg.locations[0]).should == 0
+    index_of_pool_that_best_matches_url(pools, pkg.locations[0].to_s).should == 0
 
     pools[1].read_preference = 20
-    index_of_pool_that_best_matches_url(pools, pkg.locations[0]).should == 1
+    index_of_pool_that_best_matches_url(pools, pkg.locations[0].to_s).should == 1
 
   end
 
