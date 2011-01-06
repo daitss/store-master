@@ -18,7 +18,7 @@ require 'xml'
 # pkg.name       => 
 #
 #
-# pkg = Package.create(
+# pkg = Package.store(data, pools, metadata)
 
 
 
@@ -26,62 +26,83 @@ module Store
   class Package
 
     attr_reader   :name
-    attr_accessor :dm_record, :md5, :size, :type, :sha1, :etag, :ieid
+    attr_accessor :dm_record
+
+    # Refactoring in progress - everything being migrated to the  DM::Package class
 
     # Package.new(name) really meant to only be called internally.  Use lookup or create.
 
     def initialize name
       @name      = name
       @dm_record = nil
+      @md5 	 = nil
+      @size	 = nil
+      @type	 = nil
+      @sha1	 = nil
+      @etag	 = nil
     end
+
+    def ieid
+      @dm_record.ieid
+    end
+
+    def md5;          @dm_record.md5;          end
+    def md5= datum;   @dm_record.md5 = datum;  end
+
+    def sha1;         @dm_record.sha1;         end
+    def sha1= datum;  @dm_record.sha1 = datum; end
+
+    def etag;         @dm_record.etag;         end
+    def etag= datum;  @dm_record.etag = datum; end
+
+    def size;         @dm_record.size;         end
+    def size= datum;  @dm_record.size = datum; end
+
+    def type;         @dm_record.type;         end
+    def type= datum;  @dm_record.type = datum; end
 
     def locations
       dm_record.locations
     end
 
     def self.exists? name
-      not DM::Package.first(:name => name, :extant => true).nil?
+      DM::Package.exists? name
     end
 
-    # TODO: This next is likely to result in such a long list as to be unusable in practice; need to rethink chunking this up,
-    # perhaps with yield
-
     def self.names
-      DM::Package.all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
+      DM::Package.names
+    end
+
+    def self.was_deleted? name
+      DM::Package.was_deleted? name
     end
 
     # Find a previously saved package
 
     def self.lookup name
       pkg = Package.new name
-      pkg.dm_record = DM::Package.first(:name => name, :extant => true)
-      return nil   if pkg.dm_record.nil?
-      pkg.ieid      = pkg.dm_record.ieid
+      pkg.dm_record = DM::Package.lookup name
+      return nil if pkg.dm_record.nil?
       pkg
     end
 
-    def self.was_deleted? name
-      not DM::Package.first(:name => name, :extant => false).nil?
-    end
-
-    def self.create data_io, metadata, pools
+    def self.store data_io, pools, metadata
 
       ## TODO: handle empty pools array here? or at caller?
 
       pkg = Package.new metadata[:name]
-      pkg.ieid = metadata[:ieid]
 
       raise "Can't create new package #{name}, it already exists"                   if Package.exists? name
       raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted?(name)
 
       pkg.dm_record = DM::Package.create
-      pkg.dm_record.ieid = pkg.ieid
+      pkg.dm_record.ieid = metadata[:ieid]
       pkg.dm_record.name = pkg.name
 
       begin
         pools.each do |pool|
 
-          store_info = pkg.store_copy(data_io, metadata, pool.post_url(pkg.name))
+          store_info = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
      
           pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
 
@@ -159,18 +180,20 @@ module Store
       raise DriveByError, errors.join('; ') unless errors.empty?
     end
 
-
     def sanitized_location url
       url.password ?  url.to_s.gsub(url.userinfo + '@', '') + ' (using password)' : url.to_s
     end
 
     def delete_copy url
+
       http = Net::HTTP.new(url.host, url.port)
       http.open_timeout = 10
       http.read_timeout = 60 * 2  # deletes are relatively fast
 
-      forwarded_request = Net::HTTP::Delete.new(url.request_uri)
-      response = http.request(forwarded_request)
+      request = Net::HTTP::Delete.new(url.request_uri)
+      request.basic_auth(url.user, url.password) if url.user or url.password
+
+      response = http.request(request)
       status = response.code.to_i
 
       if status >= 300
@@ -186,7 +209,8 @@ module Store
       end
     end
 
-    def store_copy io, metadata, url
+    def store_copy io, url, metadata
+
       http = Net::HTTP.new(url.host, url.port)
 
       http.open_timeout = 10
@@ -194,12 +218,12 @@ module Store
 
       io.rewind if io.respond_to?('rewind')
 
-      forwarded_request = Net::HTTP::Post.new(url.request_uri)      
-      
-      forwarded_request.body_stream = io
-      forwarded_request.initialize_http_header({"Content-MD5" => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
+      request = Net::HTTP::Post.new(url.request_uri)      
+      request.body_stream = io
+      request.initialize_http_header({"Content-MD5" => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
+      request.basic_auth(url.user, url.password) if url.user or url.password
 
-      response = http.request(forwarded_request)
+      response = http.request(request)
 
       status = response.code.to_i
       location = sanitized_location(url)

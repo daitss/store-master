@@ -95,10 +95,31 @@ module DM
         
     validates_uniqueness_of  :name
 
-    # return URI objects for all of the copies we have, in preference order
+    attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes TODO: are we still using these?
+
+    # return URI objects for all of the copies we have, in pool-preference order
 
     def locations
-      copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |cp| cp.url }
+      copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |copy| copy.url }
+    end
+
+    def self.exists? name
+      not first(:name => name, :extant => true).nil?
+    end
+
+    def self.was_deleted? name
+      not first(:name => name, :extant => false).nil?
+    end
+
+    def self.lookup name
+      first(:name => name, :extant => true)
+    end
+
+    # TODO: This next is likely to result in such a long list as to be unusable in practice; need to rethink chunking this up,
+    # perhaps with yield
+
+    def self.names
+      all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
     end
 
   end # of Package

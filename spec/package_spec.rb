@@ -146,7 +146,7 @@ describe Store::Package do
     metadata = sample_metadata(name)
 
     io  = sample_tarfile
-    pkg = Store::Package.create(io, metadata, Store::Pool.list_active)
+    pkg = Store::Package.store(io, Store::Pool.list_active, metadata)
     pkg.name.should == name
     pkg.md5.should   == @@MD5
     pkg.sha1.should  == @@SHA1
@@ -171,14 +171,14 @@ describe Store::Package do
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { Store::Package.create(sample_tarfile, sample_metadata(name), Store::Pool.list_active) }.should raise_error
+    lambda { Store::Package.store(sample_tarfile, Store::Pool.list_active, sample_metadata(name)) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
 
     res = Store::Reservation.new(ieid);  @@all_package_names.push res.name
-    pkg = Store::Package.create(sample_tarfile, sample_metadata(res.name), Store::Pool.list_active)
+    pkg = Store::Package.store(sample_tarfile, Store::Pool.list_active, sample_metadata(res.name))
     pkg.locations.length.should == active_pools.length
   end
 
@@ -191,7 +191,8 @@ describe Store::Package do
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
     name  = Store::Reservation.new(ieid).name
-    pkg = Store::Package.create(sample_tarfile, sample_metadata(name), pools)
+    pkg   = Store::Package.store(sample_tarfile, pools, sample_metadata(name))
+
     pkg.name.should == name
     @@all_package_names.push name
 

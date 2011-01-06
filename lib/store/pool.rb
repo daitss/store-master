@@ -17,7 +17,7 @@ module Store
 
     def self.create put_location
       rec = DM::Pool.create(:put_location => put_location)
-      rec.saved? or raise "Can't create new pool recrord #{put_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
+      rec.saved? or raise "Can't create new pool record #{put_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
       Pool.new rec
     end
 

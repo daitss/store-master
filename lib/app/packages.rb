@@ -37,7 +37,7 @@ put '/packages/:name' do |name|
 
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  pkg = Package.create(request.body, metadata, pools)
+  pkg = Package.store(request.body, pools, metadata)
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -83,7 +83,7 @@ get '/packages/:name' do |name|
 
   raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
 
-  redirect locations[0], 303
+  redirect locations[0].to_s, 303
 end
 
 # Get an XML file of all the packages we know about.  This is so slow as to be impractical, right now.
