@@ -24,63 +24,63 @@ require 'xml'
 
 module StoreMaster
 
-  class PackageListing
-    include Enumerable
+  # List selected package information in a form that's space efficient for rack.
+  # 
 
-    @prefix = nil
-    def initialize prefix
-      @prefix = prefix
-    end
 
-    def each
-      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
-        yield [ rec.name, [@prefix, rec.name].join('/'), rec.ieid ]
-      end
-    end
-  end # of class  StoreMasterPackageListing
+  #  class PackageListing
+  #    include Enumerable
+  #
+  #    @prefix = nil
+  #    def initialize prefix
+  #      @prefix = prefix
+  #    end
+  #
+  #    def each
+  #      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
+  #        yield [ rec.name, [@prefix, rec.name].join('/'), rec.ieid ]
+  #      end
+  #    end
+  #  end # of class  StoreMasterPackageListing
 
-  # list all of the package information we have in a form that's space efficient for rack (this
-  # means that we provide a lazy kind of evaluation
 
   class PackageXmlReport
     include Enumerable
 
-    @store_master_package_listing  = nil
     @prefix = nil
 
     def initialize prefix
       @prefix = prefix
-      @store_master_package_listing = PackageListing.new(prefix)
     end
 
     def each
-      yield "<packages location=\"#{@prefix}\" time=\"{DateTime.now.to_s}\">\n"
-
-      @store_master_package_listing.each do |rec|  # we get an array of name, location, ieid
-        yield  '  <package name="'  + StoreUtils.xml_escape(rec[0]) + '" ' +
-          'location="'  + StoreUtils.xml_escape(rec[1]) + '" ' +
-          'ieid="'  + StoreUtils.xml_escape(rec[2]) + '">' + "\n"
+      yield "<packages location=\"#{StoreUtils.xml_escape(@prefix)}\" time=\"#{DateTime.now.to_s}\">\n"
+      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
+        yield  '  <package name="'  + StoreUtils.xml_escape(rec.name)                      + '" ' +
+                      'location="'  + StoreUtils.xml_escape([@prefix, rec.name].join('/')) + '" ' +
+                          'ieid="'  + StoreUtils.xml_escape(rec.ieid)                      + '">' + "\n"
       end
-
       yield "</packages>\n"
     end
   end # of PackageXmlReport
 
 
   class PackageCsvReport
-    @store_master_package_listing  = nil
-
+    @prefix  = nil
+    
     def initialize prefix
-      @store_master_package_listing = PackageListing.new(prefix)
+      @prefix = prefix
     end
 
     def each
       yield '"name","location","ieid"' + "\n"
-      @store_master_package_listing.each do |rec|  # we get an array of name, location, ieid
-        yield rec.map { |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
+      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
+        yield [rec.name, [@prefix, rec.name].join('/'), rec.ieid].map { |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
       end
     end
-  end # of PackageXmlReport
+  end # of PackageCsvReport
+
+
 
   # TODO: we're going to completely deprecate this aqnd go straight at the DM classes. RSN.
 
