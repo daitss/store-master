@@ -1,6 +1,6 @@
-require 'store/diskstore'
-require 'store/dm'
-require 'store/exceptions'
+require 'store-master/diskstore'
+require 'store-master/dm'
+require 'store-master/exceptions'
 require 'dm-types'
 require 'uri'
 require 'net/http'
@@ -22,7 +22,7 @@ require 'xml'
 
 
 
-module Store
+module StoreMaster
   class Package
 
     attr_reader   :name
@@ -90,14 +90,12 @@ module Store
 
       ## TODO: handle empty pools array here? or at caller?
 
+      raise "Can't create new package #{name}, it already exists"                   if Package.exists? metadata[:name]
+      raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted? metadata[:name]
+      
       pkg = Package.new metadata[:name]
 
-      raise "Can't create new package #{name}, it already exists"                   if Package.exists? name
-      raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted?(name)
-
-      pkg.dm_record = DM::Package.create
-      pkg.dm_record.ieid = metadata[:ieid]
-      pkg.dm_record.name = pkg.name
+      pkg.dm_record = DM::Package.create(:name => metadata[:name], :ieid => metadata[:ieid])
 
       begin
         pools.each do |pool|
@@ -105,6 +103,9 @@ module Store
           store_info = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
      
           pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
+
+          # TODO: Why am I having problems doing the following in store_copy?  I'd like store_copy to return only the location,
+          # instead of all this ancilliary crap.
 
           pkg.md5  = store_info['md5']
           pkg.sha1 = store_info['sha1']
@@ -160,7 +161,6 @@ module Store
     #   pkg.dm_record = rec
     #   pkg
     # end
-
 
     # delete tries to fail safe here, leaving orphans if necessary
       
@@ -220,10 +220,14 @@ module Store
 
       request = Net::HTTP::Post.new(url.request_uri)      
       request.body_stream = io
-      request.initialize_http_header({"Content-MD5" => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type"   => metadata[:type], })
+
+      request.initialize_http_header("Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]),
+                                     "Content-Length" => metadata[:size].to_s, 
+                                     "Content-Type"   => metadata[:type])
+
       request.basic_auth(url.user, url.password) if url.user or url.password
 
-      response = http.request(request)
+      response = http.request(request)  # finally.
 
       status = response.code.to_i
       location = sanitized_location(url)
@@ -271,7 +275,7 @@ module Store
     end
 
   end # of class Package
-end  # of module Store
+end  # of module StoreMaster
 
 
 # curl -sv -d ieid=E000019QB_BZ81F4  http://store-master.local/reserve/

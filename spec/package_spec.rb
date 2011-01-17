@@ -1,9 +1,9 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store/dm'
-require 'store/package'
-require 'store/pool'
-require 'store/reservation'
+require 'store-master/dm'
+require 'store-master/package'
+require 'store-master/pool'
+require 'store-master/reservation'
 require 'fileutils'
 require 'spec_helpers'
 require 'digest/md5'
@@ -121,32 +121,32 @@ def nimby
 end
 
 
-describe Store::Package do
+describe StoreMaster::Package do
 
   before(:all) do
     datamapper_setup
-    active_pools.each { |pool| Store::Pool.create(pool) }
+    active_pools.each { |pool| StoreMaster::Pool.create(pool) }
   end
 
   it "should let us determine that a package doesn't exist" do
     name = ieid + '.000'
-    Store::Package.exists?(name).should == false
+    StoreMaster::Package.exists?(name).should == false
   end
     
   it "should not let us retrieve an unsaved package" do
     name = ieid + '.000'
-    pkg = Store::Package.lookup(name)
+    pkg = StoreMaster::Package.lookup(name)
     pkg.nil? == true
   end
 
   it "should let us create a package" do
     nimby
 
-    name   = Store::Reservation.new(ieid).name
+    name   = StoreMaster::Reservation.new(ieid).name
     metadata = sample_metadata(name)
 
     io  = sample_tarfile
-    pkg = Store::Package.store(io, Store::Pool.list_active, metadata)
+    pkg = StoreMaster::Package.store(io, StoreMaster::Pool.list_active, metadata)
     pkg.name.should == name
     pkg.md5.should   == @@MD5
     pkg.sha1.should  == @@SHA1
@@ -158,27 +158,27 @@ describe Store::Package do
   it "should let us determine that a recorded package exists" do
     nimby
     last_saved_package = @@all_package_names[-1]
-    Store::Package.exists?(last_saved_package).should == true
+    StoreMaster::Package.exists?(last_saved_package).should == true
   end
 
 
   it "should let us retrieve a saved package" do
     nimby
     last_saved_package = @@all_package_names[-1]
-    pkg = Store::Package.lookup(last_saved_package)
+    pkg = StoreMaster::Package.lookup(last_saved_package)
     pkg.name.should == last_saved_package
   end
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { Store::Package.store(sample_tarfile, Store::Pool.list_active, sample_metadata(name)) }.should raise_error
+    lambda { StoreMaster::Package.store(sample_tarfile, StoreMaster::Pool.list_active, sample_metadata(name)) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
 
-    res = Store::Reservation.new(ieid);  @@all_package_names.push res.name
-    pkg = Store::Package.store(sample_tarfile, Store::Pool.list_active, sample_metadata(res.name))
+    res = StoreMaster::Reservation.new(ieid);  @@all_package_names.push res.name
+    pkg = StoreMaster::Package.store(sample_tarfile, StoreMaster::Pool.list_active, sample_metadata(res.name))
     pkg.locations.length.should == active_pools.length
   end
 
@@ -186,12 +186,12 @@ describe Store::Package do
   it "should order the list of locations for a package based on the pool's read_preference" do
     nimby
 
-    pools = Store::Pool.list_active
+    pools = StoreMaster::Pool.list_active
 
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
-    name  = Store::Reservation.new(ieid).name
-    pkg   = Store::Package.store(sample_tarfile, pools, sample_metadata(name))
+    name  = StoreMaster::Reservation.new(ieid).name
+    pkg   = StoreMaster::Package.store(sample_tarfile, pools, sample_metadata(name))
 
     pkg.name.should == name
     @@all_package_names.push name
@@ -210,8 +210,8 @@ describe Store::Package do
   end
 
   it "should list all of the package names we've stored" do    
-    (Store::Package.names - @@all_package_names).should == []
-    (@@all_package_names - Store::Package.names).should == []
+    (StoreMaster::Package.names - @@all_package_names).should == []
+    (@@all_package_names - StoreMaster::Package.names).should == []
   end
 
 
@@ -220,11 +220,11 @@ describe Store::Package do
     # get all the locations for all the names
 
     @@all_package_names.each do |name|
-      Store::Package.exists?(name).should == true
-      pkg = Store::Package.lookup(name)
+      StoreMaster::Package.exists?(name).should == true
+      pkg = StoreMaster::Package.lookup(name)
       pkg.nil?.should == false
       pkg.delete
-      Store::Package.exists?(name).should == false
+      StoreMaster::Package.exists?(name).should == false
     end
   end
 

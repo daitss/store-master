@@ -1,0 +1,26 @@
+
+prime-store-master reads a datafile in from the following format:
+
+E20051012_AAAAAA        http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAA
+E20051012_AAAAAA        http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAA
+E20051012_AAAAAB        http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAB
+E20051012_AAAAAB        http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAB
+
+
+We can generate that data from the silo records directly, as so:
+
+echo "select name, concat('http://', hostname, filesystem, '/data/', name) from packages, silos where packages.silo_record_id = silos.id and packages.extant" \
+   | my TarchiveSilo_testRW  \
+   | grep ^E2 \
+   | sed 's|/daitssfs/|/|' \
+   | grep -v /037/ > data.tarchive
+
+Do for tarchive, darchive and combine, sort.
+
+
+Or from the DAITSS db:
+
+select IEID, concat(URL, '/', PATH) from SILO, COPY where not SILO.RETIRED and SILO.ID = COPY.SILO and SILO.ID NOT IN (77,78) | grep ^E | sort
+
+
+Both methods should should give identical results.

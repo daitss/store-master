@@ -1,14 +1,14 @@
 require 'builder'
 require 'ostruct'
 require 'time'
-require 'store/exceptions'
-require 'store/logger'
-require 'store/diskstore'
-require 'store/dm'
-require 'store/package'
-require 'store/pool'
-require 'store/reservation'
-require 'store/utils'
+require 'store-master/exceptions'
+require 'store-master/logger'
+require 'store-master/diskstore'
+require 'store-master/dm'
+require 'store-master/package'
+require 'store-master/pool'
+require 'store-master/reservation'
+require 'store-master/utils'
 
 # When we deploy with Capistrano it checks out the code using Git
 # into its own branch, and places the git revision hash into the
@@ -41,8 +41,8 @@ module StoreMaster
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '0.3.141'
-  NAME     = 'StoreMaster'
+  VERSION  = '0.3.1415'
+  NAME     = 'Store Master Service'
 
 
   def self.version

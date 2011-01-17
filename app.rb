@@ -1,4 +1,4 @@
-require 'store' 
+require 'store-master' 
 require 'builder'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
@@ -6,7 +6,7 @@ require 'builder'
 
 REVISION = StoreMaster.version.rev
 
-include Store
+include StoreMaster
 
 configure do
   $KCODE = 'UTF8'

@@ -1,8 +1,8 @@
-require 'store/dm'
-require 'store/exceptions'
+require 'store-master/dm'
+require 'store-master/exceptions'
 require 'dm-types'
 
-module Store
+module StoreMaster
   class Pool
 
     attr_reader :dm_record
@@ -85,16 +85,11 @@ module Store
       @dm_record.post_url name
     end
 
-
     def self.list_active
-      pools = []
-      DM::Pool.all(:required => true, :order => [ :read_preference.desc ]).each do |rec|
-        pools.push Pool.new(rec)
-      end
-      pools
+      DM::Pool.list_active.map { |rec| Pool.new(rec) }
     end
 
   end # of class Pool
-end  # of module Store
+end  # of module StoreMaster
 
 

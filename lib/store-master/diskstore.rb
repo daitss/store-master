@@ -4,12 +4,12 @@ require 'find'
 require 'stringio'
 require 'timeout'
 require 'time'
-require 'store/utils'
-require 'store/exceptions'
+require 'store-master/utils'
+require 'store-master/exceptions'
 
 # TODO: get the lock file out of the DiskStore - need a /var/run/silos directory, or something....
 
-module Store
+module StoreMaster
 
   class DiskStore
     include Enumerable

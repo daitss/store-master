@@ -1,4 +1,4 @@
-module Store
+module StoreMaster
 
   # Most named exceptions in the XmlResolution service we assign here
   # to one of the HTTP classes.  Libraries are designed specifically

@@ -5,9 +5,10 @@ require 'dm-aggregates'
 require 'dm-migrations'
 require 'dm-transactions'
 require 'dm-validations'
-require 'store/diskstore'
-require 'store/exceptions'
+require 'store-master/diskstore'
+require 'store-master/exceptions'
 require 'time'
+require 'uri'
 
 module DM
 
@@ -18,20 +19,20 @@ module DM
   def self.setup yaml_file, key
     oops = "DB setup can't"
     
-    raise Store::ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
-    raise Store::ConfigurationError, "#{oops} understand key for the configuration file #{yaml_file} - it's not a string, it's a #{key.class}." unless (key.class == String)
+    raise StoreMaster::ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
+    raise StoreMaster::ConfigurationError, "#{oops} understand key for the configuration file #{yaml_file} - it's not a string, it's a #{key.class}." unless (key.class == String)
     begin
       dict = YAML::load(File.open(yaml_file))
     rescue => e
-      raise Store::ConfigurationError, "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
+      raise StoreMaster::ConfigurationError, "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
     end
-    raise Store::ConfigurationError, "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
+    raise StoreMaster::ConfigurationError, "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
     dbinfo = dict[key]
-    raise Store::ConfigurationError, "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                    unless dbinfo
-    raise Store::ConfigurationError, "#{oops} get the vendor name (e.g. 'mysql' or 'postsql') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
-    raise Store::ConfigurationError, "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                           unless dbinfo.include? 'database'
-    raise Store::ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
-    raise Store::ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
+    raise StoreMaster::ConfigurationError, "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                    unless dbinfo
+    raise StoreMaster::ConfigurationError, "#{oops} get the vendor name (e.g. 'mysql' or 'postsql') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
+    raise StoreMaster::ConfigurationError, "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                           unless dbinfo.include? 'database'
+    raise StoreMaster::ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
+    raise StoreMaster::ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
     
     # Example string: 'mysql://root:topsecret@localhost/silos'
     
@@ -49,7 +50,7 @@ module DM
       return dm
       
     rescue => e
-      raise Store::ConfigurationError,
+      raise StoreMaster::ConfigurationError,
       "Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}"
     end
   end
@@ -62,7 +63,6 @@ module DM
     Pool.auto_migrate!
     Package.auto_migrate!
     Copy.auto_migrate!
-    Event.auto_migrate!
   end
 
   # A database for reserving names for URLs based on IEIDs.
@@ -91,11 +91,10 @@ module DM
     # many-to-many  relationship - a package can (and should) have copies on several different pools
     
     has n,      :copies
-    has n,      :events
         
     validates_uniqueness_of  :name
 
-    attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes TODO: are we still using these?
+    attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes filled in on succesful store
 
     # return URI objects for all of the copies we have, in pool-preference order
 
@@ -124,22 +123,6 @@ module DM
 
   end # of Package
   
-  class Event
-    include DataMapper::Resource
-    storage_names[:default] = 'events'          # don't want dm_events
-    
-    def self.types
-      [ :put, :delete ]
-    end
-    
-    property   :id,        Serial,         :min => 1
-    property   :datetime,  DateTime,       :index => true,   :default  => lambda { |resource, property| DateTime.now }
-    property   :type,      Enum[ *types],  :index => true,   :required => true
-    property   :outcome,   Boolean,        :index => true,   :default  => true
-    property   :note,      String,         :length => 255,   :default  => ''
-    
-    belongs_to :package
-  end # of Event
   
   class Pool
     include DataMapper::Resource
@@ -164,6 +147,11 @@ module DM
       end
       url
     end
+
+    def self.list_active
+      DM::Pool.all(:required => true, :order => [ :read_preference.desc ])
+    end
+
       
   end # of Pool
   

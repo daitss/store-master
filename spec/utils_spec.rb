@@ -1,4 +1,4 @@
-require 'store/utils'
+require 'store-master/utils'
 require 'fileutils'
 require 'tempfile'
 require 'find'
@@ -43,19 +43,6 @@ describe StoreUtils do
   
   it "should retrieve the original hexstring, after a base64 encoding of a hexstring" do
     StoreUtils.base64_to_md5hex("1B2M2Y8AsgTpgAmY7PhCfg==").should == "d41d8cd98f00b204e9800998ecf8427e"
-  end
-
-  it "should allow us to retrieve correctly specified command line arguments, defaulting the db_configuration_file" do
-    argv = [ "--hostname", "example.com", "--silo-path", "/tmp", "--db-configuration-key", "foobar", "--syslog-facility", "LOCAL0"]
-    conf = StoreUtils.get_silo_options(argv)
-
-    conf.should_not == nil
-
-    conf.hostname.should              == 'example.com'
-    conf.db_configuration_file.should == '/opt/fda/etc/db.yml'
-    conf.db_configuration_key.should  == 'foobar'
-    conf.syslog_facility.should       == 'LOCAL0'
-    conf.silo_path.should             == '/tmp'
   end
 
   it "should strip trailing slashes, leaving trailing non-slashes, and single slashes, alone" do

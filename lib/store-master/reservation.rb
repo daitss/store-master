@@ -1,10 +1,10 @@
-require 'store/dm'
-require 'store/exceptions'
-require 'store/utils'
+require 'store-master/dm'
+require 'store-master/exceptions'
+require 'store-master/utils'
 
 # First step in storing a new package is to recieve a post for an IEID.
 
-module Store
+module StoreMaster
   class Reservation
 
     # Given an IEID, create a new name based on it.  We'll use the name as part of a URL
@@ -12,7 +12,7 @@ module Store
     attr_reader :ieid, :name
 
     def initialize ieid
-      raise Store::BadName, "IEID #{ieid} doesn't meet our naming convention" unless StoreUtils.valid_ieid_name? ieid
+      raise StoreMaster::BadName, "IEID #{ieid} doesn't meet our naming convention" unless StoreUtils.valid_ieid_name? ieid
       @ieid = ieid
       @name = create_new_name(ieid)
     end
@@ -36,9 +36,9 @@ module Store
         return res.name if res.saved?
         vers.succ!
       end
-      raise Store::DataBaseError, "Can't create a new name for IEID '#{ieid}'."
+      raise StoreMaster::DataBaseError, "Can't create a new name for IEID '#{ieid}'."
     end
 
 
   end # class Reservation
-end # module Store
+end # module StoreMaster

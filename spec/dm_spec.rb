@@ -3,7 +3,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(HOME, 'lib')) # for spec_helpers
 
 # Note: please set up databases as specified in db.yml in this directory.
 
-require 'store/dm'
+require 'store-master/dm'
 require 'spec_helpers'
 
 ENV['TZ'] = 'UTC'
@@ -29,7 +29,7 @@ def mysql_setup
   DM.recreate_tables
 end
 
-share_examples_for "DataMapper Package class using any database" do
+share_examples_for "DataMapper Package class with any DB, when it" do
   
   it "should let us a create a new package" do
     package  = DM::Package.create(:ieid => IEID, :name => name(1)) 
@@ -60,29 +60,6 @@ share_examples_for "DataMapper Package class using any database" do
   end
 
 
-  it "should let us create an event and associate it with a package, retreiving it" do
-    
-    pkg1  = DM::Package.first(:name => name(1))
-  
-    ev1 = DM::Event.create(:type => :put, :note => 'This is a test')
-
-    ev1.saved?.should == false  # not a requirement per se,
-
-    pkg1.events << ev1
-    pkg1.save.should == true
-
-    pkg2 = DM::Package.first(:name => name(1))
-    ev1.saved?.should == true
-
-    ev2 = pkg2.events[0]
-
-    ev2.type.should    == :put
-    ev2.note.should    == 'This is a test'
-    ev2.outcome.should == true               # default value
-
-    (DateTime.now - ev2.datetime).should be_within(0.0001).of(0)
-  end
-
   it "should let us create pools with differing read preferences, and order them " do
 
     pool1 = DM::Pool.create(:put_location => pool('a'), :read_preference => 10)
@@ -94,6 +71,7 @@ share_examples_for "DataMapper Package class using any database" do
     pool1.read_preference.should > pool2.read_preference
   end
 
+
   it "should not let us create pools with the same location" do
 
     pool1 = DM::Pool.create(:put_location => pool('c'), :read_preference => 10)
@@ -103,6 +81,7 @@ share_examples_for "DataMapper Package class using any database" do
     pool2.save.should == false
   end
 
+
   it "should allow us to get a posting URL for a pool" do
     pool = DM::Pool.create(:put_location => pool('poster'))
     pool.post_url('name').class.should == URI::HTTP    
@@ -110,7 +89,58 @@ share_examples_for "DataMapper Package class using any database" do
 
 
 
-  it "should let us associate copies URL with a pacakge, setting the time or defaulting it, storing and retreiving it" do
+  it "should let us retrieve an associated pool from a copy" do
+
+    pool1 = DM::Pool.create(:put_location => pool('g'))
+    pool2 = DM::Pool.create(:put_location => pool('h'))
+
+    pool1.save.should == true
+    pool2.save.should == true
+
+    bar = 'http://bar.example.com/bar/100'
+    foo = 'http://foo.example.com/foo/100'
+
+    pkg1  = DM::Package.create(:ieid => IEID, :name => name(4))
+
+
+    copy2time = DateTime.now - 100
+    copy1 = DM::Copy.create(:store_location => foo, :pool => pool1)
+    copy2 = DM::Copy.create(:store_location => bar, :pool => pool2, :datetime => copy2time)
+
+    pkg1.copies << copy1
+    pkg1.copies << copy2
+
+    pkg1.save.should == true
+
+    pkg2 = DM::Package.first(:name => name(4))
+
+    [ pool1, pool2 ].should  include(pkg2.copies[0].pool)
+    [ pool1, pool2 ].should  include(pkg2.copies[1].pool)
+  end
+
+
+  it "should let us mark a package as deleted" do
+
+    pool = DM::Pool.create(:put_location => pool('i'))
+    pkg  = DM::Package.create(:ieid => IEID, :name => name(101))
+    copy = DM::Copy.create(:store_location => 'http://bar.example.com/bar', :pool => pool)
+    pkg.copies << copy
+    
+    pkg.save.should == true
+
+    pkg  = DM::Package.lookup(name(101))
+    pkg.should_not == nil
+
+    pkg.extant = false
+    pkg.save.should == true
+
+    pkg  = DM::Package.lookup(name(101))
+
+    pkg.should == nil
+  end
+
+
+  it "should let us associate copies URL with a packge, setting the time or defaulting it, storing and retreiving it" do
 
     pool1 = DM::Pool.create(:put_location => pool('d'))
     pool2 = DM::Pool.create(:put_location => pool('e'))
@@ -189,20 +219,20 @@ share_examples_for "DataMapper Package class using any database" do
 end
 
 
-describe "DataMapper Package using Postgress" do
+describe "DataMapper Package class (using Postgress); " do
   before(:all) do
     postgres_setup
   end
 
-  it_should_behave_like "DataMapper Package class using any database"
+  it_should_behave_like "DataMapper Package class with any DB, when it"
 end 
 
 
-describe "DataMapper Package using MySQL" do
+describe "DataMapper Package class (using MySQL); " do
   before(:all) do
     mysql_setup
   end
 
-  it_should_behave_like "DataMapper Package class using any database"
+  it_should_behave_like "DataMapper Package class with any DB, when it"
 end 
 

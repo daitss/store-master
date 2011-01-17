@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))  # for spec_helpers
 
-require 'store/diskstore'
+require 'store-master/diskstore'
 require 'fileutils'
 require 'tempfile'
 require 'find'
@@ -8,7 +8,7 @@ require 'find'
 require 'spec_helpers'
 
 
-describe Store::DiskStore do
+describe StoreMaster::DiskStore do
 
   before do
     @disk_root = "/tmp/test-diskstore"
@@ -18,9 +18,9 @@ describe Store::DiskStore do
     FileUtils::mkdir @disk_root + "/out"
     FileUtils::mkdir @disk_root + "/test"
 
-    @diskstore     = Store::DiskStore.new @disk_root + "/test"
-    @out_diskstore = Store::DiskStore.new @disk_root + "/out"
-    @in_diskstore  = Store::DiskStore.new @disk_root + "/in"
+    @diskstore     = StoreMaster::DiskStore.new @disk_root + "/test"
+    @out_diskstore = StoreMaster::DiskStore.new @disk_root + "/out"
+    @in_diskstore  = StoreMaster::DiskStore.new @disk_root + "/in"
   end
   
   after do
@@ -31,17 +31,17 @@ describe Store::DiskStore do
   end
   
   it "should create a diskstore based on a directory" do
-    lambda { Store::DiskStore.new @disk_root }.should_not raise_error
+    lambda { StoreMaster::DiskStore.new @disk_root }.should_not raise_error
   end
   
   it "should not create a diskstore on anything but a directory" do
     t = Tempfile.new('testtmp')
     regular_file = t.path
-    lambda { Store::DiskStore.new regular_file }.should raise_error(Store::ConfigurationError)
+    lambda { StoreMaster::DiskStore.new regular_file }.should raise_error(StoreMaster::ConfigurationError)
   end
 
   it "should not create a diskstore on an unwritable directory" do
-    lambda { Store::DiskStore.new '/etc'}.should raise_error(Store::ConfigurationError)
+    lambda { StoreMaster::DiskStore.new '/etc'}.should raise_error(StoreMaster::ConfigurationError)
   end
 
   it "should take a object name and some data to store an object" do
@@ -79,7 +79,7 @@ describe Store::DiskStore do
     name = some_name
     data = some_data
     @diskstore.put name, data, 'my-type'
-    lambda {@diskstore.put(name, data, 'my-type')}.should raise_error(Store::DiskStoreResourceExists)
+    lambda {@diskstore.put(name, data, 'my-type')}.should raise_error(StoreMaster::DiskStoreResourceExists)
   end
 
   it "should have size for an object" do
@@ -98,7 +98,7 @@ describe Store::DiskStore do
 
   it "should raise DiskStoreError on requests for size for non-existant objects" do
     name = some_name
-    lambda {@diskstore.size(name)}.should raise_error(Store::DiskStoreError)
+    lambda {@diskstore.size(name)}.should raise_error(StoreMaster::DiskStoreError)
   end
 
   it "should return size of zero, empty string, and specific md5 checksum on reading a zero length file" do
@@ -133,14 +133,14 @@ describe Store::DiskStore do
 
   it "datetime should raise an error if the object does not exist" do
     name = "bogus name"
-    lambda{ @diskstore.datetime(name)}.should raise_error(Store::DiskStoreError)	
+    lambda{ @diskstore.datetime(name)}.should raise_error(StoreMaster::DiskStoreError)	
   end
 
   it "datetime should not raise error if the object does exist"	do
     name = "the name"
     data = "some data"
     @diskstore.put name, data, 'my-type'
-    lambda{ @diskstore.datetime(name)}.should_not raise_error(Store::DiskStoreError)				
+    lambda{ @diskstore.datetime(name)}.should_not raise_error(StoreMaster::DiskStoreError)				
   end
 
   it "datetime should return the time an object was created" do
@@ -180,7 +180,7 @@ describe Store::DiskStore do
     data  = "Now is the time for all good men to come to the aid of their country!\n"
     name  = "George Washington!?"
 
-    lambda{ @diskstore.put(name, data, 'my-type')}.should raise_error(Store::BadName)
+    lambda{ @diskstore.put(name, data, 'my-type')}.should raise_error(StoreMaster::BadName)
   end  			
 
   it "should allow grep of all the names in the collection" do
@@ -297,10 +297,5 @@ describe Store::DiskStore do
     @diskstore.put(name, data, 'my-type')
     @diskstore.exists?(name).should == true
   end
-
-
-
-
-
 
 end

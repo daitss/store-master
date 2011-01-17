@@ -9,7 +9,7 @@ $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib/')
 require 'store/dm'
 require 'store/pool'
 
-DM.setup('/opt/fda/etc/db.yml', 'store_master')
+DM.setup('/opt/fda/etc/db.yml', 'ps_store_master')
 
 ENV['TZ'] = 'UTC'  # ?
 
@@ -20,19 +20,18 @@ ENV['TZ'] = 'UTC'  # ?
 
 
 loc   = 'http://silos.darchive.fcla.edu/'
-pool1 =  Store::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
+pool1 =  StoreMaster::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
 loc   = 'http://silos.tarchive.fcla.edu/'
-pool2 =  Store::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
+pool2 =  StoreMaster::Pool.exists?(loc) ? Store::Pool.lookup(loc) : Store::Pool.create(loc) 
 
 pool2.read_preference = 10
 
 puts pool1.put_location
 puts pool2.put_location
 
-
 while line = STDIN.gets do
 
-  ieid, loc = line.strip.split(/\s+/, 6)
+  ieid, loc = line.strip.split(/\s+/, 2)
 
   unless ieid =~ /^E2/
     STDERR.puts "Unexpected line '#{line.strip}', skipping"
@@ -56,7 +55,9 @@ while line = STDIN.gets do
   end
 
   pkg  = DM::Package.first_or_create(:ieid => ieid, :name => ieid)
-  pkg.copies << DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
+  copy = DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
+  puts copy.url
+  pkg.copies << copy
 
   if not pkg.save
     STDERR.puts "Error saving #{ieid}: " + pkg.errors.map{ |e| e.to_s }.join("\n -- ")
