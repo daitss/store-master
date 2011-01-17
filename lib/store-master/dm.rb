@@ -12,7 +12,7 @@ require 'uri'
 
 module DM
 
-  ENV['TZ'] = 'UTC'  ### meh
+  ENV['TZ'] = 'UTC'  ### meh - replace ASAP
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 

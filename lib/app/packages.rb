@@ -9,7 +9,7 @@ post '/reserve/?' do
   raise BadName, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
 
   res = Reservation.new ieid
-  
+
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
   xml.reserved(:ieid => ieid, :location => web_location("/packages/#{res.name}"))
@@ -29,7 +29,7 @@ put '/packages/:name' do |name|
   raise Http403, "The resource #{this_resource} already exists"                                     if Package.exists?(name)
   raise Http400, "Can't use resource #{this_resource}: it has been previously created and deleted"  if Package.was_deleted?(name)
   raise Http400, "Missing the Content-MD5 header, required for PUTs to #{this_resource}"  unless request_md5
-  raise Http400, "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar' 
+  raise Http400, "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar'
 
   pools = Pool.list_active
 
@@ -48,7 +48,7 @@ put '/packages/:name' do |name|
               :sha1     => pkg.sha1,
               :size     => pkg.size,
               :type     => pkg.type
-        )
+              )
 
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
@@ -88,19 +88,14 @@ end
 
 # Get an XML file of all the packages we know about.  This is so slow as to be impractical, right now.
 
-get '/packages/?' do 
-  xml = Builder::XmlMarkup.new(:indent => 2)
-  xml.instruct!(:xml, :encoding => 'UTF-8')
-  
-  xml.updates(:location => web_location('/packages/'), :time =>  Time.now.iso8601) {
-    Package.names.each do |name|
-      pkg = Package.lookup name
-      xml.package(:name     => name,
-                  :ieid     => pkg.ieid,
-                  :location => web_location("/packages/#{name}"))
-    end
-  }
+get '/packages.xml' do
+  [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]
+end
 
-  content_type 'application/xml'
-  xml.target!
+get '/packages.csv' do
+  [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]
+end
+
+get '/packages/?' do
+  redirect '/packages.xml', 301  # is this correct code:?
 end

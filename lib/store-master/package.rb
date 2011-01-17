@@ -9,13 +9,13 @@ require 'xml'
 # TO DO:  Add PUT/DELETE event records.
 # TO DO:  Move everything into DM::Package and use those methods....
 
-# Two basic ways to instantiate package objects, which 
+# Two basic ways to instantiate package objects, which
 #
 # pkg = Package.lookup(name)
 #
-# pkg.locations  => 
-# pkg.ieid       => 
-# pkg.name       => 
+# pkg.locations  =>
+# pkg.ieid       =>
+# pkg.name       =>
 #
 #
 # pkg = Package.store(data, pools, metadata)
@@ -23,6 +23,67 @@ require 'xml'
 
 
 module StoreMaster
+
+  class PackageListing
+    include Enumerable
+
+    @prefix = nil
+    def initialize prefix
+      @prefix = prefix
+    end
+
+    def each
+      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
+        yield [ rec.name, [@prefix, rec.name].join('/'), rec.ieid ]
+      end
+    end
+  end # of class  StoreMasterPackageListing
+
+  # list all of the package information we have in a form that's space efficient for rack (this
+  # means that we provide a lazy kind of evaluation
+
+  class PackageXmlReport
+    include Enumerable
+
+    @store_master_package_listing  = nil
+    @prefix = nil
+
+    def initialize prefix
+      @prefix = prefix
+      @store_master_package_listing = PackageListing.new(prefix)
+    end
+
+    def each
+      yield "<packages location=\"#{@prefix}\" time=\"{DateTime.now.to_s}\">\n"
+
+      @store_master_package_listing.each do |rec|  # we get an array of name, location, ieid
+        yield  '  <package name="'  + StoreUtils.xml_escape(rec[0]) + '" ' +
+          'location="'  + StoreUtils.xml_escape(rec[1]) + '" ' +
+          'ieid="'  + StoreUtils.xml_escape(rec[2]) + '">' + "\n"
+      end
+
+      yield "</packages>\n"
+    end
+  end # of PackageXmlReport
+
+
+  class PackageCsvReport
+    @store_master_package_listing  = nil
+
+    def initialize prefix
+      @store_master_package_listing = PackageListing.new(prefix)
+    end
+
+    def each
+      yield '"name","location","ieid"' + "\n"
+      @store_master_package_listing.each do |rec|  # we get an array of name, location, ieid
+        yield rec.map { |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
+      end
+    end
+  end # of PackageXmlReport
+
+  # TODO: we're going to completely deprecate this aqnd go straight at the DM classes. RSN.
+
   class Package
 
     attr_reader   :name
@@ -92,7 +153,7 @@ module StoreMaster
 
       raise "Can't create new package #{name}, it already exists"                   if Package.exists? metadata[:name]
       raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted? metadata[:name]
-      
+
       pkg = Package.new metadata[:name]
 
       pkg.dm_record = DM::Package.create(:name => metadata[:name], :ieid => metadata[:ieid])
@@ -101,7 +162,7 @@ module StoreMaster
         pools.each do |pool|
 
           store_info = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
-     
+
           pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
 
           # TODO: Why am I having problems doing the following in store_copy?  I'd like store_copy to return only the location,
@@ -116,7 +177,7 @@ module StoreMaster
 
       rescue => e1
         msg = "Failure storing copy of #{pkg.name}: #{e1.message}"
-        pkg.locations.each do |loc| 
+        pkg.locations.each do |loc|
           begin
             pkg.delete_copy(loc)
           rescue => e2
@@ -128,7 +189,7 @@ module StoreMaster
 
       if not pkg.dm_record.save
         msg = "DB error recording #{name} - #{pkg.dm_record.errors.full_messages.join('; ')}"
-        pkg.locations.each do |loc| 
+        pkg.locations.each do |loc|
           begin
             pkg.delete_copy(loc)
           rescue => e
@@ -163,20 +224,20 @@ module StoreMaster
     # end
 
     # delete tries to fail safe here, leaving orphans if necessary
-      
+
     def delete
       dm_record.extant = false
       raise  DataBaseError, "error deleting #{name} - #{pkg.dm_record.errors.full_messages.join('; ')}" unless dm_record.save
 
       errors = []
-      dm_record.locations.each do |loc| 
+      dm_record.locations.each do |loc|
         begin
           delete_copy(loc)
         rescue => e
           errors.push "failed to delete remote storage at #{loc}: #{e.message}"
         end
       end
-      
+
       raise DriveByError, errors.join('; ') unless errors.empty?
     end
 
@@ -199,11 +260,11 @@ module StoreMaster
       if status >= 300
         err   = "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{sanitized_location(url)}"
         err  += "; #{response.body}" if response.body.length > 0
-        if status >= 500   
+        if status >= 500
           raise err
-        elsif status >= 400 
+        elsif status >= 400
           raise Silo400Error, err
-        elsif status >= 300    
+        elsif status >= 300
           raise err
         end
       end
@@ -218,11 +279,11 @@ module StoreMaster
 
       io.rewind if io.respond_to?('rewind')
 
-      request = Net::HTTP::Post.new(url.request_uri)      
+      request = Net::HTTP::Post.new(url.request_uri)
       request.body_stream = io
 
       request.initialize_http_header("Content-MD5"    => StoreUtils.md5hex_to_base64(metadata[:md5]),
-                                     "Content-Length" => metadata[:size].to_s, 
+                                     "Content-Length" => metadata[:size].to_s,
                                      "Content-Type"   => metadata[:type])
 
       request.basic_auth(url.user, url.password) if url.user or url.password
@@ -236,28 +297,28 @@ module StoreMaster
       if status >= 300
         err   = "#{response.code} #{response.message} was returned for a failed forward of package to #{location}"
         err  += "; message was #{response.body}" if response.body.length > 0
-        if status >= 500   
+        if status >= 500
           raise err
-        elsif status >= 400 
+        elsif status >= 400
           raise Silo400Error, err
-        elsif status >= 300    
+        elsif status >= 300
           raise err
-        end          
+        end
       end
-    
+
       # Example XML document returned from PUT:    <?xml version="1.0" encoding="UTF-8"?>
-      #                                            <created type="application/x-tar" 
-      #                                                     time="2010-10-21T10:29:19-04:00" 
-      #                                                     sha1="ac4d813081e066422bc1dc7e7997ace1bfb858b2" 
-      #                                                     etag="a3f07bc57127112f2a2c40d026b1abe1" 
-      #                                                     md5="32e2ce3af2f98a115e121285d042c9bd" 
-      #                                                     size="6031360" 
-      #                                                     location="http://storage.local/b/data/E20101021_LJLAMU.001" 
+      #                                            <created type="application/x-tar"
+      #                                                     time="2010-10-21T10:29:19-04:00"
+      #                                                     sha1="ac4d813081e066422bc1dc7e7997ace1bfb858b2"
+      #                                                     etag="a3f07bc57127112f2a2c40d026b1abe1"
+      #                                                     md5="32e2ce3af2f98a115e121285d042c9bd"
+      #                                                     size="6031360"
+      #                                                     location="http://storage.local/b/data/E20101021_LJLAMU.001"
       #                                                     name="E20101021_LJLAMU.001"/>
 
       returned_data = {}
 
-      begin 
+      begin
         parser = XML::Parser.string(response.body).parse
         node   = parser.find('/created')[0]
         node.each_attr { |attr| returned_data[attr.name] = attr.value }
