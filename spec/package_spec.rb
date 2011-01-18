@@ -43,7 +43,7 @@ def active_pools
   # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
-  [ 'http://pool.a.local/create/', 'http://pool.b.local/create/' ]
+  [ 'http://pool.a.local/services', 'http://pool.b.local/services' ]
 end
 
 @@IEID = ieid()
@@ -99,7 +99,7 @@ def index_of_pool_that_best_matches_url(pools, url)
   # and the url passed as argument.
 
   pool_ranks    = []
-  pools.each_with_index { |p, i| pool_ranks.push [ i, lcs_size(p.put_location, url) ] }
+  pools.each_with_index { |p, i| pool_ranks.push [ i, lcs_size(p.services_location, url) ] }
 
   # sort list by length longest common substring, largest first - so:
   # [ [0, 23], [1, 28], [3, 0] ]    =>     [ [1, 28], [0, 23], [3, 0] ]

@@ -15,18 +15,18 @@ module StoreMaster
       @dm_record = dm_record
     end
 
-    def self.create put_location
-      rec = DM::Pool.create(:put_location => put_location)
-      rec.saved? or raise "Can't create new pool record #{put_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
+    def self.create services_location
+      rec = DM::Pool.create(:services_location => services_location)
+      rec.saved? or raise "Can't create new pool record #{services_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
       Pool.new rec
     end
 
-    def self.exists? put_location
-      not DM::Pool.first(:put_location => put_location).nil? 
+    def self.exists? services_location
+      not DM::Pool.first(:services_location => services_location).nil? 
     end
 
-    def self.lookup put_location
-      rec = DM::Pool.first(:put_location => put_location)
+    def self.lookup services_location
+      rec = DM::Pool.first(:services_location => services_location)
       Pool.new rec
     end
 
@@ -42,16 +42,16 @@ module StoreMaster
 
     def required= bool
       @dm_record.required = bool
-      @dm_record.save or raise "Can't set pool #{put_location} 'required' flag to #{bool};  DB errors: " + @dm_record.errors.full_messages.join('; ')
+      @dm_record.save or raise "Can't set pool #{services_location} 'required' flag to #{bool};  DB errors: " + @dm_record.errors.full_messages.join('; ')
     end
 
-    def put_location
-      @dm_record.put_location      
+    def services_location
+      @dm_record.services_location      
     end
 
-    def put_location= url
-      @dm_record.put_location = bool
-      @dm_record.save or raise "Can't set pool #{put_location} 'put_location' to#{url};  DB errors: " + @dm_record.errors.full_messages.join('; ')
+    def services_location= url
+      @dm_record.services_location = bool
+      @dm_record.save or raise "Can't set pool #{services_location} 'services_location' to#{url};  DB errors: " + @dm_record.errors.full_messages.join('; ')
     end
 
     def read_preference
@@ -60,7 +60,7 @@ module StoreMaster
 
     def read_preference= int
       @dm_record.read_preference = int
-      @dm_record.save or raise "Can't set pool #{put_location} 'read_preference' to #{int};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
+      @dm_record.save or raise "Can't set pool #{services_location} 'read_preference' to #{int};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
     end
 
     def password
@@ -69,7 +69,7 @@ module StoreMaster
 
     def password= password
       @dm_record.basic_auth_password = password
-      @dm_record.save or raise "Can't set pool #{put_location} 'basic_auth_password' to #{password};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
+      @dm_record.save or raise "Can't set pool #{services_location} 'basic_auth_password' to #{password};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
     end
 
     def username
@@ -78,7 +78,7 @@ module StoreMaster
 
     def username= username
       @dm_record.basic_auth_username = username
-      @dm_record.save or raise "Can't set pool #{put_location} 'basic_auth_username' to #{username};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
+      @dm_record.save or raise "Can't set pool #{services_location} 'basic_auth_username' to #{username};  DB errors:  " + @dm_record.errors.full_messages.join('; ')
     end
 
     def post_url name
