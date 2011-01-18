@@ -160,7 +160,6 @@ module StoreMaster
 
       begin
         pools.each do |pool|
-
           store_info = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
 
           pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)

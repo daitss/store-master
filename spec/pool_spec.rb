@@ -21,7 +21,7 @@ describe StoreMaster::Pool do
   end
 
   it "should let us create a new pool server by put URL" do
-    pool = StoreMaster::Pool.create 'http://first.example.com/services/'
+    pool = StoreMaster::Pool.add 'http://first.example.com/services/'
     pool.services_location.should == 'http://first.example.com/services/'
   end
 
@@ -40,7 +40,7 @@ describe StoreMaster::Pool do
   end
 
   it "should not allow us to create a new pool with an existing put_location" do
-    lambda { StoreMaster::Pool.create 'http://first.example.com/services/' }.should raise_error
+    lambda { StoreMaster::Pool.add 'http://first.example.com/services/' }.should raise_error
   end
 
   it "should allow us to set new attributes" do
@@ -61,8 +61,8 @@ describe StoreMaster::Pool do
   end
 
   it "should retrieve an list of active pools" do
-    StoreMaster::Pool.create 'http://second.example.com/services/'
-    StoreMaster::Pool.create 'http://third.example.com/services/'
+    StoreMaster::Pool.add 'http://second.example.com/services/'
+    StoreMaster::Pool.add 'http://third.example.com/services/'
 
     pools = StoreMaster::Pool.list_active
 
@@ -75,7 +75,7 @@ describe StoreMaster::Pool do
   it "should order the list of active pools by preference" do
     p2 = StoreMaster::Pool.lookup 'http://second.example.com/services/'
     p3 = StoreMaster::Pool.lookup 'http://third.example.com/services/'
-    p0 = StoreMaster::Pool.create 'http://zero.example.com/services/'
+    p0 = StoreMaster::Pool.add 'http://zero.example.com/services/'
 
     p2.read_preference = 2  # second.example.com
     p3.read_preference = 3  # third.example.com

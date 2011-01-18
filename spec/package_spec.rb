@@ -125,7 +125,7 @@ describe StoreMaster::Package do
 
   before(:all) do
     datamapper_setup
-    active_pools.each { |pool| StoreMaster::Pool.create(pool) }
+    active_pools.each { |pool| StoreMaster::Pool.add(pool) }
   end
 
   it "should let us determine that a package doesn't exist" do

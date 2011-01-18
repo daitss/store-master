@@ -15,9 +15,8 @@ module StoreMaster
       @dm_record = dm_record
     end
 
-    def self.create services_location
-      rec = DM::Pool.create(:services_location => services_location)
-      rec.saved? or raise "Can't create new pool record #{services_location}; DB errors: " + @dm_record.errors.full_messages.join('; ')
+    def self.add services_location, read_preference = nil
+      rec = DM::Pool.add(services_location, read_preference)
       Pool.new rec
     end
 

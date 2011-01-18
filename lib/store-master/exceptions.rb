@@ -163,6 +163,10 @@ module StoreMaster
     def status_text; "HTTP Version Not Supported"; end
   end
 
+  # SiloUnreachable exception, silo servers fault (subclassed Http500): system failure.
+
+  class SiloUnreachable           < Http500; end
+
   # ConfigurationError exception, server's fault (subclasses Http500): Something wasn't set up correctly
 
   class ConfigurationError         < Http500; end            

@@ -1,7 +1,6 @@
 require 'dm-core'
 require 'dm-types'
 require 'dm-aggregates'
-# require 'dm-constraints'  doesn't seem to work
 require 'dm-migrations'
 require 'dm-transactions'
 require 'dm-validations'
@@ -9,17 +8,14 @@ require 'store-master/diskstore'
 require 'store-master/exceptions'
 require 'time'
 require 'uri'
-#  require 'cgi' # TODO: make sure we don't need to escape the document bodies returned in error messages
 
 module DM
-
-  ENV['TZ'] = 'UTC'  ### meh - replace ASAP
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
   def self.setup yaml_file, key
     oops = "DB setup can't"
-    
+
     raise StoreMaster::ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
     raise StoreMaster::ConfigurationError, "#{oops} understand key for the configuration file #{yaml_file} - it's not a string, it's a #{key.class}." unless (key.class == String)
     begin
@@ -34,9 +30,9 @@ module DM
     raise StoreMaster::ConfigurationError, "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                           unless dbinfo.include? 'database'
     raise StoreMaster::ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
     raise StoreMaster::ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
-    
+
     # Example string: 'mysql://root:topsecret@localhost/silos'
-    
+
     connection_string =                                               # e.g.
       dbinfo['vendor']    + '://' +                                   # mysql://
       dbinfo['username']  +                                           # mysql://fischer
@@ -49,7 +45,7 @@ module DM
       DataMapper.finalize
       dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
       return dm
-      
+
     rescue => e
       raise StoreMaster::ConfigurationError,
       "Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}"
@@ -71,28 +67,28 @@ module DM
   class Reservation
     include DataMapper::Resource
     storage_names[:default] = 'reservations'    # don't want dm_packages
-    
+
     property   :id,         Serial
     property   :ieid,       String,   :required => true, :index => true, :length => (16..16)
     property   :name,       String,   :required => true, :index => true, :length => (20..20) # unique name, used as part of a url
 
     validates_uniqueness_of :name
   end
-  
+
   class Package
-    
+
     include DataMapper::Resource
     storage_names[:default] = 'packages'    # don't want dm_packages
-    
+
     property   :id,         Serial,   :min => 1
     property   :extant,     Boolean,  :default  => true, :index => true
     property   :ieid,       String,   :required => true, :index => true
     property   :name,       String,   :required => true, :index => true      # unique name, used as part of a url
-        
+
     # many-to-many  relationship - a package can (and should) have copies on several different pools
-    
+
     has n,      :copies
-        
+
     validates_uniqueness_of  :name
 
     attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes filled in on succesful store
@@ -123,12 +119,12 @@ module DM
     end
 
   end # of Package
-  
-  
+
+
   class Pool
     include DataMapper::Resource
     storage_names[:default] = 'pools'           # don't want dm_pools
-    
+
     property   :id,                   Serial,   :min => 1
     property   :required,             Boolean,  :required => true, :default => true
     property   :services_location,    String,   :length => 255, :required => true
@@ -152,30 +148,36 @@ module DM
     #  </services>
     #
     # We require one create service that specifies a URL template (it has a slot for a name)
-    # and when we POST data to that filled-in URL we'll produce a new resource; the document 
+    # and when we POST data to that filled-in URL we'll produce a new resource; the document
     # returned from the POST will tell us where the resource has been place.
     #
     # We also have one or more URLs that describe where we can requester fixity data from; the
     # MIME type of the returned data is provided.
 
+
     def service_document
-      url = URI.parse(services_location)
+      url = URI.parse(services_location) rescue raise(StoreMaster::ConfigurationError, "The silo services URL #{services_location} doesn't appear to be a valid URL")
 
-      # go get information from the services to determine the URL to post to:
+      begin # go get information from the silo services document to determine the URLs for the sub services we'll need
 
-      request = Net::HTTP::Get.new(url.path)
-      request.basic_auth(basic_auth_username, basic_auth_password) if basic_auth_username or basic_auth_password
-      response = Net::HTTP.new(url.host, url.port).start do |http| 
-        http.open_timeout = 10
-        http.read_timeout = 30
-        http.request(request)
+        request = Net::HTTP::Get.new(url.path)
+        request.basic_auth(basic_auth_username, basic_auth_password) if basic_auth_username or basic_auth_password
+        response = Net::HTTP.new(url.host, url.port).start do |http|
+          http.open_timeout = 10
+          http.read_timeout = 10
+          http.request(request)
+        end
+
+      rescue => e
+        raise StoreMaster::SiloUnreachable, "Couldn't contact the silo service at URL #{services_location}: #{e.message}"
+
+      else
+        raise StoreMaster::ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
+        return response.body
       end
-
-      raise StoreMaster::ConfigurationError, "Could not contact the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
-      return response.body
     end
 
-    # return a URI we can post data directly to; we do this by requesting the silo's '/service' docum ent
+    # return a URL we can post data directly to; we do this by requesting the silo's '/service' document
     # and parsing it for the 'create' service.  we expect it to have a '%s' in that string into which we'll
     # place the name of the resource we wish to create.
 
@@ -184,12 +186,15 @@ module DM
       parser = XML::Parser.string(text).parse
       node  = parser.find('create')[0]
 
-      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no create service was declared. The service document returned was was:\n#{text}." unless node
-      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no create location could be found. The create information was: #{node}." unless node['location']
+      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo pool at #{services_location}, no create service was declared. The service document returned was was:\n#{text}." unless node
+      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo pool at #{services_location}, no create location could be found. The create information was: #{node}." unless node['location']
 
-      # TODO: check for well formed uri, including exactly one '%'s in the string
+      create_location = node['location']
 
-      url = URI.parse(URI.encode(sprintf(node['location'], name)))
+      create_location.scan('%s').length == 1 or raise StoreMaster::ConfigurationError, "The silo pool at #{services_location} is misconfigured; it returns the bad URL template '#{create_location}' - we expected exactly one '%s' in it."
+
+      url = URI.parse(URI.encode(sprintf(create_location, name))) rescue raise(StoreMaster::ConfigurationError, "When retreiving service information from the silo pool at #{services_location}, the create link was malformed: #{node['location']}.")
+
       if basic_auth_username or basic_auth_password
         url.user     = URI.encode basic_auth_username
         url.password = URI.encode basic_auth_password
@@ -197,9 +202,10 @@ module DM
       return url
     end
 
-
-    # Return a URL that we get fixity data from: a specific mime-type can be requested (at the time of this
-    # writing, deployed silos support text/csv and application/xml).  The default mime-type is text/csv
+    # Return a URL that we can use to get fixity data from the pool: a
+    # specific mime-type can be requested (at the time of this
+    # writing, deployed silos support text/csv and application/xml).
+    # The default mime-type is text/csv.
 
     def fixity_url mime_type = 'text/csv'
       text = service_document
@@ -226,17 +232,25 @@ module DM
       raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no fixity service with mime type #{mime_type} could be found.  The service document returned was was:\n#{text}."
     end
 
+    # Create a new pool based on its services URL and optionally a read preference.
+
+    def self.add services_location, read_preference = nil
+      params = { :services_location => services_location }
+      params[:read_preference] = read_preference unless read_preference.nil?
+      rec = create(params)
+      rec.saved? or raise "Can't create new pool record #{services_location}; DB errors: " + rec.errors.full_messages.join('; ')
+      return rec
+    end
 
     def self.list_active
-      DM::Pool.all(:required => true, :order => [ :read_preference.desc ])
+      all(:required => true, :order => [ :read_preference.desc ])
     end
-      
   end # of Pool
-  
+
   class Copy
     include DataMapper::Resource
     storage_names[:default] = 'copies'          # don't want dm_copies
-    
+
     property   :id,               Serial,   :min => 1
     property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
     property   :store_location,   String,   :length => 255, :required => true, :index => true  #, :format => :url
@@ -245,6 +259,9 @@ module DM
     belongs_to :package
 
     validates_uniqueness_of :pool, :scope => :package
+
+    # Careful with the URL returned here; it may have an associated username and password
+    # which will print out in the URL.to_s method as http://user:password@example.com/
 
     def url
       url = URI.parse store_location
