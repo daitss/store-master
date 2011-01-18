@@ -9,6 +9,7 @@ require 'store-master/diskstore'
 require 'store-master/exceptions'
 require 'time'
 require 'uri'
+#  require 'cgi' # TODO: make sure we don't need to escape the document bodies returned in error messages
 
 module DM
 
@@ -130,28 +131,105 @@ module DM
     
     property   :id,                   Serial,   :min => 1
     property   :required,             Boolean,  :required => true, :default => true
-    property   :put_location,         String,   :length => 255, :required => true   # :format => :url broken - use uri?
+    property   :services_location,    String,   :length => 255, :required => true
     property   :read_preference,      Integer,  :default  => 0
     property   :basic_auth_username,  String
     property   :basic_auth_password,  String
 
     has n, :copies
 
-    validates_uniqueness_of :put_location
+    validates_uniqueness_of :services_location
+
+    # We have a protocol that silo pools must follow: they must return a service
+    # document (XML) that descirbes where we can locate essential silo services.
+    # Here's an example document:
+    #
+    #  <?xml version="1.0" encoding="UTF-8"?>
+    #  <services version="0.0.1">
+    #    <create method="post" location="http://pool-one.example.com/create/%s"/>
+    #    <fixity mime_type="text/csv" method="get" location="http://pool-one.example.com/fixity.csv"/>
+    #    <fixity mime_type="application/xml" method="get" location="http://pool-one.example.com/fixity.xml"/>
+    #  </services>
+    #
+    # We require one create service that specifies a URL template (it has a slot for a name)
+    # and when we POST data to that filled-in URL we'll produce a new resource; the document 
+    # returned from the POST will tell us where the resource has been place.
+    #
+    # We also have one or more URLs that describe where we can requester fixity data from; the
+    # MIME type of the returned data is provided.
+
+    def service_document
+      url = URI.parse(services_location)
+
+      # go get information from the services to determine the URL to post to:
+
+      request = Net::HTTP::Get.new(url.path)
+      request.basic_auth(basic_auth_username, basic_auth_password) if basic_auth_username or basic_auth_password
+      response = Net::HTTP.new(url.host, url.port).start do |http| 
+        http.open_timeout = 10
+        http.read_timeout = 30
+        http.request(request)
+      end
+
+      raise StoreMaster::ConfigurationError, "Could not contact the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
+      return response.body
+    end
+
+    # return a URI we can post data directly to; we do this by requesting the silo's '/service' docum ent
+    # and parsing it for the 'create' service.  we expect it to have a '%s' in that string into which we'll
+    # place the name of the resource we wish to create.
 
     def post_url name
-      url = URI.parse(put_location.gsub(%r{/+$}, '')  +  '/'  +  name)
+      text = service_document
+      parser = XML::Parser.string(text).parse
+      node  = parser.find('create')[0]
+
+      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no create service was declared. The service document returned was was:\n#{text}." unless node
+      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no create location could be found. The create information was: #{node}." unless node['location']
+
+      # TODO: check for well formed uri, including exactly one '%'s in the string
+
+      url = URI.parse(URI.encode(sprintf(node['location'], name)))
       if basic_auth_username or basic_auth_password
         url.user     = URI.encode basic_auth_username
         url.password = URI.encode basic_auth_password
       end
-      url
+      return url
     end
+
+
+    # Return a URL that we get fixity data from: a specific mime-type can be requested (at the time of this
+    # writing, deployed silos support text/csv and application/xml).  The default mime-type is text/csv
+
+    def fixity_url mime_type = 'text/csv'
+      text = service_document
+      parser = XML::Parser.string(text).parse
+      if  parser.find('fixity') == 0
+        raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no fixity service was declared. The service document returned was was:\n#{text}."
+      end
+
+      parser.find('fixity').each do |node|
+        if node['mime_type'] == mime_type
+          begin
+            url =  URI.parse node['location']
+          rescue => e
+            raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, the fixity service information did not include a valid location; the fixity information was: #{node}."
+          end
+
+          if basic_auth_username or basic_auth_password
+            url.user     = URI.encode basic_auth_username
+            url.password = URI.encode basic_auth_password
+          end
+          return url
+        end
+      end
+      raise StoreMaster::ConfigurationError, "When retreiving service information from the silo at #{services_location}, no fixity service with mime type #{mime_type} could be found.  The service document returned was was:\n#{text}."
+    end
+
 
     def self.list_active
       DM::Pool.all(:required => true, :order => [ :read_preference.desc ])
     end
-
       
   end # of Pool
   

@@ -56,9 +56,9 @@ module StoreMaster
     def each
       yield "<packages location=\"#{StoreUtils.xml_escape(@prefix)}\" time=\"#{DateTime.now.to_s}\">\n"
       DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
-        yield  '  <package name="'  + StoreUtils.xml_escape(rec.name)                      + '" ' +
-                      'location="'  + StoreUtils.xml_escape([@prefix, rec.name].join('/')) + '" ' +
-                          'ieid="'  + StoreUtils.xml_escape(rec.ieid)                      + '">' + "\n"
+        yield  '  <package name="'  + StoreUtils.xml_escape(rec.name)                      + '" '  +
+                      'location="'  + StoreUtils.xml_escape([@prefix, rec.name].join('/')) + '" '  +
+                          'ieid="'  + StoreUtils.xml_escape(rec.ieid)                      + '"/>' + "\n"
       end
       yield "</packages>\n"
     end

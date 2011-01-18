@@ -7,7 +7,6 @@
 #  The test-proxy is used only in remote spec tests.
 #  One can over-ride user and group settings using -S who=user:group
 
-
 require 'rubygems'
 require 'railsless-deploy'
 require 'bundler/capistrano'
@@ -22,7 +21,6 @@ set :group,        "daitss"
 
 set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
 set :bundle_without,      []
-
 
 def usage(*messages)
   STDERR.puts "Usage: cap deploy -S target=<host:filesystem>"  
@@ -46,8 +44,6 @@ if (variables[:who] and variables[:who] =~ %r{.*:.*})
   set :group, _group
 end
 
-
-
 role :app, domain
 
 # after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
@@ -63,7 +59,6 @@ namespace :deploy do
   
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
-
     # make everything group ownership daitss, for easy maintenance.
     run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"
   end

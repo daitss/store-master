@@ -15,7 +15,7 @@ def name n
 end
 
 def pool id
-  "http://pool#{id}.foo.com/packages/"
+  "http://pool#{id}.foo.com/services/"
 end
 
 
@@ -62,8 +62,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us create pools with differing read preferences, and order them " do
 
-    pool1 = DM::Pool.create(:put_location => pool('a'), :read_preference => 10)
-    pool2 = DM::Pool.create(:put_location => pool('b'))
+    pool1 = DM::Pool.create(:services_location => pool('a'), :read_preference => 10)
+    pool2 = DM::Pool.create(:services_location => pool('b'))
 
     pool1.save.should == true
     pool2.save.should == true
@@ -74,8 +74,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should not let us create pools with the same location" do
 
-    pool1 = DM::Pool.create(:put_location => pool('c'), :read_preference => 10)
-    pool2 = DM::Pool.create(:put_location => pool('c'))
+    pool1 = DM::Pool.create(:services_location => pool('c'), :read_preference => 10)
+    pool2 = DM::Pool.create(:services_location => pool('c'))
 
     pool1.save.should == true
     pool2.save.should == false
@@ -83,7 +83,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
 
   it "should allow us to get a posting URL for a pool" do
-    pool = DM::Pool.create(:put_location => pool('poster'))
+    pool = DM::Pool.create(:services_location => pool('poster'))
     pool.post_url('name').class.should == URI::HTTP    
   end
 
@@ -91,8 +91,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us retrieve an associated pool from a copy" do
 
-    pool1 = DM::Pool.create(:put_location => pool('g'))
-    pool2 = DM::Pool.create(:put_location => pool('h'))
+    pool1 = DM::Pool.create(:services_location => pool('g'))
+    pool2 = DM::Pool.create(:services_location => pool('h'))
 
     pool1.save.should == true
     pool2.save.should == true
@@ -121,7 +121,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us mark a package as deleted" do
 
-    pool = DM::Pool.create(:put_location => pool('i'))
+    pool = DM::Pool.create(:services_location => pool('i'))
     pkg  = DM::Package.create(:ieid => IEID, :name => name(101))
     copy = DM::Copy.create(:store_location => 'http://bar.example.com/bar', :pool => pool)
     pkg.copies << copy
@@ -142,8 +142,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us associate copies URL with a packge, setting the time or defaulting it, storing and retreiving it" do
 
-    pool1 = DM::Pool.create(:put_location => pool('d'))
-    pool2 = DM::Pool.create(:put_location => pool('e'))
+    pool1 = DM::Pool.create(:services_location => pool('d'))
+    pool2 = DM::Pool.create(:services_location => pool('e'))
 
     pool1.save.should == true
     pool2.save.should == true
@@ -176,7 +176,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
   it "should not let us create copies within the same pool for a given package" do
 
     pkg  = DM::Package.create(:ieid => IEID, :name => name(3)) 
-    pool = DM::Pool.first(:put_location => pool('d'))
+    pool = DM::Pool.first(:services_location => pool('d'))
 
     baz  = 'http://bar.example.com/baz'
     quux = 'http://bar.example.com/quxx'
@@ -195,7 +195,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
     pass = 'top secret'
     user = 'fischer'
 
-    pool = DM::Pool.create(:put_location => pool('e'), :basic_auth_password => pass, :basic_auth_username => user)
+    pool = DM::Pool.create(:services_location => pool('e'), :basic_auth_password => pass, :basic_auth_username => user)
     copy = DM::Copy.create(:store_location => 'http://example.com/', :pool => pool)
 
     copy.url.to_s.should =~ /#{user}:#{URI.encode pass}@/
