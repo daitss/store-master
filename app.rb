@@ -2,7 +2,6 @@ require 'store-master'
 require 'builder'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
-# TODO: Authentications on this service, and for remote services.
 
 REVISION = StoreMaster.version.rev
 
