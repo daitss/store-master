@@ -1,5 +1,4 @@
 require 'store-master' 
-require 'builder'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
@@ -26,10 +25,10 @@ configure do
   Logger.info "Starting #{StoreMaster.version.rev}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATAMAPPER_LOGGING']
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
 
   begin
-    # Get connected to db; this will let us fail fast.
+    # Get connected to db; this actually connects to the DB and performs a select, so we'll fail fast on configuration errors.
 
     DM.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 

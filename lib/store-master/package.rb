@@ -149,8 +149,6 @@ module StoreMaster
 
     def self.store data_io, pools, metadata
 
-      ## TODO: handle empty pools array here? or at caller?
-
       raise "Can't create new package #{name}, it already exists"                   if Package.exists? metadata[:name]
       raise "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted? metadata[:name]
 
