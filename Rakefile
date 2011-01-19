@@ -58,7 +58,7 @@ desc "deploy to darchive storemaster"
 task :darchive do
   sh "git commit -a"
   sh "git push"
-  sh "cap deploy -S targert=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
 
