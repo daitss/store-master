@@ -54,6 +54,14 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 
+desc "deploy to darchive storemaster"
+task :darchive do
+  sh "git commit -a"
+  sh "git push"
+  sh "cap deploy -S targert=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+end
+
+
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
 
