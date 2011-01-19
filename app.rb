@@ -27,6 +27,8 @@ configure do
   Logger.info "Starting #{StoreMaster.version.rev}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATAMAPPER_LOGGING']
+
   begin
     # Get connected to db; this will let us fail fast.
 

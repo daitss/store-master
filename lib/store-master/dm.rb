@@ -261,7 +261,8 @@ module DM
     validates_uniqueness_of :pool, :scope => :package
 
     # Careful with the URL returned here; it may have an associated username and password
-    # which will print out in the URL.to_s method as http://user:password@example.com/
+    # which will print out in the URL.to_s method as http://user:password@example.com/ - you
+    # don't want that logged.
 
     def url
       url = URI.parse store_location

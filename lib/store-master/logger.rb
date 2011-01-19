@@ -173,15 +173,23 @@ class Logger
   end
   
   # While we normally use the class methods to write our own log entries, we
-  # also have an object we can instantiate for Rack::CommonLogger to 
-  # use. For example:
+  # also have an object we can instantiate for Rack::CommonLogger or 
+  # DataMapper::Logger to use. For example:
   #
   #  Logger.setup('XmlResolutionService', 'xrez.example.com')
   #  Logger.filename = 'my.log'
-  #  use Rack:CommonLogger, Logger.new
+  #  use Rack:CommonLogger, Logger.new()
+  #  DataMapper::Logger(Logger.new(:info, 'DataMapper:'), :debug)
 
-  def initialize
+  @level = nil
+  @tag   = nil
+
+  def initialize level = :info, tag = ''
+    raise "Bad argument: if specified, the first argument must be one of :info, :warn, :error, but was :#{level}" unless [:info, :warn, :error].include? level
+    raise "Bad argument: if specified, the second argument must be a simple string, but was a #{tag.class}" unless tag.class == String
     raise "The logging system has not been setup: use Logger.setup(service, hostname)." if (@@log_name.nil? or @@process_name.nil?)
+    @level = level
+    @tag   = tag.length > 0 ? tag : nil
   end  
   
   # log.write MESSAGE
@@ -190,7 +198,7 @@ class Logger
   # it. See the Logger#new method for an example of its use.
   
   def write message
-    Log4r::Logger[@@log_name].info message.chomp
+    Log4r::Logger[@@log_name].send(@level, @tag ? "#{@tag} #{message.chomp}" : message.chomp)
   end
   
   private
