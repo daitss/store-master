@@ -7,6 +7,8 @@ require 'net/http'
 require 'xml'
 
 # TO DO:  Move everything into DataModel::Package and use those methods....
+# TO DO:  move 
+
 
 # Two basic ways to instantiate package objects, which
 #
@@ -20,8 +22,6 @@ require 'xml'
 # pkg = Package.store(data, pools, metadata)
 
 module StoreMaster
-
-  # TODO: we're going to completely deprecate this aqnd go straight at the DataModel classes. RSN.
 
   class Package
 
@@ -85,6 +85,8 @@ module StoreMaster
       return nil if pkg.dm_record.nil?
       pkg
     end
+
+    # in middle of refactoring...
 
     def self.store data_io, pools, metadata
 
@@ -199,7 +201,7 @@ module StoreMaster
         if status >= 500
           raise err
         elsif status >= 400
-          raise Silo400Error, err
+          raise SiloStoreError, err
         elsif status >= 300
           raise err
         end
