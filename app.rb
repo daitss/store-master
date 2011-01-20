@@ -5,6 +5,7 @@ require 'store-master'
 REVISION = StoreMaster.version.rev
 
 include StoreMaster
+include DataModel
 
 configure do
   $KCODE = 'UTF8'

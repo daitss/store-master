@@ -1,7 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
 require 'store-master/data-model'
-require 'store-master/package'
 require 'fileutils'
 require 'spec_helpers'
 require 'digest/md5'
@@ -31,13 +30,16 @@ require 'digest/sha1'
 #   done
 # done
 
+include DataModel
 
 def datamapper_setup
-  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
+  ## DataMapper::Logger.new(STDERR, :debug)
+
+  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
   DataModel.recreate_tables
 end
 
-def active_pools
+def test_pools
   # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
@@ -97,11 +99,14 @@ def index_of_pool_that_best_matches_url(pools, url)
   # and the url passed as argument.
 
   pool_ranks    = []
+
+  ### STDERR.puts 'index of...', pools[0].inspect, pools[1].inspect, url, ''
   pools.each_with_index { |p, i| pool_ranks.push [ i, lcs_size(p.services_location, url) ] }
 
   # sort list by length longest common substring, largest first - so:
   # [ [0, 23], [1, 28], [3, 0] ]    =>     [ [1, 28], [0, 23], [3, 0] ]
 
+  ### STDERR.puts pool_ranks.inspect
   pool_ranks.sort! { |a, b|   b[1] <=> a[1] }  
 
   # return the pool index that had the best (longest) match:
@@ -112,30 +117,28 @@ end
 @@all_package_names = []
 
 def nimby
-  pending "No active pools are available; can't run this test" unless active_pools
-  active_pools.each do |p| 
+  pending "No active pools are available; can't run this test" unless test_pools
+  test_pools.each do |p| 
     pending "Configured pool #{p} is not reachable" unless resource_exists? p
   end
 end
 
 
-describe StoreMaster::Package do
-
-  include DataModel
+describe Package do
 
   before(:all) do
     datamapper_setup
-    active_pools.each { |pool| Pool.add(pool) }
+    test_pools.each { |pool| Pool.add(pool) }
   end
 
   it "should let us determine that a package doesn't exist" do
     name = ieid + '.000'
-    StoreMaster::Package.exists?(name).should == false
+    Package.exists?(name).should == false
   end
     
   it "should not let us retrieve an unsaved package" do
     name = ieid + '.000'
-    pkg = StoreMaster::Package.lookup(name)
+    pkg = Package.lookup(name)
     pkg.nil? == true
   end
 
@@ -146,7 +149,7 @@ describe StoreMaster::Package do
     metadata = sample_metadata(name)
 
     io  = sample_tarfile
-    pkg = StoreMaster::Package.store(io, Pool.list_active, metadata)
+    pkg = Package.store(io, metadata)
     pkg.name.should == name
     pkg.md5.should   == @@MD5
     pkg.sha1.should  == @@SHA1
@@ -158,28 +161,28 @@ describe StoreMaster::Package do
   it "should let us determine that a recorded package exists" do
     nimby
     last_saved_package = @@all_package_names[-1]
-    StoreMaster::Package.exists?(last_saved_package).should == true
+    Package.exists?(last_saved_package).should == true
   end
 
 
   it "should let us retrieve a saved package" do
     nimby
     last_saved_package = @@all_package_names[-1]
-    pkg = StoreMaster::Package.lookup(last_saved_package)
+    pkg = Package.lookup(last_saved_package)
     pkg.name.should == last_saved_package
   end
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { StoreMaster::Package.store(sample_tarfile, Pool.list_active, sample_metadata(name)) }.should raise_error
+    lambda { Package.store(sample_tarfile, sample_metadata(name)) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
 
     name = Reservation.make(ieid);  @@all_package_names.push name
-    pkg  = StoreMaster::Package.store(sample_tarfile, Pool.list_active, sample_metadata(name))
-    pkg.locations.length.should == active_pools.length
+    pkg  = Package.store(sample_tarfile, sample_metadata(name))
+    pkg.locations.length.should == test_pools.length
   end
 
 
@@ -187,11 +190,10 @@ describe StoreMaster::Package do
     nimby
 
     pools = Pool.list_active
-
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
     name  = Reservation.make(ieid)
-    pkg   = StoreMaster::Package.store(sample_tarfile, pools, sample_metadata(name))
+    pkg   = Package.store(sample_tarfile, sample_metadata(name))
 
     pkg.name.should == name
     @@all_package_names.push name
@@ -199,19 +201,26 @@ describe StoreMaster::Package do
     # adjust preferences - higher value means more preferred - and check to see
     # if that forces the pool to the top of the list
 
-    pools.each { |p| p.read_preference = 0 }
+    pools.each { |p| p.assign :read_preference, 0 }
 
-    pools[0].read_preference = 10
+    #### STDERR.puts '', pools[0].inspect, pools[1].inspect, '', pkg.copies[0].pool.inspect, pkg.copies[1].pool.inspect, ''
+
+    pools[0].assign :read_preference, 10  
+
+    ### STDERR.puts '', pools[0].inspect, pools[1].inspect, '', pkg.copies[0].pool.inspect, pkg.copies[1].pool.inspect, ''
+
     index_of_pool_that_best_matches_url(pools, pkg.locations[0].to_s).should == 0
 
-    pools[1].read_preference = 20
-    index_of_pool_that_best_matches_url(pools, pkg.locations[0].to_s).should == 1
+    pools[1].assign :read_preference, 20
 
+    ### STDERR.puts '', pools[0].inspect, pools[1].inspect, '', pkg.copies[0].pool.inspect, pkg.copies[1].pool.inspect, ''
+
+    index_of_pool_that_best_matches_url(pools, pkg.locations[0].to_s).should == 1
   end
 
   it "should list all of the package names we've stored" do    
-    (StoreMaster::Package.names - @@all_package_names).should == []
-    (@@all_package_names - StoreMaster::Package.names).should == []
+    (Package.names - @@all_package_names).should == []
+    (@@all_package_names - Package.names).should == []
   end
 
 
@@ -220,11 +229,11 @@ describe StoreMaster::Package do
     # get all the locations for all the names
 
     @@all_package_names.each do |name|
-      StoreMaster::Package.exists?(name).should == true
-      pkg = StoreMaster::Package.lookup(name)
+      Package.exists?(name).should == true
+      pkg = Package.lookup(name)
       pkg.nil?.should == false
       pkg.delete
-      StoreMaster::Package.exists?(name).should == false
+      Package.exists?(name).should == false
     end
   end
 

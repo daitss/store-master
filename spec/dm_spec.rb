@@ -1,7 +1,7 @@
 HOME = File.dirname(__FILE__)
 $LOAD_PATH.unshift File.expand_path(File.join(HOME, 'lib')) # for spec_helpers
 
-# TODO: remove DataModel:: and do an include, once through refactoring to it...
+# TODO: remove DataModel:: and do an include, once through refactoring it out of StoreMaster
 # Note: please set up databases as specified in db.yml in this directory.
 
 require 'store-master/data-model'
@@ -19,13 +19,14 @@ def pool id
   "http://pool#{id}.foo.com/services/"
 end
 
-
 def postgres_setup
+  # DataMapper::Logger.new(STDERR, :debug)
   DataModel.setup(File.join(HOME, 'db.yml'), 'store_master_postgres')
   DataModel.recreate_tables
 end
 
 def mysql_setup
+  # DataMapper::Logger.new(STDERR, :debug)
   DataModel.setup(File.join(HOME, 'db.yml'), 'store_master_mysql')
   DataModel.recreate_tables
 end

@@ -1,18 +1,17 @@
 # Handling packages
 
+# TODO: use named exceptions;  TODO: let most exceptions percolate up.
+
+
+
 # Reserve a new name to PUT to.  Requires an IEID.
 
 post '/reserve/?' do
-  # TODO: use named exceptions...
-
-  raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
-  raise BadName, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
-
-  name = DataModel::Reservation.make ieid
+  name = Reservation.make params[:ieid]
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
-  xml.reserved(:ieid => ieid, :location => web_location("/packages/#{name}"))
+  xml.reserved(:ieid => params[:ieid], :location => web_location("/packages/#{name}"))
 
   status 201
   content_type 'application/xml'
@@ -23,21 +22,21 @@ end
 # Put a tarfile package to previously reserved name.
 
 put '/packages/:name' do |name|
-  ieid = DataModel::Reservation.find_ieid name
 
-  raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"   unless ieid
-  raise Http403, "The resource #{this_resource} already exists"                                     if Package.exists?(name)
-  raise Http400, "Can't use resource #{this_resource}: it has been previously created and deleted"  if Package.was_deleted?(name)
+  raise_exception_if_in_use name
+
+  ieid = Reservation.find_ieid name
+
   raise Http400, "Missing the Content-MD5 header, required for PUTs to #{this_resource}"  unless request_md5
   raise Http400, "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar'
 
-  pools = DataModel::Pool.list_active
+  pools = Pool.list_active
 
   raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
 
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  pkg = Package.store(request.body, pools, metadata)
+  pkg = Package.store(request.body, metadata)
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -58,13 +57,13 @@ end
 # Deletes a package.
 
 delete '/packages/:name' do |name|
-  raise Http410, "Resource #{this_resource} has already been deleted"  if Package.was_deleted?(name)
-  raise Http404, "No such resource #{this_resource}."              unless Package.exists?(name)
+
+  raise_exception_if_missing name
 
   begin
     Package.lookup(name).delete
   rescue DriveByError => e
-    Logger.err "DELETE of resource #{this_resource} partially failed:  #{e.message}"
+    Logger.err "Orphan alert - DELETE of resource #{this_resource} partially failed:  #{e.message}"
   end
 
   status 204
@@ -73,8 +72,7 @@ end
 # Gets a package via redirect.
 
 get '/packages/:name' do |name|
-  raise Http410, "Resource #{this_resource} has been deleted"  if Package.was_deleted?(name)
-  raise Http404, "No such resource #{this_resource}."      unless Package.exists?(name)
+  raise_exception_if_missing name
 
   locations = Package.lookup(name).locations
 

@@ -5,9 +5,9 @@ helpers do
   #
   # Return our virtual server name as a minimal URL.
   #
-  # Safety note: HTTP_HOST, according to the rack docs, is preffered
-  # over SERVER_NAME if it the former exists, but it can be borken -
-  # sometimes comes with port attached! SERVER_NAME is always defined.
+  # Safety note: HTTP_HOST, according to the rack docs, is preferred
+  # over SERVER_NAME if available. SERVER_NAME is always defined, but
+  # can sometime come with port attached.
 
   def service_name
     'http://' +
@@ -29,6 +29,16 @@ helpers do
 
   def this_resource 
     web_location @env['SCRIPT_NAME'].gsub(%r{/+$}, '') + '/' + @env['PATH_INFO'].gsub(%r{^/+}, '')
+  end
+
+  def raise_exception_if_in_use name
+    raise Http403, "The resource #{this_resource} already exists; it can't be reused, even if deleted" if Package.exists?(name)
+    raise Http400, "Can't use resource #{this_resource}; it has been previously created and deleted"   if Package.was_deleted?(name)
+  end
+
+  def raise_exception_if_missing name
+    raise Http410, "Resource #{this_resource} has been previously created and deleted"     if Package.was_deleted?(name)
+    raise Http404, "The resource #{this_resource} doesn't exist"                       unless Package.exists?(name)
   end
 
 end # of helpers do

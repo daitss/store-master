@@ -5,7 +5,6 @@ require 'store-master/exceptions'
 require 'store-master/logger'
 require 'store-master/data-model'
 require 'store-master/disk-store'
-require 'store-master/package'  ## TO-DO - remove
 require 'store-master/reports'
 require 'store-master/utils'
 

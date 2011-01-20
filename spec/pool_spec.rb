@@ -4,7 +4,7 @@ require 'store-master/data-model'
 require 'spec_helpers'
 
 def datamapper_setup
-  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
+  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
   DataModel.recreate_tables
 end
 
@@ -45,8 +45,8 @@ describe Pool do
 
   it "should allow us to set new attributes" do
     pool = Pool.lookup 'http://first.example.com/services/'
-    lambda { pool.set :required, false }.should_not raise_error
-    lambda { pool.set :read_preference, 10 }.should_not raise_error
+    lambda { pool.assign :required, false }.should_not raise_error
+    lambda { pool.assign :read_preference, 10 }.should_not raise_error
   end
 
   it "should allow us to retrieve the new attributes" do
@@ -77,8 +77,8 @@ describe Pool do
     p3 = Pool.lookup 'http://third.example.com/services/'
     p0 = Pool.add 'http://zero.example.com/services/'
 
-    p2.set :read_preference, 2  # second.example.com
-    p3.set :read_preference, 3  # third.example.com
+    p2.assign :read_preference, 2  # second.example.com
+    p3.assign :read_preference, 3  # third.example.com
 
     pools = Pool.list_active  # the first shall be last, and the last shall be first
 

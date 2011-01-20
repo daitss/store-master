@@ -5,8 +5,6 @@ require 'log4r/outputter/syslogoutputter'
 require 'log4r/outputter/fileoutputter'
 require 'log4r/outputter/rollingfileoutputter'
 
-# TODO:  the whole prefix thing is lame - rip it out, and rip out the environment requirement.
-
 # Initial Author: Randy Fischer (rf@ufl.edu) for DAITSS
 # 
 # Logging web service actions using using log4r with a
@@ -21,7 +19,7 @@ require 'log4r/outputter/rollingfileoutputter'
 #  ...
 #  get '/tmp' do
 #     Logger.warn "can't create temporary file for request.", @env
-#     halt [ 400, {}, 'oops' ]
+#     halt [ 500, {}, 'whoops' ]
 #  end
 #  ...
 #  get '/temp' do
