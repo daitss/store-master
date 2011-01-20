@@ -47,25 +47,6 @@ def some_attributes
   hash = SubtractableHash.new  :sha1 => some_sha1, :md5 => some_md5, :timestamp => DateTime.now - rand(100), :size => rand(10000), :type => 'x-application/tar'
 end
 
-def recreate_database
-
-  # We have db configuration data in a yaml file; it might look like:
-  #
-  # silo_spec_test:   { vendor: mysql, hostname: localhost, database: silo_spec_test, username: root, password: }
-  #
-  # We expect a silo_spec_test, and expect to be able to drop and recreate the tables via DM.automigrate!
-
-  yaml_filename = '/opt/fda/etc/db.yml'  
-
-  if not (File.exists?(yaml_filename) and File.readable?(yaml_filename))
-    pending "Can't contine - see the comments in 'def recreate_database' in #{__FILE__} to fix this"
-  end
-
-  DB.setup yaml_filename, 'silo_spec_test'
-  DB::DM.automigrate!
-end
-
-
 def ieid
   range = 26 ** 6
   sleep (60.0 * 60.0 * 24.0) / range   # make sure we're unique, and we pause

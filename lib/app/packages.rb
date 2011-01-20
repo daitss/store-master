@@ -8,22 +8,22 @@ post '/reserve/?' do
   raise Http412, "Missing expected paramter 'ieid'." unless ieid = params[:ieid]
   raise BadName, "The identifier #{ieid} does not meet the resource naming convention for #{this_resource}" unless good_ieid ieid
 
-  res = Reservation.new ieid
+  name = DataModel::Reservation.make ieid
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
-  xml.reserved(:ieid => ieid, :location => web_location("/packages/#{res.name}"))
+  xml.reserved(:ieid => ieid, :location => web_location("/packages/#{name}"))
 
   status 201
   content_type 'application/xml'
-  headers 'Location' => web_location("/packages/#{res.name}"), 'Content-Type' => 'application/xml'
+  headers 'Location' => web_location("/packages/#{name}"), 'Content-Type' => 'application/xml'
   xml.target!
 end
 
 # Put a tarfile package to previously reserved name.
 
 put '/packages/:name' do |name|
-  ieid = Reservation.lookup_ieid(name)
+  ieid = DataModel::Reservation.find_ieid name
 
   raise Http404, "The resource for #{name} must first be reserved before the data can be PUT"   unless ieid
   raise Http403, "The resource #{this_resource} already exists"                                     if Package.exists?(name)
@@ -31,7 +31,7 @@ put '/packages/:name' do |name|
   raise Http400, "Missing the Content-MD5 header, required for PUTs to #{this_resource}"  unless request_md5
   raise Http400, "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar'
 
-  pools = Pool.list_active
+  pools = DataModel::Pool.list_active
 
   raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
 

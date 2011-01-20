@@ -54,9 +54,10 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 
-desc "deploy to darchive storemaster"
+desc "deploy to darchive's storemaster"
 task :darchive do
-  sh "git commit -a"
+  sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
+  sh "test -s /tmp/silos.diff && git commit -a"
   sh "git push"
   sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end

@@ -3,11 +3,10 @@ require 'ostruct'
 require 'time'
 require 'store-master/exceptions'
 require 'store-master/logger'
-require 'store-master/diskstore'
-require 'store-master/dm'
-require 'store-master/package'
-require 'store-master/pool'
-require 'store-master/reservation'
+require 'store-master/data-model'
+require 'store-master/disk-store'
+require 'store-master/package'  ## TO-DO - remove
+require 'store-master/reports'
 require 'store-master/utils'
 
 # When we deploy with Capistrano it checks out the code using Git

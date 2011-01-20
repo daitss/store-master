@@ -1,13 +1,12 @@
-require 'store-master/diskstore'
-require 'store-master/dm'
+require 'store-master/disk-store'
+require 'store-master/data-model'
 require 'store-master/exceptions'
 require 'dm-types'
 require 'uri'
 require 'net/http'
 require 'xml'
 
-# TO DO:  Add PUT/DELETE event records.
-# TO DO:  Move everything into DM::Package and use those methods....
+# TO DO:  Move everything into DataModel::Package and use those methods....
 
 # Two basic ways to instantiate package objects, which
 #
@@ -20,76 +19,16 @@ require 'xml'
 #
 # pkg = Package.store(data, pools, metadata)
 
-
-
 module StoreMaster
 
-  # List selected package information in a form that's space efficient for rack.
-  # 
-
-
-  #  class PackageListing
-  #    include Enumerable
-  #
-  #    @prefix = nil
-  #    def initialize prefix
-  #      @prefix = prefix
-  #    end
-  #
-  #    def each
-  #      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
-  #        yield [ rec.name, [@prefix, rec.name].join('/'), rec.ieid ]
-  #      end
-  #    end
-  #  end # of class  StoreMasterPackageListing
-
-
-  class PackageXmlReport
-    include Enumerable
-
-    @prefix = nil
-
-    def initialize prefix
-      @prefix = prefix
-    end
-
-    def each
-      yield "<packages location=\"#{StoreUtils.xml_escape(@prefix)}\" time=\"#{DateTime.now.to_s}\">\n"
-      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
-        yield  '  <package name="'  + StoreUtils.xml_escape(rec.name)                      + '" '  +
-                      'location="'  + StoreUtils.xml_escape([@prefix, rec.name].join('/')) + '" '  +
-                          'ieid="'  + StoreUtils.xml_escape(rec.ieid)                      + '"/>' + "\n"
-      end
-      yield "</packages>\n"
-    end
-  end # of PackageXmlReport
-
-
-  class PackageCsvReport
-    @prefix  = nil
-    
-    def initialize prefix
-      @prefix = prefix
-    end
-
-    def each
-      yield '"name","location","ieid"' + "\n"
-      DM::Package.all(:order => [ :name.asc ], :extant => true).each do |rec|
-        yield [rec.name, [@prefix, rec.name].join('/'), rec.ieid].map { |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
-      end
-    end
-  end # of PackageCsvReport
-
-
-
-  # TODO: we're going to completely deprecate this aqnd go straight at the DM classes. RSN.
+  # TODO: we're going to completely deprecate this aqnd go straight at the DataModel classes. RSN.
 
   class Package
 
     attr_reader   :name
     attr_accessor :dm_record
 
-    # Refactoring in progress - everything being migrated to the  DM::Package class
+    # Refactoring in progress - everything being migrated to the  DataModel::Package class
 
     # Package.new(name) really meant to only be called internally.  Use lookup or create.
 
@@ -127,22 +66,22 @@ module StoreMaster
     end
 
     def self.exists? name
-      DM::Package.exists? name
+      DataModel::Package.exists? name
     end
 
     def self.names
-      DM::Package.names
+      DataModel::Package.names
     end
 
     def self.was_deleted? name
-      DM::Package.was_deleted? name
+      DataModel::Package.was_deleted? name
     end
 
     # Find a previously saved package
 
     def self.lookup name
       pkg = Package.new name
-      pkg.dm_record = DM::Package.lookup name
+      pkg.dm_record = DataModel::Package.lookup name
       return nil if pkg.dm_record.nil?
       pkg
     end
@@ -154,13 +93,13 @@ module StoreMaster
 
       pkg = Package.new metadata[:name]
 
-      pkg.dm_record = DM::Package.create(:name => metadata[:name], :ieid => metadata[:ieid])
+      pkg.dm_record = DataModel::Package.create(:name => metadata[:name], :ieid => metadata[:ieid])
 
       begin
         pools.each do |pool|
           store_info = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
 
-          pkg.dm_record.copies << DM::Copy.create(:store_location => store_info['location'], :pool => pool.dm_record)
+          pkg.dm_record.copies << DataModel::Copy.create(:store_location => store_info['location'], :pool => pool)
 
           # TODO: Why am I having problems doing the following in store_copy?  I'd like store_copy to return only the location,
           # instead of all this ancilliary crap.
@@ -209,7 +148,7 @@ module StoreMaster
     #   raise DiskStoreError, "Can't reuse name #{name}: it has been previously created and deleted"  if Package.was_deleted?(name)
     #
     #   pkg = Package.new name
-    #   rec = DM::Package.create
+    #   rec = DataModel::Package.create
     #
     #   rec.name      = name
     #   rec.ieid      = ieid

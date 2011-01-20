@@ -1,9 +1,7 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store-master/dm'
+require 'store-master/data-model'
 require 'store-master/package'
-require 'store-master/pool'
-require 'store-master/reservation'
 require 'fileutils'
 require 'spec_helpers'
 require 'digest/md5'
@@ -35,8 +33,8 @@ require 'digest/sha1'
 
 
 def datamapper_setup
-  DM.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
-  DM.recreate_tables
+  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
+  DataModel.recreate_tables
 end
 
 def active_pools
@@ -123,9 +121,11 @@ end
 
 describe StoreMaster::Package do
 
+  include DataModel
+
   before(:all) do
     datamapper_setup
-    active_pools.each { |pool| StoreMaster::Pool.add(pool) }
+    active_pools.each { |pool| Pool.add(pool) }
   end
 
   it "should let us determine that a package doesn't exist" do
@@ -142,11 +142,11 @@ describe StoreMaster::Package do
   it "should let us create a package" do
     nimby
 
-    name   = StoreMaster::Reservation.new(ieid).name
+    name   = Reservation.make(ieid)
     metadata = sample_metadata(name)
 
     io  = sample_tarfile
-    pkg = StoreMaster::Package.store(io, StoreMaster::Pool.list_active, metadata)
+    pkg = StoreMaster::Package.store(io, Pool.list_active, metadata)
     pkg.name.should == name
     pkg.md5.should   == @@MD5
     pkg.sha1.should  == @@SHA1
@@ -171,14 +171,14 @@ describe StoreMaster::Package do
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { StoreMaster::Package.store(sample_tarfile, StoreMaster::Pool.list_active, sample_metadata(name)) }.should raise_error
+    lambda { StoreMaster::Package.store(sample_tarfile, Pool.list_active, sample_metadata(name)) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
 
-    res = StoreMaster::Reservation.new(ieid);  @@all_package_names.push res.name
-    pkg = StoreMaster::Package.store(sample_tarfile, StoreMaster::Pool.list_active, sample_metadata(res.name))
+    name = Reservation.make(ieid);  @@all_package_names.push name
+    pkg  = StoreMaster::Package.store(sample_tarfile, Pool.list_active, sample_metadata(name))
     pkg.locations.length.should == active_pools.length
   end
 
@@ -186,11 +186,11 @@ describe StoreMaster::Package do
   it "should order the list of locations for a package based on the pool's read_preference" do
     nimby
 
-    pools = StoreMaster::Pool.list_active
+    pools = Pool.list_active
 
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
-    name  = StoreMaster::Reservation.new(ieid).name
+    name  = Reservation.make(ieid)
     pkg   = StoreMaster::Package.store(sample_tarfile, pools, sample_metadata(name))
 
     pkg.name.should == name

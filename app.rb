@@ -30,7 +30,7 @@ configure do
   begin
     # Get connected to db; this actually connects to the DB and performs a select, so we'll fail fast on configuration errors.
 
-    DM.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
+    DataModel.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 
   rescue ConfigurationError => e
     Logger.err e.message

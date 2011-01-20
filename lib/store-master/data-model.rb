@@ -4,12 +4,14 @@ require 'dm-aggregates'
 require 'dm-migrations'
 require 'dm-transactions'
 require 'dm-validations'
-require 'store-master/diskstore'
+require 'store-master/disk-store'
 require 'store-master/exceptions'
+require 'store-master/utils'
 require 'time'
 require 'uri'
 
-module DM
+
+module DataModel
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
@@ -73,6 +75,23 @@ module DM
     property   :name,       String,   :required => true, :index => true, :length => (20..20) # unique name, used as part of a url
 
     validates_uniqueness_of :name
+
+    def self.find_ieid name
+      res = first(:name => name)
+      res.nil? ? res : res.ieid
+    end
+
+    def self.make ieid
+      raise StoreMaster::BadName, "IEID #{ieid} doesn't meet our naming convention" unless StoreUtils.valid_ieid_name? ieid
+      vers = '.000'
+      while vers <= '.999' do
+        res  = create(:name => ieid + vers, :ieid => ieid)
+        return res.name if res.saved?
+        vers.succ!
+      end
+      raise StoreMaster::DataBaseError, "Can't create a new name for IEID '#{ieid}'."
+    end
+
   end
 
   class Package
@@ -135,6 +154,13 @@ module DM
     has n, :copies
 
     validates_uniqueness_of :services_location
+
+    def set field, value
+      send field.to_s + '=', value
+      save or raise "Can't set the pool #{self.inspect} property #{:field} to value #{value.inspect}"
+    end
+
+
 
     # We have a protocol that silo pools must follow: they must return a service
     # document (XML) that descirbes where we can locate essential silo services.
@@ -245,7 +271,19 @@ module DM
     def self.list_active
       all(:required => true, :order => [ :read_preference.desc ])
     end
+
+    def self.exists? services_location
+      not first(:services_location => services_location).nil? 
+    end
+
+    def self.lookup services_location
+      first(:services_location => services_location)
+    end
   end # of Pool
+
+
+
+
 
   class Copy
     include DataMapper::Resource
@@ -275,5 +313,5 @@ module DM
 
   end # of Copy
 
-end # of Module DM
+end # of Module DataModel
 
