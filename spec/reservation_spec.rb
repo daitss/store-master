@@ -49,8 +49,7 @@ describe Reservation do
   end
 
   it "should return nil when a name has not been reserved" do
-    ieid = Reservation.find_ieid(GOOD_IEID + '.069')
-    ieid.nil?.should == true
+    lambda { Reservation.find_ieid(GOOD_IEID + '.069') }.should raise_error
   end
 
   # too slow to really test
