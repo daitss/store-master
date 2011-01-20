@@ -2,6 +2,9 @@ require 'store-master/dm'
 require 'store-master/exceptions'
 require 'dm-types'
 
+# refactoring for direct use of DM::Pool
+
+
 module StoreMaster
   class Pool
 
@@ -21,11 +24,11 @@ module StoreMaster
     end
 
     def self.exists? services_location
-      not DM::Pool.first(:services_location => services_location).nil? 
+      DM::Pool.exists? services_location
     end
 
     def self.lookup services_location
-      rec = DM::Pool.first(:services_location => services_location)
+      rec = DM::Pool.lookup  services_location
       Pool.new rec
     end
 
