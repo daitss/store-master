@@ -42,6 +42,67 @@ module DataModel
       all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
     end
 
+    def self.store data_io, metadata
+
+      required_metadata = [ :name, :ieid, :md5, :size, :type ]
+      missing_metadata  = required_metadata - (required_metadata & metadata.keys)
+
+      raise "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
+      raise "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
+      raise "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
+
+      pkg = create(:name => metadata[:name], :ieid => metadata[:ieid])
+
+      begin
+        Pool.list_active.each do |pool|
+          location = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
+          pkg.copies << Copy.create(:store_location => location, :pool => pool)
+        end
+
+      rescue => e1
+        msg = "Failure storing a copy of #{metadata[:name]}: #{e1.message}"
+        pkg.locations.each do |loc|
+          begin
+            pkg.delete_copy(loc)
+          rescue => e2
+            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e2.message}"
+          end
+        end
+        pkg.destroy if pkg.respond_to? :destroy
+        raise e1, msg
+      end
+
+      if not pkg.save
+        msg = "DB error recording #{name} - #{pkg.errors.full_messages.join('; ')}"
+        pkg.locations.each do |loc|
+          begin
+            pkg.delete_copy(loc)
+          rescue => e
+            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e.message}"
+          end
+        end
+        raise DataBaseError, msg
+      end
+      pkg
+    end
+
+    # on failure may leave orphan
+
+    def delete
+      self.extant = false
+      raise  DataBaseError, "error deleting #{self.name} - #{self.errors.full_messages.join('; ')}" unless self.save
+
+      errs = []
+      locations.each do |loc|
+        begin
+          delete_copy(loc)
+        rescue => e
+          errs.push "failed to delete storage at #{loc.sanitized}: #{e.message}"
+        end
+      end
+
+      raise DriveByError, errs.join('; ') unless errs.empty?
+    end
 
     def store_copy io, posting_url, metadata
 
@@ -95,56 +156,12 @@ module DataModel
       returned_data['location']
     end
 
-
-    def self.store data_io, metadata
-
-      required_metadata = [ :name, :ieid, :md5, :size, :type ]
-      missing_metadata  = required_metadata - (required_metadata & metadata.keys)
-
-      raise "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
-      raise "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
-      raise "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
-
-      pkg = create(:name => metadata[:name], :ieid => metadata[:ieid])
-
-      begin
-        Pool.list_active.each do |pool|
-          location = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
-          pkg.copies << Copy.create(:store_location => location, :pool => pool)
-        end
-
-      rescue => e1
-        msg = "Failure storing a copy of #{metadata[:name]}: #{e1.message}"
-        pkg.locations.each do |loc|
-          begin
-            pkg.delete_copy(loc)
-          rescue => e2
-            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e2.message}"
-          end
-        end
-        pkg.destroy if pkg.respond_to? :destroy
-        raise e1, msg
-      end
-
-      if not pkg.save
-        msg = "DB error recording #{name} - #{pkg.errors.full_messages.join('; ')}"
-        pkg.locations.each do |loc|
-          begin
-            pkg.delete_copy(loc)
-          rescue => e
-            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e.message}"
-          end
-        end
-        raise DataBaseError, msg
-      end
-      pkg
-    end
     
     def delete_copy silo_resource
 
       http = Net::HTTP.new(silo_resource.host, silo_resource.port)
-      http.open_timeout = 10
-      http.read_timeout = 60 * 2  # deletes are relatively fast
+      http.open_timeout = 30
+      http.read_timeout = 60 * 5  # deletes can take some time for large packages on active filesystems
 
       request = Net::HTTP::Delete.new(silo_resource.request_uri)
       request.basic_auth(silo_resource.user, silo_resource.password) if silo_resource.user or silo_resource.password
@@ -153,24 +170,6 @@ module DataModel
       status = response.code.to_i
 
       raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource.sanitized} - #{response.body}" if status >= 300
-    end
-
-    # on failure may leave orphan
-
-    def delete
-      self.extant = false
-      raise  DataBaseError, "error deleting #{self.name} - #{self.errors.full_messages.join('; ')}" unless self.save
-
-      errs = []
-      locations.each do |loc|
-        begin
-          delete_copy(loc)
-        rescue => e
-          errs.push "failed to delete storage at #{loc.sanitized}: #{e.message}"
-        end
-      end
-
-      raise DriveByError, errs.join('; ') unless errs.empty?
     end
 
   end # of Package

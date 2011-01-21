@@ -1,24 +1,5 @@
 module StoreMaster
 
-
-  # Most named exceptions in the XmlResolution service we assign here
-  # to one of the HTTP classes.  Libraries are designed specifically
-  # to be unaware of this mapping: they should use their specific low level
-  # exceptions classes.
-  #
-  # In general, if we catch an HttpError at our top level app, we can
-  # blindly return the error message to the client as a diagnostic,
-  # and log it.  The fact that we're naming these exceptions means
-  # we're being careful not to leak information, and still be helpful
-  # to the Client.  Since they provide very specific messages
-  # tracebacks will not be required.
-  #
-  # When we get an un-named exception, however, the appropriate thing
-  # to do is to just supply a very terse message to the client (e.g.,
-  # we wouldn't like to expose errors from an ORM that said something
-  # like "password 'topsecret' failed in mysql open").  We *will* want
-  # to log the full error message, and probably a backtrace to boot.
-
   class HttpError < StandardError;
     def client_message
       "#{status_code} #{status_text} - #{message.chomp('.')}.\n"

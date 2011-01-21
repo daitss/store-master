@@ -1,15 +1,12 @@
-# Handling packages
-
-# TODO: use named exceptions;  TODO: let most exceptions percolate up.
-
-
+# Package handling
 
 # Reserve a new name to PUT to.  Requires an IEID.
 
 post '/reserve/?' do
-  name = Reservation.make params[:ieid]
 
-  xml = Builder::XmlMarkup.new(:indent => 2)
+  name = Reservation.make params[:ieid]
+  xml  = Builder::XmlMarkup.new(:indent => 2)
+
   xml.instruct!(:xml, :encoding => 'UTF-8')
   xml.reserved(:ieid => params[:ieid], :location => web_location("/packages/#{name}"))
 
@@ -17,6 +14,7 @@ post '/reserve/?' do
   content_type 'application/xml'
   headers 'Location' => web_location("/packages/#{name}"), 'Content-Type' => 'application/xml'
   xml.target!
+
 end
 
 # Put a tarfile package to previously reserved name.
@@ -52,9 +50,10 @@ put '/packages/:name' do |name|
   status 201
   headers 'Location' => this_resource, 'Content-Type' => 'application/xml'
   xml.target!
+
 end
 
-# Deletes a package.
+# Delete a package.
 
 delete '/packages/:name' do |name|
 
@@ -67,11 +66,13 @@ delete '/packages/:name' do |name|
   end
 
   status 204
+
 end
 
 # Gets a package via redirect.
 
 get '/packages/:name' do |name|
+
   raise_exception_if_missing name
 
   locations = Package.lookup(name).locations
@@ -82,18 +83,29 @@ get '/packages/:name' do |name|
   raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
 
   redirect locations[0].to_s, 303
+
 end
 
-# Get an XML file of all the packages we know about.  This is so slow as to be impractical, right now.
+# Gets an XML file of all the packages we know about.  
 
 get '/packages.xml' do
+
   [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]
+
 end
+
+# Gets a CSV file of all the packages we know about.  
 
 get '/packages.csv' do
+
   [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]
+
 end
 
+# Redirect for older versions of code
+
 get '/packages/?' do
-  redirect '/packages.xml', 301  # is this correct code:?
+
+  redirect '/packages.xml', 301
+
 end
