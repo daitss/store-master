@@ -17,19 +17,22 @@ configure do
   set :environment,  :production  # Get some exceptional defaults.
   set :raise_errors, false        # Handle our own exceptions.
 
-  Logger.setup('StoreMaster')
+  Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
-  use Rack::CommonLogger, Logger.new
+  use Rack::CommonLogger, Logger.new(:info, 'Rack:')
 
   Logger.info "Starting #{StoreMaster.version.rev}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
+  (ENV.keys - ['BASIC_AUTH_PASSWORD', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
+    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
+  end
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if ENV['DATABASE_LOGGING']
 
   begin
-    # Get connected to db; this actually connects to the DB and performs a select, so we'll fail fast on configuration errors.
+    # Connect to DB and perform a select, so we'll fail fast on configuration errors.
 
     DataModel.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 

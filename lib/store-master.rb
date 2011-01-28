@@ -1,12 +1,12 @@
 require 'builder'
 require 'ostruct'
-require 'time'
-require 'store-master/exceptions'
-require 'store-master/logger'
-require 'store-master/data-model'
+require 'store-master/data-model'  # brings in specific models
 require 'store-master/disk-store'
+require 'store-master/exceptions'  # brings in http-exceptions
+require 'store-master/logger'
 require 'store-master/reports'
 require 'store-master/utils'
+require 'time'
 
 # When we deploy with Capistrano it checks out the code using Git
 # into its own branch, and places the git revision hash into the
@@ -39,13 +39,13 @@ module StoreMaster
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '0.2.1'
+  VERSION  = '0.2.2'
   NAME     = 'Store Master Service'
 
 
   def self.version
-    os = OpenStruct.new("rev"    => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
-                        "uri"    => "info:fcla/daitss/store-master/#{VERSION}")
+    os = OpenStruct.new("rev" => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
+                        "uri" => "info:fcla/daitss/store-master/#{VERSION}")
     def os.to_s
       self.rev
     end

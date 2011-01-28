@@ -1,6 +1,6 @@
 module DataModel
-
   class Package
+
     include DataMapper::Resource
     storage_names[:default] = 'packages'    # don't want dm_packages
 
@@ -41,6 +41,7 @@ module DataModel
     def self.names
       all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
     end
+
 
     def self.store data_io, metadata
 
@@ -91,7 +92,6 @@ module DataModel
     def delete
       self.extant = false
       raise  DataBaseError, "error deleting #{self.name} - #{self.errors.full_messages.join('; ')}" unless self.save
-
       errs = []
       locations.each do |loc|
         begin
@@ -100,12 +100,11 @@ module DataModel
           errs.push "failed to delete storage at #{loc.sanitized}: #{e.message}"
         end
       end
-
       raise DriveByError, errs.join('; ') unless errs.empty?
     end
 
-    def store_copy io, posting_url, metadata
 
+    def store_copy io, posting_url, metadata
       # Note: posting_url may have credentials, be sure to use sanitized method on it.
 
       http = Net::HTTP.new(posting_url.host, posting_url.port)
@@ -156,7 +155,7 @@ module DataModel
       returned_data['location']
     end
 
-    
+
     def delete_copy silo_resource
 
       http = Net::HTTP.new(silo_resource.host, silo_resource.port)
@@ -171,8 +170,5 @@ module DataModel
 
       raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource.sanitized} - #{response.body}" if status >= 300
     end
-
-  end # of Package
-
-
-end
+  end # of class Package
+end # of module DataModel

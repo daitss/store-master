@@ -9,8 +9,8 @@ module StoreMaster
   # Most of the following comments are pretty darn obvious - they
   # are included for easy navigation in the generated rdoc html files.
 
-  # Http400Error's group named exceptions as something the client did
-  # wrong. It is subclassed from the HttpError exception.
+  # Http400Error's group the named exceptions as something the client
+  # did wrong. It is subclassed from the HttpError exception.
 
   class Http400Error < HttpError;  end
 

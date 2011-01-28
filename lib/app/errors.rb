@@ -34,7 +34,7 @@ error do
   # refactoring.)
 
   else
-    Logger.err "Internal Server Error - #{e.message}", @env
+    Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
     e.backtrace.each { |line| Logger.err line, @env }
     [ halt 500, { 'Content-Type' => 'text/plain' }, "500 Internal Service Error - See system logs for more information\n" ]
   end

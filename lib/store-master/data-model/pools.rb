@@ -20,6 +20,11 @@ module DataModel
       save or raise "Can't assign the pool #{self.inspect} property #{:field} to value #{value.inspect}"
     end
 
+    attr_accessor :name
+
+    def name 
+      @name or @name = URI.parse(services_location).host
+    end
 
     # We have a protocol that silo pools must follow: they must return a service
     # document (XML) that descirbes where we can locate essential silo services.

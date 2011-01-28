@@ -1,14 +1,20 @@
 #!/usr/bin/env ruby
 #
-# From the storemaster library:
+# This script is provided to prime the store master DB from the
+# existing silos; from that point on the packages should be mainulated
+# from the store-master service.
 
-ENV['BUNDLE_GEMFILE'] = File.expand_path(File.join(File.dirname(__FILE__), '../Gemfile'))
-require 'bundler/setup'
+
+## either run as 'bundle exec prime-store-master ...' or set up the following:
+##  ENV['BUNDLE_GEMFILE'] = File.expand_path(File.join(File.dirname(__FILE__), '../Gemfile'))
+## require 'bundler/setup'
+
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib/'))
 
 require 'store/data-model'
+include DataModel
 
-DM.setup('/opt/fda/etc/db.yml', 'ps_store_master')
+DataModel.setup('/opt/fda/etc/db.yml', 'ps_store_master')
 
 # ENV['TZ'] = 'UTC' 
 
@@ -17,11 +23,10 @@ DM.setup('/opt/fda/etc/db.yml', 'ps_store_master')
 # E20051213_AAAAAA	http://silos.darchive.fcla.edu/001/data/E20051213_AAAAAA
 # E20060108_AAAAAA	http://silos.tarchive.fcla.edu/003/data/E20060108_AAAAAA
 
-include DM
 
-loc   = 'http://silos.darchive.fcla.edu/'
+loc   = 'http://silos.darchive.fcla.edu/services'
 pool1 =  Pool.exists?(loc) ? Pool.lookup(loc) : Pool.create(loc) 
-loc   = 'http://silos.tarchive.fcla.edu/'
+loc   = 'http://silos.tarchive.fcla.edu/services'
 pool2 =  Pool.exists?(loc) ? Pool.lookup(loc) : Pool.create(loc) 
 
 pool2.read_preference = 10
@@ -45,6 +50,8 @@ while line = STDIN.gets do
   #   end
   # end
 
+  ## FIXME: won't match directly, now.
+
   if loc =~ /#{pool1.put_location}/
     pool = pool1
   elsif loc =~ /#{pool2.put_location}/
@@ -54,8 +61,8 @@ while line = STDIN.gets do
     next
   end
 
-  pkg  = DM::Package.first_or_create(:ieid => ieid, :name => ieid)
-  copy = DM::Copy.create(:store_location => loc, :pool => pool.dm_record)
+  pkg  = Package.first_or_create(:ieid => ieid, :name => ieid)
+  copy = Copy.create(:store_location => loc, :pool => pool.dm_record)
   puts copy.url
   pkg.copies << copy
 

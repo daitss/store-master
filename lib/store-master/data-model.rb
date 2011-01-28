@@ -36,7 +36,7 @@ include StoreMaster
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
-  def self.setup yaml_file, key
+  def self.setup yaml_file, key, repository = :default
     oops = "DB setup can't"
 
     raise ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
@@ -64,7 +64,7 @@ include StoreMaster
       dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
 
     begin
-      dm = DataMapper.setup(:default, connection_string)
+      dm = DataMapper.setup(repository, connection_string)
       DataMapper.finalize
       dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
       return dm

@@ -1,6 +1,7 @@
 # -*- mode: ruby; -*-
 
 require 'bundler/setup'
+require 'socket'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
@@ -14,9 +15,11 @@ ENV['DATABASE_CONFIG_KEY']  ||= 'store_master'        # Key into a hash provided
 ENV['BASIC_AUTH_USERNAME']  ||= nil                   # Credentials required to connect to the store-master
 ENV['BASIC_AUTH_PASSWORD']  ||= nil                   # service using basic authentication
 
+ENV['VIRTUAL_HOSTNAME']     ||= Socket.gethostname    # Used for logging; wish there was a better way of getting this automatically
+
 if ENV['BASIC_AUTH_USERNAME'] or ENV['BASIC_AUTH_PASSWORD']
-  use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password|
-    username == ENV['BASIC_AUTH_USERNAME'] 
+  use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password| 
+    username == ENV['BASIC_AUTH_USERNAME']
     password == ENV['BASIC_AUTH_PASSWORD']
   end
 end

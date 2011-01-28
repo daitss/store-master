@@ -56,7 +56,7 @@
   
     
       <dt class="r1">Includes:</dt>
-      <dd class="r1"><span class='object_link'><a href="Store.html" title="Store (module)">Store</a></span></dd>
+      <dd class="r1"><span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></dd>
       
     
   
@@ -69,7 +69,7 @@
 <p class="children">
    
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="DM.html" title="DM (module)">DM</a></span>, <span class='object_link'><a href="Store.html" title="Store (module)">Store</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>, <span class='object_link'><a href="URI.html" title="URI (module)">URI</a></span>
     
    
     
@@ -87,8 +87,7 @@
   <div class="discussion">
     <p>
 TODO: transfer compression in PUT seems to retain files as
-compressed&#8230;fah.  Need to check for this&#8230; TODO: Authentications
-on this service, and for remote services.
+compressed&#8230;fah.  Need to check for this&#8230;
 </p>
 
 
@@ -109,6 +108,13 @@ on this service, and for remote services.
   
   
   
+  
+  
+  
+  
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMaster.html#NAME-constant" title="StoreMaster::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="StoreMaster.html#RELEASE-constant" title="StoreMaster::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="StoreMaster.html#REVISION-constant" title="StoreMaster::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="StoreMaster.html#VERSION-constant" title="StoreMaster::VERSION (constant)">VERSION</a></span></p>
+
 
   
     <h2>
@@ -170,6 +176,27 @@ the code into a directory created under ../releases/, with names such as
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#iam-instance_method" title="#iam (instance method)">- (Object) <strong>iam</strong>(ob) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -179,6 +206,21 @@ the code into a directory created under ../releases/, with names such as
   
   
   
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DataModel.html#recreate_tables-class_method" title="DataModel.recreate_tables (method)">recreate_tables</a></span>, <span class='object_link'><a href="DataModel.html#setup-class_method" title="DataModel.setup (method)">setup</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
+
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
@@ -211,13 +253,13 @@ return its contents.
       <pre class="lines">
 
 
+16
+17
 18
-19
-20
-21</pre>
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store.rb', line 18</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 16</span>
 
 <span class='def def kw'>def</span> <span class='get_capistrano_git_revision identifier id'>get_capistrano_git_revision</span>
   <span class='revision_file identifier id'>revision_file</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>'..'</span><span class='comma token'>,</span> <span class='string val'>'REVISION'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -262,17 +304,46 @@ includes configuration information that may not be checked in.
       <pre class="lines">
 
 
+33
+34
 35
-36
-37
-38</pre>
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store.rb', line 35</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='get_capistrano_release identifier id'>get_capistrano_release</span>
   <span class='full_path identifier id'>full_path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
   <span class='lparen token'>(</span><span class='full_path identifier id'>full_path</span> <span class='match op'>=~</span> <span class='regexp val'>%r{/releases/((\d+){14})/}</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='$1 nth_ref id'>$1</span> <span class='colon op'>:</span> <span class='string val'>&quot;Not Available&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="iam-instance_method">
+  
+    - (<tt>Object</tt>) <strong>iam</strong>(ob) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/irb-setup.rb', line 8</span>
+
+<span class='def def kw'>def</span> <span class='iam identifier id'>iam</span> <span class='ob identifier id'>ob</span>
+  <span class='lparen token'>(</span><span class='ob identifier id'>ob</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span> <span class='minus op'>-</span> <span class='Object constant id'>Object</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -285,7 +356,7 @@ includes configuration information that may not be checked in.
 </div>
     
     <div id="footer">
-  Generated on Tue Dec  7 17:58:08 2010 by 
+  Generated on Sat Jan 22 16:40:16 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
