@@ -12,10 +12,11 @@ require 'datyl/streams'
 #   2 b z
 #
 
+include Streams
 
 def test_stream *list
   tempfile = Tempfile.new('test-stream-')
-  list.each do |a| 
+  list.each do |a|
     k = a.shift
     tempfile.puts "#{k} #{a.join(' ')}"
   end
@@ -83,6 +84,7 @@ describe DataFileStream do
 end  # of describe DataFileStream
 
 
+
 describe UniqueStream do
 
   it "should remove multiple values from a stream, providing only the first-supplied value" do
@@ -127,7 +129,7 @@ describe UniqueStream do
   it "should properly remove all multiple-keyed sequences in a stream, retaining the first encounted sequence" do
 
     stream = UniqueStream.new(test_stream ['1', 'a'], ['1', 'b'], ['2', 'c'], ['2', 'd'], ['3', 'e'], ['3', 'f'])
-    
+
     keys   = []
     values = []
 
@@ -141,6 +143,7 @@ describe UniqueStream do
   end
 
 end  # of describe UniqueStream
+
 
 
 describe MergedStream do
@@ -171,7 +174,7 @@ describe MergedStream do
     only_in_first.should   == [ ['1c'], ['1e'] ]
     only_in_second.should  == [ ['2a'], ['2g'] ]
   end
-    
+
 end # of describe MergedStream
 
 
@@ -182,17 +185,17 @@ describe FoldedStream do
 
     stream = FoldedStream.new(test_stream ['1', '1a'], ['2', '2a', '2b'], ['3', '3a', '3b'], ['3', '3c', '3d'])
     k, vs = stream.get
-    
+
     k.should  == '1'
     vs.should == [ '1a' ]
 
     k, vs = stream.get
-    
+
     k.should  == '2'
     vs.should == [ ['2a', '2b'] ]
 
     k, vs = stream.get
-    
+
     k.should  == '3'
     vs.should == [ ['3a', '3b'], ['3c', '3d'] ]
   end
@@ -216,4 +219,3 @@ describe FoldedStream do
 
 
 end  # of describe FoldedStream
-
