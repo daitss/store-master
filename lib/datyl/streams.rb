@@ -1,26 +1,29 @@
 
-# A stream, for us, is a sequence of key/value pairs, where the keys are
-# sorted in ascending order.  The key will typically be a string, and the
-# value an array or struct record.  All streams are expected to support 
+# A stream, for us, is a sequence of key/value pairs where the keys
+# are sorted in ascending order.  The key will typically be a string
+# (it must support <, >, ==); the values can be anything, but will
+# often be a string or an array of strings.  All streams must support
 # the following methods:
 #
 #    close    - cleans up the stream: it is unavailable for rewind.
 #    closed?  - returns true if the stream has been closed.
 #    each     - succesively yields key/value pairs off the stream.
-#    eos?     - boolean signalling that the end of stream.
+#    eos?     - boolean signalling that we're at the End Of the Stream.
 #    get      - reads a single key/value pair off the stream. Returns nil when eos? returns true.
-#    rewind   - restarts the stream from the start.
+#    rewind   - resets the stream to the beginning or the key/value pairs.
 #
-# Additionally, there should be a good diagnostic to_s methods on all stream classes
+# Additionally, there should be a good diagnostic #to_s method on all
+# stream classes; it will appear in diagnostic log messages.
 
 require 'tempfile'
 
-
-# Read white-space delimited records from a text file, one record per
-# line.  Each line should have the same number of fields. The first
-# field is the key; the successive fields make up the value.  If there
-# is only one field for the value, a simple string will be returned as the value.
-# If there are two or more fields, the value will be an array of strings.
+# DataFileStream takes an opened io object (the object must support
+# #gets) and returns a stream. It reads white-space delimited records
+# from a text file, one record per line.  Each line should have the
+# same number of fields (same arity). The first field is the key; the
+# successive fields make up the value.  If there is only one field for
+# the value, a simple string will be returned as the value.  When
+# there are two or more fields the value will be an array of strings.
 
 class DataFileStream
   include Enumerable
@@ -46,7 +49,7 @@ class DataFileStream
 
   def get
     return nil if eos?
-    arr = read
+    arr = _read
     if arr.length > 2
       return arr[0], arr[1..-1]
     else
@@ -68,18 +71,23 @@ class DataFileStream
     @io.close unless @io.closed?
   end
 
-  # Only use these in derived streams, not in application code.
+  # semi-private:
 
-  def read
+  def _read
     return *@io.gets.split(/\s+/)
   end
 
 end
 
-# Filter a stream so its keys are always unique; returns only the first encountered of multiple records
+# UniqueStream takes a stream and filters it so that the returned
+# stream's keys are always unique; a UniqueStream returns only the
+# first encountered of multiple records in the stream it is given.
 
 class UniqueStream 
-  attr_reader :stream, :last_key, :last_value
+
+  @stream     = nil
+  @last_key   = nil
+  @last_value = nil
 
   def initialize stream
     @stream   = stream
@@ -121,14 +129,14 @@ class UniqueStream
   
 end
 
-
-# given a stream, fold values for like keys together in an array.
-#
-# 
+# FoldedStream is a stream filter; given a stream, it returns a stream
+# that has folded values for identical keys together in an array.
+# Thus the values for a FoldedStream are of mixed arity, but will
+# always be an array. As for all streams, the keys must be sorted.
 
 class FoldedStream < UniqueStream
 
-  attr_reader :last_values  # we inherit :last_key, :stream
+  @last_values = nil
 
   def initialize stream
     @stream = stream
@@ -157,21 +165,21 @@ class FoldedStream < UniqueStream
   
 end
 
-  
-
-
-# Two streams where keys are unique and sorted; #each returns data
-# in the following manner:
+ 
+# MergedStream is a bit different from the other Stream classes in
+# that it is created from two streams and that #each yields three
+# objects instead of the usual two. The objects are as follows:
 #
-#   identical keys from the two streams  - yields key, data-1, data-2
+#   keys are present in both streams     - yields key, data-1, data-2
 #   key exists only on the first stream  - yields key, data-1, nil
 #   key exists only on the second stream - yields key, nil,    data-2
 #
+# The two input streams must have unique and sorted keys.
 
 class MergedStream
   include Enumerable
 
-  attr_accessor :streams, :first_stack, :second_stack
+  attr_accessor :streams
   
   def initialize first_stream, second_stream
     @first_stream  = first_stream
@@ -201,51 +209,42 @@ class MergedStream
   end
 
   def get_first_stream
-    if first_stack.empty?
+    if @first_stack.empty?
       return @first_stream.get
     else
-      return first_stack.pop, first_stack.pop
+      return @first_stack.pop, @first_stack.pop
     end
   end
 
   def unget_first_stream k, v
-    first_stack.push v
-    first_stack.push k
+    @first_stack.push v
+    @first_stack.push k
   end
 
   def get_second_stream
-    if second_stack.empty?
+    if @second_stack.empty?
       return @second_stream.get
     else
-      return second_stack.pop, second_stack.pop
+      return @second_stack.pop, @second_stack.pop
     end
   end
 
   def unget_second_stream k, v
-    second_stack.push v
-    second_stack.push k
+    @second_stack.push v
+    @second_stack.push k
   end
 
   def each
     while not eos?
       k1, v1 = get_first_stream
       k2, v2 = get_second_stream
-      if k1.nil?
-        yield k2, nil, v2
-      elsif k2.nil?
-        yield k1, v1, nil
-      elsif k1 == k2
-        yield k1, v1, v2
-      elsif k1 <  k2
-        unget_second_stream k2, v2
-        yield k1, v1, nil
-      elsif k2 < k1
-        unget_first_stream k1, v1
-        yield k2, nil, v2
+
+      if    k2.nil?;                              yield k1, v1,  nil
+      elsif k1.nil?;                              yield k2, nil, v2
+      elsif k1 <  k2; unget_second_stream k2, v2; yield k1, v1,  nil
+      elsif k2 <  k1; unget_first_stream  k1, v1; yield k2, nil, v2
+      elsif k1 == k2;                             yield k1, v1,  v2
       end
     end
   end
 end
-
-
-
