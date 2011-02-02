@@ -6,15 +6,20 @@ module Streams
   # often be a string or an array of strings.  All streams must support
   # the following methods:
   #
-  #    close    - cleans up the stream: it is unavailable for rewind.
-  #    closed?  - returns true if the stream has been closed.
-  #    each     - succesively yields key/value pairs off the stream.
-  #    eos?     - boolean signalling that we're at the End Of the Stream.
-  #    get      - reads a single key/value pair off the stream. Returns nil when eos? is true.
-  #    rewind   - resets the stream to the beginning or the key/value pairs.
+  #    close          - cleans up the stream: it is unavailable for rewind.
+  #    closed?        - returns true if the stream has been closed.
+  #    each do |k,v|  - succesively yields key/value pairs off the stream.
+  #    eos?           - boolean signalling that we're at the End Of the Stream.
+  #    k, v = get     - reads a single key/value pair off the stream. Returns nil when eos? is true.
+  #    rewind         - resets the stream to the beginning or the key/value pairs; returns the stream
   #
-  # Additionally, there should be a good diagnostic #to_s method on all
-  # stream classes; it will appear in diagnostic log messages.
+  # Optionally, it may support
+  #
+  #    unget          - forget that we've read the last key/value pair
+  #
+  # Additionally, there should be a good diagnostic #to_s method on
+  # all stream classes; that string will often appear in diagnostic
+  # log messages.
 
   require 'tempfile'
 
@@ -29,33 +34,44 @@ module Streams
   class DataFileStream
     include Enumerable
 
-    attr_accessor :io
-
     def initialize  io
-      @io   = io
+      @io            = io
+      @last_key      = nil
+      @last_val      = nil
+      @unget_pending = false
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} from #{io.inspect}>"
+      "#<#{self.class}##{self.object_id} from #{io.to_s}>"
     end
 
     def rewind
       raise "Stream #{@io} can't be rewound: it has been closed"  if @io.closed?
       @io.rewind
+      self
     end
 
     def eos?
-      @io.eof?
+      @io.eof? and not @unget_pending
     end
 
     def get
-      return nil if eos?
-      arr = _read
-      if arr.length > 2
-        return arr[0], arr[1..-1]
-      else
-        return arr[0], arr[1]
+      return if eos?
+
+      if @unget_pending
+         @unget_pending = false
+         return @last_key, @last_val
       end
+
+      @last_key, *tail = read
+      @last_val = tail.length > 1 ? tail : tail[0]
+
+      return @last_key, @last_val
+    end
+
+    def unget
+      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @unget_pending
+      @unget_pending = true
     end
 
     def each
@@ -74,29 +90,29 @@ module Streams
 
     # semi-private:
 
-    def _read
+    def read
       return *@io.gets.split(/\s+/)
     end
 
-  end
+  end # of class DataFileStream
 
   # UniqueStream takes a stream and filters it so that the returned
-  # stream's keys are always unique; a UniqueStream returns only the
-  # first encountered of multiple records in the stream it is given.
+  # stream's keys are always unique; if a UniqueStream encounters two
+  # identical keys, it returns the key/value pair of the first of
+  # them, discarding the second.
+  #
+  # It supports unget
 
   class UniqueStream
 
-    @stream     = nil
-    @last_key   = nil
-    @last_value = nil
-
     def initialize stream
-      @stream   = stream
-      @last_key, @last_value = @stream.get
+      @stream = stream
+      @unbuff = []
+      @ungot  = false
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} from #{@stream.inspect}>"
+      "#<#{self.class}##{self.object_id} wrapping #{@stream.to_s}>"
     end
 
     def closed?
@@ -108,22 +124,42 @@ module Streams
     end
 
     def eos?
-      @stream.eos? and @last_key.nil?
+      @stream.eos? and not @ungot
     end
 
     def rewind
       @stream.rewind
+      @stream
+    end
+
+    # we only support one level of unget
+
+    def unget
+      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
+      @ungot = true
     end
 
     def get
-      key_next, value_next = @stream.get
+      return if eos?
 
-      return get if key_next == @last_key
+      if @ungot
+         @ungot = false
+         return @unbuff[0], @unbuff[1]
+      end
 
-      key_last, value_last  = @last_key, @last_value
-      @last_key, @last_value = key_next, value_next
+      ku, vu = @stream.get
 
-      return key_last, value_last
+      loop do
+        break if eos?
+        k, v = @stream.get
+        if k != ku
+          @stream.unget
+          break
+        end
+      end
+
+      @unbuff = [ ku, vu ]
+      return ku, vu
     end
 
     def each
@@ -132,59 +168,60 @@ module Streams
       end
     end
 
-  end
+  end # of class UniqueStream
 
   # FoldedStream is a stream filter; given a stream, it returns a stream
   # that has folded values for identical keys together in an array.
   # Thus the values for a FoldedStream are of mixed arity, but will
   # always be an array. As for all streams, the keys must be sorted.
+  #
+  # It subclasses UniqueStream and supports one level of unget
 
   class FoldedStream < UniqueStream
 
-    @last_values = nil
-
-    def initialize stream
-      @stream = stream
-      key, value = @stream.get
-
-      @last_key = key
-      @last_values = [ value ]
-    end
-
-    def to_s
-      "#<#{self.class}##{self.object_id} from #{@stream.inspect}>"
-    end
-
     def get
-      key_now, value_now = @stream.get
+      return if eos?
 
-      if key_now == @last_key
-        @last_values.push value_now
-        return get
+      if @ungot
+         @ungot = false
+         return @unbuff[0], @unbuff[1]
       end
 
-      key_last, values_last = @last_key, @last_values
+      ku, vu = @stream.get
 
-      @last_key    = key_now
-      @last_values = [ value_now ]
+      @vals = Array.new
+      @vals << vu
 
-      return key_last, values_last
+      loop do
+        break if eos?
+        k, v = @stream.get
+        if k != ku
+          @stream.unget
+          break
+        else
+          @vals << v
+        end
+      end
+
+      @unbuff = [ ku, @vals ]
+      return ku, @vals
     end
 
-  end
+  end # of class FoldedStream
 
 
-  # MergedStream is a bit different from the other Stream classes in
-  # that it is created from two streams and that #each yields three
-  # objects instead of the usual two. The objects are as follows:
+  # ComparisonStream is a bit different from the other Stream classes in
+  # that
+  #    - it is created from exactly two streams
+  #    - ComparisonStream#each always yields the key and two data values:
   #
-  #   keys are present in both streams     - yields key, data-1, data-2
-  #   key exists only on the first stream  - yields key, data-1, nil
-  #   key exists only on the second stream - yields key, nil,    data-2
+  #   keys are present in both streams     - yields key,  data-1, data-2
+  #   key exists only on the first stream  - yields key,  data-1, nil
+  #   key exists only on the second stream - yields key,  nil,    data-2
   #
   # The two input streams must have unique and sorted keys.
 
-  class MergedStream
+  class ComparisonStream
     include Enumerable
 
     attr_accessor :streams
@@ -192,19 +229,17 @@ module Streams
     def initialize first_stream, second_stream
       @first_stream  = first_stream
       @second_stream = second_stream
-      @first_stack   = []
-      @second_stack  = []
       @streams       = [ @first_stream, @second_stream ]
-      rewind
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} from #{@streams}>"
+      "#<#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
     end
 
     def rewind
       @first_stream.rewind
       @second_stream.rewind
+      self
     end
 
     def eos?
@@ -216,45 +251,104 @@ module Streams
       @second_stream.close
     end
 
-    def get_first_stream
-      if @first_stack.empty?
-        return @first_stream.get
-      else
-        return @first_stack.pop, @first_stack.pop
+    def closed?
+      @first_stream.closed? and @second_stream.closed?
+    end
+
+    def get
+      return if eos?
+
+      k1, v1 = @first_stream.get
+      k2, v2 = @second_stream.get
+
+      if    k2.nil?;                        return k1,   v1, nil
+      elsif k1.nil?;                        return k2,  nil,  v2
+      elsif k1 <  k2; @second_stream.unget; return k1,   v1, nil
+      elsif k2 <  k1; @first_stream.unget;  return k2,  nil,  v2
+      elsif k1 == k2;                       return k1,   v1,  v2
       end
-    end
-
-    def unget_first_stream k, v
-      @first_stack.push v
-      @first_stack.push k
-    end
-
-    def get_second_stream
-      if @second_stack.empty?
-        return @second_stream.get
-      else
-        return @second_stack.pop, @second_stack.pop
-      end
-    end
-
-    def unget_second_stream k, v
-      @second_stack.push v
-      @second_stack.push k
     end
 
     def each
       while not eos?
-        k1, v1 = get_first_stream
-        k2, v2 = get_second_stream
-
-        if    k2.nil?;                              yield k1, v1,  nil
-        elsif k1.nil?;                              yield k2, nil, v2
-        elsif k1 <  k2; unget_second_stream k2, v2; yield k1, v1,  nil
-        elsif k2 <  k1; unget_first_stream  k1, v1; yield k2, nil, v2
-        elsif k1 == k2;                             yield k1, v1,  v2
-        end
+        yield get
       end
     end
-  end
+  end # of class MergedStream
+
+
+  # Return the next key/container pair from a list of streams; the
+  # container holds values found on the streams for a given key, thus
+  # is of mixed arity.
+
+  class MultiStream
+    include Enumerable
+
+    attr_reader   :streams
+
+    def initialize *streams
+      @values_container = Array   # subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
+      @streams = streams
+    end
+
+    def to_s
+      "#<#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
+    end
+
+    def closed?
+      @streams.inject(true) { |sum, stream|  sum and stream.closed? }
+    end
+
+    def close
+      @streams.each { |s| s.close }
+    end
+
+    def eos?
+      @streams.inject(true) { |sum, stream|  sum and stream.eos? }
+    end
+
+    def rewind
+      @streams.each { |s| s.rewind }
+      self
+    end
+
+    # Sort the keys from the the set of values returned by a GET on
+    # all streams to find the smallest key; assemble a container of
+    # the values that match the smallest key; push all other key/value
+    # pairs back onto their associated streams for later processing.
+    # Returns the key/container pair.
+
+    def get
+      scorecard = []
+
+      @streams.each do |s|
+        k, v = s.get
+        scorecard.push [ s, k, v ] unless k.nil?
+      end
+
+      return if scorecard.empty?
+
+      key  = scorecard.map{ |s, k, v|  k  }.sort[0]
+      vals = @values_container.new
+
+      scorecard.each do |s, k, v|
+        if k == key
+          vals << v
+        else
+          s.unget
+        end
+      end
+
+      return key, vals
+    end
+
+
+    def each
+      while not eos?
+        yield get
+      end
+    end
+
+  end # of class MultiStream
 
 end # of module Streams

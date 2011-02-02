@@ -24,6 +24,16 @@ def test_stream *list
   DataFileStream.new(tempfile)
 end
 
+def dump_stream stream
+  stream.rewind
+  puts ''
+  puts stream.to_s
+  stream.each do |k,v|
+    puts "#{k} => #{v.inspect}"
+  end
+  stream.rewind
+end
+
 
 describe DataFileStream do
 
@@ -47,14 +57,14 @@ describe DataFileStream do
 
   it "should yield all keys in a stream" do
 
-    stream = test_stream  ['1', 'a'],  ['2', 'b'], ['3', 'c']
+    stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
     keys   = []
 
     stream.each do |key, value|
       keys.push key
     end
 
-    keys.should   == ['1', '2', '3']
+    keys.should   == [ '1', '2', '3']
   end
 
   it "should yield all values in a stream" do
@@ -81,13 +91,65 @@ describe DataFileStream do
     keys.should == []
   end
 
+  it "should allow ungets on scalar-valued values" do
+
+    stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
+
+    k1, v1 = stream.get
+    stream.unget
+    k2, v2 = stream.get
+
+    k1.should == k2
+    v1.should == v2
+
+    k1.should == '1'
+    v1.should == 'a'
+
+    k1, v1 = stream.get
+    stream.unget
+    k2, v2 = stream.get
+
+    k1.should == k2
+    v1.should == v2
+
+    k1.should == '2'
+    v1.should == 'b'
+  end
+
+  it "should allow ungets on array-valued values" do
+
+    stream = test_stream  ['1', 'a0', 'a1'], ['2', 'b0', 'b1'], ['3', 'c0', 'c1']
+
+    k1, v1 = stream.get
+    stream.unget
+    k2, v2 = stream.get
+
+    k1.should == k2
+    v1.should == v2
+
+    k1.should == '1'
+    v1.should == [ 'a0', 'a1' ]
+
+    k1, v1 = stream.get
+    stream.unget
+    k2, v2 = stream.get
+
+    k1.should == k2
+    v1.should == v2
+
+    k1.should == '2'
+    v1.should == [ 'b0', 'b1' ]
+  end
+
+
+
 end  # of describe DataFileStream
 
 
 
 describe UniqueStream do
 
-  it "should remove multiple values from a stream, providing only the first-supplied value" do
+  it "should remove multiple keys from a scalar-valued stream, providing only the first-supplied value" do
 
     stream = UniqueStream.new(test_stream ['1', 'a'], ['1', 'b'], ['1', 'c'], ['2', 'd'])
 
@@ -98,6 +160,19 @@ describe UniqueStream do
     k, v = stream.get
     k.should == '2'
     v.should == 'd'
+  end
+
+  it "should remove multiple keys from an array-valued stream, providing only the first-supplied value" do
+
+    stream = UniqueStream.new(test_stream ['1', 'a', 'aa'], ['1', 'b', 'bb'], ['1', 'c', 'cc'], ['2', 'd', 'dd'])
+
+    k, v = stream.get
+    k.should == '1'
+    v.should == [ 'a', 'aa' ]
+
+    k, v = stream.get
+    k.should == '2'
+    v.should == [ 'd', 'dd' ]
   end
 
   it "should leave unique sequences in a stream intact" do
@@ -142,40 +217,60 @@ describe UniqueStream do
     values.should == ['a', 'c', 'e']
   end
 
+
+  it "should all unget from a stream with mulitple keys" do
+
+    stream = UniqueStream.new(test_stream ['1', 'a'], ['1', 'b'], ['2', 'c'], ['2', 'd'], ['3', 'e'], ['3', 'f'])
+
+    k, v = stream.get
+
+    k.should == '1'
+    v.should == 'a'
+
+    stream.unget
+
+    k, v = stream.get
+
+    k.should == '1'
+    v.should == 'a'
+  end
+
+
+
 end  # of describe UniqueStream
 
 
 
-describe MergedStream do
+describe ComparisonStream do
 
-  it "should properly merge unique streams" do
+  it "should properly merge simple streams" do
 
     s1 = test_stream              ['b', '1b'], ['c', '1c'], ['d', '1d'], ['e', '1e'], ['f', '1f']
-    s2 = test_stream ['a', '2a'], ['b', '2b'],              ['d', '2d'],              ['f', '2f'], ['g', '2g']
+    s2 = test_stream ['a', '2a'], ['b', '2b'],              ['d', '2d']
 
     in_both         = []
     only_in_first   = []
     only_in_second  = []
 
-    MergedStream.new(s1, s2).each do |key, data1, data2|
-
+    ms = ComparisonStream.new(s1, s2)
+    ms.each do |key, data1, data2|
       if data1.nil?
         only_in_second.push [ data2 ]
-
       elsif data2.nil?
         only_in_first.push  [ data1 ]
-
       else
         in_both.push        [ data1, data2 ]
       end
     end
 
-    in_both.should         == [ ['1b', '2b'], ['1d', '2d'], ['1f', '2f'] ]
-    only_in_first.should   == [ ['1c'], ['1e'] ]
-    only_in_second.should  == [ ['2a'], ['2g'] ]
+
+    in_both.should         == [ ['1b', '2b'], ['1d', '2d'] ]
+    only_in_first.should   == [ ['1c'], ['1e'], ['1f'] ]
+    only_in_second.should  == [ ['2a'] ]
   end
 
-end # of describe MergedStream
+
+end # of describe ComparisonStream
 
 
 
@@ -217,5 +312,41 @@ describe FoldedStream do
     results.keys.count.should == 4
   end
 
-
 end  # of describe FoldedStream
+
+
+describe MultiStream do
+
+  it "should combine keys from multiple streams, returning the associated values as an array" do
+
+    s1 = test_stream  ['1', 's1:k1'], ['2', 's1:k2' ],                  ['4', 's1:k4' ]
+    s2 = test_stream                  ['2', 's2:k2' ], ['3', 's2:k3' ], ['4', 's2:k4' ], ['5', 's2:k5' ]
+    s3 = test_stream                                   ['3', 's3:k3' ], ['4', 's3:k4' ], ['5', 's3:k5' ], ['6', 's3:k6' ]
+
+    ms = MultiStream.new(s1, s2, s3)
+
+    keys = []
+    vals = []
+
+    ms.each do |k, v|
+      keys.push k
+      vals.push v
+    end
+
+    keys.should == [ '1',
+                     '2',
+                     '3',
+                     '4',
+                     '5',
+                     '6' ]
+
+    vals.should == [ ['s1:k1'],
+                     ['s1:k2', 's2:k2'],
+                     ['s2:k3', 's3:k3'],
+                     ['s1:k4', 's2:k4', 's3:k4'],
+                     ['s2:k5', 's3:k5'],
+                     ['s3:k6'] ]
+  end
+
+
+end # of MultiStream

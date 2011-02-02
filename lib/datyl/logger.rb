@@ -145,6 +145,7 @@ class Logger
 
   def Logger.facility= facility
     return unless (@@virtual_hostname and @@service_name)
+    facility = 'LOG_' + facility unless facility =~ /^LOG_/
     Log4r::Logger[@@virtual_hostname].add Log4r::SyslogOutputter.new(@@service_name, 'facility' => eval("Syslog::#{facility.to_s.upcase}"))
     facility
   end
