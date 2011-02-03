@@ -1,0 +1,265 @@
+#!/usr/bin/env ruby
+#
+# -*- mode: ruby; -*-
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
+
+require 'csv'
+require 'datyl/streams'
+require 'datyl/reporter'
+require 'net/http'
+require 'optparse'
+require 'store-master'
+require 'tempfile'
+require 'uri'
+
+# DATAMAPPER_LOG_LEVEL = :debug
+
+DATAMAPPER_LOG_LEVEL = nil
+
+
+# command line options:
+
+Struct.new('Config', :syslog_facility, :db_config_file, :db_config_key, :pid_directory, :required_copies)
+
+def parse_options args
+
+  conf = Struct::Config.new('LOCAL4', '/opt/fda/etc/db.yml', 'store_master_dual_pool', nil, 2)
+
+  opts = OptionParser.new do |opts|    
+    opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
+      conf.syslog_facility = facility
+    end
+    opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
+      conf.db_config_file = path
+    end
+    opts.on("--db-config-key KEY", String, "The key for the database information in the database yaml configuration file #{conf.db_config_file}") do |key|
+      conf.db_config_key = key
+    end
+    opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
+      conf.pid_directory = path
+    end
+    opts.on("--required-copies PATH", String, "Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})") do |path|
+      conf.pid_directory = path
+    end
+  end
+  opts.parse!(args) 
+
+  raise "Configuration yaml file #{conf.db_config_file} not found"                unless File.exists? conf.db_config_file
+  raise "No key into the DB configuration file (#{conf.db_config_file}) provided" unless conf.db_config_key
+  raise "Configuration yaml file #{conf.db_config_file} not readable"             unless File.readable? conf.db_config_file
+
+  # FIXME: this can be user, uucp, news, others on our system
+
+  if conf.syslog_facility
+    raise "Syslog facility should be of the form 'LOCAL0' .. 'LOCAL1'"            unless conf.syslog_facility =~ /^LOCAL[0-7]$/
+  end
+
+  if conf.pid_directory
+    raise "The specified PID directory #{conf.pid_directory} doesn't exist"       unless File.exists? conf.pid_directory
+    raise "The specified PID directory #{conf.pid_directory} isn't a directory"   unless File.directory? conf.pid_directory
+    raise "The specified PID directory #{conf.pid_directory} isn't writable"      unless File.writable? conf.pid_directory
+  end
+rescue => e
+  STDERR.puts e, opts
+  return nil
+else
+  return conf
+end
+
+
+
+def setup config
+  Logger.setup('CollectFixities')
+  if config.syslog_facility
+    Logger.facility  = config.syslog_facility
+  else
+    Logger.stderr 
+  end
+  if config.pid_directory
+    pid_path = construct_pid_path(config.pid_directory)
+    raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
+    File.open(pid_path, 'w') { |file|  file.puts $$ }
+  end
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
+  DataModel.setup(config.db_config_file, config.db_config_key)
+end
+
+
+
+def teardown config, streams
+  if config.pid_directory
+    pid_path = construct_pid_path(config.pid_directory)
+    File.delete pid_path if File.exists? pid_path and File.writable? pid_path
+  end
+  streams.each { |s| s.close }
+end
+
+# Given a directory, return a path to a PID file in it, named after this script
+
+def construct_pid_path directory
+  File.join(directory, $0.split(File::SEPARATOR).pop + '.pid')
+end
+
+
+Struct.new('PoolFixityRecord', :location, :sha1, :md5, :timestamp, :status)
+
+# Get a stream of all of the fixity data from one pool.  The each
+# method yields two values, a package name and a struct describing
+# those resources:
+#
+# E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+# E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001", sha1="249fcdac02c9d1265a66d309c7679e89ba16be2d", md5="c6aed85f0ef29ceea5c0d032eeb8fcc6", timestamp="2011-02-02T12:05:22-05:00", status="ok">
+# E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000", sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709", md5="d41d8cd98f00b204e9800998ecf8427e", timestamp="2011-01-29T02:43:53-05:00", status="ok">
+#
+
+class PoolFixityStream < Streams::DataFileStream
+  include Enumerable
+
+  attr_reader :url
+
+  def initialize pool    
+
+    file = Tempfile.new("pool-fixity-data-#{pool.name}-")
+    @url = pool.fixity_url
+
+    get_request = Net::HTTP::Get.new(@url.path)
+    get_request.basic_auth(@url.user, @url.password) if url.user or url.password
+
+    http = Net::HTTP.new(@url.host, @url.port)
+    http.open_timeout = 60 * 2
+    http.read_timeout = 60 * 2  # it will take much longer to read it all, but should start within this time
+    
+    http.request(get_request) do |response|
+      raise StoreMaster::ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
+      response.read_body do |buff|
+        next if buff =~ /"name",/
+        file.write buff
+      end
+    end
+    file.rewind
+    super(file)
+  end
+
+  def to_s
+    "#<#{self.class}##{self.object_id} #{@url}>"   # TODO: sanitze @url, may have user/password embedded
+  end
+
+  # The CSV data returned by the above HTTP request is of the form:
+  #
+  # "E20110127_OEFCIO.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:04:27-05:00","ok"
+  # "E20110127_OPAHSG.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:27:55-05:00","ok"
+  #  ...
+
+  # key = name;  value = [ location, sha1, md5, date, status ]
+
+  def read
+    rec = CSV.parse_line(@io.gets)
+    return rec.shift, Struct::PoolFixityRecord.new(*rec)
+  end
+
+end # of class PoolFixityStream
+
+# A specialized array to hold collections of the PoolFixityRecords
+# returned by the above; these are convenience methods that map over
+# the the records in the array.
+
+class PoolFixityRecordContainer < Array
+
+  # A boolean that indicates that, for a given field, whether all the
+  # PoolFixityRecords in the container have the same value. Use with
+  # with a field of :size, :md5 or :sha1
+
+  def consistent? field
+    self.map{ |elt| elt.send field }.uniq.length == 1
+  rescue => e
+    nil
+  end
+
+  # A boolen that indeicates the field
+
+  def inconsistent? field
+    not consistent? field
+  rescue => e
+    nil
+  end
+
+end # of class 
+
+
+class PoolMultiFixities < Streams::MultiStream 
+
+  def initialize streams
+    @values_container = PoolFixityRecordContainer    
+    @streams = streams.map { |stream| Streams::UniqueStream.new(stream.rewind) }
+  end
+
+end
+
+
+
+def pluralize_phrase count, word, plural 
+  return "#{count} #{word}" if count.to_s == '1' or count.to_s.downcase == 'one'
+  return "#{count} #{plural}"
+end
+
+
+include DataModel
+
+config = parse_options(ARGV)
+setup(config)
+
+begin
+
+  # Get our basic fixity data from each pool; we'll be using these repeatedly.  Recall each stream yields the pair  <package-name>, <fixity-data-struct>
+
+  pool_fixity_streams = Pool.list_active.map { |p| PoolFixityStream.new(p) }  # TODO: list_active returns nil on nothing, but 
+
+  # Intra-pool checks: within each pool, make sure we don't have
+  # multiple packages.  To determin, we fold the data for a particular
+  # pool data stream.  If we find more than one record in that stream,
+  # we warn.
+
+  report_pools_not_unique  = Reporter.new "Redundant Packages Within a Pool"
+
+  pool_fixity_streams.map { |stream| Streams::FoldedStream.new(stream.rewind) }.each do |folded_stream|      # fold values for identical keys into one array
+    folded_stream.each do |name, records|
+      if records.count > 1 
+        report_pools_not_unique.warn "#{name} #{records.map { |rec| rec.location }.join(', ')}"
+      end
+    end
+  end
+
+  report_wrong_number   = Reporter.new "Packages Not Having the Required #{pluralize_phrase(config.required_copies, 'Copy', 'Copies')} in Pools"
+  report_copy_mismatch  = Reporter.new "Packages Having Mismatched SHA1, MD5 or Sizes Between the Silo Pools"
+
+  # Inter-pool checks: gather together all of the silo-pool data into
+  # one stream of key/container pairs.
+
+  PoolMultiFixities.new(pool_fixity_streams).each do |name, pool_records|
+
+    # wrong count
+    report_wrong_number.warn "#{name} has #{pluralize_phrase(pool_records.count, 'copy', 'copies')}" if pool_records.count != config.required_copies 
+
+    # wrong checksums or size
+    report_copy_mismatch.warn "SHA1 mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.sha1}" }.join(', ')  if pool_records.inconsistent? :sha1
+    report_copy_mismatch.warn "MD5 mismatch for #{name}: "  +  pool_records.map { |p|  "#{p.location} has #{p.md5}"  }.join(', ')  if pool_records.inconsistent? :md5
+    report_copy_mismatch.warn "Size mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.size}" }.join(', ')  if pool_records.inconsistent? :size
+  end
+
+  # Gather the data from daitss proper.
+
+
+  # Finally, report our findings.
+
+  report_pools_not_unique.write if report_pools_not_unique.interesting?
+  report_copy_mismatch.write    if report_copy_mismatch.interesting?
+  report_wrong_number.write     if report_wrong_number.interesting?
+
+rescue => e
+  STDERR.puts e
+  e.backtrace.each { |line| STDERR.puts line }
+ensure
+  teardown(config, pool_fixity_streams)
+end
+
