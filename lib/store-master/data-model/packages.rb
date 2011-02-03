@@ -2,7 +2,12 @@ module DataModel
   class Package
 
     include DataMapper::Resource
-    storage_names[:default] = 'packages'    # don't want dm_packages
+    storage_names[:store_master] = 'packages'    # don't want dm_packages
+
+    def self.default_repository_name
+      :store_master
+    end
+
 
     property   :id,         Serial,   :min => 1
     property   :extant,     Boolean,  :default  => true, :index => true

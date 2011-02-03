@@ -218,9 +218,9 @@ describe UniqueStream do
   end
 
 
-  it "should all unget from a stream with mulitple keys" do
+  it "should allow unget from a stream with mulitple keys" do
 
-    stream = UniqueStream.new(test_stream ['1', 'a'], ['1', 'b'], ['2', 'c'], ['2', 'd'], ['3', 'e'], ['3', 'f'])
+    stream = UniqueStream.new(test_stream ['1', 'a'], ['1', 'b'], ['2', 'c'], ['2', 'd'], ['3', 'e'], ['3', 'f'], ['4', 'g'])
 
     k, v = stream.get
 
@@ -233,9 +233,21 @@ describe UniqueStream do
 
     k.should == '1'
     v.should == 'a'
+
+    k, v = stream.get
+
+    k.should == '2'
+    v.should == 'c'
+
+    stream.unget
+    stream.get    # 2 again
+    stream.get    # 3 ...
+
+    k, v = stream.get
+
+    k.should == '4'
+    v.should == 'g'
   end
-
-
 
 end  # of describe UniqueStream
 
@@ -268,7 +280,6 @@ describe ComparisonStream do
     only_in_first.should   == [ ['1c'], ['1e'], ['1f'] ]
     only_in_second.should  == [ ['2a'] ]
   end
-
 
 end # of describe ComparisonStream
 
@@ -321,9 +332,10 @@ describe MultiStream do
 
     s1 = test_stream  ['1', 's1:k1'], ['2', 's1:k2' ],                  ['4', 's1:k4' ]
     s2 = test_stream                  ['2', 's2:k2' ], ['3', 's2:k3' ], ['4', 's2:k4' ], ['5', 's2:k5' ]
-    s3 = test_stream                                   ['3', 's3:k3' ], ['4', 's3:k4' ], ['5', 's3:k5' ], ['6', 's3:k6' ]
+    s4 = test_stream                                   ['3', 's4:k3' ], ['4', 's4:k4' ], ['5', 's4:k5' ], ['6', 's4:k6' ]
+    s3 = DataFileStream.new(File.open('/dev/null'))
 
-    ms = MultiStream.new(s1, s2, s3)
+    ms = MultiStream.new(s1, s2, s3, s4)
 
     keys = []
     vals = []
@@ -342,11 +354,10 @@ describe MultiStream do
 
     vals.should == [ ['s1:k1'],
                      ['s1:k2', 's2:k2'],
-                     ['s2:k3', 's3:k3'],
-                     ['s1:k4', 's2:k4', 's3:k4'],
-                     ['s2:k5', 's3:k5'],
-                     ['s3:k6'] ]
+                     ['s2:k3', 's4:k3'],
+                     ['s1:k4', 's2:k4', 's4:k4'],
+                     ['s2:k5', 's4:k5'],
+                     ['s4:k6'] ]
   end
 
-
-end # of MultiStream
+end # of describe MultiStream

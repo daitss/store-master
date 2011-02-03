@@ -22,13 +22,13 @@ end
 def postgres_setup
   # DataMapper::Logger.new(STDERR, :debug)
   DataModel.setup(File.join(HOME, 'db.yml'), 'store_master_postgres')
-  DataModel.recreate_tables
+  DataModel.create_tables
 end
 
 def mysql_setup
   # DataMapper::Logger.new(STDERR, :debug)
   DataModel.setup(File.join(HOME, 'db.yml'), 'store_master_mysql')
-  DataModel.recreate_tables
+  DataModel.create_tables
 end
 
 share_examples_for "DataMapper Package class with any DB, when it" do

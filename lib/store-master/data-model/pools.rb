@@ -2,7 +2,11 @@ module DataModel
 
   class Pool
     include DataMapper::Resource
-    storage_names[:default] = 'pools'           # don't want dm_pools
+    storage_names[:store_master] = 'pools'           # don't want data_model_pools
+
+    def self.default_repository_name
+      :store_master
+    end
 
     property   :id,                   Serial,   :min => 1
     property   :required,             Boolean,  :required => true, :default => true
@@ -133,7 +137,7 @@ module DataModel
     end
 
     def self.list_active
-      all(:required => true, :order => [ :read_preference.desc ])
+      all(:required => true, :order => [ :read_preference.desc ]) or []
     end
 
     def self.exists? services_location

@@ -5,7 +5,7 @@ require 'spec_helpers'
 
 def datamapper_setup
   DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
-  DataModel.recreate_tables
+  DataModel.create_tables
 end
 
 include DataModel

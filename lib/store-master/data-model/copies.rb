@@ -2,7 +2,11 @@ module DataModel
 
   class Copy
     include DataMapper::Resource
-    storage_names[:default] = 'copies'          # don't want dm_copies
+    storage_names[:store_master] = 'copies'          # don't want dm_copies
+
+    def self.default_repository_name
+      :store_master
+    end
 
     property   :id,               Serial,   :min => 1
     property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }

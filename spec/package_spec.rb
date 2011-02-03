@@ -36,7 +36,7 @@ def datamapper_setup
   ## DataMapper::Logger.new(STDERR, :debug)
 
   DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
-  DataModel.recreate_tables
+  DataModel.create_tables
 end
 
 def test_pools

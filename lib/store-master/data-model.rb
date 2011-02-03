@@ -16,12 +16,13 @@ require 'time'
 require 'uri'
 require 'xml'
 
-# URI#to_s method includes basic credentials.  This provides an alternative print method.
+# URI#to_s method prints basic credentials if they exist.  This provides an sanitized print method.
 
 module URI
   class HTTP
-    def sanitized
-      userinfo ? to_s.sub(userinfo + '@', '') : to_s
+    alias :old_to_s :to_s
+    def to_s
+      userinfo ? old_to_s.sub(userinfo + '@', '') : old_to_s
     end
   end
 end
@@ -36,7 +37,8 @@ include StoreMaster
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
-  def self.setup yaml_file, key, repository = :default
+  def self.setup yaml_file, key
+
     oops = "DB setup can't"
 
     raise ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
@@ -64,7 +66,7 @@ include StoreMaster
       dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
 
     begin
-      dm = DataMapper.setup(repository, connection_string)
+      dm = DataMapper.setup(:store_master, connection_string)
       DataMapper.finalize
       dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
       return dm
@@ -75,15 +77,21 @@ include StoreMaster
     end
   end
 
-  # Recreate tables for test.  We also keep mysql.ddl and psql.ddl for creating
-  # the tables, which gives us a bit more flexibility (e.g., cascading deletes)
+  # (Re)create tables for test or setup.  We'll also keep mysql.ddl and psql.ddl for creating
+  # the tables, which can gives us a bit more flexibility (e.g., cascading deletes)
 
-  def self.recreate_tables
+  def self.create_tables
     Reservation.auto_migrate!
     Pool.auto_migrate!
     Package.auto_migrate!
     Copy.auto_migrate!
   end
 
+  def self.update_tables
+    Reservation.auto_upgrade!
+    Pool.auto_upgrade!
+    Package.auto_upgrade!
+    Copy.auto_upgrade!
+  end
 
 end # of Module DataModel

@@ -46,7 +46,7 @@ require 'syslog'
 #
 #  require 'logger'
 #
-#  Logger.logname  = 'xmlresolution.example.com'
+#  Logger.setup('XmlResolutionService', 'xmlresolution.example.com')
 #  Logger.filename = '/tmp/myfile.log'
 #  Logger.facility = :LOG_LOCAL2
 #

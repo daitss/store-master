@@ -4,7 +4,13 @@ module  DataModel
 
   class Reservation
     include DataMapper::Resource
-    storage_names[:default] = 'reservations'    # don't want dm_packages
+
+    storage_names[:store_master] = 'reservations'    # don't want dm_packages
+
+    def self.default_repository_name
+      :store_master
+    end
+
 
     property   :id,         Serial
     property   :ieid,       String,   :required => true, :index => true, :length => (16..16)
