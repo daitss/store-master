@@ -89,7 +89,6 @@ def setup config
   end
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
   DataModel.setup(config.db_config_file, config.db_store_master_key)
-
   Daitss.franco_framework(config.db_config_file, config.db_daitss_key)
 end
 
@@ -195,23 +194,17 @@ class PoolFixityRecordContainer < Array
 
 end # of class 
 
-
 class PoolMultiFixities < Streams::MultiStream 
-
   def initialize streams
     @values_container = PoolFixityRecordContainer    
     @streams = streams.map { |stream| Streams::UniqueStream.new(stream.rewind) }
   end
-
 end
-
-
 
 def pluralize_phrase count, word, plural 
   return "#{count} #{word}" if count.to_s == '1' or count.to_s.downcase == 'one'
   return "#{count} #{plural}"
 end
-
 
 include DataModel
 
@@ -276,5 +269,5 @@ end
 
 
 Daitss::Package.package_copies do |rec|
-  puts rec
+  puts rec.to_s
 end
