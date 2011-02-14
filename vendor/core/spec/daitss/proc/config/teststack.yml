@@ -1,7 +1,0 @@
---- 
-uri-prefix: test:/
-actionplan-url: http://localhost:7000/actionplan
-viruscheck-url: http://localhost:7000/viruscheck/
-storage-url: http://localhost:7000/silo
-description-url: http://localhost:7000/description/describe
-database-uri: sqlite3:///tmp/db_sandbox

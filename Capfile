@@ -19,7 +19,7 @@ set :use_sudo,     false
 set :user,         "daitss"
 set :group,        "daitss" 
 
-set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
+set :bundle_flags,        "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove the default --quiet
 set :bundle_without,      []
 
 def usage(*messages)
