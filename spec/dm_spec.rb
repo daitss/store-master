@@ -193,7 +193,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
   end
 
 
-  it "should provide a uri method for a copy record that includes basic authentication information from the pool" do
+  it "should provide a uri method for a copy record that includes basic authentication information from the pool, but doesn't print" do
     pass = 'top secret'
     user = 'fischer'
 
@@ -203,7 +203,9 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
     copy = DataModel::Copy.create(:store_location => 'http://example.com/', :pool => pool)
 
-    copy.url.to_s.should =~ /#{user}:#{URI.encode pass}@/
+    copy.url.user.should     ==  URI.encode(user)
+    copy.url.password.should ==  URI.encode(pass)
+    copy.url.to_s.should     == 'http://example.com/'
   end
 
   it "should allow us to create reserved names based on an IEID" do

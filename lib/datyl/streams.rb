@@ -349,6 +349,5 @@ module Streams
       end
     end
 
-  end # of class MultiStream
-
+  end # of class MultiStream 
 end # of module Streams

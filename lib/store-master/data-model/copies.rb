@@ -17,9 +17,8 @@ module DataModel
 
     validates_uniqueness_of :pool, :scope => :package
 
-    # Careful with the URL returned here; it may have an associated username and password
-    # which will print out in the URL.to_s method as http://user:password@example.com/ - you
-    # don't want that logged. Use the url.sanitized method in preference to url.to_s.
+    # Note: data-model.rb redefines the print method for URI so that
+    # username/password won't be exposed.
 
     def url
       url = URI.parse store_location

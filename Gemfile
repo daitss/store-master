@@ -12,9 +12,13 @@ gem 'log4r',               '>= 1.1.5'
 gem 'sinatra',             '>= 1.0.0'
 gem 'sys-filesystem',      '>= 0.3.2'
 
-# dependencies required by daitss2 - way more than store-master ever
-# uses; no idea what's actually required, and what could be
-# reorganized
+
+gem 'daitss', :path => 'vendor/core'
+
+# gemspec :path => 'vendor/core'
+
+
+# Currently we have to add these for daitss-core by hand...sigh.
 
 gem 'ruby-prof'
 gem 'dm-is-list'

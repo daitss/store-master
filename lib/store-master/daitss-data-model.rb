@@ -42,7 +42,7 @@ module Daitss
     # this is actually fast enough, unless we need to include datetime in the output.
 
     def self.package_copies before = DateTime.now
-      sql =   "SELECT packages.id, copies.url, copies.md5, copies.sha1, copies.size " +
+      sql =   "SELECT packages.id AS name, copies.url, copies.md5, copies.sha1, copies.size " +
                 "FROM packages, aips, copies " +
                "WHERE packages.id = aips.package_id " + 
                  "AND aips.id = copies.aip_id " + 

@@ -6,6 +6,10 @@ require 'socket'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
+
+# TODO: probably shouldn't be removing Gemfile.lock on bundler task?
+
+
 # require 'bundler/setup'
 
 HOME    = File.expand_path(File.dirname(__FILE__))

@@ -50,7 +50,7 @@ module DataModel
 
 
     def service_document
-      url = URI.parse(services_location) rescue raise(ConfigurationError, "The silo services URL #{services_location.sanitized} doesn't appear to be a valid URL")
+      url = URI.parse(services_location) rescue raise(ConfigurationError, "The silo services URL #{services_location} doesn't appear to be a valid URL")
 
       begin # go get information from the silo services document to determine the URLs for the sub services we'll need
 

@@ -8,7 +8,6 @@ module DataModel
       :store_master
     end
 
-
     property   :id,         Serial,   :min => 1
     property   :extant,     Boolean,  :default  => true, :index => true
     property   :ieid,       String,   :required => true, :index => true
@@ -40,12 +39,29 @@ module DataModel
       first(:name => name, :extant => true)
     end
 
-    # TODO: This next is likely to result in such a long list as to be unusable in practice; need to rethink chunking this up,
-    # perhaps with yield
-
-    def self.names
-      all(:extant => true, :order => [ :name.asc ] ).map { |rec| rec.name }
+    def self.package_chunks
+      offset = 0
+      while not (packages  = all(:extant => true, :order => [ :name.asc ] ).slice(offset, 1000)).empty?
+        offset += packages.length
+        yield packages
+      end
     end
+
+    def self.list
+      package_chunks do |records|
+        records.each do |rec|
+          yield rec
+        end
+      end
+    end
+
+    ### TODO
+
+    # def safe_delete loc
+    #   delete_copy loc
+    # rescue => e
+    #   "failed in cleanup when trying to delete copy at #{loc}: #{e.message}"
+    # end
 
 
     def self.store data_io, metadata
@@ -64,6 +80,8 @@ module DataModel
           location = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
           pkg.copies << Copy.create(:store_location => location, :pool => pool)
         end
+
+      # TODO: exception wrapper to DRY
 
       rescue => e1
         msg = "Failure storing a copy of #{metadata[:name]}: #{e1.message}"
@@ -102,7 +120,7 @@ module DataModel
         begin
           delete_copy(loc)
         rescue => e
-          errs.push "failed to delete storage at #{loc.sanitized}: #{e.message}"
+          errs.push "failed to delete storage at #{loc}: #{e.message}"
         end
       end
       raise DriveByError, errs.join('; ') unless errs.empty?
@@ -110,7 +128,8 @@ module DataModel
 
 
     def store_copy io, posting_url, metadata
-      # Note: posting_url may have credentials, be sure to use sanitized method on it.
+
+      # Note: posting_url may have credentials, but URI#to_s has been redefined in data-model.rb to sanitize the printed output
 
       http = Net::HTTP.new(posting_url.host, posting_url.port)
       http.open_timeout = 60 * 2
@@ -123,7 +142,7 @@ module DataModel
       response = http.request(request)
       status = response.code.to_i
 
-      raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url.sanitized} - #{response.body}") if status >= 300
+      raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}") if status >= 300
 
       # Example XML document returned from POST, giving details about the resource
       # 
@@ -142,14 +161,14 @@ module DataModel
         parser = XML::Parser.string(response.body).parse
         parser.find('/created')[0].each_attr { |attr| returned_data[attr.name] = attr.value }
       rescue => e
-        raise SiloStoreError, "Invalid XML document returned when saving package to #{posting_url.sanitized}: #{e.message}"
+        raise SiloStoreError, "Invalid XML document returned when saving package to #{posting_url}: #{e.message}"
       end
 
       # check the md5, size, type vs. our request to that returned by remotely created copy.
 
-      raise SiloStoreError, "Error storing to #{posting_url.sanitized} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
-      raise SiloStoreError, "Error storing to #{posting_url.sanitized} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
-      raise SiloStoreError, "Error storing to #{posting_url.sanitized} - type mismatch"  if returned_data["type"] != metadata[:type]
+      raise SiloStoreError, "Error storing to #{posting_url} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
+      raise SiloStoreError, "Error storing to #{posting_url} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
+      raise SiloStoreError, "Error storing to #{posting_url} - type mismatch"  if returned_data["type"] != metadata[:type]
 
       self.md5  = returned_data['md5']
       self.sha1 = returned_data['sha1']
@@ -161,9 +180,11 @@ module DataModel
     end
 
 
+    # TODO: raise an exception for 'come back later' if remote service too busy and we get a timeout...
+
     def delete_copy silo_resource
 
-      http = Net::HTTP.new(silo_resource.host, silo_resource.port)
+      http = Net::HTTP.new(silo_resource.host, silo_resource.port) 
       http.open_timeout = 30
       http.read_timeout = 60 * 5  # deletes can take some time for large packages on active filesystems
 
@@ -173,7 +194,7 @@ module DataModel
       response = http.request(request)
       status = response.code.to_i
 
-      raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource.sanitized} - #{response.body}" if status >= 300
+      raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource} - #{response.body}" if status >= 300
     end
   end # of class Package
 end # of module DataModel

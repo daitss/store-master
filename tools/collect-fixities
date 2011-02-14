@@ -12,7 +12,7 @@ require 'store-master'
 require 'tempfile'
 require 'uri'
 
-require 'store-master/daitss-data-model'    # fix me...
+# require 'store-master/daitss-data-model'    # fix me...
 
 
 # DATAMAPPER_LOG_LEVEL = :debug
@@ -25,8 +25,8 @@ Struct.new('Config', :syslog_facility, :db_config_file, :db_store_master_key, :d
 
 def parse_options args
                            # syslog_facility   db_config_file         db_store_master_key      db_daitss_key      pid_directory  required_copies
-  #onf = Struct::Config.new('LOCAL4',         '/opt/fda/etc/db.yml', 'store_master_dual_pool', nil,               nil,           2)
-  conf = Struct::Config.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1)
+  conf = Struct::Config.new('LOCAL4',         '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'unused',          nil,           2)
+  #onf = Struct::Config.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1)
 
   opts = OptionParser.new do |opts|    
     opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
@@ -89,7 +89,7 @@ def setup config
   end
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
   DataModel.setup(config.db_config_file, config.db_store_master_key)
-  Daitss.franco_framework(config.db_config_file, config.db_daitss_key)
+###  Daitss.franco_framework(config.db_config_file, config.db_daitss_key)
 end
 
 
@@ -209,6 +209,7 @@ end
 include DataModel
 
 config = parse_options(ARGV)
+
 setup(config)
 
 begin
@@ -268,6 +269,6 @@ end
 
 
 
-Daitss::Package.package_copies do |rec|
-  puts rec.to_s
-end
+# Daitss::Package.package_copies do |rec|
+#   puts rec.to_s
+# end
