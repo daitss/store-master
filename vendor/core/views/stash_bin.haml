@@ -1,0 +1,6 @@
+%h1
+  stash bin:
+  = @bin.name
+
+- unless @bin.empty?
+  = partial :wip_table, :locals => { :space => "stashspace/#{@bin.id}", :wips => @bin }

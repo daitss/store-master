@@ -1,0 +1,19 @@
+- case @wip.task
+- when :ingest, :disseminate
+  - steps = @wip.steps_descending
+  %table.progress
+    %tr
+      %th step
+      %th time
+      %th seconds
+    - steps.each do |name,s|
+      %tr
+        %td.step= name
+        %td= s[:time].iso8601#strftime('%F %T')
+        %td= "%06.2f" % s[:duration]
+    %tr
+      %th{:colspan => 2} total duration
+      %th= "%06.2f" % steps.inject(0) { |acc,(n,s)| acc += s[:duration] }
+
+- else
+  %p unknown progress

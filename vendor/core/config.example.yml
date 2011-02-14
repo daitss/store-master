@@ -1,0 +1,23 @@
+database-url: sqlite:/var/daitss/database.sqlite
+d1-database-url: mysql://root@localhost/daitss
+d1-ops-database-url: mysql://root:@localhost/pt
+
+data-dir: /var/daitss
+
+throttle: 10
+uri-prefix: daitss-test
+http-timeout: 600
+
+actionplan-url: http://localhost:7001
+describe-url: http://localhost:7002
+storage-url: http://localhost:7003
+statusecho-url: http://localhost:7004
+viruscheck-url: http://localhost:7005
+transform-url: http://localhost:7006
+xmlresolution-url: http://xmlresolution.dev.fcla.edu
+
+jvm-options:
+- -Dhttp.proxyHost=sake.fcla.edu
+- -Dhttp.proxyPort=3128
+- -Xms2G
+- -Xmx2G

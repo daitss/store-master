@@ -1,0 +1,52 @@
+%h1
+  daitss
+  = Daitss::VERSION
+
+%form{:action => '/logout', :method => 'POST'}
+  %input{:type => 'submit', :value => 'logout'}
+
+%hr
+
+%h2 wip summary
+
+%table
+  %tr
+    %th count
+    %td= archive.workspace.to_a.size
+
+  %tr
+    %th running
+    %td= archive.workspace.select { |w| w.running? }.size
+  %tr
+    %th snafu
+    %td= archive.workspace.select { |w| w.snafu? }.size
+%hr
+
+%h2 sip summary
+
+%table
+  %tr
+    %th count
+    %td= Sip.count
+  %tr
+    %th files
+    %td= Sip.sum :number_of_datafiles
+  %tr
+    %th total size
+    %td= Sip.sum :size_in_bytes
+
+%hr
+
+%h2 aip summary
+
+%table
+  %tr
+    %th count
+    %td= Aip.count
+  %tr
+    %th files
+    %td= Aip.sum :datafile_count
+  %tr
+    %th total size
+    %td= Copy.sum :size
+
