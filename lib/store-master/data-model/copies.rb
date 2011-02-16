@@ -2,7 +2,6 @@ module DataModel
 
   class Copy
     include DataMapper::Resource
-    storage_names[:store_master] = 'copies'          # don't want dm_copies
 
     def self.default_repository_name
       :store_master

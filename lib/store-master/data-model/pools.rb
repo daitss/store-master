@@ -2,7 +2,6 @@ module DataModel
 
   class Pool
     include DataMapper::Resource
-    storage_names[:store_master] = 'pools'           # don't want data_model_pools
 
     def self.default_repository_name
       :store_master

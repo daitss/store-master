@@ -2,3 +2,6 @@
 #
 store_master_mysql:     { vendor: mysql,    hostname: localhost, database: store_master_spec_test, username: root, password: }
 store_master_postgres:  { vendor: postgres, hostname: localhost, database: store_master_spec_test, username: fischer, password: }
+
+store_daitss_mysql:     { vendor: mysql,    hostname: localhost, database: store_master_daitss_spec_test, username: root, password: }
+store_daitss_postgres:  { vendor: postgres, hostname: localhost, database: store_master_daitss_spec_test, username: fischer, password: }
