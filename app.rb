@@ -1,4 +1,8 @@
 require 'store-master' 
+require 'app/helpers.rb'
+require 'app/package-reports.rb'
+require 'app/errors.rb'
+require 'app/packages.rb'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
@@ -45,10 +49,6 @@ configure do
     raise e
   end
 end
-
-load 'lib/app/helpers.rb'
-load 'lib/app/errors.rb'
-load 'lib/app/packages.rb'
 
 get '/' do
   erb :site, :locals => { :base_url => service_name, :revision => REVISION }

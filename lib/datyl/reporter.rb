@@ -1,18 +1,20 @@
 require 'datyl/logger'
 require 'tempfile'
 
+# TODO:  rspec tests
+
 class Reporter
-  include Enumerable
 
-
-  @counter  = nil
-  @title    = nil
-  @tempfile = nil
+  DEFAULT_MAX_LINES = 1000    # abbreviated will only write this many lines of data - first half, '...', second half.
   
+  attr_reader   :title
+  attr_accessor :max_lines
+
   def initialize title
-    @counter  = 0
-    @title    = title
-    @tempfile = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
+    @max_lines = DEFAULT_MAX_LINES
+    @counter   = 0
+    @title     = title
+    @tempfile  = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
     yield self if block_given?
     self
   rescue => e
@@ -64,15 +66,29 @@ class Reporter
     end
   end
 
+
+  #### TODO:  add abbreviated method - like write, but does:
+  #
+  #  data
+  #  data
+  #   ... N lines removed: see logs for full report ...
+  #  data
+  #  data
+  #
+  # when there's too much to write -
+
+  def abbreviated io = STDERR
+    return write(io) if @counter <= @max_lines
+
+    io.puts @title
+    io.puts @title.gsub(/./, ':')
+    io.puts ''    
+    io.puts "Note: #{@counter - @max_lines} lines were truncated - see logs for complete report."
+    io.puts ''
+
+    # ....
+
+  end
+
+
 end # of class Reporter
-
-
-
-# Reporter.new('this is a test') do |report|
-#   report.info "This is a test,"
-#   report.warn "a warning,"
-#   report.err  "an error."
-#   report.each do |line|
-#     puts line
-#   end
-# end

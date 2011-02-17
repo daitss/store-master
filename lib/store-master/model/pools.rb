@@ -1,4 +1,4 @@
-module DataModel
+module StoreMasterModel
 
   class Pool
     include DataMapper::Resource
@@ -136,7 +136,7 @@ module DataModel
     end
 
     def self.list_active
-      all(:required => true, :order => [ :read_preference.desc ]) or []
+      all(:required => true, :order => [ :read_preference.desc ])
     end
 
     def self.exists? services_location

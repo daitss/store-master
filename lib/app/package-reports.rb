@@ -10,13 +10,14 @@ module StoreMaster
 
     def each
       yield "<packages location=\"#{StoreUtils.xml_escape(@url_prefix)}\" time=\"#{DateTime.now.to_s}\">\n"
-      DataModel::Package.list do |pkg|
+      StoreMasterModel::Package.list do |pkg|
         yield  '  <package name="'  + StoreUtils.xml_escape(pkg.name)                          + '" '  +
                       'location="'  + StoreUtils.xml_escape([@url_prefix, pkg.name].join('/')) + '" '  +
                           'ieid="'  + StoreUtils.xml_escape(pkg.ieid)                          + '"/>' + "\n"
       end
       yield "</packages>\n"
     end
+
   end # of PackageXmlReport
 
 
@@ -28,10 +29,11 @@ module StoreMaster
     
     def each
       yield '"name","location","ieid"' + "\n"
-      DataModel::Package.list do |pkg|
+      StoreMasterModel::Package.list do |pkg|
         yield [ pkg.name, [@url_prefix, pkg.name].join('/'), pkg.ieid ].map { |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
       end
     end
+
   end # of PackageCsvReport
 
 end

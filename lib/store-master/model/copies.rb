@@ -1,4 +1,4 @@
-module DataModel
+module StoreMasterModel
 
   class Copy
     include DataMapper::Resource

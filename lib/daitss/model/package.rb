@@ -1,4 +1,4 @@
-module Daitss
+module DaitssModel
 
   # authoritative package record
 
@@ -9,7 +9,7 @@ module Daitss
       :daitss
     end
 
-    @@uri_prefix = 'daitss'
+    @@uri_prefix = 'info:fcla'
 
     def self.uri_prefix=  prefix
       @@uri_prefix = prefix
@@ -18,9 +18,9 @@ module Daitss
     property :id,  EggHeadKey
     property :uri, String,     :unique => true, :required => true, :default => proc { |r,p| @@uri_prefix + ':' + r.id }
 
-    has n, :events
-    has n, :requests
-    has 1, :sip
+    has n,    :events
+    has n,    :requests
+    has 1,    :sip
     has 0..1, :aip
 #   has 0..1, :intentity            # brings in too much baggage - we can do without
     has 0..1, :report_delivery

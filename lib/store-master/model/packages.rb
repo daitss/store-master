@@ -1,4 +1,5 @@
-module DataModel
+module StoreMasterModel
+
   class Package
 
     include DataMapper::Resource
@@ -196,4 +197,4 @@ module DataModel
       raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource} - #{response.body}" if status >= 300
     end
   end # of class Package
-end # of module DataModel
+end # of module StoreMasterModel

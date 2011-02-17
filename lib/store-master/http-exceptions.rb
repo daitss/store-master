@@ -1,3 +1,5 @@
+# TODO: remove module and get into datyl
+
 module StoreMaster
 
   class HttpError < StandardError;

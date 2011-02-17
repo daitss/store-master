@@ -1,4 +1,4 @@
-module Daitss
+module DaitssModel
 
   class EggHeadKey < DataMapper::Property::String
     key true

@@ -1,4 +1,4 @@
-module  DataModel
+module  StoreMasterModel
 
   # For reserving names for URLs based on IEIDs.
 

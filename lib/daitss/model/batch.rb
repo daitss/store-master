@@ -1,4 +1,4 @@
-module Daitss
+module DaitssModel
 
   class Batch
     include DataMapper::Resource

@@ -2,7 +2,6 @@ require 'digest/md5'
 require 'fileutils'
 require 'optparse'
 require 'ostruct'
-require 'store-master/exceptions'
 require 'sys/filesystem'
 require 'yaml'
 
@@ -16,12 +15,12 @@ module StoreUtils
 
   def StoreUtils.disk_free(path)
     fs = Sys::Filesystem.stat(path)
-    fs.fragment_size * fs.blocks    # fragment_size is used in preference to block_size, which is just the OS's preference
+    fs.fragment_size * fs.blocks            # fragment_size is used in preference to block_size, which is just the OS's preference
   end
   
   def StoreUtils.disk_size(path)
     fs = Sys::Filesystem.stat(path)
-    fs.fragment_size * fs.blocks_available  # blocks_available < blocks_free;  some are reserved for root.
+    fs.fragment_size * fs.blocks_available  # blocks_available < blocks_free; some are reserved for root's exclusive use.
   end
   
   def StoreUtils.strip_trailing_slash_maybe(string)
@@ -82,7 +81,6 @@ module StoreUtils
     File.join(md5[0..2], md5[3..-1])      
   end
 
-
   def StoreUtils.hashpath_parent name
     Digest::MD5.hexdigest(name)[0..2]
   end
@@ -93,11 +91,8 @@ module StoreUtils
   # string.
 
   def StoreUtils.user path = nil
-    if path.nil?
-      Etc.getpwuid(Process.uid).name
-    else
-      Etc.getpwuid(File.stat(path).uid).name
-    end
+    return Etc.getpwuid(Process.uid).name if path.nil?
+    return Etc.getpwuid(File.stat(path).uid).name
   end
 
   # Without argument, return the group of the user running this
@@ -106,41 +101,38 @@ module StoreUtils
   # string.
 
   def StoreUtils.group path = nil
-    if path.nil? 
-      Etc.getgrgid(Process.gid).name
-    else
-      Etc.getgrgid(File.stat(path).uid).name
-    end
+    return Etc.getgrgid(Process.gid).name if path.nil?
+    return Etc.getgrgid(File.stat(path).uid).name
   end
 
-  # put in commas in a number (American style numeric format)
+  # Put in commas in a number (American style numeric format), lifted from Rails
 
   def StoreUtils.commify num
     num.to_s.gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
   end
 
-
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
 
   def StoreUtils.connection_string yaml_file, key
 
-    oops = "DB configuration can't"
+    oops = "Database setup can't"
 
-    # This looks like excessive error checking, but configuration errors need a lot explanation for
-    # new users of DAITSS.
+    # This looks like excessive error checking, but configuration errors need a lot explanation for new users of DAITSS.
 
     begin
       dict = YAML::load(File.open(yaml_file))
     rescue => e
-      raise ConfigurationError, "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
+      raise "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
     end
-    raise ConfigurationError, "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
+
+    raise "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
+
     dbinfo = dict[key]
-    raise ConfigurationError, "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                    unless dbinfo
-    raise ConfigurationError, "#{oops} get the vendor name (e.g. 'mysql' or 'postsql') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
-    raise ConfigurationError, "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                           unless dbinfo.include? 'database'
-    raise ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
-    raise ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
+    raise "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                     unless dbinfo
+    raise "#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
+    raise "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                            unless dbinfo.include? 'database'
+    raise "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                                unless dbinfo.include? 'hostname'
+    raise "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                                unless dbinfo.include? 'username'
 
     # Example string: 'mysql://root:topsecret@localhost/silos'
     # TODO: support different ports

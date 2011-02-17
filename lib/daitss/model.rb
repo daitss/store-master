@@ -14,45 +14,31 @@ require 'daitss/model/request'
 require 'daitss/model/sip'
 require 'libxml'
 require 'net/http'
+require 'store-master/exceptions'
 require 'store-master/utils'
 
-module Daitss
+module DaitssModel
 
   def self.setup_db yaml_file, key
     adapter = DataMapper.setup(:daitss, StoreUtils.connection_string(yaml_file, key))
     adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
-    adapter
+    adapter.select('select 1 + 1')
+    return adapter
+  rescue => e
+    raise ConfigurationError, "Failure setting up the daitss database: #{e.message}"
+  end
+
+  def self.tables
+    [ Account, Agent, Aip, Batch, Copy, Entry, Event, Package, Project, ReportDelivery, Request, Sip ]
   end
 
   def self.create_tables
-    Account.auto_migrate!
-    Agent.auto_migrate!
-    Aip.auto_migrate!
-    Batch.auto_migrate!
-    Copy.auto_migrate!
-    Entry.auto_migrate!
-    Event.auto_migrate!
-    Package.auto_migrate!
-    Project.auto_migrate!
-    ReportDelivery.auto_migrate!
-    Request.auto_migrate!
-    Sip.auto_migrate!
+    self.tables.map { |tbl|  tbl.send :auto_migrate! }
   end
 
   def self.update_tables
-    Account.auto_upgrade!
-    Agent.auto_upgrade!
-    Aip.auto_upgrade!
-    Batch.auto_upgrade!
-    Copy.auto_upgrade!
-    Entry.auto_upgrade!
-    Event.auto_upgrade!
-    Package.auto_upgrade!
-    Project.auto_upgrade!
-    ReportDelivery.auto_upgrade!
-    Request.auto_upgrade!
-    Sip.auto_upgrade!
+    self.tables.map { |tbl|  tbl.send :auto_update! }
   end
 
 end

@@ -1,4 +1,4 @@
-module Daitss
+module DaitssModel
 
   class Agent
     include DataMapper::Resource
@@ -17,7 +17,6 @@ module Daitss
 
     has n,     :events
     has n,     :requests
-
     belongs_to :account
 
     def encrypt_auth pass
@@ -47,18 +46,16 @@ module Daitss
   end
 
   class Contact < User
-
     property :permissions, Flag[:disseminate, :withdraw, :peek, :submit, :report]
   end
 
   class Operator < User
-
     def packages
       Package.all
     end
-
   end
 
   class Service < Agent; end
   class Program < Agent; end
+
 end

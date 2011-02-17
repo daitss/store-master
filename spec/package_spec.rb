@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store-master/data-model'
+require 'store-master/model'
 require 'fileutils'
 require 'spec_helpers'
 require 'digest/md5'
@@ -30,13 +30,13 @@ require 'digest/sha1'
 #   done
 # done
 
-include DataModel
+include StoreMasterModel
 
 def datamapper_setup
   ## DataMapper::Logger.new(STDERR, :debug)
 
-  DataModel.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
-  DataModel.create_tables
+  StoreMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
+  StoreMasterModel.create_tables
 end
 
 def test_pools
