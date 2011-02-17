@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+require 'optparse'
+require 'time'
+require 'net/http'
+require 'uri'
+require 'xml'
+require 'store-master'
+
+
+# Put a file to a store-master server, which will attempt to store it in multiple
+# pool servers. Run w/o arguments to get usage.
+    
+
+def ieid
+  range = 26 ** 6
+  sleep (60.0 * 60.0 * 24.0) / range   # make sure we're unique, and we pause
+
+  now  = Time.now
+  mid  = Time.mktime(now.year.to_s, now.month.to_s, now.day.to_s)
+  point_in_day  = ((now.to_i - mid.to_i) + now.usec/1_000_000.0) / 86400.0  # fraction of day to microsecond resolution
+  point_in_ieid = (point_in_day * range).to_i    # fraction of day in fixed point, base 26: 'AAAAAA' .. 'ZZZZZZ'
+
+  # horner's algorithm on point_in_ieid
+
+  letters = ('A'..'Z').to_a
+  frac = ''
+  6.times do |i|
+    point_in_ieid, rem = point_in_ieid / 26, point_in_ieid % 26
+    frac += letters[rem]
+  end
+  sprintf('E%04d%02d%02d_%s', now.year, now.month, now.day, frac.reverse)
+end
+
+Struct.new('Config', :location, :filepath, :ieid)
+
+def parse_command args
+  conf = Struct::Config.new
+
+  opts   = OptionParser.new do |opt|
+    opt.on("--store-master hostname",  String, "The hostname for the store master to use, e.g. store-master.local") do |hostname|
+      conf.location = 'http://' + hostname + '/reserve'
+    end
+    opt.on("--filepath filepath",  String, "The path to the file you want put to the webserver") do |path|
+      conf.filepath = path
+    end
+    opt.on("--ieid name",  String, "An optional IEID - a random one will be created if ommitted") do |name|
+      conf.ieid = name
+    end
+  end
+  opts.parse!(args)
+  raise "no url specified."               unless conf.location
+  raise "no filepath specified."          unless conf.filepath
+  raise "#{conf.filepath} doesn't exist." unless File.exists? conf.filepath
+  conf.ieid ||= ieid()
+rescue => e
+  STDERR.puts "Error in command line options: #{e.message}\n#{opts}"
+  exit
+else
+  return conf
+end
+
+def get_reservation url, ieid
+  xml = `curl -s -X POST -d ieid=#{ieid} #{url}`
+  xml =~ /.*location="(.*?)"/n
+  $1
+end
+
+def md5 filepath
+  `md5 #{filepath}`.split(/\s+/).pop
+end
+
+def put_file filename, reservation
+  content_md5 = `md5-base64 #{filename}`.chomp
+  `curl -s -X PUT --upload-file #{filename} -H \"Content-Type: application/x-tar\" -H \"Content-MD5: #{content_md5}\" #{reservation}`
+end
+
+conf = parse_command ARGV
+  
+reservation = get_reservation(conf.location, conf.ieid)
+puts "Sending #{conf.filepath} to #{reservation}"
+response    = put_file(conf.filepath, reservation)
+puts '"' + response + '"'
+

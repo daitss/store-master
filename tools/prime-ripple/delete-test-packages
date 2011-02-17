@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# clear out everything that has a '.00X' in its name - these are D2 test packages.
+# my D1 storage migration packages do not have '.00x' in their names.
+
+echo scrubbing out storemaster
+for i in `curl -s storemaster.ripple.fcla.edu/packages | egrep 'packages/E.*\.0' | sed -e 's/^.*location="//' -e 's/".*$//'`; do
+   echo deleting $i from storemaster
+   curl -s -X DELETE $i
+done
+echo all done with storemaster
+echo ''
+
+# ideally there are no orphans (in the silos not in the storemaster), but we follow up:
+
+for s in silos.ripple.fcla.edu/{001,002,003}; do
+  echo scrubbing orphans out of silo $s
+  for p in `curl -s $s/fixity/ | egrep 'name=".*\.0'  | sed -e 's/^.*name="//' -e 's/".*$//'`; do
+    echo deleting $p
+    curl -s -X DELETE $s/data/$p
+  done
+  echo done with $s
+  echo ''
+done

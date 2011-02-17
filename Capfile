@@ -46,21 +46,15 @@ end
 
 role :app, domain
 
-# after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
 
-after "deploy:update", "deploy:layout", "deploy:restart"
+after "deploy:update", "deploy:layout"
 
 namespace :deploy do
 
-  desc "Touch the tmp/restart.txt file on the target host, which signals passenger phusion to reload the app"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
-  end
-  
-  desc "Create the directory hierarchy, as necessary, on the target host"
+  desc "Update files and directories target host, granting broad privleges to members of the group"
   task :layout, :roles => :app do
-    # make everything group ownership daitss, for easy maintenance.
     run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"
+    run "find #{shared_path} #{release_path} -type d -print0 | xargs -0 chmod g+swrx"
   end
   
 end

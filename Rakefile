@@ -6,11 +6,7 @@ require 'socket'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
-
 # TODO: probably shouldn't be removing Gemfile.lock on bundler task?
-
-
-# require 'bundler/setup'
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
@@ -58,12 +54,13 @@ Spec::Rake::SpecTask.new do |task|
 end
 
 
-desc "deploy to darchive's storemaster"
+desc "Deploy to darchive's storemaster"
 task :darchive do
+  sh "rm -f /tmp/silos.diff"
   sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
   sh "test -s /tmp/silos.diff && git commit -a"
   sh "git push"
-  sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+# sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
 
@@ -93,42 +90,20 @@ task :docs do
   end
 end
 
-# Following used for development:
-
-desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt)."
-task :restart do
-  mkdir TMPDIR unless File.directory? TMPDIR
-  restart = File.join(TMPDIR, 'restart.txt')
-  if not (File.exists?(restart) and `find  #{FILES} -type f -newer "#{restart}" 2> /dev/null`.empty?)
-    puts "Indicating a restart is in order."
-    File.open(restart, 'w') { |f| f.write "" }
-  end
-end
-
 # Build local (not deployed) bundled files for in-place development.
-# This doesn't really work because of a chicken/egg issue (we now
-# include bundler/setup above so we can use the rakefile against
-# the bundled gems), but at it shows what you have to do.  Note
-# that capistrano will use the Gemfile.lock file created (and 
-# committed to the repository) to maintain bundled gems in a 
-# a shared directory on the deployed host.
 
 desc "Reset bundles"
 task :bundle do
-  `rm -f #{HOME}/Gemfile.lock`
-  `rm -rf #{HOME}/vendor/bundle`
-  `mkdir -p #{HOME}/vendor/bundle`
-  `cd #{HOME}; bundle install --path vendor/bundle`
+  sh "bundle install --path vendor/bundle"
 end
 
 desc "Make emacs tags files"
 task :etags do
   files = (FileList['lib/**/*', "tools/**/*", 'views/**/*', 'spec/**/*', 'bin/**/*']).exclude('spec/files', 'spec/reports')        # run yard/hanna/rdoc on these and..
-  puts "Creating Emacs TAGS file"
-  `xctags -e #{files}`
+  sh "xctags -e #{files}"
 end
 
-defaults = [:restart, :spec]
+defaults = [:spec]
 defaults.push :etags   if dev_host
 
 task :default => defaults

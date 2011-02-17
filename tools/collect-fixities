@@ -56,15 +56,11 @@ begin
 
   setup(config)
 
-  # Get data streams for our basic fixity data from each pool; we'll be
-  # using them repeatedly.  Recall that each stream of this type yields
-  # the key/value pairs <String::package>, <Struct::PoolFixityRecord>.
-
   pool_fixity_streams = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
 
   reports = []
 
-  reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams).run.reports
+  reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
 
   reports.each { |report| report.write }  #  if report.interesting? }

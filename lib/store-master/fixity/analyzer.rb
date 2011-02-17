@@ -17,20 +17,39 @@ module Analyzer
   # exacly one fixity record for each package (no redundant packages
   # in a silo-pool)
 
-  # TODO: check for bad status values within a silo-pool as well?  
-
   class IntraPoolAnalyzer
 
-    def initialize pool_fixity_streams
+    # Recall that each of the PoolFixityStreamss given to us yield key/value pairs  <String::package>, <Struct::PoolFixityRecord>, e.g.
+    # E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+    # All fields within the struct are simple strings.
+
+    def initialize pool_fixity_streams, max_days
+      @expiration_date = (DateTime.now - max_days).to_s
       @pool_fixity_streams  = pool_fixity_streams
-      @report = Reporter.new("Redundant Packages Within a Pool")
+
+      @redundant_package_report = Reporter.new("Multiple Packages Within a Pool")
+      @expired_fixity_report    = Reporter.new("Packages With Expired Fixities (Older Than #{max_days} Days)")
+      @bad_status_report        = Reporter.new("Packages With Bad Fixity Status (From Silo Pool Data)")
     end
 
     def run 
+      @pool_fixity_streams.each do |pool_fixity_stream|
+
+        pool_fixity_stream.rewind.each do |package_name, fixity_record|
+          if fixity_record.status != 'ok'
+            @bad_status_report.err "#{fixity_record.location} has fixity status #{fixity_record.status}, last checked #{Time.parse(fixity_record.timestamp).asctime}"
+          end
+
+          if fixity_record.timestamp < @expiration_date
+            @expired_fixity_report.warn "#{fixity_record.location} last checked #{Time.parse(fixity_record.timestamp).asctime}"
+          end
+        end
+      end
+
       @pool_fixity_streams.each do |pool_fixity_stream|         
-        Streams::FoldedStream.new(pool_fixity_stream.rewind).each do |name, records|      # fold values for identical keys into one array
-          if records.count > 1 
-            @report.warn "#{name} #{records.map { |rec| rec.location }.join(', ')}"
+        Streams::FoldedStream.new(pool_fixity_stream.rewind).each do |package_name, fixity_records|      # fold values for identical keys into one array
+          if fixity_records.count > 1 
+            @redundant_package_report.warn "#{package_name} #{fixity_records.map { |rec| rec.location }.join(', ')}"
           end
         end
       end
@@ -38,7 +57,7 @@ module Analyzer
     end
 
     def reports
-      [ @report ]
+      [ @redundant_package_report, @expired_fixity_report, @bad_status_report ]
     end
   end # of class IntraPoolAnalyzer
 

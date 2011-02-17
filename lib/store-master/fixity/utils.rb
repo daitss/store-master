@@ -8,16 +8,16 @@ module FixityUtils
     return "#{count} #{plural}"
   end
 
-  Struct.new('FixityConfig', :syslog_facility, :db_config_file, :db_store_master_key, :db_daitss_key, :pid_directory, :required_copies)
+  Struct.new('FixityConfig', :syslog_facility, :db_config_file, :db_store_master_key, :db_daitss_key, :pid_directory, :required_copies, :expiration_days)
 
   def FixityUtils.parse_options args
     
     # TODO: remove these too-specific defaults (one for development, one for testing
 
-    #                               syslog_facility   db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies
-    #                               ---------------   --------------         -------------------       -------------      -------------  ---------------
-    conf = Struct::FixityConfig.new('LOCAL4',         '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'unused',          nil,           2)
-    #    = Struct::FixityConfig.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1)
+    #                               syslog_facility   db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
+    #                               ---------------   --------------         -------------------       -------------      -------------  ---------------  ---------------
+    conf = Struct::FixityConfig.new('LOCAL4',         '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'unused',          nil,           2,               45)
+    #    = Struct::FixityConfig.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
 
     opts = OptionParser.new do |opts|    
       opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
@@ -26,10 +26,10 @@ module FixityUtils
       opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
         conf.db_config_file = path
       end
-      opts.on("--db-store-master-key KEY", String, "The key for the store master database in the configuration file #{conf.db_config_file}") do |key|
+      opts.on("--db-store-master-key KEY", String, "The key for the store master database in the database yaml configuration file")  do |key|
         conf.db_store_master_key = key
       end
-      opts.on("--db-daitss-key KEY", String, "The key for the daitss database in the configuration file #{conf.db_config_file}") do |key|
+      opts.on("--db-daitss-key KEY", String, "The key for the daitss database in the database yaml configuration file") do |key|
         conf.db_daitss_key = key
       end
       opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
@@ -37,6 +37,9 @@ module FixityUtils
       end
       opts.on("--required-copies PATH", String, "Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})") do |path|
         conf.pid_directory = path
+      end
+      opts.on("--expiration-days DAYS", Integer, "Optionally, the number of days after which a fixity is considered stale (defaults to #{conf.required_copies})") do |days|
+        conf.expiration_days = days
       end
     end
     opts.parse!(args) 

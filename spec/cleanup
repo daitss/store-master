@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+for s in http://pool.a.local/silo-pool.a.1 http://pool.a.local/silo-pool.a.2 http://pool.b.local/silo-pool.b.1  http://pool.b.local/silo-pool.b.2; do
+
+    for p in `curl -s $s/fixity/  | fgrep -i '<FIXITY' | cut -d\" -f2`; do
+    #for p in `curl -s $s/fixity/ | grep -i FIXITY  | cut -d\" -f2`; do
+	echo curl -s -X DELETE $s/data/$p
+	curl -s -X DELETE $s/data/$p
+    done
+done
