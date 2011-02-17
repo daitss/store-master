@@ -3,18 +3,16 @@ require 'datyl/streams'
 require 'store-master/fixity/pool-stream'
 require 'store-master/fixity/utils'
 
-
 # Analyzers run checks over various pool and daitss fixity data
-# streams; reports listing warnings and errors are provided for later
-# printing or mailing; if logging has been initialized, then it is
-# logged as well.
-
+# streams; it produces reports listing warnings and errors that are
+# provided for later printing or mailing; if logging has been
+# initialized, then the reporter objects will write to logs.
 
 module Analyzer
 
   # IntraPoolAnalyzer
   #
-  # initialize with an array of streams, one for each of our pools.
+  # Initialize with an array of streams, one for each of our pools.
   # Check each pool for internal consistency, which here means we have
   # exacly one fixity record for each package (no redundant packages
   # in a silo-pool)
@@ -77,9 +75,4 @@ module Analyzer
   end # of class InterPoolAnalyzer
 
   
-
-
-
-
-
 end # of module Analyzer

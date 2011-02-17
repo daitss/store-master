@@ -26,7 +26,7 @@ module DaitssModel
     adapter.select('select 1 + 1')
     return adapter
   rescue => e
-    raise ConfigurationError, "Failure setting up the daitss database: #{e.message}"
+    raise StoreMaster::ConfigurationError, "Failure setting up the daitss database: #{e.message}"
   end
 
   def self.tables

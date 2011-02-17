@@ -1,4 +1,4 @@
-require 'store-master/data-model'
+require 'store-master/model'
 
 module StoreMaster
   

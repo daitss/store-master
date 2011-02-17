@@ -1,5 +1,6 @@
 require 'daitss/model.rb'
 require 'datyl/streams'
+require 'fastercsv'
 require 'net/http'
 require 'store-master/model.rb'
 
@@ -23,7 +24,6 @@ module Streams
   # E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
   # E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001", sha1="249fcdac02c9d1265a66d309c7679e89ba16be2d", md5="c6aed85f0ef29ceea5c0d032eeb8fcc6", timestamp="2011-02-02T12:05:22-05:00", status="ok">
   # E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000", sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709", md5="d41d8cd98f00b204e9800998ecf8427e", timestamp="2011-01-29T02:43:53-05:00", status="ok">
-  #
 
   class PoolFixityStream < DataFileStream
 
@@ -61,7 +61,6 @@ module Streams
     # "E20110127_OEFCIO.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:04:27-05:00","ok"
     # "E20110127_OPAHSG.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:27:55-05:00","ok"
     #  ...
-
     # key = name;  value = [ location, sha1, md5, date, status ]
 
     def read

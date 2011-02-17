@@ -3,6 +3,7 @@ require 'ostruct'
 require 'datyl/logger'
 require 'store-master/model'       # brings in store-master specific data models
 require 'store-master/disk-store'
+require 'store-master/fixity'
 require 'store-master/exceptions'  # brings in http-exceptions
 require 'store-master/utils'
 require 'time'

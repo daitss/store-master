@@ -9,7 +9,7 @@ require 'app/packages.rb'
 REVISION = StoreMaster.version.rev
 
 include StoreMaster
-include DataModel
+include StoreMasterModel
 
 configure do
   $KCODE = 'UTF8'
@@ -36,9 +36,7 @@ configure do
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if ENV['DATABASE_LOGGING']
 
   begin
-    # Connect to DB and perform a select, so we'll fail fast on configuration errors.
-
-    DataModel.setup(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
+    StoreMasterModel.setup_db(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 
   rescue ConfigurationError => e
     Logger.err e.message
