@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Streams::PoolFixityStream</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (P)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../Streams.html" title="Streams (module)">Streams</a></span></span>
+     &raquo; 
+    <span class="title">PoolFixityStream</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Streams::PoolFixityStream
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></li>
+          
+            <li class="next">Streams::PoolFixityStream</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+PoolFixityStream 
+</p>
+<p>
+Return a stream of all of the fixity data from one pool.  The each method
+yields two values, a package name and a struct describing those resources:
+</p>
+<p>
+E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location=&#8220;<a
+href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000">pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000</a>&#8220;,
+sha1=&#8220;ccd53fa068173b4f5e52e55e3f1e863fc0e0c201&#8221;,
+md5=&#8220;4732518c5fe6dbeb8429cdda11d65c3d&#8221;,
+timestamp=&#8220;2011-01-29T02:43:50-05:00&#8221;, status=&#8220;ok&#8221;>
+E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location=&#8220;<a
+href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001">pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001</a>&#8220;,
+sha1=&#8220;249fcdac02c9d1265a66d309c7679e89ba16be2d&#8221;,
+md5=&#8220;c6aed85f0ef29ceea5c0d032eeb8fcc6&#8221;,
+timestamp=&#8220;2011-02-02T12:05:22-05:00&#8221;, status=&#8220;ok&#8221;>
+E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location=&#8220;<a
+href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000">pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000</a>&#8220;,
+sha1=&#8220;da39a3ee5e6b4b0d3255bfef95601890afd80709&#8221;,
+md5=&#8220;d41d8cd98f00b204e9800998ecf8427e&#8221;,
+timestamp=&#8220;2011-01-29T02:43:53-05:00&#8221;, status=&#8220;ok&#8221;>
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+  
+  
+  
+  
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#url-instance_method" title="#url (instance method)">- (Object) <strong>url</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute url.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolFixityStream) <strong>initialize</strong>(pool) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of PoolFixityStream.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read-instance_method" title="#read (instance method)">- (Object) <strong>read</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CSV data returned by the above HTTP request is of the form:.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_s-instance_method" title="#to_s (instance method)">- (Object) <strong>to_s</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DataFileStream.html#close-instance_method" title="Streams::DataFileStream#close (method)">#close</a></span>, <span class='object_link'><a href="DataFileStream.html#closed%3F-instance_method" title="Streams::DataFileStream#closed? (method)">#closed?</a></span>, <span class='object_link'><a href="DataFileStream.html#each-instance_method" title="Streams::DataFileStream#each (method)">#each</a></span>, <span class='object_link'><a href="DataFileStream.html#eos%3F-instance_method" title="Streams::DataFileStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="DataFileStream.html#get-instance_method" title="Streams::DataFileStream#get (method)">#get</a></span>, <span class='object_link'><a href="DataFileStream.html#rewind-instance_method" title="Streams::DataFileStream#rewind (method)">#rewind</a></span>, <span class='object_link'><a href="DataFileStream.html#unget-instance_method" title="Streams::DataFileStream#unget (method)">#unget</a></span></p>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Streams::PoolFixityStream (class)">PoolFixityStream</a></span></tt>) <strong>initialize</strong>(pool) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of PoolFixityStream
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 32</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span>    
+
+  <span class='file identifier id'>file</span> <span class='assign token'>=</span> <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;pool-fixity-data-#{pool.name}-&quot;</span><span class='rparen token'>)</span>
+  <span class='@url ivar id'>@url</span> <span class='assign token'>=</span> <span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='fixity_url identifier id'>fixity_url</span>
+
+  <span class='get_request identifier id'>get_request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Get constant id'>Get</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
+  <span class='get_request identifier id'>get_request</span><span class='dot token'>.</span><span class='basic_auth identifier id'>basic_auth</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='or or kw'>or</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='password identifier id'>password</span>
+
+  <span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
+  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>2</span>
+  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>2</span>  <span class='comment val'># it will take much longer to read it all, but should start within this time</span>
+  
+  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='get_request identifier id'>get_request</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='response identifier id'>response</span><span class='bitor op'>|</span>
+    <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span> <span class='eq op'>==</span> <span class='string val'>'200'</span>
+    <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='read_body identifier id'>read_body</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
+      <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='buff identifier id'>buff</span> <span class='match op'>=~</span> <span class='regexp val'>/&quot;name&quot;,/</span>
+      <span class='file identifier id'>file</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='buff identifier id'>buff</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='file identifier id'>file</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='file identifier id'>file</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="url-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="url-instance_method">
+  
+    - (<tt>Object</tt>) <strong>url</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute url
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+30
+31
+32</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 30</span>
+
+<span class='def def kw'>def</span> <span class='url identifier id'>url</span>
+  <span class='@url ivar id'>@url</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="read-instance_method">
+  
+    - (<tt>Object</tt>) <strong>read</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CSV data returned by the above HTTP request is of the form:
+</p>
+<p>
+&#8220;E20110127_OEFCIO.000&#8221;,&#8220;<a
+href="http://pool.a.local/silo-pool.a.2/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:04:27-05:00","ok">pool.a.local/silo-pool.a.2/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:04:27-05:00","ok</a>&#8220;
+&#8220;E20110127_OPAHSG.000&#8221;,&#8220;<a
+href="http://pool.a.local/silo-pool.a.2/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:27:55-05:00","ok">pool.a.local/silo-pool.a.2/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:27:55-05:00","ok</a>&#8220;
+</p>
+<pre class="code">
+ <span class='dot3 op'>...</span>
+</pre>
+<p>
+key = name;  value = [ location, sha1, md5, date, status ]
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+66
+67
+68
+69</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 66</span>
+
+<span class='def def kw'>def</span> <span class='read identifier id'>read</span>
+  <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='CSV constant id'>CSV</span><span class='dot token'>.</span><span class='parse_line identifier id'>parse_line</span><span class='lparen token'>(</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='comma token'>,</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='PoolFixityRecord constant id'>PoolFixityRecord</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rec identifier id'>rec</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_s-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_s</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 55</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} #{@url}&gt;&quot;</span>   <span class='comment val'># TODO: double check that URL is properly sanitized</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Thu Feb 17 01:19:14 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

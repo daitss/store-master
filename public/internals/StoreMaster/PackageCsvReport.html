@@ -70,22 +70,17 @@
     
   
     
-      <dt class="r2">Includes:</dt>
-      <dd class="r2">Enumerable</dd>
-      
-    
   
   
   
-    <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/reports.rb</dd>
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/app/package-reports.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 
 
-  
 
   
     <h2>
@@ -145,8 +140,7 @@ A new instance of PackageCsvReport.
     </ul>
   
 
-
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -173,12 +167,12 @@ A new instance of PackageCsvReport
       <pre class="lines">
 
 
-31
-32
-33</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/reports.rb', line 31</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/app/package-reports.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='url_prefix identifier id'>url_prefix</span>
   <span class='@url_prefix ivar id'>@url_prefix</span> <span class='assign token'>=</span> <span class='url_prefix identifier id'>url_prefix</span>
@@ -230,20 +224,20 @@ A new instance of PackageCsvReport
       <pre class="lines">
 
 
-35
-36
-37
-38
-39
-40</pre>
+30
+31
+32
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/reports.rb', line 35</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/app/package-reports.rb', line 30</span>
 
 <span class='def def kw'>def</span> <span class='each identifier id'>each</span>
   <span class='yield yield kw'>yield</span> <span class='string val'>'&quot;name&quot;,&quot;location&quot;,&quot;ieid&quot;'</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
-  <span class='DataModel constant id'>DataModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:name</span><span class='dot token'>.</span><span class='asc identifier id'>asc</span> <span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>
-    <span class='yield yield kw'>yield</span> <span class='lbrack token'>[</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='lbrack token'>[</span><span class='@url_prefix ivar id'>@url_prefix</span><span class='comma token'>,</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'/'</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='ieid identifier id'>ieid</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='e identifier id'>e</span><span class='bitor op'>|</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='csv_escape identifier id'>csv_escape</span><span class='lparen token'>(</span><span class='e identifier id'>e</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>','</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
+  <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='list identifier id'>list</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pkg identifier id'>pkg</span><span class='bitor op'>|</span>
+    <span class='yield yield kw'>yield</span> <span class='lbrack token'>[</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='lbrack token'>[</span><span class='@url_prefix ivar id'>@url_prefix</span><span class='comma token'>,</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'/'</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='ieid identifier id'>ieid</span> <span class='rbrack token'>]</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='e identifier id'>e</span><span class='bitor op'>|</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='csv_escape identifier id'>csv_escape</span><span class='lparen token'>(</span><span class='e identifier id'>e</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>','</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>&quot;\n&quot;</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -257,7 +251,7 @@ A new instance of PackageCsvReport
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 22 16:40:13 2011 by 
+  Generated on Thu Feb 17 01:19:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

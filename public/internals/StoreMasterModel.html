@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: StoreMasterModel</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo; 
+    
+    
+    <span class="title">StoreMasterModel</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: StoreMasterModel
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+      <dt class="r1">Includes:</dt>
+      <dd class="r1"><span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb<span class="defines">,<br />
+  /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/copies.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO: returned etag is missing quotes
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+   
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="StoreMasterModel/Copy.html" title="StoreMasterModel::Copy (class)">Copy</a></span>, <span class='object_link'><a href="StoreMasterModel/Package.html" title="StoreMasterModel::Package (class)">Package</a></span>, <span class='object_link'><a href="StoreMasterModel/Pool.html" title="StoreMasterModel::Pool (class)">Pool</a></span>, <span class='object_link'><a href="StoreMasterModel/Reservation.html" title="StoreMasterModel::Reservation (class)">Reservation</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+
+
+  
+  
+  
+  
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMaster.html#NAME-constant" title="StoreMaster::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="StoreMaster.html#RELEASE-constant" title="StoreMaster::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="StoreMaster.html#REVISION-constant" title="StoreMaster::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="StoreMaster.html#VERSION-constant" title="StoreMaster::VERSION (constant)">VERSION</a></span></p>
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_tables-class_method" title="create_tables (class method)">+ (Object) <strong>create_tables</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setup_db-class_method" title="setup_db (class method)">+ (Object) <strong>setup_db</strong>(yaml_file, key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tables-class_method" title="tables (class method)">+ (Object) <strong>tables</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+(Re)create tables for test or setup.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_tables-class_method" title="update_tables (class method)">+ (Object) <strong>update_tables</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="create_tables-class_method">
+  
+    + (<tt>Object</tt>) <strong>create_tables</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+53
+54
+55</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 53</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_migrate!</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="setup_db-class_method">
+  
+    + (<tt>Object</tt>) <strong>setup_db</strong>(yaml_file, key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
+  <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:store_master</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='resource_naming_convention identifier id'>resource_naming_convention</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='colon2 op'>::</span><span class='NamingConventions constant id'>NamingConventions</span><span class='colon2 op'>::</span><span class='Resource constant id'>Resource</span><span class='colon2 op'>::</span><span class='UnderscoredAndPluralizedWithoutModule constant id'>UnderscoredAndPluralizedWithoutModule</span>
+  <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='finalize identifier id'>finalize</span>
+  <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='dm identifier id'>dm</span>
+
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span>
+  <span class='dstring node'>&quot;Failure setting up the store-master database: #{e.message}&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="tables-class_method">
+  
+    + (<tt>Object</tt>) <strong>tables</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+(Re)create tables for test or setup.  We&#8217;ll also provide a mysql.ddl
+and psql.ddl for creating the tables, which can give us a bit more
+flexibility (e.g., specialized indcies for some of the sql we do)
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+49
+50
+51</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 49</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
+  <span class='lbrack token'>[</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Pool constant id'>Pool</span><span class='comma token'>,</span> <span class='Reservation constant id'>Reservation</span> <span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="update_tables-class_method">
+  
+    + (<tt>Object</tt>) <strong>update_tables</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+57
+58
+59</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 57</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_update!</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Thu Feb 17 01:19:21 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

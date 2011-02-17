@@ -129,7 +129,33 @@ returning the corresponding hex string.
 
   
     <span class="summary_desc"><div class='inline'><p>
-put in commas in a number (American style numeric format).
+Put in commas in a number (American style numeric format), lifted from
+Rails.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connection_string-class_method" title="connection_string (class method)">+ (Object) <strong>connection_string</strong>(yaml_file, key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Purpose here is to provide connections for datamapper using our yaml
+configuration file + key technique;.
 </p>
 </div></span>
   
@@ -486,7 +512,8 @@ returning the corresponding hex string.
 </p><div class="docstring">
   <div class="discussion">
     <p>
-put in commas in a number (American style numeric format)
+Put in commas in a number (American style numeric format), lifted from
+Rails
 </p>
 
 
@@ -500,15 +527,112 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-117
-118
-119</pre>
+110
+111
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 117</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 110</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="connection_string-class_method">
+  
+    + (<tt>Object</tt>) <strong>connection_string</strong>(yaml_file, key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Purpose here is to provide connections for datamapper using our yaml
+configuration file + key technique;
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 116</span>
+
+<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
+
+  <span class='oops identifier id'>oops</span> <span class='assign token'>=</span> <span class='string val'>&quot;Database setup can't&quot;</span>
+
+  <span class='comment val'># This looks like excessive error checking, but configuration errors need a lot explanation for new users of DAITSS.</span>
+
+  <span class='begin begin kw'>begin</span>
+    <span class='dict identifier id'>dict</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the configuration file #{yaml_file}: #{e.message}.&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the data in the configuration file #{yaml_file}.&quot;</span> <span class='if if_mod kw'>if</span> <span class='dict identifier id'>dict</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
+
+  <span class='dbinfo identifier id'>dbinfo</span> <span class='assign token'>=</span> <span class='dict identifier id'>dict</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get any data from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the #{yaml_file} configuration file using the key #{key}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'vendor'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                            <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'database'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
+
+  <span class='comment val'># Example string: 'mysql://root:topsecret@localhost/silos'</span>
+  <span class='comment val'># TODO: support different ports</span>
+
+  <span class='return return kw'>return</span> \
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span>    <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span>                                   <span class='comment val'># mysql://</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span>                                           <span class='comment val'># mysql://fischer</span>
+   <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span>  <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'@'</span> <span class='plus op'>+</span>    <span class='comment val'># mysql://fischer:topsecret@  (or mysql://fischer@)</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>                                     <span class='comment val'># mysql://fischer:topsecret@localhost/</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>                                              <span class='comment val'># mysql://fischer:topsecret@localhost/store_master</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -568,7 +692,7 @@ put in commas in a number (American style numeric format)
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_free identifier id'>disk_free</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
-  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks identifier id'>blocks</span>    <span class='comment val'># fragment_size is used in preference to block_size, which is just the OS's preference</span>
+  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks identifier id'>blocks</span>            <span class='comment val'># fragment_size is used in preference to block_size, which is just the OS's preference</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -694,7 +818,7 @@ N.B. We depend on a trailing slash being removed
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_size identifier id'>disk_size</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
-  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks_available identifier id'>blocks_available</span>  <span class='comment val'># blocks_available &lt; blocks_free;  some are reserved for root.</span>
+  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks_available identifier id'>blocks_available</span>  <span class='comment val'># blocks_available &lt; blocks_free; some are reserved for root's exclusive use.</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -728,23 +852,17 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-107
-108
-109
-110
-111
-112
-113</pre>
+103
+104
+105
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 107</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 103</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='group identifier id'>group</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
-  <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
-    <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='gid identifier id'>gid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
-  <span class='else else kw'>else</span>
-    <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
-  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='gid identifier id'>gid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -796,12 +914,12 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
+84
 85
-86
-87</pre>
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 85</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 84</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath_parent identifier id'>hashpath_parent</span> <span class='name identifier id'>name</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>2</span><span class='rbrack token'>]</span>
@@ -914,23 +1032,17 @@ return the user name who owns it as a string.
       <pre class="lines">
 
 
+93
 94
 95
-96
-97
-98
-99
-100</pre>
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 93</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
-  <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-    <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
-  <span class='else else kw'>else</span>
-    <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
-  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1022,7 +1134,7 @@ return the user name who owns it as a string.
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 22 16:40:12 2011 by 
+  Generated on Thu Feb 17 01:19:10 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

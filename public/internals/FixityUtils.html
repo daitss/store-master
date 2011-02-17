@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: FixityUtils</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (F)</a> &raquo; 
+    
+    
+    <span class="title">FixityUtils</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: FixityUtils
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#parse_options-class_method" title="parse_options (class method)">+ (Object) <strong>parse_options</strong>(args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pluralize_phrase-class_method" title="pluralize_phrase (class method)">+ (Object) <strong>pluralize_phrase</strong>(count, word, plural) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="parse_options-class_method">
+  
+    + (<tt>Object</tt>) <strong>parse_options</strong>(args) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 13</span>
+
+<span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='parse_options identifier id'>parse_options</span> <span class='args identifier id'>args</span>
+  
+  <span class='comment val'># TODO: remove these too-specific defaults (one for development, one for testing</span>
+
+  <span class='comment val'>#                               syslog_facility   db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies</span>
+  <span class='comment val'>#                               ---------------   --------------         -------------------       -------------      -------------  ---------------</span>
+  <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityConfig constant id'>FixityConfig</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'LOCAL4'</span><span class='comma token'>,</span>         <span class='string val'>'/opt/fda/etc/db.yml'</span><span class='comma token'>,</span> <span class='string val'>'store_master_dual_pool'</span><span class='comma token'>,</span> <span class='string val'>'unused'</span><span class='comma token'>,</span>          <span class='nil nil kw'>nil</span><span class='comma token'>,</span>           <span class='integer val'>2</span><span class='rparen token'>)</span>
+  <span class='comment val'>#    = Struct::FixityConfig.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1)</span>
+
+  <span class='opts identifier id'>opts</span> <span class='assign token'>=</span> <span class='OptionParser constant id'>OptionParser</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='opts identifier id'>opts</span><span class='bitor op'>|</span>    
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--syslog-facility FACILITY&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='facility identifier id'>facility</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='syslog_facility identifier id'>syslog_facility</span> <span class='assign token'>=</span> <span class='facility identifier id'>facility</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-config-file PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;A database yaml configuration file, defaults to #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-store-master-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The key for the store master database in the configuration file #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-daitss-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The key for the daitss database in the configuration file #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_daitss_key identifier id'>db_daitss_key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--pid-directory PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--required-copies PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='parse! fid id'>parse!</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> 
+
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not found&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No store-master database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>  <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No daitss database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>        <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_daitss_key identifier id'>db_daitss_key</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not readable&quot;</span>                                  <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
+
+  <span class='comment val'># FIXME: this can be user, uucp, news, others on our system</span>
+
+  <span class='if if kw'>if</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='syslog_facility identifier id'>syslog_facility</span>
+    <span class='raise identifier id'>raise</span> <span class='string val'>&quot;Syslog facility should be of the form 'LOCAL0' .. 'LOCAL1'&quot;</span>            <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='syslog_facility identifier id'>syslog_facility</span> <span class='match op'>=~</span> <span class='regexp val'>/^LOCAL[0-7]$/</span>
+  <span class='end end kw'>end</span>
+
+  <span class='if if kw'>if</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The specified PID directory #{conf.pid_directory} doesn't exist&quot;</span>       <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The specified PID directory #{conf.pid_directory} isn't a directory&quot;</span>   <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The specified PID directory #{conf.pid_directory} isn't writable&quot;</span>      <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='writable? fid id'>writable?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
+  <span class='end end kw'>end</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='STDERR constant id'>STDERR</span><span class='dot token'>.</span><span class='puts identifier id'>puts</span> <span class='e identifier id'>e</span><span class='comma token'>,</span> <span class='opts identifier id'>opts</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+<span class='else else kw'>else</span>
+  <span class='return return kw'>return</span> <span class='conf identifier id'>conf</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="pluralize_phrase-class_method">
+  
+    + (<tt>Object</tt>) <strong>pluralize_phrase</strong>(count, word, plural) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+6
+7
+8
+9</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 6</span>
+
+<span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='pluralize_phrase identifier id'>pluralize_phrase</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='word identifier id'>word</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span> 
+  <span class='return return kw'>return</span> <span class='dstring node'>&quot;#{count} #{word}&quot;</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='eq op'>==</span> <span class='string val'>'1'</span> <span class='or or kw'>or</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='eq op'>==</span> <span class='string val'>'one'</span>
+  <span class='return return kw'>return</span> <span class='dstring node'>&quot;#{count} #{plural}&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Thu Feb 17 01:18:58 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

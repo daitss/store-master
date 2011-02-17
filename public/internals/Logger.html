@@ -74,7 +74,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb</dd>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -401,16 +401,16 @@ A new instance of Logger
       <pre class="lines">
 
 
-197
 198
 199
 200
 201
 202
-203</pre>
+203
+204</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 197</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 198</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='level identifier id'>level</span> <span class='assign token'>=</span> <span class='symbol val'>:info</span><span class='comma token'>,</span> <span class='tag identifier id'>tag</span> <span class='assign token'>=</span> <span class='string val'>''</span>
   <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Bad argument: if specified, the first argument must be one of :info, :warn, :error, but was :#{level}&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='lbrack token'>[</span><span class='symbol val'>:info</span><span class='comma token'>,</span> <span class='symbol val'>:warn</span><span class='comma token'>,</span> <span class='symbol val'>:error</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='level identifier id'>level</span>
@@ -461,10 +461,10 @@ used.
       <pre class="lines">
 
 
-158</pre>
+159</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 158</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 159</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -529,13 +529,15 @@ significantly differently.  But that&#8217;s not your problem.
 147
 148
 149
-150</pre>
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 146</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 146</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='facility identifier id'>facility</span><span class='assign token'>=</span> <span class='facility identifier id'>facility</span>
   <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='@@virtual_hostname ivar id'>@@virtual_hostname</span> <span class='and and kw'>and</span> <span class='@@service_name ivar id'>@@service_name</span><span class='rparen token'>)</span>
+  <span class='facility identifier id'>facility</span> <span class='assign token'>=</span> <span class='string val'>'LOG_'</span> <span class='plus op'>+</span> <span class='facility identifier id'>facility</span> <span class='unless unless_mod kw'>unless</span> <span class='facility identifier id'>facility</span> <span class='match op'>=~</span> <span class='regexp val'>/^LOG_/</span>
   <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@virtual_hostname ivar id'>@@virtual_hostname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='SyslogOutputter constant id'>SyslogOutputter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@@service_name ivar id'>@@service_name</span><span class='comma token'>,</span> <span class='string val'>'facility'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='eval identifier id'>eval</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Syslog::#{facility.to_s.upcase}&quot;</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
   <span class='facility identifier id'>facility</span>
 <span class='end end kw'>end</span>
@@ -584,7 +586,7 @@ one of them must be done before any actual logging occurs.
 109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 105</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 105</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='filename identifier id'>filename</span><span class='assign token'>=</span> <span class='filepath identifier id'>filepath</span>
   <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='@@virtual_hostname ivar id'>@@virtual_hostname</span> <span class='and and kw'>and</span> <span class='@@service_name ivar id'>@@service_name</span><span class='rparen token'>)</span>
@@ -626,10 +628,10 @@ used.
       <pre class="lines">
 
 
-180</pre>
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 180</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 181</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -669,16 +671,16 @@ Note that the object method #write will not use this.
       <pre class="lines">
 
 
-223
 224
 225
 226
 227
 228
-229</pre>
+229
+230</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 223</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 224</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='prefix identifier id'>prefix</span> <span class='env identifier id'>env</span>
   <span class='return return kw'>return</span> <span class='string val'>''</span> <span class='if if_mod kw'>if</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'REQUEST_METHOD'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='env identifier id'>env</span><span class='lbrack token'>[</span><span class='string val'>'PATH_INFO'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -714,7 +716,7 @@ Note that the object method #write will not use this.
 93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 88</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 88</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='service_name identifier id'>service_name</span><span class='comma token'>,</span> <span class='virtual_hostname identifier id'>virtual_hostname</span> <span class='assign token'>=</span> <span class='Socket constant id'>Socket</span><span class='dot token'>.</span><span class='gethostname identifier id'>gethostname</span><span class='rparen token'>)</span>
   <span class='@@virtual_hostname ivar id'>@@virtual_hostname</span> <span class='assign token'>=</span> <span class='virtual_hostname identifier id'>virtual_hostname</span>
@@ -761,7 +763,7 @@ Initialize the logging system to write to STDERR.
 118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 115</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 115</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='stderr identifier id'>stderr</span>
   <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='@@virtual_hostname ivar id'>@@virtual_hostname</span> <span class='and and kw'>and</span> <span class='@@service_name ivar id'>@@service_name</span><span class='rparen token'>)</span>
@@ -802,10 +804,10 @@ used.
       <pre class="lines">
 
 
-169</pre>
+170</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 169</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 170</span>
 
 <span class='def def kw'>def</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='env identifier id'>env</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -848,12 +850,12 @@ write method on it. See the Logger#new method for an example of its use.
       <pre class="lines">
 
 
-210
 211
-212</pre>
+212
+213</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/logger.rb', line 210</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/logger.rb', line 211</span>
 
 <span class='def def kw'>def</span> <span class='write identifier id'>write</span> <span class='message identifier id'>message</span>
   <span class='Log4r constant id'>Log4r</span><span class='colon2 op'>::</span><span class='Logger constant id'>Logger</span><span class='lbrack token'>[</span><span class='@@virtual_hostname ivar id'>@@virtual_hostname</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='send identifier id'>send</span><span class='lparen token'>(</span><span class='@level ivar id'>@level</span><span class='comma token'>,</span> <span class='@tag ivar id'>@tag</span> <span class='question op'>?</span> <span class='dstring node'>&quot;#{@tag} #{message.chomp}&quot;</span> <span class='colon op'>:</span> <span class='message identifier id'>message</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span><span class='rparen token'>)</span>
@@ -869,7 +871,7 @@ write method on it. See the Logger#new method for an example of its use.
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 22 16:40:14 2011 by 
+  Generated on Thu Feb 17 01:19:03 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

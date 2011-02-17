@@ -56,7 +56,7 @@
   
     
       <dt class="r1">Includes:</dt>
-      <dd class="r1"><span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></dd>
+      <dd class="r1"><span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span></dd>
       
     
   
@@ -69,11 +69,11 @@
 <p class="children">
    
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>, <span class='object_link'><a href="URI.html" title="URI (module)">URI</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Analyzer.html" title="Analyzer (module)">Analyzer</a></span>, <span class='object_link'><a href="DaitssModel.html" title="DaitssModel (module)">DaitssModel</a></span>, <span class='object_link'><a href="FixityUtils.html" title="FixityUtils (module)">FixityUtils</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>, <span class='object_link'><a href="Streams.html" title="Streams (module)">Streams</a></span>, <span class='object_link'><a href="URI.html" title="URI (module)">URI</a></span>
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>, <span class='object_link'><a href="Reporter.html" title="Reporter (class)">Reporter</a></span>, <span class='object_link'><a href="Trie.html" title="Trie (class)">Trie</a></span>
     
   
 </p>
@@ -176,27 +176,6 @@ the code into a directory created under ../releases/, with names such as
 </li>
 
       
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#iam-instance_method" title="#iam (instance method)">- (Object) <strong>iam</strong>(ob) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
     </ul>
   
 
@@ -208,8 +187,8 @@ the code into a directory created under ../releases/, with names such as
   
   
   
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="DataModel.html" title="DataModel (module)">DataModel</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="DataModel.html#recreate_tables-class_method" title="DataModel.recreate_tables (method)">recreate_tables</a></span>, <span class='object_link'><a href="DataModel.html#setup-class_method" title="DataModel.setup (method)">setup</a></span></p>
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMasterModel.html#create_tables-class_method" title="StoreMasterModel.create_tables (method)">create_tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#setup_db-class_method" title="StoreMasterModel.setup_db (method)">setup_db</a></span>, <span class='object_link'><a href="StoreMasterModel.html#tables-class_method" title="StoreMasterModel.tables (method)">tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#update_tables-class_method" title="StoreMasterModel.update_tables (method)">update_tables</a></span></p>
 
   
   
@@ -322,41 +301,12 @@ includes configuration information that may not be checked in.
 </table>
 </div>
     
-      <div class="method_details ">
-  <p class="signature " id="iam-instance_method">
-  
-    - (<tt>Object</tt>) <strong>iam</strong>(ob) 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-8
-9
-10</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/irb-setup.rb', line 8</span>
-
-<span class='def def kw'>def</span> <span class='iam identifier id'>iam</span> <span class='ob identifier id'>ob</span>
-  <span class='lparen token'>(</span><span class='ob identifier id'>ob</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span> <span class='minus op'>-</span> <span class='Object constant id'>Object</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
   </div>
 
 </div>
     
     <div id="footer">
-  Generated on Sat Jan 22 16:40:16 2011 by 
+  Generated on Thu Feb 17 01:19:22 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
