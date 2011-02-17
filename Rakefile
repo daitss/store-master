@@ -60,7 +60,7 @@ task :darchive do
   sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
   sh "test -s /tmp/silos.diff && git commit -a"
   sh "git push"
-# sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
 
