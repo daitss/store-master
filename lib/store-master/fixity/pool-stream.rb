@@ -1,10 +1,10 @@
-require 'daitss/model.rb'
 require 'datyl/streams'
 require 'fastercsv'
 require 'net/http'
 require 'store-master/model.rb'
 
-# Create a variety of sorted data streams from the silo-pool services keyed by package-name
+# Create a variety of sorted data streams from the silo-pool services keyed by package-name.
+# This returns what the silos have, not what store-master thinks they have.
 
 module Streams
 
@@ -41,7 +41,7 @@ module Streams
 
       http = Net::HTTP.new(@url.host, @url.port)
       http.open_timeout = 60 * 2
-      http.read_timeout = 60 * 2  # it will take much longer to read it all, but should start within this time
+      http.read_timeout = 60 * 10  # TODO: get some perfomance metrics on this
       
       http.request(get_request) do |response|
         raise StoreMaster::ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
@@ -111,10 +111,11 @@ module Streams
   # the structs from the constituent PoolFixityStream values. The
   # arrays are homogenous in the type of elements (namely,
   # PoolFixityRecords) but may well vary in the number of
-  # elements. There will always be at least one element in the array.
+  # elements. There will be between one and the number of strems elements
+  # in the array.
   #
   # This stream is used to determine both the consisitency of fixities
-  # across muiltiple pools, as well as the required number of copies
+  # across muiltiple pools, as well as confirming the required number of copies
   # of packages across those pools.
 
   class PoolMultiFixities < MultiStream 

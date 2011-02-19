@@ -5,7 +5,8 @@ module DaitssModel
 
   class Package
 
-    # provide a list of all of the package ids
+    # Provide a list of all of the package ids sorted by the copy URL.
+    # There will be on the order of 10^6 of these
 
     def self.package_copies_ids  before = DateTime.now
 
@@ -19,7 +20,7 @@ module DaitssModel
       repository(:daitss).adapter.select(sql)
     end
 
-    # provide a list of data mapper records ordered by the copies URL
+    # provide a list of data mapper records for selected IEIDs  ordered by the copy URL
 
     def self.package_copies  ieids
       return [] unless ieids and not ieids.empty?
@@ -27,7 +28,7 @@ module DaitssModel
               "FROM packages, aips, copies " +
              "WHERE packages.id = aips.package_id " +
                "AND aips.id = copies.aip_id " +
-               "AND packages.id in ('" + ieids.join("', '")  + "')" +
+               "AND packages.id in ('" + ieids.join("', '")  + "') " +
           "ORDER BY copies.url"
 
       repository(:daitss).adapter.select(sql)
@@ -42,7 +43,9 @@ module Streams
   class DaitssPackageStream
   
     # TODO: we might be better off maintaining an index into @ieids and keeping it around, rather than shifting
-    # materials off.
+    # materials off and having to re-create it.  We'll see after how it's used in practice.
+
+    CHUNK_SIZE = 1000  # TODO: try large size, real small size, then compare output
 
     def initialize before = DateTime.now
       @before = before
@@ -56,7 +59,7 @@ module Streams
 
     def setup
       @ieids  = DaitssModel::Package.package_copies_ids @before
-      @unget  = []
+      @last   = nil
       @buff   = []      
       @closed = false
       @ungot  = false
@@ -67,7 +70,7 @@ module Streams
     end
 
     def eos?
-      @ieids.empty? and @buff.empty? and @unget.empty?
+      @ieids.empty? and @buff.empty? and not @ungot
     end
 
     def get
@@ -75,18 +78,16 @@ module Streams
 
       if @ungot
          @ungot = false
-         return @unget.pop, @unget.pop
+         return @last.url, @last
       end
 
       if @buff.empty?
-        @buff = DaitssModel::Package.package_copies @ieids.shift(2000)
+         @buff = DaitssModel::Package.package_copies @ieids.shift(CHUNK_SIZE)
       end
 
-      rec = @buff.shift
+      @last = @buff.shift
 
-      @unget = [ rec, rec.url ]
-
-      return rec.url, rec
+      return @last.url, @last
     end
 
     def unget
@@ -96,7 +97,7 @@ module Streams
 
     def each
       while not eos?
-        return get
+        yield get
       end
     end
 
@@ -112,4 +113,4 @@ module Streams
 
   end # of class DaitssPackageStream
 
-end
+end # of module Streams

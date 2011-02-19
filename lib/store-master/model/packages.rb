@@ -41,7 +41,7 @@ module StoreMasterModel
 
     def self.package_chunks
       offset = 0
-      while not (packages  = all(:extant => true, :order => [ :name.asc ] ).slice(offset, 1000)).empty?
+      while not (packages  = all(:extant => true, :order => [ :name.asc ] ).slice(offset, 2000)).empty?
         offset += packages.length
         yield packages
       end
@@ -72,6 +72,9 @@ module StoreMasterModel
       raise "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
       raise "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
       raise "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
+
+      # TODO: we need to wrap the package insert with the copy insert in a transaction.
+      # TODO: when there's a pacakge without copies, a GET on the package will cause a 500 error; there's a race condition here...
 
       pkg = create(:name => metadata[:name], :ieid => metadata[:ieid])
 
@@ -129,11 +132,11 @@ module StoreMasterModel
 
     def store_copy io, posting_url, metadata
 
-      # Note: posting_url may have credentials, but URI#to_s has been redefined in data-model.rb to sanitize the printed output
+      # Note: posting_url may have credentials, but URI#to_s has been redefined in store-master/model.rb to sanitize the printed output
 
       http = Net::HTTP.new(posting_url.host, posting_url.port)
       http.open_timeout = 60 * 2
-      http.read_timeout = 60 * 2
+      http.read_timeout = 60 * 60
       request = Net::HTTP::Post.new(posting_url.request_uri)
       io.rewind if io.respond_to?('rewind')
       request.body_stream = io
@@ -141,6 +144,12 @@ module StoreMasterModel
       request.basic_auth(posting_url.user, posting_url.password) if posting_url.user or posting_url.password
       response = http.request(request)
       status = response.code.to_i
+
+      # TODO: timeout in the above doesn't cause the package entry to be deleted; so we get a package entry without 
+      # copy entry - boom! later.
+      #
+      # TODO: we need to wrap the package insert with the copy insert in a transaction.
+
 
       raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}") if status >= 300
 

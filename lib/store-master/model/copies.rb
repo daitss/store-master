@@ -16,7 +16,7 @@ module StoreMasterModel
 
     validates_uniqueness_of :pool, :scope => :package
 
-    # Note: data-model.rb redefines the print method for URI so that
+    # Note: store-master/model.rb redefines the print method for URI so that
     # username/password won't be exposed.
 
     def url
