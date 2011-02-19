@@ -1,11 +1,34 @@
 require 'datyl/streams'
 require 'store-master/model.rb'
-# This file sets up data streams that lists the packages and copies that store-master thinks the silos have.
-# See pool-stream for data streams that list what the silos report as present.
+
+# This file sets up data streams that lists the packages and copies
+# that store-master thinks the silos have.  See pool-stream for data
+# streams that list what the silos report as present.
 
 module StoreMasterModel
 
   class Package
+
+    #  copies table
+    #
+    #      column     |            type             |                      modifiers                      
+    # ----------------+-----------------------------+-----------------------------------------------------
+    #  id             | integer                     | not null default nextval('copies_id_seq'::regclass)
+    #  datetime       | timestamp without time zone | 
+    #  store_location | character varying(255)      | not null
+    #  package_id     | integer                     | not null
+    #  pool_id        | integer                     | not null
+    #
+    #
+    #  packages table
+    #
+    #  column |         type          |                       modifiers                       
+    # --------+-----------------------+-------------------------------------------------------
+    #  id     | integer               | not null default nextval('packages_id_seq'::regclass)
+    #  extant | boolean               | default true
+    #  ieid   | character varying(50) | not null
+    #  name   | character varying(50) | not null
+
 
     def self.package_copies_ids  before = DateTime.now
       sql = "SELECT packages.id " +
