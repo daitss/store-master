@@ -52,12 +52,11 @@ class Reporter
   def each 
     yield @title
     yield @title.gsub(/./, ':')
-    yield ''
     @tempfile.rewind
     while not @tempfile.eof
       yield @tempfile.gets
     end
-    yield '' if interesting?
+    yield ''
   end
 
   def write io = STDERR

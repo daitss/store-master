@@ -49,7 +49,6 @@ def teardown config, streams
   streams.each { |s| s.close unless s.closed? }
 end
 
-
 config = FixityUtils.parse_options(ARGV)
 
 begin
@@ -57,13 +56,18 @@ begin
   setup(config)
 
   pool_fixity_streams = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
+  store_master_stream = Streams::StoreMasterPackageStream.new
 
   reports = []
 
   reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
+  reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
+  reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
 
-  reports.each { |report| report.write }  #  if report.interesting? }
+  # reports.each { |report| report.write if report.interesting? }
+
+  reports.each { |report| report.write }
 
 rescue => e
   Logger.err  "#{e.class}: #{e.message} - backtrace follows"

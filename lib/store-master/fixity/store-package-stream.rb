@@ -11,18 +11,18 @@ module StoreMasterModel
 
     #  copies table
     #
-    #      column     |            type             |                      modifiers                      
-    # ----------------+-----------------------------+-----------------------------------------------------
-    #  id             | integer                     | not null default nextval('copies_id_seq'::regclass)
-    #  datetime       | timestamp without time zone | 
-    #  store_location | character varying(255)      | not null
-    #  package_id     | integer                     | not null
-    #  pool_id        | integer                     | not null
+    #      column     |            type          |                      modifiers
+    # ----------------+--------------------------+-----------------------------------------------------
+    #  id             | integer                  | not null default nextval('copies_id_seq'::regclass)
+    #  datetime       | timestamp with time zone |
+    #  store_location | character varying(255)   | not null
+    #  package_id     | integer                  | not null
+    #  pool_id        | integer                  | not null
     #
     #
     #  packages table
     #
-    #  column |         type          |                       modifiers                       
+    #  column |         type          |                       modifiers
     # --------+-----------------------+-------------------------------------------------------
     #  id     | integer               | not null default nextval('packages_id_seq'::regclass)
     #  extant | boolean               | default true
@@ -46,7 +46,7 @@ module StoreMasterModel
       sql = "SELECT packages.name, copies.store_location, packages.ieid " +
               "FROM packages, copies " +
              "WHERE packages.id = copies.package_id " +
-               "AND packages.id in ('" + ids.join("', '")  + "') " 
+               "AND packages.id in ('" + ids.join("', '")  + "') "
           "ORDER BY packages.name"
 
       repository(:store_master).adapter.select(sql)
@@ -56,13 +56,20 @@ module StoreMasterModel
 end # of module StoreMasterModel
 
 module Streams
-  
+
+  # StoreMasterPackageStream returns information about what the StoreMaster thinks should be on the silos:
+  #
+  # E20110210_ROGMBP.000   #<struct name="E20110210_ROGMBP.000", store_location="http://one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">
+  # E20110210_ROGMBP.000   #<struct name="E20110210_ROGMBP.000", store_location="http://two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">
+  # E20110210_ROIUIC.000   #<struct name="E20110210_ROIUIC.000", store_location="http://one.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">
+  # E20110210_ROIUIC.000   #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">
+  # ...
+
+  # TODO: keep the @ids as an array without shifting, keeping an offset, so we can reset it to zero on rewind.
+
   class StoreMasterPackageStream
 
     CHUNK_SIZE = 1000  # TODO: try large size, real small size, then compare output
-    
-    # TODO: we might be better off maintaining an index into @ieids and keeping it around, rather than shifting
-    # materials off and having to re-create it.  We'll see after how it's used in practice.
 
     def initialize before = DateTime.now
       @before = before
@@ -77,7 +84,7 @@ module Streams
     def setup
       @ids    = StoreMasterModel::Package.package_copies_ids @before
       @last   = nil
-      @buff   = []      
+      @buff   = []
       @closed = false
       @ungot  = false
     end
@@ -98,8 +105,8 @@ module Streams
         return @last.name, @last
       end
 
-      if @buff.empty? 
-        @buff = StoreMasterModel::Package.package_copies @ids.shift(CHUNK_SIZE) 
+      if @buff.empty?
+        @buff = StoreMasterModel::Package.package_copies @ids.shift(CHUNK_SIZE)
       end
 
       @last = @buff.shift
@@ -120,11 +127,11 @@ module Streams
     end
 
     # closing is just for consistency; really a no-op
-    
+
     def close
       @closed = true
     end
-    
+
     def closed?
       @closed
     end

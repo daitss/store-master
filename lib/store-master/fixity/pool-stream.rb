@@ -110,9 +110,8 @@ module Streams
   # package-name, a string) and the value is a specialized array of
   # the structs from the constituent PoolFixityStream values. The
   # arrays are homogenous in the type of elements (namely,
-  # PoolFixityRecords) but may well vary in the number of
-  # elements. There will be between one and the number of strems elements
-  # in the array.
+  # PoolFixityRecords) but may well vary in the number of elements (of
+  # which there will be from one to the number of streams).
   #
   # This stream is used to determine both the consisitency of fixities
   # across muiltiple pools, as well as confirming the required number of copies
