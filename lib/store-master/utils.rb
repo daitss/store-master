@@ -122,17 +122,17 @@ module StoreUtils
     begin
       dict = YAML::load(File.open(yaml_file))
     rescue => e
-      raise "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
+      raise "#{oops} parse the configuration file '#{yaml_file}': #{e.message}."
     end
 
-    raise "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
+    raise "#{oops} parse the data in the configuration file '#{yaml_file}'." if dict.class != Hash
 
     dbinfo = dict[key]
-    raise "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                     unless dbinfo
-    raise "#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
-    raise "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                            unless dbinfo.include? 'database'
-    raise "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                                unless dbinfo.include? 'hostname'
-    raise "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                                unless dbinfo.include? 'username'
+    raise "#{oops} get any data from the configuration file '#{yaml_file}' using the key '#{key}'"                                     unless dbinfo
+    raise "#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the configuration file '#{yaml_file}' using the key '#{key}'" unless dbinfo.include? 'vendor'
+    raise "#{oops} get the database name from the configuration file '#{yaml_file}' using the key '#{key}'"                            unless dbinfo.include? 'database'
+    raise "#{oops} get the host name from the configuration file '#{yaml_file}' using the key '#{key}'"                                unless dbinfo.include? 'hostname'
+    raise "#{oops} get the user name from the configuration file '#{yaml_file}' using the key '#{key}'"                                unless dbinfo.include? 'username'
 
     # Example string: 'mysql://root:topsecret@localhost/silos'
     # TODO: support different ports
@@ -143,6 +143,12 @@ module StoreUtils
      (dbinfo['password']  ? ':' + dbinfo['password'] : '') + '@' +    # mysql://fischer:topsecret@  (or mysql://fischer@)
       dbinfo['hostname']  + '/' +                                     # mysql://fischer:topsecret@localhost/
       dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
+  end
+
+  # Given a directory, return a path to a PID file in it, naming based on the currently running process name
+
+  def StoreUtils.pid_file dir
+    File.join(dir, $0.split(File::SEPARATOR).pop + '.pid')
   end
 
 end # of Module StoreUtils

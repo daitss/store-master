@@ -10,11 +10,11 @@ module DaitssModel
 
     def self.package_copies_ids  before = DateTime.now
 
-      sql = "SELECT packages.id " +
-              "FROM packages, aips, copies " +
+      sql = "SELECT packages.id "                   +
+              "FROM packages, aips, copies "        +
              "WHERE packages.id = aips.package_id " +
-               "AND aips.id = copies.aip_id " +
-        "AND copies.timestamp < '#{before}' " +
+               "AND aips.id = copies.aip_id "       +
+        "AND copies.timestamp < '#{before}' "       +
           "ORDER BY copies.url"
 
       repository(:daitss).adapter.select(sql)
@@ -24,7 +24,7 @@ module DaitssModel
 
     def self.package_copies  ieids
       return [] unless ieids and not ieids.empty?
-      sql = "SELECT packages.id AS name, copies.url, copies.md5, copies.sha1, copies.size " +
+      sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
               "FROM packages, aips, copies " +
              "WHERE packages.id = aips.package_id " +
                "AND aips.id = copies.aip_id " +
@@ -43,9 +43,9 @@ module Streams
   class DaitssPackageStream
   
     # TODO: we might be better off maintaining an index into @ieids and keeping it around, rather than shifting
-    # materials off and having to re-create it.  We'll see after how it's used in practice.
+    # materials off and having to re-create it with another database hit.  We'll see after how it's used in practice.
 
-    CHUNK_SIZE = 1000  # TODO: try large size, real small size, then compare output
+    CHUNK_SIZE = 2000
 
     def initialize before = DateTime.now
       @before = before

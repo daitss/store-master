@@ -5,13 +5,11 @@ require 'tempfile'
 
 class Reporter
 
-  DEFAULT_MAX_LINES = 1000    # abbreviated will only write this many lines of data - first half, '...', second half.
-  
-  attr_reader   :title
-  attr_accessor :max_lines
+  @@max_lines = 1000    # abbreviated will only write this many lines of data - first half, '...', second half.
+
+  attr_reader   :title, :counter
 
   def initialize title
-    @max_lines = DEFAULT_MAX_LINES
     @counter   = 0
     @title     = title
     @tempfile  = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
@@ -23,10 +21,19 @@ class Reporter
     @tempfile.unlink
   end
 
+  def self.max_lines_to_write
+    @@max_lines
+  end
+
+  def self.max_lines_to_write= num
+    @@max_lines = num
+  end
+
+
   def info str
     @counter += 1
     Logger.info str
-    @tempfile.puts str    
+    @tempfile.puts str
   end
 
   def warn str
@@ -46,48 +53,56 @@ class Reporter
   end
 
   def interesting?
-    @counter > 1
+    @counter > 0
   end
 
-  def each 
+
+  def top_lines
+    @@max_lines / 2 + (@@max_lines.odd? ? 1 : 0)
+  end
+
+  def bottom_lines
+    @@max_lines / 2
+  end
+
+  def each
+
     yield @title
     yield @title.gsub(/./, ':')
+
     @tempfile.rewind
-    while not @tempfile.eof
-      yield @tempfile.gets
+
+    if @counter > @@max_lines
+      yield "Note: #{@counter - @@max_lines} of #{@counter} lines were discared - see the associated log for the complete report."
+
+      top_lines.times  { yield @tempfile.gets }           # print first half
+
+      @tempfile.rewind
+
+
+      (@counter - bottom_lines).times { @tempfile.gets }  # discard middle
+
+      yield " ..."
+
+      while not @tempfile.eof
+        yield @tempfile.gets
+      end
+
+    else
+      @tempfile.rewind
+      while not @tempfile.eof
+        yield @tempfile.gets
+      end
     end
+
     yield ''
   end
 
-  def write io = STDERR
+
+  def write io = STDOUT
     each do |line|
       io.puts line
     end
   end
-
-
-  #### TODO:  add abbreviated method - like write, but does:
-  #
-  #  data
-  #  data
-  #   ... N lines removed: see logs for full report ...
-  #  data
-  #  data
-  #
-  # when there's too much to write -
-
-  def abbreviated io = STDERR
-    return write(io) if @counter <= @max_lines
-
-    io.puts @title
-    io.puts @title.gsub(/./, ':')
-    io.puts ''    
-    io.puts "Note: #{@counter - @max_lines} lines were truncated - see logs for complete report."
-    io.puts ''
-
-    # ....
-
-  end
-
 
 end # of class Reporter

@@ -8,55 +8,59 @@ require 'datyl/streams'
 require 'optparse'
 require 'store-master'
 
-DATAMAPPER_LOG_LEVEL = :debug
+# one of nil, :debug 
 
-# DATAMAPPER_LOG_LEVEL = nil
-
-# Given a directory, return a path to a PID file in it, named after this script
-
-def construct_pid_path directory
-  File.join(directory, $0.split(File::SEPARATOR).pop + '.pid')
-end
-
+DATAMAPPER_LOG_LEVEL = nil
 
 def setup config
-  Logger.setup('CollectFixities')
+  Logger.setup('CollectFixities', config.server_name)
 
   if config.syslog_facility
     Logger.facility  = config.syslog_facility
   else
-     Logger.stderr 
-   end
+    Logger.stderr 
+  end
 
-   if config.pid_directory
-     pid_path = construct_pid_path(config.pid_directory)
-     raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
-     File.open(pid_path, 'w') { |file|  file.puts $$ }
-   end
+  if config.pid_directory
+    pid_path = StoreUtils.pid_file(config.pid_directory)
+    raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
+    File.open(pid_path, 'w') { |file|  file.puts $$ }
+  end
+
+  Reporter.max_lines_to_write = 100
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
+
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
-
-  ## DaitssModel.setup_db(config.db_config_file, config.db_daitss_key)
-
+  DaitssModel.setup_db(config.db_config_file, config.db_daitss_key)
 end
+
 
 def teardown config, streams
   if config.pid_directory
     pid_path = construct_pid_path(config.pid_directory)
     File.delete pid_path if File.exists? pid_path and File.writable? pid_path
   end
-  streams.each { |s| s.close unless s.closed? }
+
+  if streams 
+    streams.each { |stream| stream.close unless stream.closed? }
+  end
 end
 
+
+# MAIN:
+
 config = FixityUtils.parse_options(ARGV)
+setup(config)
 
 begin
+  # Get our data streams, some from web services, some from various databases
 
-  setup(config)
+  pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
+  store_master_stream  = Streams::StoreMasterPackageStream.new
+  daitss_fixity_stream = Streams::DaitssPackageStream.new
 
-  pool_fixity_streams = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
-  store_master_stream = Streams::StoreMasterPackageStream.new
+  # daitss_fixity_stream.each { |k, v|  puts k + ' ' + v.ieid + ' ' + v.md5 + ' ' + v.sha1 + ' ' + v.size.to_s }
 
   reports = []
 
@@ -65,17 +69,20 @@ begin
   reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
 
-  # reports.each { |report| report.write if report.interesting? }
+  ## reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream).run.reports
 
-  reports.each { |report| report.write }
+  ## TODO: break this entire section out so we can create a report preface describing problems found, summary information, and configuration notes
+
+  reports.each { |report| report.write if report.interesting? }
 
 rescue => e
-  Logger.err  "#{e.class}: #{e.message} - backtrace follows"
-  e.backtrace.each { |line| Logger.err line }
 
-  STDERR.puts "#{e.class}: #{e.message} - backtrace follows"
-  e.backtrace.each { |line| STDERR.puts line }
+  lede = "#{e.class}: #{e.message} - backtrace follows:"
+  Logger.err  lede
+  STDERR.puts lede
+  e.backtrace.each { |line| Logger.err line; STDERR.puts line }
 
-ensure
+else
+
   teardown(config, pool_fixity_streams)
 end

@@ -102,7 +102,6 @@ module Streams
 
   end # of class PoolFixityRecordContainer
 
-
   # PoolMultiFixities
   #
   # Return a stream of key/value pairs that folds the data from a
