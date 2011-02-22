@@ -12,11 +12,12 @@ module FixityUtils
 
   def FixityUtils.parse_options args
     
-    # TODO: remove these too-specific defaults (one for development, one for testing
+    # TODO: remove these too-specific defaults (one for development, one for testing)
 
     #                               syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
     #                               ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
-    conf = Struct::FixityConfig.new(nil,              'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               5)
+
+    conf = Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
     #    = Struct::FixityConfig.new('LOCAL3',                                         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
 
     opts = OptionParser.new do |opts|    

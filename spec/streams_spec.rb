@@ -360,4 +360,33 @@ describe MultiStream do
                      ['s4:k6'] ]
   end
 
+  it "should allow an unget" do
+
+    s1 = test_stream  ['1', 's1:k1'], ['2', 's1:k2' ],                  ['4', 's1:k4' ]
+    s2 = test_stream                  ['2', 's2:k2' ], ['3', 's2:k3' ], ['4', 's2:k4' ], ['5', 's2:k5' ]
+    s4 = test_stream                                   ['3', 's4:k3' ], ['4', 's4:k4' ], ['5', 's4:k5' ], ['6', 's4:k6' ]
+    s3 = DataFileStream.new(File.open('/dev/null'))
+
+    ms = MultiStream.new(s1, s2, s3, s4)
+
+    k, v = ms.get
+    k.should == '1'
+    v.should == ['s1:k1']
+
+    k, v = ms.get
+    k.should == '2'
+    v.should == ['s1:k2','s2:k2']
+
+    ms.unget
+
+    k, v = ms.get
+    k.should == '2'
+    v.should == ['s1:k2','s2:k2']
+
+    k, v = ms.get
+    k.should == '3'
+    v.should == ['s2:k3', 's4:k3']
+
+  end
+
 end # of describe MultiStream

@@ -13,6 +13,10 @@ require 'store-master'
 DATAMAPPER_LOG_LEVEL = nil
 
 def setup config
+  $0 = 'collect-fixities'
+
+  puts `ps auxwww | grep collect`
+  exit
   Logger.setup('CollectFixities', config.server_name)
 
   if config.syslog_facility
@@ -31,7 +35,10 @@ def setup config
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
 
+  StoreMasterModel::Package.server_location = "http://#{config.server_name}"
+
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
+
   DaitssModel.setup_db(config.db_config_file, config.db_daitss_key)
 end
 
@@ -60,7 +67,7 @@ begin
   store_master_stream  = Streams::StoreMasterPackageStream.new
   daitss_fixity_stream = Streams::DaitssPackageStream.new
 
-  # daitss_fixity_stream.each { |k, v|  puts k + ' ' + v.ieid + ' ' + v.md5 + ' ' + v.sha1 + ' ' + v.size.to_s }
+  # daitss_fixity_stream.each { |k, v|  puts '', k, v.inspect }
 
   reports = []
 
@@ -68,8 +75,7 @@ begin
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
-
-  ## reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream).run.reports
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies).run.reports
 
   ## TODO: break this entire section out so we can create a report preface describing problems found, summary information, and configuration notes
 
@@ -83,6 +89,6 @@ rescue => e
   e.backtrace.each { |line| Logger.err line; STDERR.puts line }
 
 else
-
+  puts config.server_name, StoreMasterModel::Package.server_location
   teardown(config, pool_fixity_streams)
 end

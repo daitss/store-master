@@ -56,7 +56,6 @@ class Reporter
     @counter > 0
   end
 
-
   def top_lines
     @@max_lines / 2 + (@@max_lines.odd? ? 1 : 0)
   end
@@ -79,16 +78,15 @@ class Reporter
 
       @tempfile.rewind
 
-
       (@counter - bottom_lines).times { @tempfile.gets }  # discard middle
 
       yield " ..."
 
-      while not @tempfile.eof
+      while not @tempfile.eof                             # print last half
         yield @tempfile.gets
       end
 
-    else
+    else                     # we can print everything
       @tempfile.rewind
       while not @tempfile.eof
         yield @tempfile.gets

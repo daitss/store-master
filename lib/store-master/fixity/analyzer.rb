@@ -54,7 +54,8 @@ module Analyzer
           end
 
           if fixity_record.timestamp < @expiration_date
-            @expired_fixity_report.warn "#{fixity_record.location} fixity expired #{((Time.now - Time.parse(fixity_record.timestamp))/(60 * 60 * 24)).to_i} days ago"
+            days = '%3.1f' % ((Time.parse(@expiration_date) - Time.parse(fixity_record.timestamp))/(60 * 60 * 24))
+            @expired_fixity_report.warn "#{fixity_record.location} fixity expired #{days} #{FixityUtils.pluralize(days,'day ago', 'days ago')}"
           end
         end
       end
@@ -84,6 +85,7 @@ module Analyzer
     def initialize pool_fixity_streams, required_copies
       @pool_fixity_streams  = pool_fixity_streams
       @required_copies      = required_copies
+
       @report_wrong_number  = Reporter.new "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
       @report_copy_mismatch = Reporter.new "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
       @reports              = [ @report_wrong_number, @report_copy_mismatch ]
@@ -115,6 +117,7 @@ module Analyzer
     #
     # E20110210_ROGMBP.000  [ #<struct name="E20110210_ROGMBP.000", store_location="http://one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
     #                         #<struct name="E20110210_ROGMBP.000", store_location="http://two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP"> ]
+    #
     # E20110210_ROIUIC.000  [ #<struct name="E20110210_ROIUIC.000", store_location="http://one.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
     #                         #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC"> ]
     # ....
@@ -123,6 +126,7 @@ module Analyzer
     #
     # E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.example.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok">,
     #                        #<Struct::PoolFixityRecord location="http://two.example.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
+    #
     # E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.example.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:05-05:00", status="ok">,
     #                        #<Struct::PoolFixityRecord location="http://two.example.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
     # ....
@@ -203,7 +207,70 @@ module Analyzer
       end
       self
     end
-
-
   end # of class StoreMasterAnalyser
+
+
+  class PoolVsDaitssAnalyzer
+
+    attr_reader :reports
+    
+    def initialize  pool_fixity_streams, daitss_fixity_stream, required_number
+
+      @daitss_fixities   = daitss_fixity_stream    
+      @pool_fixities     = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
+      @comparison_stream = Streams::ComparisonStream.new(@pool_fixities, @daitss_fixities)
+
+      @report_missing    = Reporter.new "Missing Packages"
+      @report_orphaned   = Reporter.new "Orphaned Packages"
+      @report_integrity  = Reporter.new "Packages With Integrity Issues"
+      @report_fixity     = Reporter.new "Packages With Fixity Errors"
+
+      @reports    = [ @report_missing, @report_orphaned, @report_integrity, @report_fixity ]
+      @score_card = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
+    end
+
+    # the @pool_fixities stream:
+    #
+    # http://store-master.com/packages/E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
+    # http://store-master.com/packages/E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:05-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
+    # ...
+
+    # the @daitss_fixities stream:
+    #
+    # http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000 #<Struct::DataMapper ieid="EZQQYQMC2_6PYZMQ", url="http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000", md5="7e45d204d270da0f8aab2a65f59a2429", sha1="e541c693e56edd9a7e04cab94de5740092ae3953", size=4761600>
+    # http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000 #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
+    # ...
+
+    
+    def run
+      @comparison_stream.each do |url, pool_data, daitss_data|
+
+        if not pool_data                         # missing package
+          @score_card[:missing] += 1
+          @report_missing.err  "Package #{url} is missing"
+
+        elsif not daitss_data                    # orphaned package
+          @score_card[:orphans] += 1
+          @report_orphaned.warn "Package #{url} is an orphan"
+
+        else
+          @score_card[:checked] += 1
+          pkg = DaitssModel::Package.lookup_from_url(url)   # TODO: we really need to collect these up in chunks by accumulating URLs, getting all of the packages
+          pool_data.concat daitss.data                      # we might even be able to create event collections
+          puts pool_data.inspect
+          
+          # check required number on pool - integrity error;  create event integrity-failure
+          # check all sums, sizes matched - fixity error;     create even fixity-error
+          # all good?   find-or-create event fixity-success
+        end
+      end
+
+      self
+    end
+
+
+
+  end # of class PoolVsDaitssAnalyzer
+
+
 end # of module Analyzer

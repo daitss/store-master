@@ -4,6 +4,8 @@ module StoreMasterModel
 
     include DataMapper::Resource
 
+    @@server_location = nil 
+
     def self.default_repository_name
       :store_master
     end
@@ -23,8 +25,24 @@ module StoreMasterModel
 
     # return URI objects for all of the copies we have, in pool-preference order
 
+    # TODO: this next method should really be named copy_locations
+
     def locations
       copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |copy| copy.url }
+    end
+
+    def url
+      "#{@@server_location || 'http://localhost'}/packages/#{name}"
+    end
+
+    # e.g. http://store-master.example.com:8080
+
+    def self.server_location= prefix
+      @@server_location = prefix.gsub(/:80$/, '')
+    end
+
+    def self.server_location
+      @@server_location
     end
 
     def self.exists? name
@@ -135,7 +153,7 @@ module StoreMasterModel
       # Note: posting_url may have credentials, but URI#to_s has been redefined in store-master/model.rb to sanitize the printed output
 
       http = Net::HTTP.new(posting_url.host, posting_url.port)
-      http.open_timeout = 60 * 2
+      http.open_timeout = 60 * 5
       http.read_timeout = 60 * 60
       request = Net::HTTP::Post.new(posting_url.request_uri)
       io.rewind if io.respond_to?('rewind')
@@ -153,7 +171,7 @@ module StoreMasterModel
 
       raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}") if status >= 300
 
-      # Example XML document returned from POST, giving details about the resource
+      # Example XML document returned from POST to a silo, giving details about the resource
       # 
       #   <?xml version="1.0" encoding="UTF-8"?>                              
       #   <created type="application/x-tar"                                                                            
@@ -162,7 +180,7 @@ module StoreMasterModel
       #            etag="a3f07bc57127112f2a2c40d026b1abe1"                                                             
       #            md5="32e2ce3af2f98a115e121285d042c9bd"                                                              
       #            size="6031360"                                                                                      
-      #            location="http://storage.local/b/data/E20101021_LJLAMU.001"                                         
+      #            location="http://silo.example.com/001/data/E20101021_LJLAMU.001"                                         
       #            name="E20101021_LJLAMU.001"/>
 
       returned_data = {}
@@ -194,7 +212,7 @@ module StoreMasterModel
     def delete_copy silo_resource
 
       http = Net::HTTP.new(silo_resource.host, silo_resource.port) 
-      http.open_timeout = 30
+      http.open_timeout = 60 * 5
       http.read_timeout = 60 * 5  # deletes can take some time for large packages on active filesystems
 
       request = Net::HTTP::Delete.new(silo_resource.request_uri)

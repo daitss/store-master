@@ -289,6 +289,8 @@ module Streams
     def initialize *streams
       @values_container = Array   # subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
       @streams = streams
+      @ungot   = false
+      @last    = nil
     end
 
     def to_s
@@ -304,12 +306,17 @@ module Streams
     end
 
     def eos?
-      @streams.inject(true) { |sum, stream|  sum and stream.eos? }
+      not @ungot and @streams.inject(true) { |sum, stream|  sum and stream.eos? }
     end
 
     def rewind
       @streams.each { |s| s.rewind }
       self
+    end
+
+    def unget
+      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
+      @ungot = true
     end
 
     # Sort the keys from the the set of values returned by a GET on
@@ -319,6 +326,11 @@ module Streams
     # Returns the key/container pair.
 
     def get
+      if @ungot
+        @ungot = false
+        return @last[0], @last[1]
+      end
+
       scorecard = []
 
       @streams.each do |s|
@@ -339,7 +351,8 @@ module Streams
         end
       end
 
-      return key, vals
+      @last = [ key, vals ]
+      return    key, vals
     end
 
 

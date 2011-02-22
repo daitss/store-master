@@ -71,34 +71,11 @@ module DaitssModel
 
     end
 
-    # def elapsed_time
-    #   raise "package not yet ingested" unless status == 'archived'
-    #   return 0 if self.id =~ /^E20(05|06|07|08|09|10|11)/ #return 0 for D1 pacakges
 
-    #   event_list = self.events.all(:name => "ingest started") + self.events.all(:name => "ingest snafu") + self.events.all(:name => "ingest stopped") + self.events.first(:name => "ingest finished")
 
-    #   event_list.sort {|a, b| a.timestamp <=> b.timestamp}
 
-    #   elapsed = 0
-    #   while event_list.length >= 2
-    #     elapsed += Time.parse(event_list.pop.timestamp.to_s) - Time.parse(event_list.pop.timestamp.to_s)
-    #   end
 
-    #   return elapsed
-    # end
 
-    # def d1?
-    #   if aip.xml
-    #     doc = Nokogiri::XML aip.xml
-    #     doc.root.name == 'daitss1'
-    #   end
-    # end
-
-    # def dips
-    #   Dir.chdir archive.disseminate_path do
-    #     Dir['*'].select { |dip| dip =~ /^#{id}-\d+.tar$/ }
-    #   end
-    # end
 
   end
 

@@ -123,5 +123,26 @@ module Streams
     end
   end
 
+  
+  # StoreUrlMultiFixities
+  #
+  # Just like PoolMultiFixities, but we return the storemaster's URL for the package as
+  # the key, e.g http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000 instead of EZQQYQMC2_6PYZMQ.000
+
+  class StoreUrlMultiFixities < MultiStream
+
+    def initialize streams
+      @values_container = PoolFixityRecordContainer    
+      @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
+      @prefix = StoreMasterModel::Package.server_location + '/packages/'
+    end
+
+    def get
+      k, v = super
+      return if k.nil?
+      return @prefix + k, v
+    end
+  end
+    
 
 end # of module Streams

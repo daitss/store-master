@@ -117,7 +117,7 @@ end
 #  </packages>
 
 get '/packages.xml' do
-  [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]
+  [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]   ## TODO: use Package.server_location= in setup
 end
 
 # Return a CSV report of all the packages we know about, ordered by package name
@@ -129,7 +129,7 @@ end
 #   "E20111201_AAAAAA.001","http://store-master.local/packages/E20111201_AAAAAA.001","E20111201_AAAAAA"
 
 get '/packages.csv' do
-  [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]
+  [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]        ## TODO: use Package.server_location= in setup
 end
 
 # Redirect from plain old /packages or /packages/
