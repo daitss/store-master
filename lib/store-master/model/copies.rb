@@ -1,5 +1,9 @@
+require 'store-master/exceptions'
+
 module StoreMasterModel
 
+  include StoreMaster
+  
   class Copy
     include DataMapper::Resource
 

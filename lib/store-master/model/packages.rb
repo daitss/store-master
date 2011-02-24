@@ -1,9 +1,13 @@
+require 'store-master/exceptions'
+
 module StoreMasterModel
+
+  include StoreMaster
 
   class Package
 
     include DataMapper::Resource
-
+    
     @@server_location = nil 
 
     def self.default_repository_name

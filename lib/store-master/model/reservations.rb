@@ -1,4 +1,9 @@
+require 'store-master/exceptions'
+
+
 module  StoreMasterModel
+
+  include StoreMaster
 
   # For reserving names for URLs based on IEIDs.
 
