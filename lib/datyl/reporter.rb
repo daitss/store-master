@@ -1,5 +1,6 @@
 require 'datyl/logger'
 require 'tempfile'
+require 'time'
 
 # TODO:  rspec tests
 
@@ -10,6 +11,8 @@ class Reporter
   attr_reader   :title, :counter
 
   def initialize title
+    @start     = Time.now
+    @done      = nil
     @counter   = 0
     @title     = title
     @tempfile  = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
@@ -27,6 +30,11 @@ class Reporter
 
   def self.max_lines_to_write= num
     @@max_lines = num
+  end
+
+  # for debugging - if you call 'done' the report will add to the title its total runtime - from the creation time of the constructor to the point 'done' was called'
+  def done
+    @done = Time.now
   end
 
 
@@ -65,9 +73,9 @@ class Reporter
   end
 
   def each
-
-    yield @title
-    yield @title.gsub(/./, ':')
+    title = @title + (@done ? sprintf(" (%3.2f seconds)", @done - @start) : '')
+    yield title
+    yield title.gsub(/./, ':')
 
     @tempfile.rewind
 

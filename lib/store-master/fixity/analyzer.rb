@@ -13,7 +13,6 @@ require 'store-master/fixity/utils'
 #  * run - Runs an analysis over one or more data streams, populating reporter objects with messages. Returns the analysis object itself.
 #  * reports - Returns an array containing the reports generated during the run.
 
-
 module Analyzer
 
   # IntraPoolAnalyzer
@@ -104,6 +103,7 @@ module Analyzer
         @report_copy_mismatch.warn "MD5 mismatch for #{name}: "  +  pool_records.map { |p|  "#{p.location} has #{p.md5}"  }.join(', ')  if pool_records.inconsistent? :md5
         @report_copy_mismatch.warn "Size mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.size}" }.join(', ')  if pool_records.inconsistent? :size
       end
+      @reports.each { |report| report.done }
       self
     end
 
@@ -158,13 +158,14 @@ module Analyzer
         in_store_only   = store_locations - pool_locations
 
         unless in_pool_only.empty?
-          @report_warn_orphan.warn  "#{package_name} has #{FixityUtils.pluralize(in_pool_only.count, 'an orphan', 'orphans')} in the pools: #{in_pool_only.join(', ')}"
+          @report_warn_orphan.warn in_pool_only.join(', ')
         end
 
         unless in_store_only.empty?
           @report_error_missing.err "#{package_name} is missing #{FixityUtils.pluralize(in_store_only.count, 'this copy', 'these copies')} from the pools: #{in_store_only.join(', ')}"
         end
       end
+      @reports.each { |report| report.done }
       self
     end
   end # of class StoreVsPoolAnalyser
@@ -205,6 +206,7 @@ module Analyzer
         end
 
       end
+      @reports.each { |report| report.done }
       self
     end
   end # of class StoreMasterAnalyser
@@ -220,8 +222,8 @@ module Analyzer
       @pool_fixities     = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
       @comparison_stream = Streams::ComparisonStream.new(@pool_fixities, @daitss_fixities)
 
-      @report_missing    = Reporter.new "Missing Packages"
-      @report_orphaned   = Reporter.new "Orphaned Packages"
+      @report_missing    = Reporter.new "Missing Packages From Pools"
+      @report_orphaned   = Reporter.new "Orphaned Package Copies - Found In The Pools, But Not Recorded By DAITTS"
       @report_integrity  = Reporter.new "Packages With Integrity Issues"
       @report_fixity     = Reporter.new "Packages With Fixity Errors"
 
@@ -247,30 +249,24 @@ module Analyzer
 
         if not pool_data                         # missing package
           @score_card[:missing] += 1
-          @report_missing.err  "Package #{url} is missing"
+          @report_missing.err  url
 
         elsif not daitss_data                    # orphaned package
           @score_card[:orphans] += 1
-          @report_orphaned.warn "Package #{url} is an orphan"
+          @report_orphaned.warn pool_data.map{ |cpy| cpy.location }.join(', ')
 
         else
           @score_card[:checked] += 1
           pkg = DaitssModel::Package.lookup_from_url(url)   # TODO: we really need to collect these up in chunks by accumulating URLs, getting all of the packages
-          pool_data.concat daitss.data                      # we might even be able to create event collections
-          puts pool_data.inspect
           
           # check required number on pool - integrity error;  create event integrity-failure
           # check all sums, sizes matched - fixity error;     create even fixity-error
           # all good?   find-or-create event fixity-success
         end
       end
-
+      @reports.each { |report| report.done }
       self
     end
 
-
-
   end # of class PoolVsDaitssAnalyzer
-
-
 end # of module Analyzer

@@ -44,8 +44,6 @@ module DaitssModel
              "LIMIT 1"
 
       id = repository(:daitss).adapter.select(sql)
-      STDERR.puts id.inspect
-
       Package.get(id)
     end
 

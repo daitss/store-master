@@ -31,11 +31,11 @@ module StoreMasterModel
 
 
     def self.package_copies_ids  before = DateTime.now
-      sql = "SELECT packages.id " +
-              "FROM packages, copies " +
-             "WHERE packages.extant " +
+      sql = "SELECT packages.id "                     +
+              "FROM packages, copies "                +
+             "WHERE packages.extant "                 +
                "AND packages.id = copies.package_id " +
-               "AND copies.datetime < '#{before}' " +
+               "AND copies.datetime < '#{before}' "   +
           "ORDER BY packages.name"
 
       repository(:store_master).adapter.select(sql)
@@ -44,9 +44,9 @@ module StoreMasterModel
     def self.package_copies ids
       return [] if not ids or ids.empty?
       sql = "SELECT packages.name, copies.store_location, packages.ieid " +
-              "FROM packages, copies " +
-             "WHERE packages.id = copies.package_id " +
-               "AND packages.id in ('" + ids.join("', '")  + "') "
+              "FROM packages, copies "                                    +
+             "WHERE packages.id = copies.package_id "                     +
+               "AND packages.id in ('" + ids.join("', '")  + "') "        +
           "ORDER BY packages.name"
 
       repository(:store_master).adapter.select(sql)
@@ -69,7 +69,7 @@ module Streams
 
   class StoreMasterPackageStream
 
-    CHUNK_SIZE = 1000  # TODO: try large size, real small size, then compare output
+    CHUNK_SIZE = 5000
 
     def initialize before = DateTime.now
       @before = before
@@ -137,9 +137,5 @@ module Streams
     end
 
   end # of class StoreMasterPackageStream
-
-
-
-
 
 end # of module Streams

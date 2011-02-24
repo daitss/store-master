@@ -14,9 +14,6 @@ DATAMAPPER_LOG_LEVEL = nil
 
 def setup config
   $0 = 'collect-fixities'
-
-  puts `ps auxwww | grep collect`
-  exit
   Logger.setup('CollectFixities', config.server_name)
 
   if config.syslog_facility
