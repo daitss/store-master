@@ -12,6 +12,7 @@ require 'uri'
 require 'xml'
 
 # URI#to_s method prints basic credentials if they exist.  This provides an sanitized print method.
+# We use URIs throughout our models.
 
 module URI
 
@@ -51,11 +52,11 @@ include StoreMaster
   end
 
   def self.create_tables
-    self.tables.map { |tbl|  tbl.send :auto_migrate! }
+    self.tables.map &:auto_migrate!
   end
 
   def self.update_tables
-    self.tables.map { |tbl|  tbl.send :auto_update! }
+    self.tables.map &:auto_upgrade!
   end
 
 end # of Module StoreMasterModel
