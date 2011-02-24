@@ -1,8 +1,10 @@
+require 'store-master/exceptions'
+
 module StoreMasterModel
 
   class Pool
     include DataMapper::Resource
-
+    include StoreMaster
     def self.default_repository_name
       :store_master
     end

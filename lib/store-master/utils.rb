@@ -142,7 +142,7 @@ module StoreUtils
       dbinfo['username']  +                                           # mysql://fischer
      (dbinfo['password']  ? ':' + dbinfo['password'] : '') + '@' +    # mysql://fischer:topsecret@  (or mysql://fischer@)
       dbinfo['hostname']  +
-     (dbinfo['port']      ? ':' + dbinfo['port'] : '')  + '/'    +    # mysql://fischer:topsecret@localhost/ (or mysql://fischer:topsecret@localhost:port/)
+     (dbinfo['port']      ? ':' + dbinfo['port'].to_s : '')  + '/' +  # mysql://fischer:topsecret@localhost/ (or mysql://fischer:topsecret@localhost:port/)
       dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
   end
 
