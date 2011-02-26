@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   class Account
     include DataMapper::Resource

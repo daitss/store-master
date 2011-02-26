@@ -210,8 +210,7 @@ module StoreMasterModel
       returned_data['location']
     end
 
-
-    # TODO: raise an exception for 'come back later' if remote service too busy and we get a timeout...
+    # TODO: raise an exception, maybe, for 'come back later' if remote service too busy and we get a timeout...
 
     def delete_copy silo_resource
 

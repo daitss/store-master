@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   class ReportDelivery
     include DataMapper::Resource

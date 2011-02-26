@@ -17,7 +17,7 @@ require 'net/http'
 require 'store-master/exceptions'
 require 'store-master/utils'
 
-module DaitssModel
+module Daitss
 
   def self.setup_db yaml_file, key
     adapter = DataMapper.setup(:daitss, StoreUtils.connection_string(yaml_file, key))

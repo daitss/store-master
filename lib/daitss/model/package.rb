@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   # authoritative package record
 

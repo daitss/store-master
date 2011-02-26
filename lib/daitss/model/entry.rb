@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   # represents an admin log entry
 

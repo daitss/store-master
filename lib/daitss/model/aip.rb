@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   class Aip
     include DataMapper::Resource

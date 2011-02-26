@@ -10,7 +10,7 @@ require 'store-master'
 
 # one of nil, :debug 
 
-DATAMAPPER_LOG_LEVEL = nil
+DATAMAPPER_LOG_LEVEL = :debug
 
 def setup config
   $0 = 'collect-fixities'
@@ -36,7 +36,7 @@ def setup config
 
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
 
-  DaitssModel.setup_db(config.db_config_file, config.db_daitss_key)
+  Daitss.setup_db(config.db_config_file, config.db_daitss_key)
 end
 
 
@@ -64,8 +64,6 @@ begin
   store_master_stream  = Streams::StoreMasterPackageStream.new
   daitss_fixity_stream = Streams::DaitssPackageStream.new
 
-  # daitss_fixity_stream.each { |k, v|  puts '', k, v.inspect }
-
   reports = []
 
   reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
@@ -79,13 +77,13 @@ begin
   reports.each { |report| report.write if report.interesting? }
 
 rescue => e
-
   lede = "#{e.class}: #{e.message} - backtrace follows:"
-  Logger.err  lede
-  STDERR.puts lede
-  e.backtrace.each { |line| Logger.err line; STDERR.puts line }
 
+  STDERR.puts lede
+  e.backtrace.each { |line| STDERR.puts line }
+
+  Logger.err  lede
+  e.backtrace.each { |line| Logger.err line }
 else
-  puts config.server_name, StoreMasterModel::Package.server_location
   teardown(config, pool_fixity_streams)
 end

@@ -40,20 +40,20 @@ class Reporter
 
   def info str
     @counter += 1
-    Logger.info str
+    Logger.info @title + ': ' + str
     @tempfile.puts str
   end
 
   def warn str
     @counter += 1
-    Logger.warn str
-    @tempfile.puts 'Warning: ' + str
+    Logger.warn  @title + ': ' + str
+    @tempfile.puts str
   end
 
   def err str
     @counter += 1
-    Logger.err str
-    @tempfile.puts 'ERROR: ' + str
+    Logger.err  @title + ': ' + str
+    @tempfile.puts str
   end
 
   def rewind

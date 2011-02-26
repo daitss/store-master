@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   class Project
     include DataMapper::Resource

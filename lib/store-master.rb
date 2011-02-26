@@ -42,13 +42,8 @@ module StoreMaster
   VERSION  = '0.2.3'
   NAME     = 'Store Master Service'
 
-
   def self.version
-    os = OpenStruct.new("rev" => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
-                        "uri" => "info:fcla/daitss/store-master/#{VERSION}")
-    def os.to_s
-      self.rev
-    end
-    os
+    os = OpenStruct.new("name" => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
+                        "uri"  => "info:fcla/daitss/store-master/#{VERSION}")
   end
 end

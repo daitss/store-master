@@ -1,7 +1,22 @@
 require 'datyl/streams'
 require 'daitss/model'
+require 'store-master'
 
-module DaitssModel
+module Daitss
+
+  class Agent
+
+    @@store_master = nil
+
+    def self.store_master
+      return @@store_master if @@store_master
+      sys = Account.first(:id => 'SYSTEM') or 
+        raise StoreMaster::ConfigurationError, "Can't find the SYSTEM account, so cannot find/create the #{StoreMaster.version.uri} Software Agent"
+      @@store_master = Program.first_or_create(:id => StoreMaster.version.uri, :account => sys)
+    end
+
+  end
+
   class Package
 
     # Provide a list of all of the package ids sorted by the copy URL.
@@ -47,6 +62,41 @@ module DaitssModel
       Package.get(id)
     end
 
+    @@event_save_failures = 0  ## This doesn't seem sensible - problem may go away as we gain experience in Collection-level manipulation
+
+    def integrity_failure_event note
+      e = Event.new :name => 'integrity failure', :package => self
+      e.agent = Agent.store_master
+      e.notes = note
+      if not e.save
+        @@event_save_failures += 1
+        STDERR.puts "Can't save event #{e}, #{e.errors.full_messages.join('; ')}"  ## FIXME
+      end
+    end
+
+    def fixity_failure_event note
+      e = Event.new :name => 'fixity failure', :package => self
+      e.agent = Agent.store_master
+      e.notes = note      
+      if not e.save
+        @@event_save_failures += 1
+        STDERR.puts "Can't save event #{e}, #{e.errors.full_messages.join('; ')}" ## FIXME
+      end
+    end
+
+    # A quandry: how to do this efficiently if timestamp hasn't actually changed...
+
+    def fixity_success_event datetime
+      event = Event.first_or_new :name => 'fixity success', :package => self
+      return if event.timestamp === datetime
+      event.agent = Agent.store_master
+      event.timestamp = datetime
+      if not event.save
+        @@event_save_failures += 1
+        STDERR.puts "Can't save event #{event}, #{event.errors.full_messages.join('; ')}" ## FIXME
+      end
+    end
+
 
   end # of class Package
 end # of module Daitss
@@ -84,7 +134,7 @@ module Streams
     end
 
     def setup
-      @ieids  = DaitssModel::Package.package_copies_ids @before
+      @ieids  = Daitss::Package.package_copies_ids @before
       @last   = nil
       @buff   = []
       @closed = false
@@ -108,7 +158,7 @@ module Streams
       end
 
       if @buff.empty?
-        @buff = DaitssModel::Package.package_copies @ieids.shift(CHUNK_SIZE)
+        @buff = Daitss::Package.package_copies @ieids.shift(CHUNK_SIZE)
       end
 
       @last = @buff.shift

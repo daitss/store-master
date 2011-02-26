@@ -1,7 +1,7 @@
 require 'datyl/reporter'
 require 'datyl/streams'
-require 'store-master/fixity/pool-stream'
 require 'store-master/fixity/utils'
+
 
 # Analyzers run checks over various pool and daitss fixity data
 # streams; it produces reports listing warnings and errors that are
@@ -216,11 +216,13 @@ module Analyzer
 
     attr_reader :reports
     
-    def initialize  pool_fixity_streams, daitss_fixity_stream, required_number
+    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies
 
       @daitss_fixities   = daitss_fixity_stream    
       @pool_fixities     = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
       @comparison_stream = Streams::ComparisonStream.new(@pool_fixities, @daitss_fixities)
+
+      @required_copies   = required_copies
 
       @report_missing    = Reporter.new "Missing Packages From Pools"
       @report_orphaned   = Reporter.new "Orphaned Package Copies - Found In The Pools, But Not Recorded By DAITTS"
@@ -243,13 +245,48 @@ module Analyzer
     # http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000 #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
     # ...
 
+
+    def sha1_inconsistent? pool_data_array, daitss_data
+      pool_data_array.inconsistent? :sha1 or pool_data_array[0].sha1 != daitss_data.sha1
+    end
+
+    def size_inconsistent? pool_data_array, daitss_data
+      pool_data_array.inconsistent? :size or pool_data_array[0].size.to_i != daitss_data.size.to_i
+    end
+
+    def md5_inconsistent? pool_data_array, daitss_data
+      pool_data_array.inconsistent? :md5 or pool_data_array[0].md5 != daitss_data.md5
+    end
+
+    def fixity_issues pool_data, daitss_data
+      messages = []
+
+      if sha1_inconsistent? pool_data, daitss_data
+        messages.push "#{daitss_data.url}: DAITSS recorded SHA1 of #{daitss_data.sha1}, but we have " + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ') \
+      end
+
+      if md5_inconsistent? pool_data, daitss_data
+        messages.push "#{daitss_data.url}: DAITSS recorded MD5 of #{daitss_data.md5}, but we have "   + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
+      end
+
+      if size_inconsistent? pool_data, daitss_data
+        messages.push  "#{daitss_data.url}: DAITSS recorded size of #{daitss_data.size}, but we have " + pool_data.map { |rec| rec.size.to_s + ' at ' + rec.location }.join(';  ')
+      end
+
+      return if messages.empty?
+      return messages
+    end
+
     
     def run
       @comparison_stream.each do |url, pool_data, daitss_data|
 
+        pkg = Daitss::Package.lookup_from_url(url)   # TODO: when these are placed onto 
+
         if not pool_data                         # missing package
           @score_card[:missing] += 1
           @report_missing.err  url
+          pkg.integrity_failure_event "No copies available for #{url}"
 
         elsif not daitss_data                    # orphaned package
           @score_card[:orphans] += 1
@@ -257,13 +294,56 @@ module Analyzer
 
         else
           @score_card[:checked] += 1
-          pkg = DaitssModel::Package.lookup_from_url(url)   # TODO: we really need to collect these up in chunks by accumulating URLs, getting all of the packages
           
-          # check required number on pool - integrity error;  create event integrity-failure
-          # check all sums, sizes matched - fixity error;     create even fixity-error
-          # all good?   find-or-create event fixity-success
+          ### @score_card = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
+          ## puts '', url, pool_data.inspect, daitss_data.inspect
+          ##    =>
+          ## http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000
+          ##
+          ## [#<Struct::PoolFixityRecord location="http://betasilos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok">]
+          ##
+          ##  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
+
+          all_good = true
+
+          # integrity error
+          
+          case pool_data.length <=> @required_copies
+          when -1
+            message = "Too few copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
+            @report_integrity.err message
+            pkg.integrity_failure_event
+            @score_card[:wrong_number] += 1
+            all_good = false
+          when +1
+            message = "Too many copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
+            @report_integrity.err message
+            pkg.integrity_failure_event message
+            @score_card[:wrong_number] += 1
+            all_good = false
+          end
+
+          # fixity errors
+
+          if messages = fixity_issues(pool_data, daitss_data)
+            messages.each do |msg|
+              @report_fixity.err msg
+              pkg.fixity_failure_event msg
+              @score_card[:fixity_failures] += 1
+              all_good = false
+            end
+          end
+
+          if all_good
+            @score_card[:fixity_successes] += 1
+            pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.timestamp }.min)
+          end
+
         end
       end
+
+      ### TODO: assemble a summary
+
       @reports.each { |report| report.done }
       self
     end

@@ -13,7 +13,7 @@ module Streams
   # Create a struct to contain individual pool fixity records: PoolFixityStream will return the
   # key/value pairs <String:package-name>, <Struct:PoolFixityRecord>
 
-  Struct.new('PoolFixityRecord', :location, :sha1, :md5, :timestamp, :status)
+  Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :timestamp, :status)
 
   # PoolFixityStream 
   #
@@ -21,9 +21,9 @@ module Streams
   # method yields two values, a package name and a struct describing
   # those resources:
   #
-  # E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
-  # E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001", sha1="249fcdac02c9d1265a66d309c7679e89ba16be2d", md5="c6aed85f0ef29ceea5c0d032eeb8fcc6", timestamp="2011-02-02T12:05:22-05:00", status="ok">
-  # E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000", sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709", md5="d41d8cd98f00b204e9800998ecf8427e", timestamp="2011-01-29T02:43:53-05:00", status="ok">
+  # E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+  # E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001", sha1="249fcdac02c9d1265a66d309c7679e89ba16be2d", md5="c6aed85f0ef29ceea5c0d032eeb8fcc6", size="855784665", timestamp="2011-02-02T12:05:22-05:00", status="ok">
+  # E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000", sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709", md5="d41d8cd98f00b204e9800998ecf8427e", size="440242968", timestamp="2011-01-29T02:43:53-05:00", status="ok">
   #
   # In the interest of speed the location and timestamp fields are simple strings (not a URI and DateTime as you might expect)
 

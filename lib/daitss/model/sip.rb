@@ -1,4 +1,4 @@
-module DaitssModel
+module Daitss
 
   # Description of a submitted sip
 
