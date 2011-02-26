@@ -207,14 +207,14 @@ field of :size, :md5 or :sha1
       <pre class="lines">
 
 
-87
-88
 89
 90
-91</pre>
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 87</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 89</span>
 
 <span class='def def kw'>def</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='elt identifier id'>elt</span><span class='bitor op'>|</span> <span class='elt identifier id'>elt</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='field identifier id'>field</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -264,14 +264,14 @@ A boolean that indicates the give field isn&#8217;t consistent
       <pre class="lines">
 
 
-95
-96
 97
 98
-99</pre>
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 95</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 97</span>
 
 <span class='def def kw'>def</span> <span class='inconsistent? fid id'>inconsistent?</span> <span class='field identifier id'>field</span>
   <span class='not not kw'>not</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
@@ -289,7 +289,7 @@ A boolean that indicates the give field isn&#8217;t consistent
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:18:51 2011 by 
+  Generated on Fri Feb 25 21:49:00 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

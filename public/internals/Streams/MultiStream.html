@@ -97,7 +97,7 @@ holds values found on the streams for a given key, thus is of mixed arity.
   
 </div><div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="PoolMultiFixities.html" title="Streams::PoolMultiFixities (class)">PoolMultiFixities</a></span></p>
+  <p class="children"><span class='object_link'><a href="PoolMultiFixities.html" title="Streams::PoolMultiFixities (class)">PoolMultiFixities</a></span>, <span class='object_link'><a href="StoreUrlMultiFixities.html" title="Streams::StoreUrlMultiFixities (class)">StoreUrlMultiFixities</a></span></p>
 </div>
 
 
@@ -322,6 +322,27 @@ A new instance of MultiStream.
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unget-instance_method" title="#unget (instance method)">- (Object) <strong>unget</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -356,7 +377,9 @@ A new instance of MultiStream
 289
 290
 291
-292</pre>
+292
+293
+294</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 289</span>
@@ -364,6 +387,8 @@ A new instance of MultiStream
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='mult op'>*</span><span class='streams identifier id'>streams</span>
   <span class='@values_container ivar id'>@values_container</span> <span class='assign token'>=</span> <span class='Array constant id'>Array</span>   <span class='comment val'># subclass MultiStream to use a specialized container for assembling the merged values - it must support '&lt;&lt;'</span>
   <span class='@streams ivar id'>@streams</span> <span class='assign token'>=</span> <span class='streams identifier id'>streams</span>
+  <span class='@ungot ivar id'>@ungot</span>   <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@last ivar id'>@last</span>    <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -439,12 +464,12 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-302
-303
-304</pre>
+304
+305
+306</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 302</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 304</span>
 
 <span class='def def kw'>def</span> <span class='close identifier id'>close</span>
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='rbrace token'>}</span>
@@ -489,12 +514,12 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-298
-299
-300</pre>
+300
+301
+302</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 298</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 300</span>
 
 <span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span> <span class='rbrace token'>}</span>
@@ -518,14 +543,14 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-346
-347
-348
-349
-350</pre>
+359
+360
+361
+362
+363</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 346</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 359</span>
 
 <span class='def def kw'>def</span> <span class='each identifier id'>each</span>
   <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
@@ -572,15 +597,15 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-306
-307
-308</pre>
+308
+309
+310</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 306</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 308</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
-  <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='rbrace token'>}</span>
+  <span class='not not kw'>not</span> <span class='@ungot ivar id'>@ungot</span> <span class='and and kw'>and</span> <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='rbrace token'>}</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -615,13 +640,6 @@ streams for later processing. Returns the key/container pair.
       <pre class="lines">
 
 
-321
-322
-323
-324
-325
-326
-327
 328
 329
 330
@@ -637,12 +655,30 @@ streams for later processing. Returns the key/container pair.
 340
 341
 342
-343</pre>
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 321</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 328</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span>
+  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
+    <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+    <span class='return return kw'>return</span> <span class='@last ivar id'>@last</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='@last ivar id'>@last</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+
   <span class='scorecard identifier id'>scorecard</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
 
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span>
@@ -663,7 +699,8 @@ streams for later processing. Returns the key/container pair.
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
 
-  <span class='return return kw'>return</span> <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
+  <span class='@last ivar id'>@last</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span> <span class='rbrack token'>]</span>
+  <span class='return return kw'>return</span>    <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -684,13 +721,13 @@ streams for later processing. Returns the key/container pair.
       <pre class="lines">
 
 
-310
-311
 312
-313</pre>
+313
+314
+315</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 310</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 312</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span> <span class='rbrace token'>}</span>
@@ -715,15 +752,46 @@ streams for later processing. Returns the key/container pair.
       <pre class="lines">
 
 
-294
-295
-296</pre>
+296
+297
+298</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 294</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 296</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}&gt;&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="unget-instance_method">
+  
+    - (<tt>Object</tt>) <strong>unget</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+317
+318
+319
+320</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 317</span>
+
+<span class='def def kw'>def</span> <span class='unget identifier id'>unget</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}&quot;</span> <span class='if if_mod kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
+  <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -736,7 +804,7 @@ streams for later processing. Returns the key/container pair.
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:06 2011 by 
+  Generated on Fri Feb 25 21:48:57 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

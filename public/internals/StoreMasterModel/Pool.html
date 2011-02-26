@@ -374,12 +374,12 @@ Returns the value of attribute name
       <pre class="lines">
 
 
-26
-27
-28</pre>
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 26</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 29</span>
 
 <span class='def def kw'>def</span> <span class='name identifier id'>name</span> 
   <span class='@name ivar id'>@name</span> <span class='or or kw'>or</span> <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='host identifier id'>host</span>
@@ -422,16 +422,16 @@ preference.
       <pre class="lines">
 
 
-130
-131
-132
 133
 134
 135
-136</pre>
+136
+137
+138
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 130</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 133</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='services_location identifier id'>services_location</span><span class='comma token'>,</span> <span class='read_preference identifier id'>read_preference</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span> <span class='rbrace token'>}</span>
@@ -459,12 +459,12 @@ preference.
       <pre class="lines">
 
 
-6
-7
-8</pre>
+9
+10
+11</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 6</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 9</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_repository_name identifier id'>default_repository_name</span>
   <span class='symbol val'>:store_master</span>
@@ -509,12 +509,12 @@ preference.
       <pre class="lines">
 
 
-142
-143
-144</pre>
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 142</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 145</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='services_location identifier id'>services_location</span>
   <span class='not not kw'>not</span> <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
@@ -538,12 +538,12 @@ preference.
       <pre class="lines">
 
 
-138
-139
-140</pre>
+141
+142
+143</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 138</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 141</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span>
   <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:required</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:read_preference</span><span class='dot token'>.</span><span class='desc identifier id'>desc</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -567,12 +567,12 @@ preference.
       <pre class="lines">
 
 
-146
-147
-148</pre>
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 146</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 149</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='services_location identifier id'>services_location</span>
   <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span>
@@ -602,13 +602,13 @@ preference.
       <pre class="lines">
 
 
-21
-22
-23
-24</pre>
+24
+25
+26
+27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='assign identifier id'>assign</span> <span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='value identifier id'>value</span>
   <span class='send identifier id'>send</span> <span class='field identifier id'>field</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>'='</span><span class='comma token'>,</span> <span class='value identifier id'>value</span>
@@ -659,9 +659,6 @@ support text/csv and application/xml). The default mime-type is text/csv.
       <pre class="lines">
 
 
-103
-104
-105
 106
 107
 108
@@ -682,10 +679,13 @@ support text/csv and application/xml). The default mime-type is text/csv.
 123
 124
 125
-126</pre>
+126
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 103</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 106</span>
 
 <span class='def def kw'>def</span> <span class='fixity_url identifier id'>fixity_url</span> <span class='mime_type identifier id'>mime_type</span> <span class='assign token'>=</span> <span class='string val'>'text/csv'</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
@@ -758,9 +758,6 @@ to create.
       <pre class="lines">
 
 
-77
-78
-79
 80
 81
 82
@@ -777,10 +774,13 @@ to create.
 93
 94
 95
-96</pre>
+96
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 77</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='post_url identifier id'>post_url</span> <span class='name identifier id'>name</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
@@ -821,9 +821,6 @@ to create.
       <pre class="lines">
 
 
-51
-52
-53
 54
 55
 56
@@ -841,10 +838,13 @@ to create.
 68
 69
 70
-71</pre>
+71
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 51</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 54</span>
 
 <span class='def def kw'>def</span> <span class='service_document identifier id'>service_document</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span> <span class='rescue rescue kw'>rescue</span> <span class='raise identifier id'>raise</span><span class='lparen token'>(</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The silo services URL #{services_location} doesn't appear to be a valid URL&quot;</span><span class='rparen token'>)</span>
@@ -854,8 +854,8 @@ to create.
     <span class='request identifier id'>request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Get constant id'>Get</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
     <span class='request identifier id'>request</span><span class='dot token'>.</span><span class='basic_auth identifier id'>basic_auth</span><span class='lparen token'>(</span><span class='basic_auth_username identifier id'>basic_auth_username</span><span class='comma token'>,</span> <span class='basic_auth_password identifier id'>basic_auth_password</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='basic_auth_username identifier id'>basic_auth_username</span> <span class='or or kw'>or</span> <span class='basic_auth_password identifier id'>basic_auth_password</span>
     <span class='response identifier id'>response</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='start identifier id'>start</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='http identifier id'>http</span><span class='bitor op'>|</span>
-      <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>120</span>
-      <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>120</span>
+      <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>5</span>
+      <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>5</span>
       <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='request identifier id'>request</span><span class='rparen token'>)</span>
     <span class='end end kw'>end</span>
 
@@ -878,7 +878,7 @@ to create.
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:08 2011 by 
+  Generated on Fri Feb 25 21:48:59 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

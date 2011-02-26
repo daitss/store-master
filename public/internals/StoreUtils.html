@@ -365,6 +365,31 @@ we typically have only the hexstring.
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#pid_file-class_method" title="pid_file (class method)">+ (Object) <strong>pid_file</strong>(dir) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Given a directory, return a path to a PID file in it, naming based on the
+currently running process name.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#strip_trailing_slash_maybe-class_method" title="strip_trailing_slash_maybe (class method)">+ (Object) <strong>strip_trailing_slash_maybe</strong>(string) </a>
     
 
@@ -598,7 +623,8 @@ configuration file + key technique;
 143
 144
 145
-146</pre>
+146
+147</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 116</span>
@@ -612,17 +638,17 @@ configuration file + key technique;
   <span class='begin begin kw'>begin</span>
     <span class='dict identifier id'>dict</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
   <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the configuration file #{yaml_file}: #{e.message}.&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the configuration file '#{yaml_file}': #{e.message}.&quot;</span>
   <span class='end end kw'>end</span>
 
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the data in the configuration file #{yaml_file}.&quot;</span> <span class='if if_mod kw'>if</span> <span class='dict identifier id'>dict</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the data in the configuration file '#{yaml_file}'.&quot;</span> <span class='if if_mod kw'>if</span> <span class='dict identifier id'>dict</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
 
   <span class='dbinfo identifier id'>dbinfo</span> <span class='assign token'>=</span> <span class='dict identifier id'>dict</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get any data from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the #{yaml_file} configuration file using the key #{key}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'vendor'</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                            <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'database'</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get any data from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'vendor'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the database name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                            <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'database'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the host name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the user name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
 
   <span class='comment val'># Example string: 'mysql://root:topsecret@localhost/silos'</span>
   <span class='comment val'># TODO: support different ports</span>
@@ -631,7 +657,8 @@ configuration file + key technique;
     <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span>    <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span>                                   <span class='comment val'># mysql://</span>
     <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span>                                           <span class='comment val'># mysql://fischer</span>
    <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span>  <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'@'</span> <span class='plus op'>+</span>    <span class='comment val'># mysql://fischer:topsecret@  (or mysql://fischer@)</span>
-    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>                                     <span class='comment val'># mysql://fischer:topsecret@localhost/</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span>
+   <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span>      <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span>  <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>  <span class='comment val'># mysql://fischer:topsecret@localhost/ (or mysql://fischer:topsecret@localhost:port/)</span>
     <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>                                              <span class='comment val'># mysql://fischer:topsecret@localhost/store_master</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -976,6 +1003,47 @@ representation.
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="pid_file-class_method">
+  
+    + (<tt>Object</tt>) <strong>pid_file</strong>(dir) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Given a directory, return a path to a PID file in it, naming based on the
+currently running process name
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+151
+152
+153</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 151</span>
+
+<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='pid_file identifier id'>pid_file</span> <span class='dir identifier id'>dir</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='$0 gvar id'>$0</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span> <span class='plus op'>+</span> <span class='string val'>'.pid'</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="strip_trailing_slash_maybe-class_method">
   
     + (<tt>Object</tt>) <strong>strip_trailing_slash_maybe</strong>(string) 
@@ -1134,7 +1202,7 @@ return the user name who owns it as a string.
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:10 2011 by 
+  Generated on Fri Feb 25 21:49:12 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

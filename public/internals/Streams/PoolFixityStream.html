@@ -95,17 +95,24 @@ E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location=&#8220;<a
 href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000">pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000</a>&#8220;,
 sha1=&#8220;ccd53fa068173b4f5e52e55e3f1e863fc0e0c201&#8221;,
 md5=&#8220;4732518c5fe6dbeb8429cdda11d65c3d&#8221;,
+size=&#8220;218734619&#8221;,
 timestamp=&#8220;2011-01-29T02:43:50-05:00&#8221;, status=&#8220;ok&#8221;>
 E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location=&#8220;<a
 href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001">pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001</a>&#8220;,
 sha1=&#8220;249fcdac02c9d1265a66d309c7679e89ba16be2d&#8221;,
 md5=&#8220;c6aed85f0ef29ceea5c0d032eeb8fcc6&#8221;,
+size=&#8220;855784665&#8221;,
 timestamp=&#8220;2011-02-02T12:05:22-05:00&#8221;, status=&#8220;ok&#8221;>
 E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location=&#8220;<a
 href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000">pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000</a>&#8220;,
 sha1=&#8220;da39a3ee5e6b4b0d3255bfef95601890afd80709&#8221;,
 md5=&#8220;d41d8cd98f00b204e9800998ecf8427e&#8221;,
+size=&#8220;440242968&#8221;,
 timestamp=&#8220;2011-01-29T02:43:53-05:00&#8221;, status=&#8220;ok&#8221;>
+</p>
+<p>
+In the interest of speed the location and timestamp fields are simple
+strings (not a URI and DateTime as you might expect)
 </p>
 
 
@@ -273,8 +280,6 @@ A new instance of PoolFixityStream
       <pre class="lines">
 
 
-32
-33
 34
 35
 36
@@ -294,10 +299,12 @@ A new instance of PoolFixityStream
 50
 51
 52
-53</pre>
+53
+54
+55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 32</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 34</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span>    
 
@@ -309,7 +316,7 @@ A new instance of PoolFixityStream
 
   <span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
   <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>2</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>2</span>  <span class='comment val'># it will take much longer to read it all, but should start within this time</span>
+  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>10</span>  <span class='comment val'># TODO: get some perfomance metrics on this</span>
   
   <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='get_request identifier id'>get_request</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='response identifier id'>response</span><span class='bitor op'>|</span>
     <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span> <span class='eq op'>==</span> <span class='string val'>'200'</span>
@@ -359,12 +366,12 @@ Returns the value of attribute url
       <pre class="lines">
 
 
-30
-31
-32</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 30</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='@url ivar id'>@url</span>
@@ -418,13 +425,13 @@ key = name;  value = [ location, sha1, md5, date, status ]
       <pre class="lines">
 
 
-66
-67
 68
-69</pre>
+69
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 66</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='CSV constant id'>CSV</span><span class='dot token'>.</span><span class='parse_line identifier id'>parse_line</span><span class='lparen token'>(</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='rparen token'>)</span>
@@ -449,12 +456,12 @@ key = name;  value = [ location, sha1, md5, date, status ]
       <pre class="lines">
 
 
-55
-56
-57</pre>
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 55</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 57</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} #{@url}&gt;&quot;</span>   <span class='comment val'># TODO: double check that URL is properly sanitized</span>
@@ -470,7 +477,7 @@ key = name;  value = [ location, sha1, md5, date, status ]
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:14 2011 by 
+  Generated on Fri Feb 25 21:49:10 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

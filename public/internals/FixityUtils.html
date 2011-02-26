@@ -99,7 +99,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#pluralize_phrase-class_method" title="pluralize_phrase (class method)">+ (Object) <strong>pluralize_phrase</strong>(count, word, plural) </a>
+      <a href="#pluralize-class_method" title="pluralize (class method)">+ (Object) <strong>pluralize</strong>(count, word, plural) </a>
     
 
     
@@ -191,31 +191,41 @@
 62
 63
 64
-65</pre>
+65
+66
+67
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 13</span>
 
 <span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='parse_options identifier id'>parse_options</span> <span class='args identifier id'>args</span>
   
-  <span class='comment val'># TODO: remove these too-specific defaults (one for development, one for testing</span>
+  <span class='comment val'># TODO: remove these too-specific defaults (one for development, one for testing)</span>
 
-  <span class='comment val'>#                               syslog_facility   db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies</span>
-  <span class='comment val'>#                               ---------------   --------------         -------------------       -------------      -------------  ---------------</span>
-  <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityConfig constant id'>FixityConfig</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'LOCAL4'</span><span class='comma token'>,</span>         <span class='string val'>'/opt/fda/etc/db.yml'</span><span class='comma token'>,</span> <span class='string val'>'store_master_dual_pool'</span><span class='comma token'>,</span> <span class='string val'>'unused'</span><span class='comma token'>,</span>          <span class='nil nil kw'>nil</span><span class='comma token'>,</span>           <span class='integer val'>2</span><span class='rparen token'>)</span>
-  <span class='comment val'>#    = Struct::FixityConfig.new('LOCAL3',         '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1)</span>
+  <span class='comment val'>#                               syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days</span>
+  <span class='comment val'>#                               ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------</span>
+  <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityConfig constant id'>FixityConfig</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span>              <span class='string val'>'betastore.tarchive.fcla.edu'</span><span class='comma token'>,</span>  <span class='string val'>'/opt/fda/etc/db.yml'</span><span class='comma token'>,</span> <span class='string val'>'ps_store_master'</span><span class='comma token'>,</span>        <span class='string val'>'ps_daitss_2'</span><span class='comma token'>,</span>     <span class='nil nil kw'>nil</span><span class='comma token'>,</span>           <span class='integer val'>1</span><span class='comma token'>,</span>               <span class='integer val'>45</span><span class='rparen token'>)</span>
+<span class='comment val'>### conf = Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)</span>
 
   <span class='opts identifier id'>opts</span> <span class='assign token'>=</span> <span class='OptionParser constant id'>OptionParser</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='opts identifier id'>opts</span><span class='bitor op'>|</span>    
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--syslog-facility FACILITY&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='facility identifier id'>facility</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='syslog_facility identifier id'>syslog_facility</span> <span class='assign token'>=</span> <span class='facility identifier id'>facility</span>
     <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--server-name HOSTNAME&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The virtual hostname of the store-master web service&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='host_name identifier id'>host_name</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='server identifier id'>server</span> <span class='assign token'>=</span> <span class='host_name identifier id'>host_name</span>
+    <span class='end end kw'>end</span>
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-config-file PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;A database yaml configuration file, defaults to #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
     <span class='end end kw'>end</span>
-    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-store-master-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The key for the store master database in the configuration file #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-store-master-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The key for the store master database in the database yaml configuration file&quot;</span><span class='rparen token'>)</span>  <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span>
     <span class='end end kw'>end</span>
-    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-daitss-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The key for the daitss database in the configuration file #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-daitss-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The key for the daitss database in the database yaml configuration file&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_daitss_key identifier id'>db_daitss_key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span>
     <span class='end end kw'>end</span>
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--pid-directory PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
@@ -223,6 +233,9 @@
     <span class='end end kw'>end</span>
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--required-copies PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
+    <span class='end end kw'>end</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--expiration-days DAYS&quot;</span><span class='comma token'>,</span> <span class='Integer constant id'>Integer</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Optionally, the number of days after which a fixity is considered stale (defaults to #{conf.required_copies})&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='days identifier id'>days</span><span class='bitor op'>|</span>
+      <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='expiration_days identifier id'>expiration_days</span> <span class='assign token'>=</span> <span class='days identifier id'>days</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
   <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='parse! fid id'>parse!</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> 
@@ -243,6 +256,7 @@
     <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The specified PID directory #{conf.pid_directory} isn't a directory&quot;</span>   <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
     <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The specified PID directory #{conf.pid_directory} isn't writable&quot;</span>      <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='writable? fid id'>writable?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='pid_directory identifier id'>pid_directory</span>
   <span class='end end kw'>end</span>
+
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
   <span class='STDERR constant id'>STDERR</span><span class='dot token'>.</span><span class='puts identifier id'>puts</span> <span class='e identifier id'>e</span><span class='comma token'>,</span> <span class='opts identifier id'>opts</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
@@ -256,9 +270,9 @@
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="pluralize_phrase-class_method">
+  <p class="signature " id="pluralize-class_method">
   
-    + (<tt>Object</tt>) <strong>pluralize_phrase</strong>(count, word, plural) 
+    + (<tt>Object</tt>) <strong>pluralize</strong>(count, word, plural) 
   
 
   
@@ -276,9 +290,9 @@
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 6</span>
 
-<span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='pluralize_phrase identifier id'>pluralize_phrase</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='word identifier id'>word</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span> 
-  <span class='return return kw'>return</span> <span class='dstring node'>&quot;#{count} #{word}&quot;</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='eq op'>==</span> <span class='string val'>'1'</span> <span class='or or kw'>or</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='eq op'>==</span> <span class='string val'>'one'</span>
-  <span class='return return kw'>return</span> <span class='dstring node'>&quot;#{count} #{plural}&quot;</span>
+<span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='pluralize identifier id'>pluralize</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='word identifier id'>word</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span>
+  <span class='return return kw'>return</span> <span class='word identifier id'>word</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='eq op'>==</span> <span class='string val'>'1'</span> <span class='or or kw'>or</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='eq op'>==</span> <span class='string val'>'one'</span>
+  <span class='return return kw'>return</span> <span class='plural identifier id'>plural</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -291,7 +305,7 @@
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:18:58 2011 by 
+  Generated on Fri Feb 25 21:48:45 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

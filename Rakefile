@@ -68,14 +68,13 @@ end
 
 desc "Deploy to tarchive's test storemaster"
 task :tarchive do
-  #  sh "rm -f /tmp/silos.diff"
-  #  sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
-  #  sh "test -s /tmp/silos.diff && git commit -a"
-  #  sh "git push"
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/betastore -S who=fischer:daitss"
 end
 
-
+desc "Deploy to ripple's test storemaster"
+task :ripple do
+  sh "cap deploy -S target=ripple:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+end
 
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."

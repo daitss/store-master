@@ -92,12 +92,12 @@ PoolFixityStreams.  It uses the same key (namely, the package-name, a
 string) and the value is a specialized array of the structs from the
 constituent PoolFixityStream values. The arrays are homogenous in the type
 of elements (namely, PoolFixityRecords) but may well vary in the number of
-elements. There will always be at least one element in the array.
+elements (of which there will be from one to the number of streams).
 </p>
 <p>
 This stream is used to determine both the consisitency of fixities across
-muiltiple pools, as well as the required number of copies of packages
-across those pools.
+muiltiple pools, as well as confirming the required number of copies of
+packages across those pools.
 </p>
 
 
@@ -159,7 +159,7 @@ A new instance of PoolMultiFixities.
   
   
   <h3 class="inherited">Methods inherited from <span class='object_link'><a href="MultiStream.html" title="Streams::MultiStream (class)">MultiStream</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="MultiStream.html#close-instance_method" title="Streams::MultiStream#close (method)">#close</a></span>, <span class='object_link'><a href="MultiStream.html#closed%3F-instance_method" title="Streams::MultiStream#closed? (method)">#closed?</a></span>, <span class='object_link'><a href="MultiStream.html#each-instance_method" title="Streams::MultiStream#each (method)">#each</a></span>, <span class='object_link'><a href="MultiStream.html#eos%3F-instance_method" title="Streams::MultiStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="MultiStream.html#get-instance_method" title="Streams::MultiStream#get (method)">#get</a></span>, <span class='object_link'><a href="MultiStream.html#rewind-instance_method" title="Streams::MultiStream#rewind (method)">#rewind</a></span>, <span class='object_link'><a href="MultiStream.html#to_s-instance_method" title="Streams::MultiStream#to_s (method)">#to_s</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="MultiStream.html#close-instance_method" title="Streams::MultiStream#close (method)">#close</a></span>, <span class='object_link'><a href="MultiStream.html#closed%3F-instance_method" title="Streams::MultiStream#closed? (method)">#closed?</a></span>, <span class='object_link'><a href="MultiStream.html#each-instance_method" title="Streams::MultiStream#each (method)">#each</a></span>, <span class='object_link'><a href="MultiStream.html#eos%3F-instance_method" title="Streams::MultiStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="MultiStream.html#get-instance_method" title="Streams::MultiStream#get (method)">#get</a></span>, <span class='object_link'><a href="MultiStream.html#rewind-instance_method" title="Streams::MultiStream#rewind (method)">#rewind</a></span>, <span class='object_link'><a href="MultiStream.html#to_s-instance_method" title="Streams::MultiStream#to_s (method)">#to_s</a></span>, <span class='object_link'><a href="MultiStream.html#unget-instance_method" title="Streams::MultiStream#unget (method)">#unget</a></span></p>
 
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
@@ -188,13 +188,13 @@ A new instance of PoolMultiFixities
       <pre class="lines">
 
 
-119
 120
 121
-122</pre>
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 119</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 120</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='streams identifier id'>streams</span>
   <span class='@values_container ivar id'>@values_container</span> <span class='assign token'>=</span> <span class='PoolFixityRecordContainer constant id'>PoolFixityRecordContainer</span>    
@@ -212,7 +212,7 @@ A new instance of PoolMultiFixities
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:18:54 2011 by 
+  Generated on Fri Feb 25 21:48:42 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

@@ -64,7 +64,7 @@
   
     <dt class="r2 last">Defined in:</dt>
     <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb<span class="defines">,<br />
-  /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/copies.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb</span>
+  /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/copies.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb</span>
 </dd>
   
 </dl>
@@ -73,7 +73,9 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     <p>
-TODO: returned etag is missing quotes
+This file sets up data streams that lists the packages and copies that
+store-master thinks the silos have.  See pool-stream for data streams that
+list what the silos report as present.
 </p>
 
 
@@ -231,15 +233,15 @@ TODO: returned etag is missing quotes
       <pre class="lines">
 
 
-53
 54
-55</pre>
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 53</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 54</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_migrate!</span> <span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_migrate!</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -281,7 +283,6 @@ TODO: returned etag is missing quotes
       <pre class="lines">
 
 
-33
 34
 35
 36
@@ -291,10 +292,11 @@ TODO: returned etag is missing quotes
 40
 41
 42
-43</pre>
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 33</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 34</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
   <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:store_master</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -339,12 +341,12 @@ flexibility (e.g., specialized indcies for some of the sql we do)
       <pre class="lines">
 
 
-49
 50
-51</pre>
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 49</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 50</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
   <span class='lbrack token'>[</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Pool constant id'>Pool</span><span class='comma token'>,</span> <span class='Reservation constant id'>Reservation</span> <span class='rbrack token'>]</span>
@@ -368,15 +370,15 @@ flexibility (e.g., specialized indcies for some of the sql we do)
       <pre class="lines">
 
 
-57
 58
-59</pre>
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 57</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 58</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_update!</span> <span class='rbrace token'>}</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_upgrade!</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -389,7 +391,7 @@ flexibility (e.g., specialized indcies for some of the sql we do)
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:21 2011 by 
+  Generated on Fri Feb 25 21:49:01 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

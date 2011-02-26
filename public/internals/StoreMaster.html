@@ -111,7 +111,7 @@ TODO: remove module and get into datyl
         <dt id="VERSION-constant" class="">VERSION =
           
         </dt>
-        <dd><pre class="code"><span class='string val'>'0.2.2'</span>
+        <dd><pre class="code"><span class='string val'>'0.2.3'</span>
 </pre></dd>
       
         <dt id="NAME-constant" class="">NAME =
@@ -176,25 +176,17 @@ TODO: remove module and get into datyl
       <pre class="lines">
 
 
+45
 46
 47
-48
-49
-50
-51
-52
-53</pre>
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 46</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 45</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
-  <span class='os identifier id'>os</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;rev&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.&quot;</span><span class='comma token'>,</span>
-                      <span class='string val'>&quot;uri&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;info:fcla/daitss/store-master/#{VERSION}&quot;</span><span class='rparen token'>)</span>
-  <span class='def def kw'>def</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
-    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span>
-  <span class='end end kw'>end</span>
-  <span class='os identifier id'>os</span>
+  <span class='os identifier id'>os</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;name&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.&quot;</span><span class='comma token'>,</span>
+                      <span class='string val'>&quot;uri&quot;</span>  <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;info:fcla/daitss/store-master/#{VERSION}&quot;</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -207,7 +199,7 @@ TODO: remove module and get into datyl
 </div>
     
     <div id="footer">
-  Generated on Thu Feb 17 01:19:14 2011 by 
+  Generated on Fri Feb 25 21:48:46 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
