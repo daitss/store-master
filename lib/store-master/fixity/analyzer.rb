@@ -26,7 +26,7 @@ module Analyzer
     # Recall that each of the PoolFixityStreamss given to us yield key/value pairs:
     # <String::package>, <Struct::PoolFixityRecord>, e.g.
     #
-    # E20110129_CYXBHO.000, #<Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+    # E20110129_CYXBHO.000, #<Struct::PoolFixityRecord location="http://pool.example.com/001/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
     #
     # All fields within the struct are simple strings.
 
@@ -225,13 +225,13 @@ module Analyzer
     end
 
     def status= res
-      if res.nil?
-        @unchanged += 1
-      elsif res
-        @successes += 1
-      else
-        @failures  += 1
-      end
+        case res
+        when nil;    @unchanged += 1
+        when true;   @successes += 1
+        when false;  @failures  += 1
+        else 
+          raise "Unexpected value when recording event save status: #{res.inspect}"
+        end
     end
 
     def total
