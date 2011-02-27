@@ -212,23 +212,26 @@ module Analyzer
   end # of class StoreMasterAnalyser
 
   class EventCounter      
-    attr_reader :successes, :failures
+    attr_reader :successes, :failures, :unchanged
 
     def initialize
       @failures = 0
       @successes  = 0
+      @unchanged = 0
     end
 
     def status= res
-      if res
+      if res.nil?
+        @unchanged += 1
+      elsif res
         @successes += 1
       else
         @failures += 1
       end
     end
 
-    def totals
-      @failures + @successes
+    def total
+      @failures + @successes + @unchanged
     end
 
   end
@@ -363,14 +366,16 @@ module Analyzer
 
         end
       end
+
+      len = [ score_card.values ].max.to_s.length
       
-      @report_summary.warn "%10d checked packages"                      % score_card[:checked]
-      @report_summary.warn "%10d succesful fixities"                    % score_card[:fixity_successes]
-      @report_summary.warn "%10d failed fixities"                       % score_card[:fixity_failures]
-      @report_summary.warn "%10d missing packages"                      % score_card[:missing]
-      @report_summary.warn "%10d unexpected packages"                   % score_card[:orphans] 
-      @report_summary.warn "%10d packages with wrong number of copies"  % score_card[:wrong_number] 
-      @report_summary.warn "%10d events, %d failed to be recorded"      % [ event_counter.totals, event_counter.failures ]
+      @report_summary.warn "%{len}d checked packages"                         % score_card[:checked]
+      @report_summary.warn "%{len}d succesful fixities"                       % score_card[:fixity_successes]
+      @report_summary.warn "%{len}d failed fixities"                          % score_card[:fixity_failures]
+      @report_summary.warn "%{len}d missing packages"                         % score_card[:missing]
+      @report_summary.warn "%{len}d unexpected packages"                      % score_card[:orphans] 
+      @report_summary.warn "%{len}d packages with wrong number of copies"     % score_card[:wrong_number] 
+      @report_summary.warn "%{len}d events, %d new, %d failed to be recorded" % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ]
 
       @reports.each { |report| report.done }
       self

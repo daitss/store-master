@@ -66,11 +66,11 @@ begin
 
   reports = []
 
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies).run.reports
   reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
-  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies).run.reports
 
   ## TODO: break this entire section out so we can create a report preface describing problems found, summary information, and configuration notes
 
