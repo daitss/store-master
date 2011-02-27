@@ -2,7 +2,6 @@ require 'datyl/reporter'
 require 'datyl/streams'
 require 'store-master/fixity/utils'
 
-
 # Analyzers run checks over various pool and daitss fixity data
 # streams; it produces reports listing warnings and errors that are
 # provided for later printing or mailing; if logging has been
@@ -103,6 +102,7 @@ module Analyzer
         @report_copy_mismatch.warn "MD5 mismatch for #{name}: "  +  pool_records.map { |p|  "#{p.location} has #{p.md5}"  }.join(', ')  if pool_records.inconsistent? :md5
         @report_copy_mismatch.warn "Size mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.size}" }.join(', ')  if pool_records.inconsistent? :size
       end
+
       @reports.each { |report| report.done }
       self
     end
@@ -187,11 +187,11 @@ module Analyzer
       # StoreMasterPackageStream returns information about what the StoreMaster thinks should be on the silos;
       # the folded data looks as so:
       #
-      # E20110210_ROGMBP.000  [ #<struct name="E20110210_ROGMBP.000", store_location="http://one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
-      #                         #<struct name="E20110210_ROGMBP.000", store_location="http://two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
+      # E20110210_ROGMBP.000  [ #<struct name="E20110210_ROGMBP.000", store_location="http://pool-one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
+      #                         #<struct name="E20110210_ROGMBP.000", store_location="http://pool-two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
       #                         ... ]
-      # E20110210_ROIUIC.000  [ #<struct name="E20110210_ROIUIC.000", store_location="http://one.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
-      #                         #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
+      # E20110210_ROIUIC.000  [ #<struct name="E20110210_ROIUIC.000", store_location="http://pool-two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
+      #                         #<struct name="E20110210_ROIUIC.000", store_location="http://pool-six.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
       #                         ... ]
       #
       # We check that we have the expected number of copies for each package.
@@ -211,13 +211,17 @@ module Analyzer
     end
   end # of class StoreMasterAnalyser
 
-  class EventCounter      
+
+  # A utility to keep track of how events are recorded - it's possbile the DB won't get capture some of
+  # them,  and some events are redundant and not recorded.
+
+  class EventCounter
     attr_reader :successes, :failures, :unchanged
 
     def initialize
-      @failures = 0
+      @failures   = 0
       @successes  = 0
-      @unchanged = 0
+      @unchanged  = 0
     end
 
     def status= res
@@ -226,50 +230,41 @@ module Analyzer
       elsif res
         @successes += 1
       else
-        @failures += 1
+        @failures  += 1
       end
     end
 
     def total
       @failures + @successes + @unchanged
     end
-
   end
 
 
   class PoolVsDaitssAnalyzer
-
     attr_reader :reports
-    
+
     def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies
-
-      @daitss_fixities   = daitss_fixity_stream    
-      @pool_fixities     = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
-      @comparison_stream = Streams::ComparisonStream.new(@pool_fixities, @daitss_fixities)
-
+      @comparison_stream = Streams::ComparisonStream.new(Streams::StoreUrlMultiFixities.new(pool_fixity_streams), daitss_fixity_stream)
       @required_copies   = required_copies
-
       @report_missing    = Reporter.new "Missing Packages"
       @report_orphaned   = Reporter.new "Unrecorded Packages"
       @report_integrity  = Reporter.new "Integrity Errors"
       @report_fixity     = Reporter.new "Fixity Errors"
       @report_summary    = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
-
-      @reports    = [ @report_summary, @report_missing, @report_orphaned, @report_integrity, @report_fixity ]
+      @reports           = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned ]
     end
 
-    # the @pool_fixities stream:
+    # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity record for each copy of the package:
     #
-    # http://store-master.com/packages/E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
-    # http://store-master.com/packages/E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:05-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
+    # http://store-master.com/packages/E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", size="26903684", timestamp="2011-02-10T16:11:54-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
+    # http://store-master.com/packages/E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", size="5609284854", timestamp="2011-02-10T16:12:05-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
     # ...
 
-    # the @daitss_fixities stream:
+    # the daitss_fixity_stream  provides the same key as the above, and a DataMapper-supplied record of the DAITSS information about the package:
     #
     # http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000 #<Struct::DataMapper ieid="EZQQYQMC2_6PYZMQ", url="http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000", md5="7e45d204d270da0f8aab2a65f59a2429", sha1="e541c693e56edd9a7e04cab94de5740092ae3953", size=4761600>
     # http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000 #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
     # ...
-
 
     def sha1_inconsistent? pool_data_array, daitss_data
       pool_data_array.inconsistent? :sha1 or pool_data_array[0].sha1 != daitss_data.sha1
@@ -287,11 +282,11 @@ module Analyzer
       messages = []
 
       if sha1_inconsistent? pool_data, daitss_data
-        messages.push "#{daitss_data.url}: DAITSS recorded SHA1 of #{daitss_data.sha1}, but we have " + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ') \
+        messages.push "#{daitss_data.url}: DAITSS recorded SHA1 of #{daitss_data.sha1}, but we have "  + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ')
       end
 
       if md5_inconsistent? pool_data, daitss_data
-        messages.push "#{daitss_data.url}: DAITSS recorded MD5 of #{daitss_data.md5}, but we have "   + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
+        messages.push "#{daitss_data.url}: DAITSS recorded MD5 of #{daitss_data.md5}, but we have "    + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
       end
 
       if size_inconsistent? pool_data, daitss_data
@@ -301,19 +296,18 @@ module Analyzer
       return if messages.empty?
       return messages
     end
-    
+
     def run
       score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
       event_counter = EventCounter.new
 
-
-      # for example:
-      #
-      # url:          http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000
-      # pool_data:    [ #<Struct::PoolFixityRecord location="http://betasilos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok"> , .... ]
-      # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
-
       @comparison_stream.each do |url, pool_data, daitss_data|
+
+        # for example:
+        #
+        # url:          http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000
+        # pool_data:    [ #<Struct::PoolFixityRecord location="http://silos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok"> , .... ]
+        # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
 
         pkg = Daitss::Package.lookup_from_url(url)
 
@@ -328,12 +322,9 @@ module Analyzer
 
         else
           score_card[:checked] += 1
-
           all_good = true
 
-          # integrity errors
-          
-          case pool_data.length <=> @required_copies
+          case pool_data.length <=> @required_copies              # integrity error
           when -1
             message = "Too few copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
@@ -348,9 +339,7 @@ module Analyzer
             all_good = false
           end
 
-          # fixity errors
-
-          if messages = fixity_issues(pool_data, daitss_data)
+          if messages = fixity_issues(pool_data, daitss_data)    # fixity error
             messages.each do |msg|
               @report_fixity.err msg
               event_counter.status = pkg.fixity_failure_event msg
@@ -363,19 +352,18 @@ module Analyzer
             score_card[:fixity_successes] += 1
             event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.timestamp }.min)
           end
-
         end
       end
 
-      len = [ score_card.values ].max.to_s.length
-      
-      @report_summary.warn "%{len}d checked packages"                         % score_card[:checked]
-      @report_summary.warn "%{len}d succesful fixities"                       % score_card[:fixity_successes]
-      @report_summary.warn "%{len}d failed fixities"                          % score_card[:fixity_failures]
-      @report_summary.warn "%{len}d missing packages"                         % score_card[:missing]
-      @report_summary.warn "%{len}d unexpected packages"                      % score_card[:orphans] 
-      @report_summary.warn "%{len}d packages with wrong number of copies"     % score_card[:wrong_number] 
-      @report_summary.warn "%{len}d events, %d new, %d failed to be recorded" % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ]
+      len = StoreUtils.commify(score_card.values.max).length
+
+      @report_summary.warn "%#{len}s checked packages"                         % StoreUtils.commify(score_card[:checked])
+      @report_summary.warn "%#{len}s successful fixities"                      % StoreUtils.commify(score_card[:fixity_successes])
+      @report_summary.warn "%#{len}s failed fixities"                          % StoreUtils.commify(score_card[:fixity_failures])
+      @report_summary.warn "%#{len}s missing packages"                         % StoreUtils.commify(score_card[:missing])
+      @report_summary.warn "%#{len}s unexpected packages"                      % StoreUtils.commify(score_card[:orphans])
+      @report_summary.warn "%#{len}s packages with wrong number of copies"     % StoreUtils.commify(score_card[:wrong_number])
+      @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded" % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
 
       @reports.each { |report| report.done }
       self

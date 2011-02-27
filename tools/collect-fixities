@@ -8,10 +8,6 @@ require 'datyl/streams'
 require 'optparse'
 require 'store-master'
 
-# one of nil, :debug 
-
-DATAMAPPER_LOG_LEVEL = :debug
-
 def setup config
   $0 = 'collect-fixities'
   Logger.setup('CollectFixities', config.server_name)
@@ -28,14 +24,10 @@ def setup config
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
-  Reporter.max_lines_to_write = 100
-
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), DATAMAPPER_LOG_LEVEL)  if DATAMAPPER_LOG_LEVEL
-
+  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
+  # DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
   StoreMasterModel::Package.server_location = "http://#{config.server_name}"
-
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
-
   Daitss.setup_db(config.db_config_file, config.db_daitss_key)
 end
 
@@ -54,7 +46,13 @@ end
 
 # MAIN:
 
-config = FixityUtils.parse_options(ARGV)
+#  config = FixityUtils.parse_options(ARGV)
+#
+#                                 syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
+#                                 ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
+#        Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
+config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
+
 setup(config)
 
 begin
@@ -71,8 +69,6 @@ begin
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
-
-  ## TODO: break this entire section out so we can create a report preface describing problems found, summary information, and configuration notes
 
   reports.each { |report| report.write if report.interesting? }
 

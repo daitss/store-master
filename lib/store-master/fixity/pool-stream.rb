@@ -15,7 +15,7 @@ module Streams
 
   Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :timestamp, :status)
 
-  # PoolFixityStream 
+  # PoolFixityStream
   #
   # Return a stream of all of the fixity data from one pool.  The each
   # method yields two values, a package name and a struct describing
@@ -31,7 +31,7 @@ module Streams
 
     attr_reader :url
 
-    def initialize pool    
+    def initialize pool
 
       file = Tempfile.new("pool-fixity-data-#{pool.name}-")
       @url = pool.fixity_url
@@ -42,7 +42,7 @@ module Streams
       http = Net::HTTP.new(@url.host, @url.port)
       http.open_timeout = 60 * 2
       http.read_timeout = 60 * 10  # TODO: get some perfomance metrics on this
-      
+
       http.request(get_request) do |response|
         raise StoreMaster::ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
         response.read_body do |buff|
@@ -116,14 +116,14 @@ module Streams
   # across muiltiple pools, as well as confirming the required number of copies
   # of packages across those pools.
 
-  class PoolMultiFixities < MultiStream 
+  class PoolMultiFixities < MultiStream
     def initialize streams
-      @values_container = PoolFixityRecordContainer    
+      @values_container = PoolFixityRecordContainer
       @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
     end
   end
 
-  
+
   # StoreUrlMultiFixities
   #
   # Just like PoolMultiFixities, but we return the storemaster's URL for the package as
@@ -132,7 +132,7 @@ module Streams
   class StoreUrlMultiFixities < MultiStream
 
     def initialize streams
-      @values_container = PoolFixityRecordContainer    
+      @values_container = PoolFixityRecordContainer
       @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
       @prefix = StoreMasterModel::Package.server_location + '/packages/'
     end
@@ -143,6 +143,6 @@ module Streams
       return @prefix + k, v
     end
   end
-    
+
 
 end # of module Streams

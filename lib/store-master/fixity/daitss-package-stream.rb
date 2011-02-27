@@ -10,7 +10,7 @@ module Daitss
 
     def self.store_master
       return @@store_master if @@store_master
-      sys = Account.first(:id => 'SYSTEM') or 
+      sys = Account.first(:id => 'SYSTEM') or
         raise StoreMaster::ConfigurationError, "Can't find the SYSTEM account, so cannot find/create the #{StoreMaster.version.uri} Software Agent"
       @@store_master = Program.first_or_create(:id => StoreMaster.version.uri, :account => sys)
     end
@@ -74,7 +74,7 @@ module Daitss
     def fixity_failure_event note
       e = Event.new :name => 'fixity failure', :package => self
       e.agent = Agent.store_master
-      e.notes = note      
+      e.notes = note
       e.save
     end
 
