@@ -211,6 +211,28 @@ module Analyzer
     end
   end # of class StoreMasterAnalyser
 
+  class EventCounter      
+    attr_reader :successes, :failures
+
+    def initialize
+      @failures = 0
+      @successes  = 0
+    end
+
+    def status= res
+      if res
+        @successes += 1
+      else
+        @failures += 1
+      end
+    end
+
+    def totals
+      @failures + @successes
+    end
+
+  end
+
 
   class PoolVsDaitssAnalyzer
 
@@ -224,13 +246,13 @@ module Analyzer
 
       @required_copies   = required_copies
 
-      @report_missing    = Reporter.new "Missing Packages From Pools"
-      @report_orphaned   = Reporter.new "Orphaned Package Copies - Found In The Pools, But Not Recorded By DAITTS"
-      @report_integrity  = Reporter.new "Packages With Integrity Issues"
-      @report_fixity     = Reporter.new "Packages With Fixity Errors"
+      @report_missing    = Reporter.new "Missing Packages"
+      @report_orphaned   = Reporter.new "Unrecorded Packages"
+      @report_integrity  = Reporter.new "Integrity Errors"
+      @report_fixity     = Reporter.new "Fixity Errors"
+      @report_summary    = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
 
-      @reports    = [ @report_missing, @report_orphaned, @report_integrity, @report_fixity ]
-      @score_card = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
+      @reports    = [ @report_summary, @report_missing, @report_orphaned, @report_integrity, @report_fixity ]
     end
 
     # the @pool_fixities stream:
@@ -276,50 +298,50 @@ module Analyzer
       return if messages.empty?
       return messages
     end
-
     
     def run
+      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
+      event_counter = EventCounter.new
+
+
+      # for example:
+      #
+      # url:          http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000
+      # pool_data:    [ #<Struct::PoolFixityRecord location="http://betasilos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok"> , .... ]
+      # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
+
       @comparison_stream.each do |url, pool_data, daitss_data|
 
-        pkg = Daitss::Package.lookup_from_url(url)   # TODO: when these are placed onto 
+        pkg = Daitss::Package.lookup_from_url(url)
 
         if not pool_data                         # missing package
-          @score_card[:missing] += 1
+          score_card[:missing] += 1
           @report_missing.err  url
-          pkg.integrity_failure_event "No copies available for #{url}"
+          event_counter.status = pkg.integrity_failure_event "No copies found for #{url}"
 
         elsif not daitss_data                    # orphaned package
-          @score_card[:orphans] += 1
+          score_card[:orphans] += 1
           @report_orphaned.warn pool_data.map{ |cpy| cpy.location }.join(', ')
 
         else
-          @score_card[:checked] += 1
-          
-          ### @score_card = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
-          ## puts '', url, pool_data.inspect, daitss_data.inspect
-          ##    =>
-          ## http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000
-          ##
-          ## [#<Struct::PoolFixityRecord location="http://betasilos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok">]
-          ##
-          ##  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
+          score_card[:checked] += 1
 
           all_good = true
 
-          # integrity error
+          # integrity errors
           
           case pool_data.length <=> @required_copies
           when -1
             message = "Too few copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
-            pkg.integrity_failure_event
-            @score_card[:wrong_number] += 1
+            event_counter.status = pkg.integrity_failure_event
+            score_card[:wrong_number] += 1
             all_good = false
           when +1
             message = "Too many copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
-            pkg.integrity_failure_event message
-            @score_card[:wrong_number] += 1
+            event_counter.status = pkg.integrity_failure_event message
+            score_card[:wrong_number] += 1
             all_good = false
           end
 
@@ -328,21 +350,27 @@ module Analyzer
           if messages = fixity_issues(pool_data, daitss_data)
             messages.each do |msg|
               @report_fixity.err msg
-              pkg.fixity_failure_event msg
-              @score_card[:fixity_failures] += 1
+              event_counter.status = pkg.fixity_failure_event msg
+              score_card[:fixity_failures] += 1
               all_good = false
             end
           end
 
           if all_good
-            @score_card[:fixity_successes] += 1
-            pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.timestamp }.min)
+            score_card[:fixity_successes] += 1
+            event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.timestamp }.min)
           end
 
         end
       end
-
-      ### TODO: assemble a summary
+      
+      @report_summary.warn "%10d checked packages"                      % score_card[:checked]
+      @report_summary.warn "%10d succesful fixities"                    % score_card[:fixity_successes]
+      @report_summary.warn "%10d failed fixities"                       % score_card[:fixity_failures]
+      @report_summary.warn "%10d missing packages"                      % score_card[:missing]
+      @report_summary.warn "%10d unexpected packages"                   % score_card[:orphans] 
+      @report_summary.warn "%10d packages with wrong number of copies"  % score_card[:wrong_number] 
+      @report_summary.warn "%10d events, %d failed to be recorded"      % [ event_counter.totals, event_counter.failures ]
 
       @reports.each { |report| report.done }
       self

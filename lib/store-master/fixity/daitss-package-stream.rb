@@ -62,39 +62,27 @@ module Daitss
       Package.get(id)
     end
 
-    @@event_save_failures = 0  ## This doesn't seem sensible - problem may go away as we gain experience in Collection-level manipulation
-
     def integrity_failure_event note
       e = Event.new :name => 'integrity failure', :package => self
       e.agent = Agent.store_master
       e.notes = note
-      if not e.save
-        @@event_save_failures += 1
-        STDERR.puts "Can't save event #{e}, #{e.errors.full_messages.join('; ')}"  ## FIXME
-      end
+      e.save
     end
 
     def fixity_failure_event note
       e = Event.new :name => 'fixity failure', :package => self
       e.agent = Agent.store_master
       e.notes = note      
-      if not e.save
-        @@event_save_failures += 1
-        STDERR.puts "Can't save event #{e}, #{e.errors.full_messages.join('; ')}" ## FIXME
-      end
+      e.save
     end
-
-    # A quandry: how to do this efficiently if timestamp hasn't actually changed...
 
     def fixity_success_event datetime
       event = Event.first_or_new :name => 'fixity success', :package => self
-      return if event.timestamp === datetime
-      event.agent = Agent.store_master
+      return true if event.timestamp === datetime
+
+      event.agent     = Agent.store_master
       event.timestamp = datetime
-      if not event.save
-        @@event_save_failures += 1
-        STDERR.puts "Can't save event #{event}, #{event.errors.full_messages.join('; ')}" ## FIXME
-      end
+      event.save
     end
 
 

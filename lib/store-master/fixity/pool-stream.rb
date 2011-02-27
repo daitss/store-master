@@ -60,8 +60,8 @@ module Streams
 
     # The CSV data returned by the above HTTP request is of the form:
     #
-    # "E20110127_OEFCIO.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:04:27-05:00","ok"
-    # "E20110127_OPAHSG.000","http://pool.a.local/silo-pool.a.2/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","2011-01-27T13:27:55-05:00","ok"
+    # "E20110127_OEFCIO.000","http://pool.example.com/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","218734619","2011-01-27T13:04:27-05:00","ok"
+    # "E20110127_OPAHSG.000","http://pool.example.com/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","855784665","2011-01-27T13:27:55-05:00","ok"
     #  ...
     # key = name;  value = [ location, sha1, md5, date, status ]
 
