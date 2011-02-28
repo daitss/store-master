@@ -68,14 +68,14 @@ module Daitss
       e = Event.new :name => 'integrity failure', :package => self
       e.agent = Agent.store_master
       e.notes = note
-      e.save
+      return e.save
     end
 
     def fixity_failure_event note
       e = Event.new :name => 'fixity failure', :package => self
       e.agent = Agent.store_master
       e.notes = note
-      e.save
+      return e.save
     end
 
     def fixity_success_event datetime
@@ -83,7 +83,7 @@ module Daitss
       return nil if event.timestamp === datetime
       event.agent     = Agent.store_master
       event.timestamp = datetime
-      event.save
+      return event.save
     end
 
 
