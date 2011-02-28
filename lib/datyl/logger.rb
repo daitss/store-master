@@ -54,7 +54,7 @@ require 'syslog'
 #  DataMapper::Logger.new(Logger.new, :debug)
 #
 # Note a gotcha in DataMapper logging: you must call it before any
-# DataMapper iniatizations take effect.
+# DataMapper initializations take effect.
 
 
 class Logger
