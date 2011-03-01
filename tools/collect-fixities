@@ -64,7 +64,7 @@ begin
 
   reports = []
 
-  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies).run.reports
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days).run.reports
   reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
   reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports

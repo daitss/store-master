@@ -32,6 +32,8 @@ module Analyzer
 
     attr_reader :reports
 
+    ### TODO: can we get expiration out of here, since we do it at PoolVsDaitssAnalyzer?
+
     def initialize pool_fixity_streams, max_days
       @expiration_date = (DateTime.now - max_days).to_s
       @pool_fixity_streams  = pool_fixity_streams
@@ -241,17 +243,21 @@ module Analyzer
 
 
   class PoolVsDaitssAnalyzer
+
     attr_reader :reports
 
-    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies
-      @comparison_stream = Streams::ComparisonStream.new(Streams::StoreUrlMultiFixities.new(pool_fixity_streams), daitss_fixity_stream)
-      @required_copies   = required_copies
-      @report_missing    = Reporter.new "Missing Packages"
-      @report_orphaned   = Reporter.new "Unrecorded Packages"
-      @report_integrity  = Reporter.new "Integrity Errors"
-      @report_fixity     = Reporter.new "Fixity Errors"
-      @report_summary    = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
-      @reports           = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned ]
+    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days
+      @expiration_days     = expiration_days
+      @required_copies     = required_copies
+      @store_fixity_stream = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
+      @comparison_stream   = Streams::ComparisonStream.new(@store_master_fixity_stream, daitss_fixity_stream)
+      @report_missing      = Reporter.new "Missing Packages"
+      @report_orphaned     = Reporter.new "Unrecorded Packages"
+      @report_integrity    = Reporter.new "Integrity Errors"
+      @report_fixity       = Reporter.new "Fixity Errors"
+      @report_expired      = Reporter.new "Fixity Expirations"
+      @report_summary      = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
+      @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned ]
     end
 
     # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity record for each copy of the package:
@@ -298,7 +304,7 @@ module Analyzer
     end
 
     def run
-      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0 }
+      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0 }
       event_counter = EventCounter.new
 
       @comparison_stream.each do |url, pool_data, daitss_data|
@@ -340,10 +346,10 @@ module Analyzer
           end
 
           if messages = fixity_issues(pool_data, daitss_data)    # fixity error
+            score_card[:fixity_failures] += 1
             messages.each do |msg|
               @report_fixity.err msg
               event_counter.status = pkg.fixity_failure_event msg
-              score_card[:fixity_failures] += 1
               all_good = false
             end
           end
@@ -355,6 +361,21 @@ module Analyzer
         end
       end
 
+      expiration_date = (DateTime.now - @expiration_days).to_s
+      @store_fixity_stream.rewind.each do |url, fixity_records|
+        messages = []
+        fixity_records.each do |fix|
+          if fix.timestamp < expiration_date
+            messages.push ' has expired copy at ' + fix.location + ' - last fixity ' + fix.timestamp
+          end
+        end
+        if not messages.empty?
+          score_card[:expired_fixities] += 1
+          messages.each { |msg| @report_expired.warn url + msg }
+        end
+      end
+
+
       len = StoreUtils.commify(score_card.values.max).length
 
       @report_summary.warn "%#{len}s checked packages"                         % StoreUtils.commify(score_card[:checked])
@@ -362,6 +383,7 @@ module Analyzer
       @report_summary.warn "%#{len}s failed fixities"                          % StoreUtils.commify(score_card[:fixity_failures])
       @report_summary.warn "%#{len}s missing packages"                         % StoreUtils.commify(score_card[:missing])
       @report_summary.warn "%#{len}s unexpected packages"                      % StoreUtils.commify(score_card[:orphans])
+      @report_summary.warn "%#{len}s packages with expired fixities"           % StoreUtils.commify(score_card[:expired_fixities])
       @report_summary.warn "%#{len}s packages with wrong number of copies"     % StoreUtils.commify(score_card[:wrong_number])
       @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded" % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
 
