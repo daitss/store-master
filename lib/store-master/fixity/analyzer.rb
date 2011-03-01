@@ -250,7 +250,7 @@ module Analyzer
       @expiration_days     = expiration_days
       @required_copies     = required_copies
       @store_fixity_stream = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
-      @comparison_stream   = Streams::ComparisonStream.new(@store_master_fixity_stream, daitss_fixity_stream)
+      @comparison_stream   = Streams::ComparisonStream.new(@store_fixity_stream, daitss_fixity_stream)
       @report_missing      = Reporter.new "Missing Packages"
       @report_orphaned     = Reporter.new "Unrecorded Packages"
       @report_integrity    = Reporter.new "Integrity Errors"
