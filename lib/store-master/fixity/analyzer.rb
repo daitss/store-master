@@ -215,7 +215,7 @@ module Analyzer
 
 
   # A utility to keep track of how events are recorded - it's possbile the DB won't get capture some of
-  # them,  and some events are redundant and not recorded.
+  # them,  and many 'fixity success' events are redundant and not recorded.
 
   class EventCounter
     attr_reader :successes, :failures, :unchanged
@@ -247,17 +247,20 @@ module Analyzer
     attr_reader :reports
 
     def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days
+
       @expiration_days     = expiration_days
       @required_copies     = required_copies
-      @store_fixity_stream = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
-      @comparison_stream   = Streams::ComparisonStream.new(@store_fixity_stream, daitss_fixity_stream)
+
+      @comparison_stream   = Streams::ComparisonStream.new(Streams::StoreUrlMultiFixities.new(pool_fixity_streams), daitss_fixity_stream)
+
       @report_missing      = Reporter.new "Missing Packages"
       @report_orphaned     = Reporter.new "Unrecorded Packages"
       @report_integrity    = Reporter.new "Integrity Errors"
       @report_fixity       = Reporter.new "Fixity Errors"
       @report_expired      = Reporter.new "Fixity Expirations"
       @report_summary      = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
-      @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned ]
+
+      @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned, @report_expired ]
     end
 
     # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity record for each copy of the package:
@@ -362,9 +365,11 @@ module Analyzer
       end
 
       expiration_date = (DateTime.now - @expiration_days).to_s
-      @store_fixity_stream.rewind.each do |url, fixity_records|
+
+      @comparison_stream.rewind.each do |url, pool_data, daitss_data|
+        next unless daitss_data # skip reporting expired orphans
         messages = []
-        fixity_records.each do |fix|
+        pool_data.each do |fix|
           if fix.timestamp < expiration_date
             messages.push ' has expired copy at ' + fix.location + ' - last fixity ' + fix.timestamp
           end
@@ -374,7 +379,6 @@ module Analyzer
           messages.each { |msg| @report_expired.warn url + msg }
         end
       end
-
 
       len = StoreUtils.commify(score_card.values.max).length
 
