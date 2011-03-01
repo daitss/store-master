@@ -80,7 +80,7 @@ module Daitss
 
     def fixity_success_event datetime
       event = Event.first_or_new :name => 'fixity success', :package => self
-      return nil if event.timestamp === datetime
+      return nil if event.timestamp == datetime
       event.agent     = Agent.store_master
       event.timestamp = datetime
       return event.save
