@@ -1,7 +1,8 @@
 require 'datyl/streams'
 require 'fastercsv'
 require 'net/http'
-require 'store-master/model.rb'
+require 'store-master/model'
+require 'store-master/exceptions'
 
 # Create a variety of sorted data streams from the silo-pool services keyed by package-name.
 # This returns what the silos have, not what store-master thinks they have.
@@ -132,6 +133,9 @@ module Streams
   class StoreUrlMultiFixities < MultiStream
 
     def initialize streams
+      if StoreMasterModel::Package.server_location.nil?
+        raise StoreMaster::ConfigurationError, "The store master data has not been completely set up; use StoreMasterModel::Package.server_location = <http://server.example.com>/"
+      end
       @values_container = PoolFixityRecordContainer
       @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
       @prefix = StoreMasterModel::Package.server_location + '/packages/'
