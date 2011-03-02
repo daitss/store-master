@@ -248,10 +248,10 @@ module Analyzer
 
     def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days
 
-      @expiration_days     = expiration_days
-      @required_copies     = required_copies
-
       @comparison_stream   = Streams::ComparisonStream.new(Streams::StoreUrlMultiFixities.new(pool_fixity_streams), daitss_fixity_stream)
+
+      @required_copies     = required_copies
+      @expiration_days     = expiration_days
 
       @report_missing      = Reporter.new "Missing Packages"
       @report_orphaned     = Reporter.new "Unrecorded Packages"
@@ -305,6 +305,12 @@ module Analyzer
       return if messages.empty?
       return messages
     end
+
+    def pluralize count, singular, plural
+      return singular if count = 1
+      return plural
+    end
+
 
     def run
       score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0 }
@@ -365,7 +371,7 @@ module Analyzer
       expiration_date = (DateTime.now - @expiration_days).to_s
 
       @comparison_stream.rewind.each do |url, pool_data, daitss_data|
-        next unless daitss_data # skip reporting expired orphans
+        next unless daitss_data and pool_data # skip reporting expired orphans
         messages = []
         pool_data.each do |fix|
           if fix.timestamp < expiration_date
@@ -380,14 +386,14 @@ module Analyzer
 
       len = StoreUtils.commify(score_card.values.max).length
 
-      @report_summary.warn "%#{len}s checked packages"                         % StoreUtils.commify(score_card[:checked])
-      @report_summary.warn "%#{len}s successful fixities"                      % StoreUtils.commify(score_card[:fixity_successes])
-      @report_summary.warn "%#{len}s failed fixities"                          % StoreUtils.commify(score_card[:fixity_failures])
-      @report_summary.warn "%#{len}s missing packages"                         % StoreUtils.commify(score_card[:missing])
-      @report_summary.warn "%#{len}s unexpected packages"                      % StoreUtils.commify(score_card[:orphans])
-      @report_summary.warn "%#{len}s packages with expired fixities"           % StoreUtils.commify(score_card[:expired_fixities])
-      @report_summary.warn "%#{len}s packages with wrong number of copies"     % StoreUtils.commify(score_card[:wrong_number])
-      @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded" % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
+      @report_summary.warn "%#{len}s checked package#{pluralize score_card[:checked], '', 's'}"                                                                                % StoreUtils.commify(score_card[:checked])
+      @report_summary.warn "%#{len}s successful #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}"                                                              % StoreUtils.commify(score_card[:fixity_successes])
+      @report_summary.warn "%#{len}s failed #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}"                                                                   % StoreUtils.commify(score_card[:fixity_failures])
+      @report_summary.warn "%#{len}s missing package#{pluralize score_card[:missing], '', 's'}"                                                                                % StoreUtils.commify(score_card[:missing])
+      @report_summary.warn "%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'}"                                                                             % StoreUtils.commify(score_card[:orphans])
+      @report_summary.warn "%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} with expired #{pluralize score_card[:expired_fixities], 'fixity', 'fixities'}" % StoreUtils.commify(score_card[:expired_fixities])
+      @report_summary.warn "%#{len}s package#{score_card[:wrong_number] '' : 's'} with wrong number of copies"                                                                 % StoreUtils.commify(score_card[:wrong_number])
+      @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded"                                                                                                 % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
 
       @reports.each { |report| report.done }
       self

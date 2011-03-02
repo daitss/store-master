@@ -10,7 +10,7 @@ module Daitss
     def self.store_master
       return @@store_master if @@store_master
       sys = Account.first(:id => 'SYSTEM') or
-        raise StoreMaster::ConfigurationError, "Can't find the SYSTEM account, so can neither find nor create the #{StoreMaster.version.uri} Software Agent"
+        raise StoreMaster::ConfigurationError, "Can't find the SYSTEM account - this is a database setup issue - so can neither find nor create the #{StoreMaster.version.uri} Software Agent"
       @@store_master = Program.first_or_create(:id => StoreMaster.version.uri, :account => sys)
     end
 
