@@ -291,15 +291,15 @@ module Analyzer
       messages = []
 
       if sha1_inconsistent? pool_data, daitss_data
-        messages.push "#{daitss_data.url}: DAITSS recorded SHA1 of #{daitss_data.sha1}, but we have "  + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ')
+        messages.push "Expected SHA1 #{daitss_data.sha1}, have "  + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ')
       end
 
       if md5_inconsistent? pool_data, daitss_data
-        messages.push "#{daitss_data.url}: DAITSS recorded MD5 of #{daitss_data.md5}, but we have "    + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
+        messages.push "Expected MD5 #{daitss_data.md5}, have "    + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
       end
 
       if size_inconsistent? pool_data, daitss_data
-        messages.push  "#{daitss_data.url}: DAITSS recorded size of #{daitss_data.size}, but we have " + pool_data.map { |rec| rec.size.to_s + ' at ' + rec.location }.join(';  ')
+        messages.push  "Expected size #{daitss_data.size} have " + pool_data.map { |rec| rec.size.to_s + ' at ' + rec.location }.join(';  ')
       end
 
       return if messages.empty?
@@ -350,11 +350,9 @@ module Analyzer
 
           if messages = fixity_issues(pool_data, daitss_data)    # fixity error
             score_card[:fixity_failures] += 1
-            messages.each do |msg|
-              @report_fixity.err msg
-              event_counter.status = pkg.fixity_failure_event msg
-              all_good = false
-            end
+            messages.each { |msg| @report_fixity.err url + ': ' + msg }
+            event_counter.status = pkg.fixity_failure_event messages.join(' - ')
+            all_good = false
           end
 
           if all_good
