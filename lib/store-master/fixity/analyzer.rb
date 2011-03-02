@@ -38,9 +38,9 @@ module Analyzer
       @expiration_date = (DateTime.now - max_days).to_s
       @pool_fixity_streams  = pool_fixity_streams
 
-      @redundant_package_report = Reporter.new("Multiple Packages Within A Pool")
-      @expired_fixity_report    = Reporter.new("Packages With Expired Fixities (Older Than #{max_days} Days)")
-      @bad_status_report        = Reporter.new("Packages With Bad Fixity Status (From Silo Pool Data)")
+      @redundant_package_report = Reporter.new("Per-Pool Redundancy Report", "Multiple Copies Within A Pool")
+      @expired_fixity_report    = Reporter.new("Per-Pool Expiration Report", "Packages With Expired Fixities - Older Than #{max_days} Days")
+      @bad_status_report        = Reporter.new("Per-Pool Status Report", "Packages Currently Marked With Failed Fixity")
 
       @reports = [ @redundant_package_report, @expired_fixity_report, @bad_status_report ]
     end
@@ -50,7 +50,7 @@ module Analyzer
 
         pool_fixity_stream.rewind.each do |package_name, fixity_record|
           if fixity_record.status != 'ok'
-            @bad_status_report.err "#{fixity_record.location} has fixity status #{fixity_record.status}, last checked #{Time.parse(fixity_record.timestamp).asctime}"
+            @bad_status_report.err "#{fixity_record.location} has fixity status '#{fixity_record.status}' as of #{Time.parse(fixity_record.timestamp).asctime}"
           end
 
           if fixity_record.timestamp < @expiration_date
@@ -67,6 +67,8 @@ module Analyzer
           end
         end
       end
+
+      @reports.each { |report| report.done }
       self
     end
 
@@ -86,8 +88,8 @@ module Analyzer
       @pool_fixity_streams  = pool_fixity_streams
       @required_copies      = required_copies
 
-      @report_wrong_number  = Reporter.new "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
-      @report_copy_mismatch = Reporter.new "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
+      @report_wrong_number  = Reporter.new "Inter-Pool Copy Check", "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
+      @report_copy_mismatch = Reporter.new "Inter-Pool Fixity Check", "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
       @reports              = [ @report_wrong_number, @report_copy_mismatch ]
     end
 
@@ -144,8 +146,8 @@ module Analyzer
       @pool_fixities     = Streams::PoolMultiFixities.new(pool_fixity_streams)
       @comparison_stream = Streams::ComparisonStream.new(@store_fixities, @pool_fixities)
 
-      @report_error_missing  = Reporter.new("Missing Package Copies - Recorded On The Storemaster, But Not Present In The Pools")
-      @report_warn_orphan    = Reporter.new("Orphaned Package Copies - Found In The Pools, But Not Recorded By The Storemaster")
+      @report_error_missing  = Reporter.new("Store-Master/Pools - Missing Packages Check", "Packages Recorded On The Storemaster, But Not Present In The Pools")
+      @report_warn_orphan    = Reporter.new("Store-Master/Pools - Unexpected Packages Check", "Packages Found In The Pools, But Not Recorded By The Store-Master")
 
       @reports = [ @report_error_missing, @report_warn_orphan ]
     end
@@ -181,7 +183,7 @@ module Analyzer
     def initialize store_master_stream, required_number
       @required_number     = required_number
       @store_master_stream = store_master_stream
-      @report_wrong_number = Reporter.new("StoreMaster Has The Wrong Number Of Copies (#{required_number} Required)")
+      @report_wrong_number = Reporter.new("Store-Master Copy Check", "Store-Master Didn't Record The Required #{required_number} #{FixityUtils.pluralize @required_number, 'Copy', 'Copies'}")
       @reports             = [ @report_wrong_number ]
     end
 
@@ -253,12 +255,12 @@ module Analyzer
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
-      @report_missing      = Reporter.new "Missing Packages"
-      @report_orphaned     = Reporter.new "Unrecorded Packages"
-      @report_integrity    = Reporter.new "Integrity Errors"
-      @report_fixity       = Reporter.new "Fixity Errors"
-      @report_expired      = Reporter.new "Fixity Expirations"
-      @report_summary      = Reporter.new "Summary Checks, #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package Required"
+      @report_missing      = Reporter.new "Missing Packages", "Expected DAITSS Packages Where Not Found In Pools"
+      @report_orphaned     = Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
+      @report_integrity    = Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
+      @report_fixity       = Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
+      @report_expired      = Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Old"
+      @report_summary      = Reporter.new "Summary Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
       @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned, @report_expired ]
     end
