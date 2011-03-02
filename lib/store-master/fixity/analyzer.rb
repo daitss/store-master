@@ -307,7 +307,7 @@ module Analyzer
     end
 
     def pluralize count, singular, plural
-      return singular if count = 1
+      return singular if count == 1
       return plural
     end
 
@@ -392,7 +392,7 @@ module Analyzer
       @report_summary.warn "%#{len}s missing package#{pluralize score_card[:missing], '', 's'}"                                                                                % StoreUtils.commify(score_card[:missing])
       @report_summary.warn "%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'}"                                                                             % StoreUtils.commify(score_card[:orphans])
       @report_summary.warn "%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} with expired #{pluralize score_card[:expired_fixities], 'fixity', 'fixities'}" % StoreUtils.commify(score_card[:expired_fixities])
-      @report_summary.warn "%#{len}s package#{score_card[:wrong_number], '' : 's'} with wrong number of copies"                                                                % StoreUtils.commify(score_card[:wrong_number])
+      @report_summary.warn "%#{len}s package#{pluralize score_card[:wrong_number], '', 's'} with wrong number of copies"                                                       % StoreUtils.commify(score_card[:wrong_number])
       @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded"                                                                                                 % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
 
       @reports.each { |report| report.done }
