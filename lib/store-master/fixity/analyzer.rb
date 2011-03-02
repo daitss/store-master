@@ -50,7 +50,7 @@ module Analyzer
 
         pool_fixity_stream.rewind.each do |package_name, fixity_record|
           if fixity_record.status != 'ok'
-            @bad_status_report.err "#{fixity_record.location} has fixity status '#{fixity_record.status}' as of #{Time.parse(fixity_record.timestamp).asctime}"
+            @bad_status_report.err "#{fixity_record.location} fixity status of '#{fixity_record.status}' as of  #{Time.parse(fixity_record.timestamp)}"
           end
 
           if fixity_record.timestamp < @expiration_date
@@ -146,8 +146,8 @@ module Analyzer
       @pool_fixities     = Streams::PoolMultiFixities.new(pool_fixity_streams)
       @comparison_stream = Streams::ComparisonStream.new(@store_fixities, @pool_fixities)
 
-      @report_error_missing  = Reporter.new("Store-Master/Pools - Missing Packages Check", "Packages Recorded On The Storemaster, But Not Present In The Pools")
-      @report_warn_orphan    = Reporter.new("Store-Master/Pools - Unexpected Packages Check", "Packages Found In The Pools, But Not Recorded By The Store-Master")
+      @report_error_missing  = Reporter.new("Store-Master/Pools - Missing Packages", "Packages Recorded On The Store-Master, But Not Present In The Pools")
+      @report_warn_orphan    = Reporter.new("Store-Master/Pools - Unexpected Packages", "Packages Found In The Pools, But Not Recorded By The Store-Master")
 
       @reports = [ @report_error_missing, @report_warn_orphan ]
     end
@@ -166,7 +166,7 @@ module Analyzer
         end
 
         unless in_store_only.empty?
-          @report_error_missing.err "#{package_name} is missing #{FixityUtils.pluralize(in_store_only.count, 'this copy', 'these copies')} from the pools: #{in_store_only.join(', ')}"
+          @report_error_missing.err "#{package_name} is missing #{FixityUtils.pluralize(in_store_only.count, 'this copy', 'these copies')}: #{in_store_only.join(', ')}"
         end
       end
       @reports.each { |report| report.done }
@@ -255,7 +255,7 @@ module Analyzer
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
-      @report_missing      = Reporter.new "Missing Packages", "Expected DAITSS Packages Where Not Found In Pools"
+      @report_missing      = Reporter.new "Missing Packages", "Expected DAITSS Packages Were Not Found In Pools"
       @report_orphaned     = Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
       @report_integrity    = Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
       @report_fixity       = Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"

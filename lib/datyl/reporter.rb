@@ -108,7 +108,7 @@ class Reporter
   end
 
   def each
-    title = @title + ':' + @subtitle +  (@done ? sprintf(" (%3.2f seconds)", @done - @start) : '')
+    title = @title + ': ' + @subtitle +  (@done ? sprintf(" (%3.2f seconds)", @done - @start) : '')
     yield title
     yield title.gsub(/./, ':')
 
