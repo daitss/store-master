@@ -422,24 +422,22 @@ module Analyzer
 
       len = StoreUtils.commify(score_card.values.max).length
 
-      @report_summary.warn
       @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), DateTime.now.strftime('%F %T'))
-      @report_summary.warn sprintf("%#{len}s ingested package records where checked against fixity data", StoreUtils.commify(score_card[:checked]))
+      @report_summary.warn sprintf("%#{len}s ingested package records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
       @report_summary.warn 'Recorded Events:'
-      @report_summary.warn
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
+      @report_summary.warn sprintf("%#{len}s incorrect package #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))
       @report_summary.warn sprintf("%#{len}s missing package#{pluralize score_card[:missing], '', 's'}", StoreUtils.commify(score_card[:missing]))
       @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:wrong_number], '', 's'} with wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
       @report_summary.warn '-' * len
       @report_summary.warn sprintf("%#{len}s total events, %s new, %s failed to be recorded", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged), StoreUtils.commify(event_counter.failures))
       @report_summary.warn
       @report_summary.warn  'Additionally:'
-      @report_summary.warn
       @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
       @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
       @report_summary.warn
-      @report_summary.warn  'Details Follow:'  if anything_interesting? @reports - [ @report_summary ]
+      @report_summary.warn  'Details Follow:' if anything_interesting? @reports - [ @report_summary ]
 
 
       @reports.each { |report| report.done }
