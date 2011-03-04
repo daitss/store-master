@@ -41,7 +41,7 @@ class Reporter
 
   attr_reader   :title, :counter
 
-  def initialize title, sub = ''
+  def initialize title, sub = nil
     @start     = Time.now
     @done      = nil
     @counter   = 0
@@ -73,22 +73,22 @@ class Reporter
   end
 
 
-  def info str
+  def info str = nil
     @counter += 1
-    Logger.info @title + ': ' + str
-    @tempfile.puts str
+    Logger.info @title + ': ' + str  if str
+    @tempfile.puts(str ? str : '')
   end
 
-  def warn str
+  def warn str = nil
     @counter += 1
-    Logger.warn  @title + ': ' + str
-    @tempfile.puts str
+    Logger.warn  @title + ': ' + str  if str
+    @tempfile.puts(str ? str : '')
   end
 
-  def err str
+  def err str = nil
     @counter += 1
-    Logger.err  @title + ': ' + str
-    @tempfile.puts str
+    Logger.err  @title + ': ' + str  if str
+    @tempfile.puts(str ? str : '')
   end
 
   def rewind
@@ -108,14 +108,14 @@ class Reporter
   end
 
   def each
-    title = @title + ': ' + @subtitle +  (@done ? sprintf(" (%3.2f seconds)", @done - @start) : '')
+    title = @title + (@subtitle ? ": #{@subtitle}" : '') +  (@done ? sprintf(" (%3.2f seconds)", @done - @start) : '')
     yield title
     yield title.gsub(/./, ':')
 
     @tempfile.rewind
 
     if @counter > @@max_lines
-      yield "Note: #{@counter - @@max_lines} of #{@counter} lines were discared - see the system log for the complete report."
+      yield "Note: #{@counter - @@max_lines} of #{@counter} lines were discarded - see the system log for the complete report."
 
       top_lines.times  { yield @tempfile.gets }           # print first half
 

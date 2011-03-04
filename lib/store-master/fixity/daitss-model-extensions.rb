@@ -61,7 +61,7 @@ module Daitss
       Package.get(id)
     end
 
-    # event recording: return true if saved, false on error, and nil if unchanged
+    # event recording: return true if saved, false on error, and, in the case of success events, nil if unchanged
 
     def integrity_failure_event note
       e = Event.new :name => 'integrity failure', :package => self

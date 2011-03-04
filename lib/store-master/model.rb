@@ -53,10 +53,18 @@ include StoreMaster
 
   def self.create_tables
     self.tables.map &:auto_migrate!
+    # self.patch_tables
   end
 
   def self.update_tables
     self.tables.map &:auto_upgrade!
   end
+
+  def self.patch_tables
+    [ 'alter table copies alter datetime type timestamp with time zone' ].each do |sql|
+      repository(:store_master).adapter.select(sql)
+    end
+  end
+
 
 end # of Module StoreMasterModel

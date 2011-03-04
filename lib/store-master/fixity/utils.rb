@@ -12,12 +12,14 @@ module FixityUtils
 
   def FixityUtils.parse_options args
 
+    conf = Struct::FixityConfig.new(nil, nil, '/opt/fda/etc/db.yml', nil, nil, nil, 2, 45)
+
     opts = OptionParser.new do |opts|
       opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
         conf.syslog_facility = facility
       end
       opts.on("--server-name HOSTNAME",  String, "The virtual hostname of the store-master web service") do |host_name|
-        conf.server = host_name
+        conf.server_name = host_name
       end
       opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
         conf.db_config_file = path
@@ -31,10 +33,10 @@ module FixityUtils
       opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
         conf.pid_directory = path
       end
-      opts.on("--required-copies PATH", String, "Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})") do |path|
-        conf.pid_directory = path
+      opts.on("--required-copies NUM", Integer, "Optionally, the number of required pool copies we'll need (defaults to #{conf.required_copies})") do |num|
+        conf.required_copies = num
       end
-      opts.on("--expiration-days DAYS", Integer, "Optionally, the number of days after which a fixity is considered stale (defaults to #{conf.required_copies})") do |days|
+      opts.on("--expiration-days DAYS", Integer, "Optionally, the number of days after which a fixity is considered to have expired (defaults to #{conf.expiration_days})") do |days|
         conf.expiration_days = days
       end
     end
@@ -59,6 +61,7 @@ module FixityUtils
 
   rescue => e
     STDERR.puts e, opts
+    STDERR.puts e.backtrace.join("\n")
     return nil
   else
     return conf

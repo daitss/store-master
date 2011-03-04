@@ -260,7 +260,7 @@ module Analyzer
       @report_integrity    = Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
       @report_fixity       = Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
       @report_expired      = Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Old"
-      @report_summary      = Reporter.new "Summary Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
+      @report_summary      = Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
       @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned, @report_expired ]
     end
@@ -314,8 +314,14 @@ module Analyzer
     end
 
 
+    def anything_interesting? reports
+      result = false
+      reports.each { |rep| result ||= rep.interesting? }
+      return result
+    end
+
     def run
-      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0 }
+      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0, :daitss_packages => 0 }
       event_counter = EventCounter.new
 
       @comparison_stream.each do |url, pool_data, daitss_data|
@@ -328,6 +334,8 @@ module Analyzer
 
         pkg = Daitss::Package.lookup_from_url(url)
 
+        score_card[:daitss_packages] += 1 if daitss_data
+        
         if not pool_data                         # missing package
           score_card[:missing] += 1
           @report_missing.err  url
@@ -386,16 +394,53 @@ module Analyzer
         end
       end
 
+      # We are looking for a report that looks roughly like the following: 
+      #
+      # Summary of DAITSS Package Fixity Checks
+      # :::::::::::::::::::::::::::::::::::::::
+      #
+      # 1,242 ingested package records as of 2011-12-01 04:15:00
+      # 1,242 ingested package records were checked against fixity data.
+      #
+      # Recorded Events:
+      #
+      # 1,240 correct fixities
+      #     1 incorrect fixity
+      #     1 missing package
+      #     0 packages with wrong number of copies in pools
+      # -----
+      # 1,242 events, 2 new, 0 failed to be updated
+      #
+      # Additionally:
+      #
+      #     1 package had an expired fixity
+      #     1 unexpected package (orphan?) in silo pools
+      #
+      # Details Follow:
+      # ...
+
+
       len = StoreUtils.commify(score_card.values.max).length
 
-      @report_summary.warn "%#{len}s checked package#{pluralize score_card[:checked], '', 's'}"                                                                                % StoreUtils.commify(score_card[:checked])
-      @report_summary.warn "%#{len}s successful #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}"                                                              % StoreUtils.commify(score_card[:fixity_successes])
-      @report_summary.warn "%#{len}s failed #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}"                                                                   % StoreUtils.commify(score_card[:fixity_failures])
-      @report_summary.warn "%#{len}s missing package#{pluralize score_card[:missing], '', 's'}"                                                                                % StoreUtils.commify(score_card[:missing])
-      @report_summary.warn "%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'}"                                                                             % StoreUtils.commify(score_card[:orphans])
-      @report_summary.warn "%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} with expired #{pluralize score_card[:expired_fixities], 'fixity', 'fixities'}" % StoreUtils.commify(score_card[:expired_fixities])
-      @report_summary.warn "%#{len}s package#{pluralize score_card[:wrong_number], '', 's'} with wrong number of copies"                                                       % StoreUtils.commify(score_card[:wrong_number])
-      @report_summary.warn "%#{len}s events, %s new, %s failed to be recorded"                                                                                                 % [ event_counter.total, event_counter.total - event_counter.unchanged, event_counter.failures ].map { |val| StoreUtils.commify(val) }
+      @report_summary.warn
+      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), DateTime.now.strftime('%F %T'))
+      @report_summary.warn sprintf("%#{len}s ingested package records where checked against fixity data", StoreUtils.commify(score_card[:checked]))
+      @report_summary.warn
+      @report_summary.warn 'Recorded Events:'
+      @report_summary.warn
+      @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
+      @report_summary.warn sprintf("%#{len}s missing package#{pluralize score_card[:missing], '', 's'}", StoreUtils.commify(score_card[:missing]))
+      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:wrong_number], '', 's'} with wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
+      @report_summary.warn '-' * len
+      @report_summary.warn sprintf("%#{len}s total events, %s new, %s failed to be recorded", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged), StoreUtils.commify(event_counter.failures))
+      @report_summary.warn
+      @report_summary.warn  'Additionally:'
+      @report_summary.warn
+      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
+      @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
+      @report_summary.warn
+      @report_summary.warn  'Details Follow:'  if anything_interesting? @reports - [ @report_summary ]
+
 
       @reports.each { |report| report.done }
       self

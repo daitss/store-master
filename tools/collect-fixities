@@ -34,7 +34,7 @@ end
 
 def teardown config, streams
   if config.pid_directory
-    pid_path = construct_pid_path(config.pid_directory)
+    pid_path = StoreUtils.pid_file(config.pid_directory)
     File.delete pid_path if File.exists? pid_path and File.writable? pid_path
   end
 
@@ -48,27 +48,33 @@ end
 
 #  config = FixityUtils.parse_options(ARGV)
 #
-#                                 syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
-#                                 ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
-#        Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
-config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
+#                                   syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
+#                                   ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
+# config=  Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
+# config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
 
+config = StoreMaster::FixityUtils.parse_options(ARGV) or exit
 setup(config)
 
 begin
   # Get our data streams, some from web services, some from various databases
 
   pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
-  store_master_stream  = Streams::StoreMasterPackageStream.new
   daitss_fixity_stream = Streams::DaitssPackageStream.new
 
   reports = []
 
   reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days).run.reports
-  reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
-  reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
-  reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
-  reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
+
+  # TODO: get these into their own script
+
+  # store_master_stream  = Streams::StoreMasterPackageStream.new
+  #
+  #
+  # reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
+  # reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
+  # reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
+  # reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
 
   reports.each { |report| report.write if report.interesting? }
 

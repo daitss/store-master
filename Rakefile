@@ -76,6 +76,11 @@ task :ripple do
   sh "cap deploy -S target=ripple:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
+desc "Deploy to franco's storemaster on ripple"
+task :francos do
+  sh "cap deploy -S target=ripple:/opt/web-services/sites/francos-storemaster -S who=daitss:daitss"
+end
+
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do

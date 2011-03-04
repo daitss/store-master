@@ -22,7 +22,7 @@ describe FixityUtils do
 
      conf.should_not be_nil
 
-     conf.db_config_file.should ==       "/dev/null"
+     conf.db_config_file.should ==        "/dev/null"
      conf.db_daitss_key.should ==         "ps_daitss_2"
      conf.db_store_master_key.should ==   "ps_store_master"
      conf.expiration_days.should ==       45
