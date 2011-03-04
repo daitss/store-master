@@ -259,10 +259,10 @@ module Analyzer
       @report_orphaned     = Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
       @report_integrity    = Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
       @report_fixity       = Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
-      @report_expired      = Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Old"
+      @report_expired      = Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Days Old"
       @report_summary      = Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
-      @reports             = [ @report_summary, @report_missing, @report_integrity, @report_fixity, @report_orphaned, @report_expired ]
+      @reports             = [ @report_summary, @report_missing, @report_fixity, @report_integrity, @report_orphaned, @report_expired ]
     end
 
     # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity record for each copy of the package:
@@ -419,26 +419,24 @@ module Analyzer
       # Details Follow:
       # ...
 
-
       len = StoreUtils.commify(score_card.values.max).length
 
       @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), DateTime.now.strftime('%F %T'))
       @report_summary.warn sprintf("%#{len}s ingested package records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
-      @report_summary.warn 'Recorded Events:'
+      @report_summary.warn 'Recorded package events:'
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
-      @report_summary.warn sprintf("%#{len}s incorrect package #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))
-      @report_summary.warn sprintf("%#{len}s missing package#{pluralize score_card[:missing], '', 's'}", StoreUtils.commify(score_card[:missing]))
-      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:wrong_number], '', 's'} with wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
+      @report_summary.warn sprintf("%#{len}s missing", StoreUtils.commify(score_card[:missing]))
+      @report_summary.warn sprintf("%#{len}s incorrect #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))
+      @report_summary.warn sprintf("%#{len}s with the wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
       @report_summary.warn '-' * len
       @report_summary.warn sprintf("%#{len}s total events, %s new, %s failed to be recorded", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged), StoreUtils.commify(event_counter.failures))
       @report_summary.warn
-      @report_summary.warn  'Additionally:'
-      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
+      @report_summary.warn 'Additionally:'
       @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
+      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
       @report_summary.warn
-      @report_summary.warn  'Details Follow:' if anything_interesting? @reports - [ @report_summary ]
-
+      @report_summary.warn 'Details Follow:' if anything_interesting? @reports - [ @report_summary ]
 
       @reports.each { |report| report.done }
       self
