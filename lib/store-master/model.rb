@@ -1,3 +1,7 @@
+module StoreMasterModel
+  REPOSITORY_NAME = :store_master
+end
+
 require 'data_mapper'
 require 'net/http'
 require 'store-master/model/copies'
@@ -32,10 +36,10 @@ module StoreMasterModel
 include StoreMaster
 
   def self.setup_db yaml_file, key
-    dm = DataMapper.setup(:store_master, StoreUtils.connection_string(yaml_file, key))
+    dm = DataMapper.setup(REPOSITORY_NAME, StoreUtils.connection_string(yaml_file, key))
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
-    dm.select('select 1 + 1')
+    dm.select('select 1')  # make sure we can connect
     return dm
 
   rescue => e
@@ -51,20 +55,26 @@ include StoreMaster
     [ Copy, Package, Pool, Reservation ]
   end
 
-  def self.create_tables
+  def self.create_tables                # drops and recreates as well
     self.tables.map &:auto_migrate!
-    # self.patch_tables
+    self.patch_tables
   end
 
-  def self.update_tables
+  def self.update_tables                # will make minor schema changes
     self.tables.map &:auto_upgrade!
   end
 
-  def self.patch_tables
-    [ 'alter table copies alter datetime type timestamp with time zone' ].each do |sql|
-      repository(:store_master).adapter.select(sql)
+  def self.patch_tables                 # special purpose setup
+    db = repository(REPOSITORY_NAME).adapter
+    postgres_commands = [ 
+                         'alter table copies alter datetime type timestamp with time zone',
+                        ]
+
+    if db.methods.include? 'postgres_version'
+      postgres_commands.each { |sql| db.execute sql } 
     end
   end
+
 
 
 end # of Module StoreMasterModel

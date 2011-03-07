@@ -1,4 +1,4 @@
-require 'store-master/exceptions'
+require 'store-master/model'
 
 module StoreMasterModel
 
@@ -11,7 +11,7 @@ module StoreMasterModel
     @@server_location = nil 
 
     def self.default_repository_name
-      :store_master
+      StoreMasterModel::REPOSITORY_NAME
     end
 
     property   :id,         Serial,   :min => 1

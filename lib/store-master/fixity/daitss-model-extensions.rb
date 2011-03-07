@@ -16,6 +16,15 @@ module Daitss
 
   end
 
+  ## TODO: there are smarter (faster?) ways to do some of these with datamapper-joins and slices, maybe
+  #
+  # get all the copy URL
+  #
+  # Copy.all(Copy.aip.package.id.not => nil, :timestamp.lt => DateTime.now, :order => :url).slice(0,1000).map { |elt| elt.url.path.split('/').pop } 
+  #
+  # Package.all(Package.aip.copy.timestamp.lt => DateTime, :order => :id).slice...
+
+
   class Package
 
     # Provide a list of all of the package ids sorted by the copy URL.
@@ -76,6 +85,15 @@ module Daitss
       e.notes = note
       return e.save
     end
+
+    ### TODO - there may be a better way to do these en masses, something like?
+    #
+    #   collection = Event.first(0)      
+    #   event = Event.first_or_new 
+    #   collection.push event if some-condition
+    # ...
+    #   collection.save      
+
 
     def fixity_success_event datetime
       event = Event.first_or_new :name => 'fixity success', :package => self

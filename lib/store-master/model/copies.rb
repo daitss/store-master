@@ -1,4 +1,4 @@
-require 'store-master/exceptions'
+require 'store-master/model'
 
 module StoreMasterModel
 
@@ -8,12 +8,12 @@ module StoreMasterModel
     include DataMapper::Resource
 
     def self.default_repository_name
-      :store_master
+      StoreMasterModel::REPOSITORY_NAME
     end
 
     property   :id,               Serial,   :min => 1
     property   :datetime,         DateTime, :index => true, :default => lambda { |resource, property| DateTime.now }
-    property   :store_location,   String,   :length => 255, :required => true, :index => true  #, :format => :url
+    property   :store_location,   String,   :length => 255, :required => true, :index => true
 
     belongs_to :pool
     belongs_to :package
@@ -21,7 +21,7 @@ module StoreMasterModel
     validates_uniqueness_of :pool, :scope => :package
 
     # Note: store-master/model.rb redefines the print method for URI so that
-    # username/password won't be exposed.
+    # username/password credentials won't be exposed.
 
     def url
       url = URI.parse store_location
