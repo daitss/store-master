@@ -1,8 +1,8 @@
 require 'store-master' 
-require 'app/helpers.rb'
-require 'app/package-reports.rb'
-require 'app/errors.rb'
-require 'app/packages.rb'
+require 'app/helpers'
+require 'app/package-reports'
+require 'app/errors'
+require 'app/packages'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 

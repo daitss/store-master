@@ -1,7 +1,3 @@
-module StoreMasterModel
-  REPOSITORY_NAME = :store_master
-end
-
 require 'data_mapper'
 require 'net/http'
 require 'store-master/model/copies'
@@ -36,7 +32,7 @@ module StoreMasterModel
 include StoreMaster
 
   def self.setup_db yaml_file, key
-    dm = DataMapper.setup(REPOSITORY_NAME, StoreUtils.connection_string(yaml_file, key))
+    dm = DataMapper.setup(:store_master, StoreUtils.connection_string(yaml_file, key))
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
     dm.select('select 1')  # make sure we can connect
@@ -65,7 +61,7 @@ include StoreMaster
   end
 
   def self.patch_tables                 # special purpose setup
-    db = repository(REPOSITORY_NAME).adapter
+    db = repository(:store_master).adapter
     postgres_commands = [ 
                          'alter table copies alter datetime type timestamp with time zone',
                         ]

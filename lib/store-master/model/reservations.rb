@@ -1,3 +1,4 @@
+require 'store-master/exceptions'
 require 'store-master/model'
 
 module  StoreMasterModel
@@ -10,7 +11,7 @@ module  StoreMasterModel
     include DataMapper::Resource
 
     def self.default_repository_name
-      StoreMasterModel::REPOSITORY_NAME
+      :store_master
     end
 
     property   :id,         Serial
