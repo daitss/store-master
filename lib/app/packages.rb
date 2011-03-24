@@ -103,7 +103,7 @@ get '/packages/:name' do |name|
 
   raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
 
-  redirect locations[0].to_s, 303
+  redirect locations[0].to_s_with_userinfo, 303
 end
 
 # Return an XML report of all the packages we know about, ordered by package name. For

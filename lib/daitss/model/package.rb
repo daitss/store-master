@@ -23,7 +23,7 @@ module Daitss
     has 1,    :sip
     has 0..1, :aip
 #   has 0..1, :intentity            # brings in too much baggage - we can do without
-    has 0..1, :report_delivery
+    has 0..1, :report_delivery      # we can probably drop this as well (remove report_delivery.rb)
 
     belongs_to :project
     belongs_to :batch, :required => false
@@ -70,12 +70,6 @@ module Daitss
       end
 
     end
-
-
-
-
-
-
 
   end
 

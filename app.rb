@@ -6,7 +6,7 @@ require 'app/packages'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
-REVISION = StoreMaster.version.rev
+REVISION = StoreMaster.version.name
 
 include StoreMaster
 include StoreMasterModel
@@ -27,7 +27,7 @@ configure do
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')
 
-  Logger.info "Starting #{StoreMaster.version.rev}."
+  Logger.info "Starting #{REVISION}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
   (ENV.keys - ['BASIC_AUTH_PASSWORD', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
     Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"

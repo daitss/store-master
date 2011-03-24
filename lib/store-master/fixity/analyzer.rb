@@ -32,8 +32,6 @@ module Analyzer
 
     attr_reader :reports
 
-    ### TODO: can we get expiration out of here, since we do it at PoolVsDaitssAnalyzer?
-
     def initialize pool_fixity_streams, max_days
       @expiration_date = (DateTime.now - max_days).to_s
       @pool_fixity_streams  = pool_fixity_streams

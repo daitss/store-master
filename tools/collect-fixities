@@ -53,7 +53,7 @@ end
 # config=  Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
 # config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
 
-config = StoreMaster::FixityUtils.parse_options(ARGV) or exit
+config = FixityUtils.parse_options(ARGV) or exit
 setup(config)
 
 begin
@@ -66,8 +66,8 @@ begin
 
   reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days).run.reports
 
-  # TODO: get these into their own script
-
+  # TODO: these turn out to be redundant, maybe put into their own script?
+  #
   # store_master_stream  = Streams::StoreMasterPackageStream.new
   #
   #

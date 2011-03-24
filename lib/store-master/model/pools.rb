@@ -16,7 +16,8 @@ module StoreMasterModel
     property   :services_location,    String,   :length => 255, :required => true
     property   :read_preference,      Integer,  :default  => 0
     property   :basic_auth_username,  String
-    property   :basic_auth_password,  String
+    property   :basic_auth_password,  String   # note that it is an error if exactly one of basic_auth_xxx is NULL;
+                                               # it should be the empty string in that case (need a validator?)
 
     has n, :copies
 
@@ -34,7 +35,7 @@ module StoreMasterModel
     end
 
     # We have a protocol that silo pools must follow: they must return a service
-    # document (XML) that descirbes where we can locate essential silo services.
+    # document (XML) that describes where we can locate essential silo services.
     # Here's an example document:
     #
     #  <?xml version="1.0" encoding="UTF-8"?>

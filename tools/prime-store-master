@@ -4,70 +4,124 @@
 # existing silos; from that point on the packages should be mainulated
 # from the store-master service.
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-## either run as 'bundle exec prime-store-master ...' or set up the following:
-##  ENV['BUNDLE_GEMFILE'] = File.expand_path(File.join(File.dirname(__FILE__), '../Gemfile'))
-## require 'bundler/setup'
+require 'datyl/reporter'
+require 'datyl/streams'
+require 'optparse'
+require 'store-master'
 
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib/'))
+def setup config
+  Logger.setup('Fixities', config.server_name)
 
-require 'store/data-model'
-include DataModel
-
-DataModel.setup('/opt/fda/etc/db.yml', 'ps_store_master')
-
-# ENV['TZ'] = 'UTC' 
-
-# Our data - we don't use field 5 here:
-#
-# E20051213_AAAAAA	http://silos.darchive.fcla.edu/001/data/E20051213_AAAAAA
-# E20060108_AAAAAA	http://silos.tarchive.fcla.edu/003/data/E20060108_AAAAAA
-
-
-loc   = 'http://silos.darchive.fcla.edu/services'
-pool1 =  Pool.exists?(loc) ? Pool.lookup(loc) : Pool.create(loc) 
-loc   = 'http://silos.tarchive.fcla.edu/services'
-pool2 =  Pool.exists?(loc) ? Pool.lookup(loc) : Pool.create(loc) 
-
-pool2.read_preference = 10
-
-puts pool1.put_location
-puts pool2.put_location
-
-while line = STDIN.gets do
-
-  ieid, loc = line.strip.split(/\s+/, 2)
-
-  unless ieid =~ /^E2/
-    STDERR.puts "Unexpected line '#{line.strip}', skipping"
-    next
-  end
-
-  # if pkg = DM::Package.first(:name => ieid)
-  #   if not pkg.destroy 
-  #     STDERR.puts "Unable to remove pre-exising package record for name '#{ieid}', skipping"
-  #     next
-  #   end
-  # end
-
-  ## FIXME: won't match directly, now.
-
-  if loc =~ /#{pool1.put_location}/
-    pool = pool1
-  elsif loc =~ /#{pool2.put_location}/
-    pool = pool2
+  if config.syslog_facility
+    Logger.facility  = config.syslog_facility
   else
-    STDERR.puts "Can't find pool for location '#{loc}', skipping."
-    next
+    Logger.stderr 
   end
 
-  pkg  = Package.first_or_create(:ieid => ieid, :name => ieid)
-  copy = Copy.create(:store_location => loc, :pool => pool.dm_record)
-  puts copy.url
-  pkg.copies << copy
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
+  StoreMasterModel::Package.server_location = "http://#{config.server_name}"
+  StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
+  Daitss.setup_db(config.db_config_file, config.db_daitss_key)
 
-  if not pkg.save
-    STDERR.puts "Error saving #{ieid}: " + pkg.errors.map{ |e| e.to_s }.join("\n -- ")
-  end
-
+  Reporter.max_lines_to_write = 1000    # each report will have at most these lines, though everything will go to syslog
 end
+
+
+
+Struct.new('Config', :syslog_facility, :server_name, :db_config_file, :db_store_master_key)
+
+def parse_options args
+
+  conf = Struct::Config.new(nil, nil, '/opt/fda/etc/db.yml', nil, nil)
+
+  opts = OptionParser.new do |opts|
+    opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
+      conf.syslog_facility = facility
+    end
+    opts.on("--server-name HOSTNAME",  String, "The virtual hostname of the store-master web service") do |host_name|
+      conf.server_name = host_name
+    end
+    opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
+      conf.db_config_file = path
+    end
+    opts.on("--db-store-master-key KEY", String, "The key for the store master database in the database yaml configuration file")  do |key|
+      conf.db_store_master_key = key
+    end
+    opts.on("--pool URL", String, "The pool associated with the copies being read on STDIN. It must exist in the database") do |url|
+      conf.pool_url = url
+    end
+  end
+  opts.parse!(args)
+
+  raise "Configuration yaml file #{conf.db_config_file} not found"                                     unless File.exists? conf.db_config_file
+  raise "No store-master database key to the DB configuration file (#{conf.db_config_file}) provided"  unless conf.db_store_master_key
+  raise "Configuration yaml file #{conf.db_config_file} not readable"                                  unless File.readable? conf.db_config_file
+  raise "No pool provided"                                                                             unless conf.pool_url
+
+  if conf.syslog_facility
+    raise "Syslog facility should be of the form 'LOCAL0' .. 'LOCAL1'"            unless conf.syslog_facility =~ /^LOCAL[0-7]$/
+  end
+
+rescue => e
+  STDERR.puts e, opts
+  STDERR.puts e.backtrace.join("\n")
+  return nil
+else
+  return conf
+end
+
+
+# expecting a CSV file as input:
+#
+# "name","location","sha1","md5","size","time","status"
+# "E20051012_AAAAAA","http://gammasilos.tarchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2008-05-23T10:32:41-04:00","ok"
+# "E20051012_AAAAAB","http://gammasilos.tarchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2008-05-23T10:35:15-04:00","ok"
+#
+# 
+# A package entry of  "http://#{config.server_name}/packages/IEID" will be installed, with 
+# a copy listed in the pool specifiied from the command line.
+
+# while line = STDIN.gets do
+
+
+
+
+# while line = STDIN.gets do
+
+#   ieid, loc = line.strip.split(/\s+/, 2)
+
+#   unless ieid =~ /^E2/
+#     STDERR.puts "Unexpected line '#{line.strip}', skipping"
+#     next
+#   end
+
+#   # if pkg = DM::Package.first(:name => ieid)
+#   #   if not pkg.destroy 
+#   #     STDERR.puts "Unable to remove pre-exising package record for name '#{ieid}', skipping"
+#   #     next
+#   #   end
+#   # end
+
+#   ## FIXME: won't match directly, now.
+
+#   if loc =~ /#{pool1.put_location}/
+#     pool = pool1
+#   elsif loc =~ /#{pool2.put_location}/
+#     pool = pool2
+#   else
+#     STDERR.puts "Can't find pool for location '#{loc}', skipping."
+#     next
+#   end
+
+#   pkg  = Package.first_or_create(:ieid => ieid, :name => ieid)
+#   copy = Copy.create(:store_location => loc, :pool => pool.dm_record)
+#   puts copy.url
+#   pkg.copies << copy
+
+#   if not pkg.save
+#     STDERR.puts "Error saving #{ieid}: " + pkg.errors.map{ |e| e.to_s }.join("\n -- ")
+#   end
+
+# end

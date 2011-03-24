@@ -62,6 +62,9 @@ module StoreMasterModel
       first(:name => name, :extant => true)
     end
 
+    # TODO: now that names are not sequential we're probably susceptible to drop material in subsequent 
+    # slices when new random ids are inserted during processing.  check. order by time instead
+
     def self.package_chunks
       offset = 0
       while not (packages  = all(:extant => true, :order => [ :name.asc ] ).slice(offset, 2000)).empty?
@@ -171,7 +174,7 @@ module StoreMasterModel
       # TODO: timeout in the above doesn't cause the package entry to be deleted; so we get a package entry without 
       # copy entry - boom! later.
       #
-      # TODO: we need to wrap the package insert with the copy insert in a transaction.
+      # TODO: we need to wrap the package insert with the copy insert in a transaction, on an error run down and delete any created copies
 
 
       raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}") if status >= 300

@@ -63,7 +63,8 @@ else
 end
 
 def get_reservation url, ieid
-  xml = `curl -s -X POST -d ieid=#{ieid} #{url}`
+  puts "curl -sv -X POST -d ieid=#{ieid} #{url}"
+  xml = `curl -sv -X POST -d ieid=#{ieid} #{url}`
   puts xml
   xml =~ /.*location="(.*?)"/n
   $1
@@ -76,7 +77,7 @@ end
 def put_file filename, reservation
   content_md5 = `md5-base64 #{filename}`.chomp
   puts "curl -s -X PUT --upload-file #{filename} -H \"Content-Type: application/x-tar\" -H \"Content-MD5: #{content_md5}\" #{reservation}"
-  `curl -s -X PUT --upload-file #{filename} -H \"Content-Type: application/x-tar\" -H \"Content-MD5: #{content_md5}\" #{reservation}`
+  `curl -sv -X PUT --upload-file #{filename} -H \"Content-Type: application/x-tar\" -H \"Content-MD5: #{content_md5}\" #{reservation}`
 end
 
 conf = parse_command ARGV

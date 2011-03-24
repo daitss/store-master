@@ -17,9 +17,9 @@ require 'xml'
 module URI
 
   class HTTP
-    alias :old_to_s :to_s
+    alias :to_s_with_userinfo :to_s
     def to_s
-      userinfo ? old_to_s.sub(userinfo + '@', '') : old_to_s
+      userinfo ? to_s_with_userinfo.sub(userinfo + '@', '') : to_s_with_userinfo
     end
   end
 
