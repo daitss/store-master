@@ -3,11 +3,11 @@ require 'store-master/model'
 
 module StoreMasterModel
 
-  include StoreMaster
 
   class Package
 
     include DataMapper::Resource
+    include StoreMaster
     
     @@server_location = nil 
 

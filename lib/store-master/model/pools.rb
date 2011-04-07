@@ -2,10 +2,10 @@ require 'store-master/exceptions'
 require 'store-master/model'
 
 module StoreMasterModel
-  include StoreMaster
 
   class Pool
     include DataMapper::Resource
+    include StoreMaster
 
     def self.default_repository_name
       :store_master
@@ -70,7 +70,7 @@ module StoreMasterModel
         raise SiloUnreachable, "Couldn't contact the silo service at URL #{services_location}: #{e.message}"
 
       else
-        raise ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
+        raise SiloStoreError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
         return response.body
       end
     end

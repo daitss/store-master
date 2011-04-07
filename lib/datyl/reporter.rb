@@ -48,12 +48,9 @@ class Reporter
     @title     = title
     @subtitle  = sub
     @tempfile  = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
-    yield self if block_given?
-    self
+    @tempfile.unlink
   rescue => e
     Logger.error "Fatal error in Reporter module; #{e.class}: #{e.message}"
-  ensure
-    @tempfile.unlink
   end
 
   def self.max_lines_to_write

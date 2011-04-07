@@ -3,12 +3,11 @@ require 'store-master/model'
 
 module  StoreMasterModel
 
-  include StoreMaster
-
   # For reserving names for URLs based on IEIDs.
 
   class Reservation
     include DataMapper::Resource
+    include StoreMaster
 
     def self.default_repository_name
       :store_master

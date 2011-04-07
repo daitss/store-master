@@ -400,8 +400,6 @@ module Analyzer
       # 1,242 ingested package records as of 2011-12-01 04:15:00
       # 1,242 ingested package records were checked against fixity data.
       #
-      # Recorded Events:
-      #
       # 1,240 correct fixities
       #     1 incorrect fixity
       #     1 missing package
@@ -422,7 +420,6 @@ module Analyzer
       @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), DateTime.now.strftime('%F %T'))
       @report_summary.warn sprintf("%#{len}s ingested package records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
-      @report_summary.warn 'Recorded package events:'
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
       @report_summary.warn sprintf("%#{len}s missing", StoreUtils.commify(score_card[:missing]))
       @report_summary.warn sprintf("%#{len}s incorrect #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))

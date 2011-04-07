@@ -67,12 +67,12 @@ end
 # assumes git pushed out
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
-task :tarchive do
+task :tarchive_beta do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/betastore -S who=fischer:daitss"
 end
 
 desc "Deploy to tarchive's other test storemaster - gammastore.tarchive.fcla.edu"
-task :gamma do
+task :tarchive_gamma do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/gammastore -S who=fischer:daitss"
 end
 
