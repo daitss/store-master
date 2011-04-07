@@ -1,45 +1,92 @@
 #!/usr/bin/env ruby
-#
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
+
+
+require 'datyl/streams'
+require 'datyl/logger'
+require 'store-master/model'
+
 # This script is provided to prime the store master DB from the
 # existing silos; from that point on the packages should be mainulated
 # from the store-master service.
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'datyl/reporter'
-require 'datyl/streams'
-require 'optparse'
-require 'store-master'
+#  storemaster.packages
+# --------+-----------------------
+#  id     | integer               
+#  extant | boolean               
+#  ieid   | character varying(50) 
+#  name   | character varying(50) 
+#
+#  storemaster.copies
+# ----------------+--------------------------
+#  id             | integer                  
+#  datetime       | timestamp with time zone 
+#  store_location | character varying(255)   
+#  package_id     | integer                  
+#  pool_id        | integer                  
 
-def setup config
-  Logger.setup('Fixities', config.server_name)
 
-  if config.syslog_facility
-    Logger.facility  = config.syslog_facility
-  else
-    Logger.stderr 
-  end
+# First step is to merge data files from silos, they look like this:
+#
+# "name","location","sha1","md5","size","time","status"
+# "E20051012_AAAAAA","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-04-02T12:52:52-04:00","ok"
+# "E20051012_AAAAAB","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-04-02T12:53:03-04:00","ok"
+#
+# And this:
+#
+# "name","location","sha1","md5","size","time","status"
+# "E20051012_AAAAAA","http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-02-08T23:10:02-05:00","ok"
+# "E20051012_AAAAAB","http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-02-08T21:12:25-05:00","ok"
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
-  StoreMasterModel::Package.server_location = "http://#{config.server_name}"
-  StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
-  Daitss.setup_db(config.db_config_file, config.db_daitss_key)
 
-  Reporter.max_lines_to_write = 1000    # each report will have at most these lines, though everything will go to syslog
+module Streams
+
+  Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :timestamp, :status)
+
+  # initialized via an opened file object
+
+  class PoolDataStream < DataFileStream
+
+    def initialize io
+      io.rewind
+      io.gets
+      super(io)
+    end
+      
+
+    def rewind
+      @io.rewind
+      @io.gets    # discard heading
+      self
+    end
+
+    def read
+      rec = CSV.parse_line(@io.gets)
+      return rec.shift, Struct::PoolFixityRecord.new(*rec)
+    end
+
+  end # of class PoolFixityStream
+
 end
 
 
 
-Struct.new('Config', :syslog_facility, :server_name, :db_config_file, :db_store_master_key)
+def setup config
+  Logger.setup('StoreMasterMerge', config.server_name)
+  Logger.stderr 
+
+  StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
+end
+
+Struct.new('Config', :server_name, :db_config_file, :db_store_master_key)
 
 def parse_options args
 
-  conf = Struct::Config.new(nil, nil, '/opt/fda/etc/db.yml', nil, nil)
+  conf = Struct::Config.new('storemaster.fda.fcla.edu', '/opt/fda/etc/db.yml', 'production_storemaster')
 
   opts = OptionParser.new do |opts|
-    opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
-      conf.syslog_facility = facility
-    end
     opts.on("--server-name HOSTNAME",  String, "The virtual hostname of the store-master web service") do |host_name|
       conf.server_name = host_name
     end
@@ -49,20 +96,12 @@ def parse_options args
     opts.on("--db-store-master-key KEY", String, "The key for the store master database in the database yaml configuration file")  do |key|
       conf.db_store_master_key = key
     end
-    opts.on("--pool URL", String, "The pool associated with the copies being read on STDIN. It must exist in the database") do |url|
-      conf.pool_url = url
-    end
   end
   opts.parse!(args)
 
   raise "Configuration yaml file #{conf.db_config_file} not found"                                     unless File.exists? conf.db_config_file
   raise "No store-master database key to the DB configuration file (#{conf.db_config_file}) provided"  unless conf.db_store_master_key
   raise "Configuration yaml file #{conf.db_config_file} not readable"                                  unless File.readable? conf.db_config_file
-  raise "No pool provided"                                                                             unless conf.pool_url
-
-  if conf.syslog_facility
-    raise "Syslog facility should be of the form 'LOCAL0' .. 'LOCAL1'"            unless conf.syslog_facility =~ /^LOCAL[0-7]$/
-  end
 
 rescue => e
   STDERR.puts e, opts
@@ -72,56 +111,42 @@ else
   return conf
 end
 
+config = setup(parse_options(ARGV))
 
-# expecting a CSV file as input:
+dfix = Streams::PoolDataStream.new(File.open('darchive.fixity.csv'))
+tfix = Streams::PoolDataStream.new(File.open('tarchive.fixity.csv'))
+
+cmp = Streams::ComparisonStream.new(dfix, tfix)
+
+# Data looks as so:
 #
-# "name","location","sha1","md5","size","time","status"
-# "E20051012_AAAAAA","http://gammasilos.tarchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2008-05-23T10:32:41-04:00","ok"
-# "E20051012_AAAAAB","http://gammasilos.tarchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2008-05-23T10:35:15-04:00","ok"
-#
-# 
-# A package entry of  "http://#{config.server_name}/packages/IEID" will be installed, with 
-# a copy listed in the pool specifiied from the command line.
+# E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://one.pool.example/com/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+#                       #<struct Struct::PoolFixityRecord location="http://two.pool.example/com/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:44:01-05:00", status="ok">
 
-# while line = STDIN.gets do
+pool1 = StoreMasterModel::Pool.lookup 'http://silos.darchive.fcla.edu/services'
+pool2 = StoreMasterModel::Pool.lookup 'http://silos.tarchive.fcla.edu/services'
 
+cmp.each do |ieid, v1, v2|
 
+  if v1.nil?
+    puts "#{ieid} missing from darchive: tarchive has " + v2.inspect
+  elsif v2.nil?
+    puts "#{ieid} missing from tarchive: darchive has " + v1.inspect
+  else
+    package = StoreMasterModel::Package.create(:ieid => ieid, :name => ieid)
 
+    cp1 = StoreMasterModel::Copy.create(:store_location => v1.location, :datetime => v1.timestamp, :pool => pool1)
+    cp2 = StoreMasterModel::Copy.create(:store_location => v2.location, :datetime => v2.timestamp, :pool => pool2)
 
-# while line = STDIN.gets do
+    package.copies << cp1
+    package.copies << cp2
 
-#   ieid, loc = line.strip.split(/\s+/, 2)
+    if not package.save
+      puts "copy 1: "   + cp1.errors.full_messages.join('; ')
+      puts "copy 2: "   + cp2.errors.full_messages.join('; ')
+      puts "package: "  + package.errors.full_messages.join('; ')
+    end
+  end
 
-#   unless ieid =~ /^E2/
-#     STDERR.puts "Unexpected line '#{line.strip}', skipping"
-#     next
-#   end
+end
 
-#   # if pkg = DM::Package.first(:name => ieid)
-#   #   if not pkg.destroy 
-#   #     STDERR.puts "Unable to remove pre-exising package record for name '#{ieid}', skipping"
-#   #     next
-#   #   end
-#   # end
-
-#   ## FIXME: won't match directly, now.
-
-#   if loc =~ /#{pool1.put_location}/
-#     pool = pool1
-#   elsif loc =~ /#{pool2.put_location}/
-#     pool = pool2
-#   else
-#     STDERR.puts "Can't find pool for location '#{loc}', skipping."
-#     next
-#   end
-
-#   pkg  = Package.first_or_create(:ieid => ieid, :name => ieid)
-#   copy = Copy.create(:store_location => loc, :pool => pool.dm_record)
-#   puts copy.url
-#   pkg.copies << copy
-
-#   if not pkg.save
-#     STDERR.puts "Error saving #{ieid}: " + pkg.errors.map{ |e| e.to_s }.join("\n -- ")
-#   end
-
-# end
