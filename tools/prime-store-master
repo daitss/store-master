@@ -1,64 +1,60 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
-
-
-require 'datyl/streams'
-require 'datyl/logger'
-require 'store-master/model'
-
 # This script is provided to prime the store master DB from the
-# existing silos; from that point on the packages should be mainulated
-# from the store-master service.
-
-
-#  storemaster.packages
-# --------+-----------------------
-#  id     | integer               
-#  extant | boolean               
-#  ieid   | character varying(50) 
-#  name   | character varying(50) 
+# existing silos as part of the data migration of DAITSS 1 to DAITSS
+# 2; from that point on the packages should be manipulated from the
+# store-master service.
 #
-#  storemaster.copies
-# ----------------+--------------------------
-#  id             | integer                  
-#  datetime       | timestamp with time zone 
-#  store_location | character varying(255)   
-#  package_id     | integer                  
-#  pool_id        | integer                  
-
-
-# First step is to merge data files from silos, they look like this:
+# It requires data be gathered from the silos service:
+#
+# curl -s http://silos.darchive.fcla.edu/fixity.csv > darchive.fixity.csv
+# curl -s http://silos.tarchive.fcla.edu/fixity.csv > tarchive.fixity.csv
+#
+# That raw data takes about an hour to retrieve and looks something
+# like this:
 #
 # "name","location","sha1","md5","size","time","status"
 # "E20051012_AAAAAA","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-04-02T12:52:52-04:00","ok"
 # "E20051012_AAAAAB","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-04-02T12:53:03-04:00","ok"
 #
-# And this:
+# The pool table should already have been populated; we have
 #
-# "name","location","sha1","md5","size","time","status"
-# "E20051012_AAAAAA","http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-02-08T23:10:02-05:00","ok"
-# "E20051012_AAAAAB","http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-02-08T21:12:25-05:00","ok"
+# > select * from pools;
+#
+#  id | required |            services_location            | read_preference | basic_auth_username | basic_auth_password 
+# ----+----------+-----------------------------------------+-----------------+---------------------+---------------------
+#   2 | t        | http://silos.darchive.fcla.edu/services |               0 |                     | 
+#   1 | t        | http://silos.tarchive.fcla.edu/services |               1 |                     | 
+# (2 rows)
+#
+# Once we have all that, this program will populate the storemaster db; that takes about
+# 2.5 hours to run.
 
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
+
+require 'datyl/streams'
+require 'datyl/logger'
+require 'store-master/model'
 
 module Streams
 
   Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :timestamp, :status)
 
-  # initialized via an opened file object
 
   class PoolDataStream < DataFileStream
 
+    # initialized via an csv file:
+
     def initialize io
       io.rewind
-      io.gets
+      io.gets     # discard CSV header
       super(io)
     end
       
-
     def rewind
       @io.rewind
-      @io.gets    # discard heading
+      @io.gets    # discard CSV header
       self
     end
 
@@ -67,64 +63,33 @@ module Streams
       return rec.shift, Struct::PoolFixityRecord.new(*rec)
     end
 
-  end # of class PoolFixityStream
-
-end
-
+  end
+end  # of module Streams
 
 
-def setup config
-  Logger.setup('StoreMasterMerge', config.server_name)
+def setup
+  Logger.setup('StoreMasterMerge', 'storemaster.fda.fcla.edu')
   Logger.stderr 
 
-  StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
+  StoreMasterModel.setup_db('/opt/fda/etc/db.yml', 'production_storemaster')
 end
 
-Struct.new('Config', :server_name, :db_config_file, :db_store_master_key)
+include StoreMasterModel
+include Streams
 
-def parse_options args
+setup()
 
-  conf = Struct::Config.new('storemaster.fda.fcla.edu', '/opt/fda/etc/db.yml', 'production_storemaster')
+pool1 = Pool.lookup 'http://silos.darchive.fcla.edu/services'
+pool2 = Pool.lookup 'http://silos.tarchive.fcla.edu/services'
 
-  opts = OptionParser.new do |opts|
-    opts.on("--server-name HOSTNAME",  String, "The virtual hostname of the store-master web service") do |host_name|
-      conf.server_name = host_name
-    end
-    opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
-      conf.db_config_file = path
-    end
-    opts.on("--db-store-master-key KEY", String, "The key for the store master database in the database yaml configuration file")  do |key|
-      conf.db_store_master_key = key
-    end
-  end
-  opts.parse!(args)
-
-  raise "Configuration yaml file #{conf.db_config_file} not found"                                     unless File.exists? conf.db_config_file
-  raise "No store-master database key to the DB configuration file (#{conf.db_config_file}) provided"  unless conf.db_store_master_key
-  raise "Configuration yaml file #{conf.db_config_file} not readable"                                  unless File.readable? conf.db_config_file
-
-rescue => e
-  STDERR.puts e, opts
-  STDERR.puts e.backtrace.join("\n")
-  return nil
-else
-  return conf
-end
-
-config = setup(parse_options(ARGV))
-
-dfix = Streams::PoolDataStream.new(File.open('darchive.fixity.csv'))
-tfix = Streams::PoolDataStream.new(File.open('tarchive.fixity.csv'))
-
-cmp = Streams::ComparisonStream.new(dfix, tfix)
-
-# Data looks as so:
+# PoolDataStream looks as so:
 #
-# E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://one.pool.example/com/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:43:50-05:00", status="ok">
-#                       #<struct Struct::PoolFixityRecord location="http://two.pool.example/com/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:44:01-05:00", status="ok">
+#   E20110129_CYXBHO, #<struct Struct::PoolFixityRecord location="http://silos.darchive.fcla.edu/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+#
+# We get the data from the silo web services, see comments above.
 
-pool1 = StoreMasterModel::Pool.lookup 'http://silos.darchive.fcla.edu/services'
-pool2 = StoreMasterModel::Pool.lookup 'http://silos.tarchive.fcla.edu/services'
+cmp = ComparisonStream.new(PoolDataStream.new(File.open('darchive.fixity.csv')),
+                           PoolDataStream.new(File.open('tarchive.fixity.csv')))
 
 cmp.each do |ieid, v1, v2|
 
@@ -133,20 +98,19 @@ cmp.each do |ieid, v1, v2|
   elsif v2.nil?
     puts "#{ieid} missing from tarchive: darchive has " + v1.inspect
   else
-    package = StoreMasterModel::Package.create(:ieid => ieid, :name => ieid)
+    package = Package.create(:ieid => ieid, :name => ieid)
 
-    cp1 = StoreMasterModel::Copy.create(:store_location => v1.location, :datetime => v1.timestamp, :pool => pool1)
-    cp2 = StoreMasterModel::Copy.create(:store_location => v2.location, :datetime => v2.timestamp, :pool => pool2)
+    cp1 = Copy.create(:store_location => v1.location, :datetime => v1.timestamp, :pool => pool1)
+    cp2 = Copy.create(:store_location => v2.location, :datetime => v2.timestamp, :pool => pool2)
 
     package.copies << cp1
     package.copies << cp2
 
     if not package.save
+      puts "Save error for #{ieid}"
       puts "copy 1: "   + cp1.errors.full_messages.join('; ')
       puts "copy 2: "   + cp2.errors.full_messages.join('; ')
       puts "package: "  + package.errors.full_messages.join('; ')
     end
   end
-
 end
-
