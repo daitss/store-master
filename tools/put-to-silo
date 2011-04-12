@@ -7,23 +7,10 @@ require 'time'
 require 'net/http'
 require 'uri'
 require 'xml'
-require 'store/utils'
+require 'store-master/utils'
 
 
-# Put a file to a store-master server, in exactly the way store-master might
-#
-# Example URL to which we can PUT:
-#
-# http://store-master.fcla.edu/packages/E20051012_AAAAAB.001
-#
-# you have to obtain the above url by performing a reservation:
-#
-#  curl -sv -d ieid=E20051012_AAAAAB  http://store-master.fcla.edu/reserve/
-#
-# which nmight return something like:
-#
-# <?xml version="1.0" encoding="UTF-8"?>
-# <reserved ieid="E20100727_AAAAAA" location="http://store-master.fcla.edu/packages/E20051012_AAAAAB.001"/>
+# Put a file to a silo server, in exactly the way store-master might
     
 
 

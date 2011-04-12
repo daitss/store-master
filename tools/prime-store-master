@@ -7,15 +7,15 @@
 #
 # It requires data be gathered from the silos service:
 #
-# curl -s http://silos.darchive.fcla.edu/fixity.csv > darchive.fixity.csv
-# curl -s http://silos.tarchive.fcla.edu/fixity.csv > tarchive.fixity.csv
+# curl -s http://silos.darchive.fcla.edu:70/fixity.csv > darchive.fixity.csv
+# curl -s http://silos.tarchive.fcla.edu:70/fixity.csv > tarchive.fixity.csv
 #
 # That raw data takes about an hour to retrieve and looks something
 # like this:
 #
 # "name","location","sha1","md5","size","time","status"
-# "E20051012_AAAAAA","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-04-02T12:52:52-04:00","ok"
-# "E20051012_AAAAAB","http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-04-02T12:53:03-04:00","ok"
+# "E20051012_AAAAAA","http://silos.tarchive.fcla.edu:70/007/data/E20051012_AAAAAA","0d37bd6cebd25d5601abe61ede71e1fcf31b35b7","85d8585997f6c40b0ab559072c78137d","1016350720","2011-04-02T12:52:52-04:00","ok"
+# "E20051012_AAAAAB","http://silos.tarchive.fcla.edu:70/007/data/E20051012_AAAAAB","8533c8362453b75afc8c911e2b9b230445fc380c","bef2badc1234d429b34cec1879e2f0d0","958720000","2011-04-02T12:53:03-04:00","ok"
 #
 # The pool table should already have been populated; we have
 #
@@ -31,7 +31,7 @@
 # 2.5 hours to run.
 
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
+$LOAD_PATH.unshift '/opt/web-services/sites/storemaster/current/lib'
 
 require 'datyl/streams'
 require 'datyl/logger'
@@ -79,8 +79,8 @@ include Streams
 
 setup()
 
-pool1 = Pool.lookup 'http://silos.darchive.fcla.edu/services'
-pool2 = Pool.lookup 'http://silos.tarchive.fcla.edu/services'
+pool1 = Pool.lookup 'http://silos.darchive.fcla.edu:70/services'
+pool2 = Pool.lookup 'http://silos.tarchive.fcla.edu:70/services'
 
 # PoolDataStream looks as so:
 #
