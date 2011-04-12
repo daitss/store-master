@@ -61,29 +61,29 @@ task :darchive do
   #  sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
   #  sh "test -s /tmp/silos.diff && git commit -a"
   #  sh "git push"
-  sh "cap deploy -S target=darchive:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=darchive.fcla.edu/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
 # assumes git pushed out
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
 task :tarchive_beta do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/betastore -S who=fischer:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu/opt/web-services/sites/betastore -S who=fischer:daitss"
 end
 
 desc "Deploy to tarchive's other test storemaster - gammastore.tarchive.fcla.edu"
 task :tarchive_gamma do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/gammastore -S who=fischer:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu/opt/web-services/sites/gammastore -S who=fischer:daitss"
 end
 
 desc "Deploy to ripple's test storemaster"
 task :ripple do
-  sh "cap deploy -S target=ripple:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
 desc "Deploy to franco's storemaster on ripple"
 task :francos do
-  sh "cap deploy -S target=ripple:/opt/web-services/sites/francos-storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/francos-storemaster -S who=daitss:daitss"
 end
 
 
