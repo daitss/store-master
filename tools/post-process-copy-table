@@ -102,7 +102,7 @@ cmp.each do |ieid, v1, v2|
       md5  = v2.md5
       sha1 = v2.sha1
       size = v2.size
-      time = v2.timestamp
+      time = [ v1.timestamp, v2.timestamp ].max
 
     elsif v2.status != 'ok'
       Logger.warn "#{ieid} from tarchive is bad, using darchive's"
@@ -145,5 +145,5 @@ cmp.each do |ieid, v1, v2|
       Logger.info "#{ieid} updated with #{sha1}, #{time}, #{size}"
     end
 
-  end  # of each
-end
+  end
+end  # of each
