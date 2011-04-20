@@ -18,7 +18,7 @@ module FixityUtils
       opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR") do |facility|
         conf.syslog_facility = facility
       end
-      opts.on("--server-name HOSTNAME",  String, "The virtual hostname of the store-master web service") do |host_name|
+      opts.on("--server-address HOSTNAME[:PORT]",  String, "The address of the store-master web service - port defaults to 80") do |host_name|
         conf.server_name = host_name
       end
       opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
