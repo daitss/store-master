@@ -51,10 +51,10 @@ include StoreMaster
     [ Copy, Package, Pool, Reservation ]
   end
 
-  # def self.create_tables                # drops and recreates as well
-  #   self.tables.map &:auto_migrate!
-  #   self.patch_tables
-  # end
+  def self.create_tables                # drops and recreates as well
+    self.tables.map &:auto_migrate!
+    self.patch_tables
+  end
 
   def self.update_tables                # will make minor schema changes
     self.tables.map &:auto_upgrade!
