@@ -351,7 +351,7 @@ module Analyzer
           when -1
             message = "Too few copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
-            event_counter.status = pkg.integrity_failure_event
+            event_counter.status = pkg.integrity_failure_event message
             score_card[:wrong_number] += 1
             all_good = false
           when +1
