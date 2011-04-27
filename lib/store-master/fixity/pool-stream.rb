@@ -41,8 +41,8 @@ module Streams
       get_request.basic_auth(@url.user, @url.password) if url.user or url.password
 
       http = Net::HTTP.new(@url.host, @url.port)
-      http.open_timeout = 60 * 2
-      http.read_timeout = 60 * 10  # TODO: get some perfomance metrics on this
+      http.open_timeout = 60 * 15
+      http.read_timeout = 60 * 60  # TODO: get some perfomance metrics on this
 
       http.request(get_request) do |response|
         raise StoreMaster::ConfigurationError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'

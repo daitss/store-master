@@ -61,8 +61,8 @@ module StoreMasterModel
         request = Net::HTTP::Get.new(url.path)
         request.basic_auth(basic_auth_username, basic_auth_password) if basic_auth_username or basic_auth_password
         response = Net::HTTP.new(url.host, url.port).start do |http|
-          http.open_timeout = 60 * 5
-          http.read_timeout = 60 * 5
+          http.open_timeout = 60 * 15
+          http.read_timeout = 60 * 15
           http.request(request)
         end
 

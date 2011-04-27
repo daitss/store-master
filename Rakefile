@@ -68,12 +68,12 @@ end
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
 task :tarchive_beta do
-  sh "cap deploy -S target=tarchive.fcla.edu/opt/web-services/sites/betastore -S who=fischer:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betastore -S who=daitss:daitss"
 end
 
 desc "Deploy to tarchive's other test storemaster - gammastore.tarchive.fcla.edu"
 task :tarchive_gamma do
-  sh "cap deploy -S target=tarchive.fcla.edu/opt/web-services/sites/gammastore -S who=fischer:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/gammastore -S who=daitss:daitss"
 end
 
 desc "Deploy to ripple's test storemaster"

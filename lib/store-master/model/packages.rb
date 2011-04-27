@@ -117,7 +117,7 @@ module StoreMasterModel
         pkg.locations.each do |loc|
           begin
             pkg.delete_copy(loc)
-          rescue => e2
+          rescue Exception => e2
             msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e2.message}"
           end
         end
@@ -130,7 +130,7 @@ module StoreMasterModel
         pkg.locations.each do |loc|
           begin
             pkg.delete_copy(loc)
-          rescue => e
+          rescue Exception => e
             msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e.message}"
           end
         end
@@ -148,7 +148,7 @@ module StoreMasterModel
       locations.each do |loc|
         begin
           delete_copy(loc)
-        rescue => e
+        rescue Exception => e
           errs.push "failed to delete storage at #{loc}: #{e.message}"
         end
       end
@@ -161,8 +161,8 @@ module StoreMasterModel
       # Note: posting_url may have credentials, but URI#to_s has been redefined in store-master/model.rb to sanitize the printed output
 
       http = Net::HTTP.new(posting_url.host, posting_url.port)
-      http.open_timeout = 60 * 5
-      http.read_timeout = 60 * 60
+      http.open_timeout = 60 * 15
+      http.read_timeout = 60 * 120
       request = Net::HTTP::Post.new(posting_url.request_uri)
       io.rewind if io.respond_to?('rewind')
       request.body_stream = io
@@ -219,8 +219,8 @@ module StoreMasterModel
     def delete_copy silo_resource
 
       http = Net::HTTP.new(silo_resource.host, silo_resource.port) 
-      http.open_timeout = 60 * 5
-      http.read_timeout = 60 * 5  # deletes can take some time for large packages on active filesystems
+      http.open_timeout = 60 * 15
+      http.read_timeout = 60 * 30  # deletes can take some time for large packages on active filesystems
 
       request = Net::HTTP::Delete.new(silo_resource.request_uri)
       request.basic_auth(silo_resource.user, silo_resource.password) if silo_resource.user or silo_resource.password
