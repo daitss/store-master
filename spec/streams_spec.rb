@@ -67,6 +67,7 @@ describe DataFileStream do
     keys.should   == [ '1', '2', '3']
   end
 
+
   it "should yield all values in a stream" do
 
     stream = test_stream  ['1', 'a'],  ['2', 'b'], ['3', 'c']
@@ -78,6 +79,36 @@ describe DataFileStream do
 
     values.should == ['a', 'b', 'c']
   end
+
+
+  it "should allow us to filter a stream by key" do
+
+    stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
+    keys   = []
+
+    stream.filter(lambda{ |k,v| k != '3' }) do |key, value|
+      keys.push key
+    end
+    keys.should   == [ '1', '2']
+  end
+
+
+  it "should allow us to filter a stream by value" do
+
+    stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
+    keys   = []
+
+    def a_or_b  val
+      val == 'a' or val == 'b'
+    end
+
+    stream.filter(lambda{ |k,v| a_or_b(v) }) do |key, value|
+      keys.push key
+    end
+
+    keys.should   == [ '1', '2']
+  end
+
 
   it "should yield nothing on a null stream" do
 
@@ -279,6 +310,38 @@ describe ComparisonStream do
     in_both.should         == [ ['1b', '2b'], ['1d', '2d'] ]
     only_in_first.should   == [ ['1c'], ['1e'], ['1f'] ]
     only_in_second.should  == [ ['2a'] ]
+  end
+
+
+  it "should be produced by the streams spaceship operator" do
+
+    s1 = test_stream              ['b', '1b'], ['c', '1c']
+    s2 = test_stream ['a', '2a'], ['b', '2b'],
+
+    keys  = []
+
+    values_in_both         = []
+    values_only_in_first   = []
+    values_only_in_second  = []
+
+    (s1 <=> s2).each do | k, v1, v2 |
+      keys.push k
+
+      if v1.nil?
+        values_only_in_second.push v2
+      elsif v2.nil?
+        values_only_in_first.push  v1
+      else
+        values_in_both.push        v1
+        values_in_both.push        v2
+      end
+    end
+
+    keys.should == [ 'a', 'b', 'c' ]
+
+    values_in_both.should         == [ '1b', '2b' ]
+    values_only_in_first.should   == [ '1c' ]
+    values_only_in_second.should  == [ '2a' ]
   end
 
 end # of describe ComparisonStream

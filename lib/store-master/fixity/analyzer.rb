@@ -142,7 +142,6 @@ module Analyzer
     def initialize store_master_stream, pool_fixity_streams
       @store_fixities    = Streams::FoldedStream.new(store_master_stream.rewind)
       @pool_fixities     = Streams::PoolMultiFixities.new(pool_fixity_streams)
-      @comparison_stream = Streams::ComparisonStream.new(@store_fixities, @pool_fixities)
 
       @report_error_missing  = Reporter.new("Store-Master/Pools - Missing Packages", "Packages Recorded On The Store-Master, But Not Present In The Pools")
       @report_warn_orphan    = Reporter.new("Store-Master/Pools - Unexpected Packages", "Packages Found In The Pools, But Not Recorded By The Store-Master")
@@ -151,7 +150,7 @@ module Analyzer
     end
 
     def run
-      @comparison_stream.each do |package_name, store_data, pool_data|
+      (@store_fixities <=> @pool_fixities).each do |package_name, store_data, pool_data|
 
         pool_locations  = pool_data  ? pool_data.map  { |datum| datum.location }.sort       : []
         store_locations = store_data ? store_data.map { |datum| datum.store_location }.sort : []
@@ -248,7 +247,9 @@ module Analyzer
 
     def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days
 
-      @comparison_stream   = Streams::ComparisonStream.new(Streams::StoreUrlMultiFixities.new(pool_fixity_streams), daitss_fixity_stream)
+
+      @pool_fixity_stream    = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
+      @daitss_fixity_stream  = daitss_fixity_stream
 
       @required_copies     = required_copies
       @expiration_days     = expiration_days
@@ -318,11 +319,12 @@ module Analyzer
       return result
     end
 
+
     def run
       score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0, :daitss_packages => 0 }
       event_counter = EventCounter.new
 
-      @comparison_stream.each do |url, pool_data, daitss_data|
+      (@pool_fixity_stream <=> @daitss_fixity_stream).each do |url, pool_data, daitss_data|
 
         # for example:
         #
@@ -378,7 +380,8 @@ module Analyzer
 
       expiration_date = (DateTime.now - @expiration_days).to_s
 
-      @comparison_stream.rewind.each do |url, pool_data, daitss_data|
+      (@pool_fixity_stream.rewind <=> @daitss_fixity_stream.rewind).each do |url, pool_data, daitss_data|
+
         next unless daitss_data and pool_data # skip reporting expired orphans
         messages = []
         pool_data.each do |fix|

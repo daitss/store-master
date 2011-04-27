@@ -21,6 +21,55 @@ module Streams
   # all stream classes; that string will often appear in diagnostic
   # log messages.
 
+
+  class AbstractStream
+
+    def initialize dummy
+      raise NotImplementedError, 'No constructor method for abstract stream'
+    end
+
+    def rewind
+      raise NotImplementedError, 'No rewind method for abstract stream'
+    end
+
+    def close
+      raise NotImplementedError, 'No close method for abstract stream'
+    end
+
+    def closed?
+      raise NotImplementedError, 'No closed? method for abstract stream'
+    end
+
+    def get
+      raise NotImplementedError, 'No get method for abstract stream'
+    end
+
+    def eos?
+      raise NotImplementedError, 'No eos? method for abstract stream'
+    end
+
+    # all derived classes will pick these up:
+
+    def each
+      while not eos?
+        yield get
+      end
+    end
+
+    def filter condition
+      self.each do |k, v|
+        yield k, v if condition.call(k, v)
+      end
+    end
+
+    def <=> stream
+      ComparisonStream.new(self, stream) # .each { |k, v1, v2| yield k, v1, v2 }
+    end
+
+  end
+
+
+
   require 'tempfile'
 
   # DataFileStream takes an opened io object (the object must support
@@ -31,7 +80,7 @@ module Streams
   # the value, a simple string will be returned as the value.  When
   # there are two or more fields the value will be an array of strings.
 
-  class DataFileStream
+  class DataFileStream < AbstractStream
     include Enumerable
 
     def initialize  io
@@ -74,11 +123,6 @@ module Streams
       @unget_pending = true
     end
 
-    def each
-      while not eos?
-        yield get
-      end
-    end
 
     def closed?
       return @io.closed?
@@ -103,7 +147,7 @@ module Streams
   #
   # It supports unget
 
-  class UniqueStream
+  class UniqueStream < DataFileStream
 
     def initialize stream
       @stream = stream
@@ -115,21 +159,8 @@ module Streams
       "#<#{self.class}##{self.object_id} wrapping #{@stream.to_s}>"
     end
 
-    def closed?
-      @stream.closed?
-    end
-
-    def close
-      @stream.close
-    end
-
     def eos?
       @stream.eos? and not @ungot
-    end
-
-    def rewind
-      @stream.rewind
-      @stream
     end
 
     # we only support one level of unget
@@ -160,12 +191,6 @@ module Streams
 
       @unbuff = [ ku, vu ]
       return ku, vu
-    end
-
-    def each
-      while not eos?
-        yield get
-      end
     end
 
   end # of class UniqueStream
@@ -219,9 +244,10 @@ module Streams
   #   key exists only on the first stream  - yields key,  data-1, nil
   #   key exists only on the second stream - yields key,  nil,    data-2
   #
-  # The two input streams must have unique and sorted keys.
+  # Note: the two input streams must have unique and sorted keys.
+  # 
 
-  class ComparisonStream
+  class ComparisonStream < AbstractStream
     include Enumerable
 
     attr_accessor :streams
@@ -264,24 +290,20 @@ module Streams
       if    k2.nil?;                        return k1,   v1, nil
       elsif k1.nil?;                        return k2,  nil,  v2
       elsif k1 <  k2; @second_stream.unget; return k1,   v1, nil
-      elsif k2 <  k1; @first_stream.unget;  return k2,  nil,  v2
+      elsif k1 >  k2; @first_stream.unget;  return k2,  nil,  v2
       elsif k1 == k2;                       return k1,   v1,  v2
       end
     end
 
-    def each
-      while not eos?
-        yield get
-      end
-    end
-  end # of class MergedStream
+  end # of class ComparisonStream
 
 
+  # The MultiStream constructor takes an arbitrary number of streams.
   # Return the next key/container pair from a list of streams; the
   # container holds values found on the streams for a given key, thus
   # is of mixed arity.
 
-  class MultiStream
+  class MultiStream < AbstractStream
     include Enumerable
 
     attr_reader   :streams
@@ -355,12 +377,7 @@ module Streams
       return    key, vals
     end
 
-
-    def each
-      while not eos?
-        yield get
-      end
-    end
-
   end # of class MultiStream 
+
+
 end # of module Streams

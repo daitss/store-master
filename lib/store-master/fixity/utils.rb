@@ -8,7 +8,7 @@ module FixityUtils
     return plural
   end
 
-  Struct.new('FixityConfig', :syslog_facility, :server_name, :db_config_file, :db_store_master_key, :db_daitss_key, :pid_directory, :required_copies, :expiration_days)
+  Struct.new('FixityConfig', :syslog_facility, :server_address, :db_config_file, :db_store_master_key, :db_daitss_key, :pid_directory, :required_copies, :expiration_days)
 
   def FixityUtils.parse_options args
 
@@ -19,7 +19,7 @@ module FixityUtils
         conf.syslog_facility = facility
       end
       opts.on("--server-address HOSTNAME[:PORT]",  String, "The address of the store-master web service - port defaults to 80") do |host_name|
-        conf.server_name = host_name
+        conf.server_address = host_name.sub(/:80$/, '')
       end
       opts.on("--db-config-file PATH", String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
         conf.db_config_file = path

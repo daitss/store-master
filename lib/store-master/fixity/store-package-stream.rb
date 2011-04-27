@@ -30,7 +30,8 @@ module StoreMasterModel
     #  name   | character varying(50) | not null
 
 
-    def self.package_copies_ids  before = DateTime.now
+    def self.package_copies_ids before = nil
+      before ||= DateTime.now
       sql = "SELECT packages.id "                     +
               "FROM packages, copies "                +
              "WHERE packages.extant "                 +
@@ -67,12 +68,12 @@ module Streams
 
   # TODO: keep the @ids as an array without shifting, keeping an offset, so we can reset it to zero on rewind.
 
-  class StoreMasterPackageStream
+  class StoreMasterPackageStream < AbstractStream
 
     CHUNK_SIZE = 5000
 
-    def initialize before = DateTime.now
-      @before = before
+    def initialize before = nil
+      @before = before || DateTime.now
       setup
     end
 
@@ -118,12 +119,6 @@ module Streams
         raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}"
       end
       @ungot = true
-    end
-
-    def each
-      while not eos?
-        yield get
-      end
     end
 
     # closing is just for consistency; really a no-op

@@ -10,7 +10,7 @@ require 'store-master'
 
 def setup config
   $0 = 'collect-fixities'
-  Logger.setup('CollectFixities', config.server_name)
+  Logger.setup('CollectFixities', config.server_address)
 
   if config.syslog_facility
     Logger.facility  = config.syslog_facility
@@ -26,7 +26,7 @@ def setup config
 
   Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
   # DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
-  StoreMasterModel::Package.server_location = "http://#{config.server_name}"
+  StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
   Daitss.setup_db(config.db_config_file, config.db_daitss_key)
 end
@@ -48,7 +48,7 @@ end
 
 #  config = FixityUtils.parse_options(ARGV)
 #
-#                                   syslog_facility   server_name                     db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
+#                                   syslog_facility   server_address                  db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
 #                                   ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
 # config=  Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
 # config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
