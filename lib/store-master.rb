@@ -8,6 +8,16 @@ require 'store-master/exceptions'  # brings in http-exceptions
 require 'store-master/utils'
 require 'time'
 
+
+# Get a properly formatted UTC string from a DateTime object. 
+
+class DateTime
+  def to_utc
+    new_offset(0).to_s.sub(/\+00:00$/, 'Z')
+  end
+end
+
+
 # When we deploy with Capistrano it checks out the code using Git
 # into its own branch, and places the git revision hash into the
 # 'REVISION' file.  Here we search for that file, and if found, return

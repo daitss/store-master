@@ -14,7 +14,7 @@ module Streams
   # Create a struct to contain individual pool fixity records: PoolFixityStream will return the
   # key/value pairs <String:package-name>, <Struct:PoolFixityRecord>
 
-  Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :timestamp, :status)
+  Struct.new('PoolFixityRecord', :location, :sha1, :md5, :size, :fixity_time, :put_time, :status)
 
   # PoolFixityStream
   #
@@ -22,9 +22,9 @@ module Streams
   # method yields two values, a package name and a struct describing
   # those resources:
   #
-  # E20110129_CYXBHO.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", size="218734619", timestamp="2011-01-29T02:43:50-05:00", status="ok">
-  # E20110129_CYYJLZ.001, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYYJLZ.001", sha1="249fcdac02c9d1265a66d309c7679e89ba16be2d", md5="c6aed85f0ef29ceea5c0d032eeb8fcc6", size="855784665", timestamp="2011-02-02T12:05:22-05:00", status="ok">
-  # E20110129_CYZBEK.000, #<struct Struct::PoolFixityRecord location="http://pool.b.local/silo-pool.b.1/data/E20110129_CYZBEK.000", sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709", md5="d41d8cd98f00b204e9800998ecf8427e", size="440242968", timestamp="2011-01-29T02:43:53-05:00", status="ok">
+  #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
+  #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000", sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4", md5="c9672d29178ee51eafef97a4b8297a5b", size="587591680", fixity_time="2011-04-27T11:38:45Z", put_time="2011-04-20T22:08:41Z", status="ok">
+  #  ESKMPS0TO_7W4ASP.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000", sha1="a1bc6134dbc4dc0beffa94235f470bb7e0e8a016", md5="9fc127a90ec6c02b094d6f656f74232c", size="1003280384", fixity_time="2011-04-27T11:39:11Z", put_time="2011-04-21T14:20:13Z", status="ok">
   #
   # In the interest of speed the location and timestamp fields are simple strings (not a URI and DateTime as you might expect)
 
@@ -61,8 +61,10 @@ module Streams
 
     # The CSV data returned by the above HTTP request is of the form:
     #
-    # "E20110127_OEFCIO.000","http://pool.example.com/data/E20110127_OEFCIO.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","218734619","2011-01-27T13:04:27-05:00","ok"
-    # "E20110127_OPAHSG.000","http://pool.example.com/data/E20110127_OPAHSG.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","855784665","2011-01-27T13:27:55-05:00","ok"
+    #   "name","location","sha1","md5","size","fixity_time","put_time","status"
+    #   "E20110420_OOJGPX.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:25:58Z","ok"
+    #   "E20110420_OOKCET.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:26:02Z","ok"
+    #   "E20110420_OOKUHK.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:04Z","2011-04-20T17:26:06Z","ok"
     #  ...
     # key = name;  value = [ location, sha1, md5, date, status ]
 

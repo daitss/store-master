@@ -26,7 +26,7 @@ module Analyzer
     # Recall that each of the PoolFixityStreamss given to us yield key/value pairs:
     # <String::package>, <Struct::PoolFixityRecord>, e.g.
     #
-    # E20110129_CYXBHO.000, #<Struct::PoolFixityRecord location="http://pool.example.com/001/data/E20110129_CYXBHO.000", sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201", md5="4732518c5fe6dbeb8429cdda11d65c3d", timestamp="2011-01-29T02:43:50-05:00", status="ok">
+    #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
     #
     # All fields within the struct are simple strings.
 
@@ -126,11 +126,9 @@ module Analyzer
     #
     # The Pool fixity records look as so:
     #
-    # E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.example.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok">,
-    #                        #<Struct::PoolFixityRecord location="http://two.example.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
-    #
-    # E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.example.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:05-05:00", status="ok">,
-    #                        #<Struct::PoolFixityRecord location="http://two.example.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
+    #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
+    #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000", sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4", md5="c9672d29178ee51eafef97a4b8297a5b", size="587591680", fixity_time="2011-04-27T11:38:45Z", put_time="2011-04-20T22:08:41Z", status="ok">
+    #  ESKMPS0TO_7W4ASP.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000", sha1="a1bc6134dbc4dc0beffa94235f470bb7e0e8a016", md5="9fc127a90ec6c02b094d6f656f74232c", size="1003280384", fixity_time="2011-04-27T11:39:11Z", put_time="2011-04-21T14:20:13Z", status="ok">
     # ....
     #
     # Our job here is to do a sanity check on these two streams, so we build a ComparisonStream. Cases:
@@ -264,10 +262,9 @@ module Analyzer
       @reports             = [ @report_summary, @report_missing, @report_fixity, @report_integrity, @report_orphaned, @report_expired ]
     end
 
-    # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity record for each copy of the package:
+    # the StoreUrlMultiFixities stream provides as a key the storage url for a package; the associated value is an array of pool fixity records for each copy of the package (these may be mixed arities)
     #
-    # http://store-master.com/packages/E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", size="26903684", timestamp="2011-02-10T16:11:54-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROGMBP.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:11:54-05:00", status="ok"> ]
-    # http://store-master.com/packages/E20110210_ROIUIC.000 [ #<Struct::PoolFixityRecord location="http://one.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", size="5609284854", timestamp="2011-02-10T16:12:05-05:00", status="ok">, #<Struct::PoolFixityRecord location="http://two.pools.com/.../E20110210_ROIUIC.000", sha1="a5ffd229992586461450851d434e3ce51debb626", md5="15e4aeae105dc0cfc8edb2dd4c79454e", timestamp="2011-02-10T16:12:06-05:00", status="ok"> ]
+    # http://store-master.com/packages/E20110210_ROGMBP.000 [ #<Struct::PoolFixityRecord ...> #<Struct::PoolFixityRecord ...> ]
     # ...
 
     # the daitss_fixity_stream  provides the same key as the above, and a DataMapper-supplied record of the DAITSS information about the package:
