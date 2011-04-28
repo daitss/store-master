@@ -243,12 +243,12 @@ module Analyzer
 
     attr_reader :reports
 
-    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days
-
+    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, no_later_than
 
       @pool_fixity_stream    = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
       @daitss_fixity_stream  = daitss_fixity_stream
 
+      @cutoff_time         = no_later_than.to_utc
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
@@ -317,6 +317,14 @@ module Analyzer
     end
 
 
+    def too_recent pool_data
+      return false unless pool_data
+      pool_data.each do |pool_record|
+        return true if pool_record.put_time > @cutoff_time
+      end
+      return false
+    end
+
     def run
       score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0, :daitss_packages => 0 }
       event_counter = EventCounter.new
@@ -326,8 +334,11 @@ module Analyzer
         # for example:
         #
         # url:          http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000
-        # pool_data:    [ #<Struct::PoolFixityRecord location="http://silos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", md5="06cd2880ad13eed3255706752be8a6b1", size="119244800", timestamp="2011-02-18T19:50:46-05:00", status="ok"> , .... ]
+        # pool_data:    [ #<struct Struct::PoolFixityRecord location="http...", sha1="4ab..", md5="0d7...", size="131..", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok"> .. more structs .. ]
         # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
+
+
+        next if too_recent(pool_data)
 
         pkg = Daitss::Package.lookup_from_url(url)
 
@@ -370,20 +381,23 @@ module Analyzer
 
           if all_good
             score_card[:fixity_successes] += 1
-            event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.timestamp }.min)
+            event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.fixity_time }.min)
           end
         end
       end
 
       expiration_date = (DateTime.now - @expiration_days).to_s
 
-      (@pool_fixity_stream.rewind <=> @daitss_fixity_stream.rewind).each do |url, pool_data, daitss_data|
+      @pool_fixity_stream.rewind
+      @daitss_fixity_stream.rewind
+
+      (@pool_fixity_stream <=> @daitss_fixity_stream).each do |url, pool_data, daitss_data|
 
         next unless daitss_data and pool_data # skip reporting expired orphans
         messages = []
         pool_data.each do |fix|
-          if fix.timestamp < expiration_date
-            messages.push ' has expired copy at ' + fix.location + ' - last fixity ' + fix.timestamp
+          if fix.fixity_time < expiration_date
+            messages.push ' has expired copy at ' + fix.location + ' - last fixity ' + fix.fixity_time
           end
         end
         if not messages.empty?

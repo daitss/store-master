@@ -56,7 +56,7 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} #{@url}>"   # TODO: double check that URL is properly sanitized
+      "#<#{self.class} #{@url}>"   # TODO: double check that URL is properly sanitized
     end
 
     # The CSV data returned by the above HTTP request is of the form:

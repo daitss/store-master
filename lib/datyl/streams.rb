@@ -1,18 +1,18 @@
-module Streams
-
   # A stream, for us, is a sequence of key/value pairs where the keys
   # are sorted in ascending order.  The key will typically be a string
   # (it must support <, >, ==); the values can be anything, but will
   # often be a string or an array of strings.  All streams must support
   # the following methods:
   #
-  #    close          - cleans up the stream: it is unavailable for rewind.
-  #    closed?        - returns true if the stream has been closed.
-  #    each do |k,v|  - succesively yields key/value pairs off the stream.
-  #    eos?           - boolean signalling that we're at the End Of the Stream.
-  #    k, v = get     - reads a single key/value pair off the stream. Returns nil when eos? is true.
-  #    rewind         - resets the stream to the beginning or the key/value pairs; returns the stream
-  #
+  #    close           - cleans up the stream: it is unavailable for rewind.
+  #    closed?         - returns true if the stream has been closed.
+  #    each do |k,v|   - succesively yields key/value pairs off the stream.
+  #    eos?            - boolean signalling that we're at the End Of the Stream.
+  #    filters         - a list of procs (takes k, v; returns true/false) that will filter the stream
+  #    k, v = get      - reads a single key/value pair off the stream. Returns nil when eos? is true.
+  #    rewind          - resets the stream to the beginning or the key/value pairs; returns the stream
+  #    <=> stream      - returns a comparison stream between self and second stream
+  #                      
   # Optionally, it may support
   #
   #    unget          - forget that we've read the last key/value pair
@@ -22,53 +22,36 @@ module Streams
   # log messages.
 
 
-  class AbstractStream
 
-    def initialize dummy
-      raise NotImplementedError, 'No constructor method for abstract stream'
-    end
+module CommonStreamMethods
 
-    def rewind
-      raise NotImplementedError, 'No rewind method for abstract stream'
-    end
-
-    def close
-      raise NotImplementedError, 'No close method for abstract stream'
-    end
-
-    def closed?
-      raise NotImplementedError, 'No closed? method for abstract stream'
-    end
-
-    def get
-      raise NotImplementedError, 'No get method for abstract stream'
-    end
-
-    def eos?
-      raise NotImplementedError, 'No eos? method for abstract stream'
-    end
-
-    # all derived classes will pick these up:
-
-    def each
-      while not eos?
-        yield get
-      end
-    end
-
-    def filter condition
-      self.each do |k, v|
-        yield k, v if condition.call(k, v)
-      end
-    end
-
-    def <=> stream
-      ComparisonStream.new(self, stream) # .each { |k, v1, v2| yield k, v1, v2 }
-    end
-
+  def filters
+    @filters ||= []
   end
 
+  def passes_filters k, v      
+    return false if k.nil?   
+    filters.each do |proc|
+      return false unless proc.call(k, v)
+    end
+    return true
+  end
 
+  def each
+    while not eos?
+      k, v = get
+      yield k, v if passes_filters(k, v)
+    end
+  end
+
+  def <=> stream
+    Streams::ComparisonStream.new(self, stream)
+  end
+
+end
+
+
+module Streams
 
   require 'tempfile'
 
@@ -80,8 +63,9 @@ module Streams
   # the value, a simple string will be returned as the value.  When
   # there are two or more fields the value will be an array of strings.
 
-  class DataFileStream < AbstractStream
-    include Enumerable
+  class DataFileStream 
+
+    include CommonStreamMethods
 
     def initialize  io
       @io            = io
@@ -91,7 +75,7 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} from #{io.to_s}>"
+      "#<#{self.class} from io #{@io}>"
     end
 
     def rewind
@@ -147,7 +131,9 @@ module Streams
   #
   # It supports unget
 
-  class UniqueStream < DataFileStream
+  class UniqueStream 
+
+    include CommonStreamMethods
 
     def initialize stream
       @stream = stream
@@ -156,11 +142,23 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} wrapping #{@stream.to_s}>"
+      "#<#{self.class} wrapping #{@stream.to_s}>"
     end
 
     def eos?
       @stream.eos? and not @ungot
+    end
+
+    def rewind
+      @stream.rewind
+    end
+
+    def close
+      @stream.close
+    end
+
+    def closed?
+      @stream.closed?
     end
 
     # we only support one level of unget
@@ -247,8 +245,7 @@ module Streams
   # Note: the two input streams must have unique and sorted keys.
   # 
 
-  class ComparisonStream < AbstractStream
-    include Enumerable
+  class ComparisonStream 
 
     attr_accessor :streams
 
@@ -258,8 +255,14 @@ module Streams
       @streams       = [ @first_stream, @second_stream ]
     end
 
+    def each
+      while not eos?
+        yield get
+      end
+    end
+
     def to_s
-      "#<#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
+      "#<#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
     end
 
     def rewind
@@ -295,6 +298,7 @@ module Streams
       end
     end
 
+
   end # of class ComparisonStream
 
 
@@ -303,8 +307,10 @@ module Streams
   # container holds values found on the streams for a given key, thus
   # is of mixed arity.
 
-  class MultiStream < AbstractStream
-    include Enumerable
+  class MultiStream 
+
+    include CommonStreamMethods
+
 
     attr_reader   :streams
 
@@ -316,7 +322,7 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
+      "#<#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
     end
 
     def closed?
@@ -378,6 +384,4 @@ module Streams
     end
 
   end # of class MultiStream 
-
-
 end # of module Streams

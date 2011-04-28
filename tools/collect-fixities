@@ -57,14 +57,16 @@ config = FixityUtils.parse_options(ARGV) or exit
 setup(config)
 
 begin
+  start_time = DateTime.now
+
   # Get our data streams, some from web services, some from various databases
 
   pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
-  daitss_fixity_stream = Streams::DaitssPackageStream.new
+  daitss_fixity_stream = Streams::DaitssPackageStream.new(:before => start_time)
 
   reports = []
 
-  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days).run.reports
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days, start_time).run.reports
 
   # TODO: these turn out to be redundant, maybe put into their own script?
   #

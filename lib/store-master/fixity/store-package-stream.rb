@@ -68,7 +68,10 @@ module Streams
 
   # TODO: keep the @ids as an array without shifting, keeping an offset, so we can reset it to zero on rewind.
 
-  class StoreMasterPackageStream < AbstractStream
+  class StoreMasterPackageStream
+
+    include CommonStreamMethods
+
 
     CHUNK_SIZE = 5000
 

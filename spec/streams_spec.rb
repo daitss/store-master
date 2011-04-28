@@ -80,13 +80,25 @@ describe DataFileStream do
     values.should == ['a', 'b', 'c']
   end
 
+  it "should allow us to create and return a filter" do
+
+    stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
+
+    proc = lambda{ |k,v| k != '3' }
+    stream.filters.push proc
+    
+    stream.filters.include?(proc).should == true
+  end
+
 
   it "should allow us to filter a stream by key" do
 
     stream = test_stream  ['1', 'a'], ['2', 'b'], ['3', 'c']
     keys   = []
 
-    stream.filter(lambda{ |k,v| k != '3' }) do |key, value|
+    stream.filters.push lambda{ |k,v| k != '3' }
+
+    stream.each do |key, value|
       keys.push key
     end
     keys.should   == [ '1', '2']
@@ -102,7 +114,9 @@ describe DataFileStream do
       val == 'a' or val == 'b'
     end
 
-    stream.filter(lambda{ |k,v| a_or_b(v) }) do |key, value|
+    stream.filters.push lambda{ |k,v| a_or_b(v) }
+
+    stream.each do |key, value|
       keys.push key
     end
 

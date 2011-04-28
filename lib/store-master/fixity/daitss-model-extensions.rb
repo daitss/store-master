@@ -30,7 +30,7 @@ module Daitss
     # Provide a list of all of the package ids sorted by the copy URL.
     # There will be on the order of 10^6 of these
 
-    def self.package_copies_ids  before = DateTime.now
+    def self.package_copies_ids  before
       sql = "SELECT packages.id "                    +
               "FROM packages, aips, copies "         +
              "WHERE packages.id = aips.package_id "  +

@@ -17,14 +17,16 @@ module Streams
   #
 
   class DaitssPackageStream
+    
+    include CommonStreamMethods
 
     # TODO: we might be better off maintaining an index into @ieids and keeping it around, rather than shifting
     # materials off and having to re-create it with another database hit.  We'll see after how it's used in practice.
 
     CHUNK_SIZE = 2000
 
-    def initialize before = DateTime.now
-      @before = before
+    def initialize options = {}
+      @before = options[:before] || DateTime.now
       setup
     end
 
@@ -61,12 +63,6 @@ module Streams
     def unget
       raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
       @ungot = true
-    end
-
-    def each
-      while not eos?
-        yield get
-      end
     end
 
     # closing is just for consistency; really a no-op
