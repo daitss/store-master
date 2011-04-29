@@ -7,9 +7,9 @@
   #    new      - specialized processing for your constructor
   #    read     - return key, value pair, or nil if at end of stream
   #    eos?     - true if at end of stream
-  #    rewind   - resets the stream to the beginning; returns the stream
+  #    rewind   - resets the stream to the beginning and returns the stream
   #
-  # Then include CommonStreamMethods, which gives you:
+  # Then include CommonStreamMethods, which give you:
   #
   #    each do |key, value| - successively yields key/value pairs off the stream.
   #    filters              - a list of procs (takes k, v; returns true/false) that will filter the stream
@@ -18,11 +18,8 @@
   #    <=> stream           - returns a specialized comparison stream between self and second stream
   #
   # Additionally, there should be a good diagnostic #to_s method on
-  # all stream classes; that string will often appear in diagnostic
-  # log messages.
+  # all stream classes; that string will often appear in log messages.
 
-
-# To create a stream, include CommonStreamMethods and add constructor, to_s, read, rewind and eos?
 
 module CommonStreamMethods
 
@@ -125,8 +122,7 @@ module Streams
   # stream's keys are always unique; if a UniqueStream encounters two
   # identical keys, it returns the key/value pair of the first of
   # them, discarding the subsequent ones.
-  #
-  # It supports unget
+
 
   class UniqueStream 
 
@@ -169,8 +165,10 @@ module Streams
   end # of class UniqueStream
 
 
-  # FoldedStream: given a stream, it returns a stream  that has folded the values for identical keys together in an array.
-  # Thus the values for a FoldedStream are always an array, possibly of mixed arity. As for all streams, the keys must be sorted.
+  # FoldedStream is initialized from stream, returning a stream that
+  # has folded the values for identical keys together in an array.
+  # Thus the values for a FoldedStream are always an array, possibly
+  # of mixed arity. As for all streams, the keys must be sorted.
  
   class FoldedStream 
 
@@ -181,7 +179,7 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class} wrapping #{@stream.to_s}>"
+      "#<#{self.class} folding #{@stream}>"
     end
 
     def eos?
@@ -203,7 +201,7 @@ module Streams
           return upcoming[0], vals
         end
 
-        if next_record[0] = upcoming[0]
+        if next_record[0] == upcoming[0]
           vals.push next_record[1]
         else
           @stream.unget
@@ -219,37 +217,37 @@ module Streams
   # Thus the values for a FoldedStream are of mixed arity, but will
   # always be an array. As for all streams, the keys must be sorted.
 
-  class FoldedStream
+  # class FoldedStream
 
-    def get
-      return if eos?
+  #   def get
+  #     return if eos?
 
-      if @ungot
-         @ungot = false
-         return @unbuff[0], @unbuff[1]
-      end
+  #     if @ungot
+  #        @ungot = false
+  #        return @unbuff[0], @unbuff[1]
+  #     end
 
-      ku, vu = @stream.get
+  #     ku, vu = @stream.get
 
-      @vals = Array.new
-      @vals << vu
+  #     @vals = Array.new
+  #     @vals << vu
 
-      loop do
-        break if eos?
-        k, v = @stream.get
-        if k != ku
-          @stream.unget
-          break
-        else
-          @vals << v
-        end
-      end
+  #     loop do
+  #       break if eos?
+  #       k, v = @stream.get
+  #       if k != ku
+  #         @stream.unget
+  #         break
+  #       else
+  #         @vals << v
+  #       end
+  #     end
 
-      @unbuff = [ ku, @vals ]
-      return ku, @vals
-    end
+  #     @unbuff = [ ku, @vals ]
+  #     return ku, @vals
+  #   end
 
-  end # of class FoldedStream
+  # end # of class FoldedStream
 
 
   # The MultiStream constructor takes an arbitrary number of streams.
@@ -318,7 +316,9 @@ module Streams
   #   key exists only on the second stream - yields key,  nil,    data-2
   #
   # Note: the two input streams must have unique and sorted keys.
-  # 
+  #
+  # All basic streams support the <=> method,  which provides a
+  # comparison stream.
 
   class ComparisonStream 
 
@@ -337,7 +337,7 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
+      "#<#{self.class} comparing stream #{@first_stream} with #{@second_stream}"
     end
 
     def rewind
