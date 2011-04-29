@@ -191,8 +191,20 @@ describe DataFileStream do
 end  # of describe DataFileStream
 
 
-
 describe UniqueStream do
+
+
+  it "should yield all values in an already-uniquely-keyed stream" do
+
+    stream = UniqueStream.new(test_stream  ['1', 'a'],  ['2', 'b'], ['3', 'c'])
+    values = []
+
+    stream.each do |key, value|
+      values.push value
+    end
+
+    values.should == ['a', 'b', 'c']
+  end
 
   it "should remove multiple keys from a scalar-valued stream, providing only the first-supplied value" do
 
@@ -295,71 +307,6 @@ describe UniqueStream do
   end
 
 end  # of describe UniqueStream
-
-
-
-describe ComparisonStream do
-
-  it "should properly merge simple streams" do
-
-    s1 = test_stream              ['b', '1b'], ['c', '1c'], ['d', '1d'], ['e', '1e'], ['f', '1f']
-    s2 = test_stream ['a', '2a'], ['b', '2b'],              ['d', '2d']
-
-    in_both         = []
-    only_in_first   = []
-    only_in_second  = []
-
-    ms = ComparisonStream.new(s1, s2)
-    ms.each do |key, data1, data2|
-      if data1.nil?
-        only_in_second.push [ data2 ]
-      elsif data2.nil?
-        only_in_first.push  [ data1 ]
-      else
-        in_both.push        [ data1, data2 ]
-      end
-    end
-
-
-    in_both.should         == [ ['1b', '2b'], ['1d', '2d'] ]
-    only_in_first.should   == [ ['1c'], ['1e'], ['1f'] ]
-    only_in_second.should  == [ ['2a'] ]
-  end
-
-
-  it "should be produced by the streams spaceship operator" do
-
-    s1 = test_stream              ['b', '1b'], ['c', '1c']
-    s2 = test_stream ['a', '2a'], ['b', '2b'],
-
-    keys  = []
-
-    values_in_both         = []
-    values_only_in_first   = []
-    values_only_in_second  = []
-
-    (s1 <=> s2).each do | k, v1, v2 |
-      keys.push k
-
-      if v1.nil?
-        values_only_in_second.push v2
-      elsif v2.nil?
-        values_only_in_first.push  v1
-      else
-        values_in_both.push        v1
-        values_in_both.push        v2
-      end
-    end
-
-    keys.should == [ 'a', 'b', 'c' ]
-
-    values_in_both.should         == [ '1b', '2b' ]
-    values_only_in_first.should   == [ '1c' ]
-    values_only_in_second.should  == [ '2a' ]
-  end
-
-end # of describe ComparisonStream
-
 
 
 describe FoldedStream do
@@ -467,3 +414,67 @@ describe MultiStream do
   end
 
 end # of describe MultiStream
+
+
+describe ComparisonStream do
+
+  it "should properly merge simple streams" do
+
+    s1 = test_stream              ['b', '1b'], ['c', '1c'], ['d', '1d'], ['e', '1e'], ['f', '1f']
+    s2 = test_stream ['a', '2a'], ['b', '2b'],              ['d', '2d']
+
+    in_both         = []
+    only_in_first   = []
+    only_in_second  = []
+
+    ms = ComparisonStream.new(s1, s2)
+    ms.each do |key, data1, data2|
+      if data1.nil?
+        only_in_second.push [ data2 ]
+      elsif data2.nil?
+        only_in_first.push  [ data1 ]
+      else
+        in_both.push        [ data1, data2 ]
+      end
+    end
+
+
+    in_both.should         == [ ['1b', '2b'], ['1d', '2d'] ]
+    only_in_first.should   == [ ['1c'], ['1e'], ['1f'] ]
+    only_in_second.should  == [ ['2a'] ]
+  end
+
+
+  it "should be produced by the streams spaceship operator" do
+
+    s1 = test_stream              ['b', '1b'], ['c', '1c']
+    s2 = test_stream ['a', '2a'], ['b', '2b'],
+
+    keys  = []
+
+    values_in_both         = []
+    values_only_in_first   = []
+    values_only_in_second  = []
+
+    (s1 <=> s2).each do | k, v1, v2 |
+      keys.push k
+
+      if v1.nil?
+        values_only_in_second.push v2
+      elsif v2.nil?
+        values_only_in_first.push  v1
+      else
+        values_in_both.push        v1
+        values_in_both.push        v2
+      end
+    end
+
+    keys.should == [ 'a', 'b', 'c' ]
+
+    values_in_both.should         == [ '1b', '2b' ]
+    values_only_in_first.should   == [ '1c' ]
+    values_only_in_second.should  == [ '2a' ]
+  end
+
+end # of describe ComparisonStream
+

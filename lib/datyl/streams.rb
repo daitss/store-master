@@ -3,33 +3,34 @@
   # (it must support <, >, ==); the values can be anything, but will
   # often be a string or an array of strings.  All streams must support
   # the following methods:
+
+  #    new      - specialized processing for your constructor
+  #    read     - return key, value pair, or nil if at end of stream
+  #    eos?     - true if at end of stream
+  #    rewind   - resets the stream to the beginning; returns the stream
   #
-  #    close           - cleans up the stream: it is unavailable for rewind.
-  #    closed?         - returns true if the stream has been closed.
-  #    each do |k,v|   - succesively yields key/value pairs off the stream.
-  #    eos?            - boolean signalling that we're at the End Of the Stream.
-  #    filters         - a list of procs (takes k, v; returns true/false) that will filter the stream
-  #    k, v = get      - reads a single key/value pair off the stream. Returns nil when eos? is true.
-  #    rewind          - resets the stream to the beginning or the key/value pairs; returns the stream
-  #    <=> stream      - returns a comparison stream between self and second stream
-  #                      
-  # Optionally, it may support
+  # Then include CommonStreamMethods, which gives you:
   #
-  #    unget          - forget that we've read the last key/value pair
+  #    each do |key, value| - successively yields key/value pairs off the stream.
+  #    filters              - a list of procs (takes k, v; returns true/false) that will filter the stream
+  #    key, value = get     - reads a single key/value pair off the stream. Returns nil when eos? is true.
+  #    unget                - forget that we've read the last key/value pair - we'll get it on next pass - only one level
+  #    <=> stream           - returns a specialized comparison stream between self and second stream
   #
   # Additionally, there should be a good diagnostic #to_s method on
   # all stream classes; that string will often appear in diagnostic
   # log messages.
 
 
+# To create a stream, include CommonStreamMethods and add constructor, to_s, read, rewind and eos?
 
 module CommonStreamMethods
 
   def filters
-    @filters ||= []
+    @_filters ||= []
   end
 
-  def passes_filters k, v      
+  def _passes_filters k, v      
     return false if k.nil?   
     filters.each do |proc|
       return false unless proc.call(k, v)
@@ -37,16 +38,35 @@ module CommonStreamMethods
     return true
   end
 
-  def each
-    while not eos?
-      k, v = get
-      yield k, v if passes_filters(k, v)
+  def unget
+    @_handle_unget = true
+  end
+
+  def ungetting?
+    @_handle_unget
+  end
+
+  def get
+    if ungetting?
+      @_handle_unget = false
+      return @_last
+    elsif eos?
+      return
+    else
+      return @_last = read
     end
   end
 
-  def <=> stream
-    Streams::ComparisonStream.new(self, stream)
+  def each
+    while not eos?
+      k, v = get
+      yield k, v if _passes_filters(k, v)
+    end
   end
+
+   def <=> stream
+     Streams::ComparisonStream.new(self, stream)
+   end
 
 end
 
@@ -68,10 +88,7 @@ module Streams
     include CommonStreamMethods
 
     def initialize  io
-      @io            = io
-      @last_key      = nil
-      @last_val      = nil
-      @unget_pending = false
+      @io = io
     end
 
     def to_s
@@ -85,41 +102,21 @@ module Streams
     end
 
     def eos?
-      @io.eof? and not @unget_pending
+      @io.eof? and not ungetting?
     end
-
-    def get
-      return if eos?
-
-      if @unget_pending
-         @unget_pending = false
-         return @last_key, @last_val
-      end
-
-      @last_key, *tail = read
-      @last_val = tail.length > 1 ? tail : tail[0]
-
-      return @last_key, @last_val
-    end
-
-    def unget
-      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @unget_pending
-      @unget_pending = true
-    end
-
-
-    def closed?
-      return @io.closed?
-    end
-
-    def close
-      @io.close unless @io.closed?
-    end
-
-    # semi-private:
 
     def read
-      return *@io.gets.split(/\s+/)
+      return if @io.eof?
+      head, *tail = @io.gets.strip.split(/\s+/)
+      return unless head
+      tail = if tail.empty?
+               nil
+             elsif tail.length == 1
+               tail[0]
+             else
+               tail
+             end
+      return head, tail
     end
 
   end # of class DataFileStream
@@ -127,7 +124,7 @@ module Streams
   # UniqueStream takes a stream and filters it so that the returned
   # stream's keys are always unique; if a UniqueStream encounters two
   # identical keys, it returns the key/value pair of the first of
-  # them, discarding the second.
+  # them, discarding the subsequent ones.
   #
   # It supports unget
 
@@ -136,9 +133,7 @@ module Streams
     include CommonStreamMethods
 
     def initialize stream
-      @stream = stream
-      @unbuff = []
-      @ungot  = false
+      @stream  = stream
     end
 
     def to_s
@@ -146,61 +141,85 @@ module Streams
     end
 
     def eos?
-      @stream.eos? and not @ungot
+      @stream.eos?
     end
 
     def rewind
       @stream.rewind
     end
 
-    def close
-      @stream.close
-    end
-
-    def closed?
-      @stream.closed?
-    end
-
-    # we only support one level of unget
-
-    def unget
-      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
-      @ungot = true
-    end
-
-    def get
-      return if eos?
-
-      if @ungot
-         @ungot = false
-         return @unbuff[0], @unbuff[1]
-      end
-
-      ku, vu = @stream.get
+    def read
+      return unless upcoming = @stream.get
 
       loop do
-        break if eos?
-        k, v = @stream.get
-        if k != ku
-          @stream.unget
-          break
-        end
-      end
+        next_record = @stream.get
 
-      @unbuff = [ ku, vu ]
-      return ku, vu
+        if next_record.nil?
+          return upcoming
+        end
+
+        if next_record[0] != upcoming[0]
+          @stream.unget
+          return upcoming
+        end
+
+      end
     end
 
   end # of class UniqueStream
+
+
+  # FoldedStream: given a stream, it returns a stream  that has folded the values for identical keys together in an array.
+  # Thus the values for a FoldedStream are always an array, possibly of mixed arity. As for all streams, the keys must be sorted.
+ 
+  class FoldedStream 
+
+    include CommonStreamMethods
+
+    def initialize stream
+      @stream  = stream
+    end
+
+    def to_s
+      "#<#{self.class} wrapping #{@stream.to_s}>"
+    end
+
+    def eos?
+      @stream.eos?
+    end
+
+    def rewind
+      @stream.rewind
+    end
+
+    def read
+      return unless upcoming = @stream.get
+      vals = [ upcoming[1] ]
+
+      loop do
+        next_record = @stream.get
+
+        if next_record.nil?
+          return upcoming[0], vals
+        end
+
+        if next_record[0] = upcoming[0]
+          vals.push next_record[1]
+        else
+          @stream.unget
+          return upcoming[0], vals
+        end
+      end
+    end
+
+  end # of class FoldedStream
 
   # FoldedStream is a stream filter; given a stream, it returns a stream
   # that has folded values for identical keys together in an array.
   # Thus the values for a FoldedStream are of mixed arity, but will
   # always be an array. As for all streams, the keys must be sorted.
-  #
-  # It subclasses UniqueStream and supports one level of unget
 
-  class FoldedStream < UniqueStream
+  class FoldedStream
 
     def get
       return if eos?
@@ -231,6 +250,62 @@ module Streams
     end
 
   end # of class FoldedStream
+
+
+  # The MultiStream constructor takes an arbitrary number of streams.
+  # The get method returns the next key/container pair from a list of streams; the
+  # container holds values found on the streams for a given key, thus
+  # is of mixed arity.
+
+  class MultiStream 
+
+    include CommonStreamMethods
+
+    attr_reader   :streams
+
+    def initialize *streams
+      @values_container = Array   # subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
+      @streams = streams
+    end
+
+    def to_s
+      "#<#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
+    end
+
+    def eos?
+      @streams.inject(true) { |sum, stream|  sum and stream.eos? }
+    end
+
+    def rewind
+      @streams.each { |s| s.rewind }
+      self
+    end
+
+    def read
+      scorecard = []
+
+      @streams.each do |s|
+        k, v = s.get
+        scorecard.push [ s, k, v ] unless k.nil?
+      end
+
+      return if scorecard.empty?
+
+      key  = scorecard.map{ |s, k, v|  k  }.sort[0]
+      vals = @values_container.new
+
+      scorecard.each do |s, k, v|
+        if k == key
+          vals << v
+        else
+          s.unget
+        end
+      end
+
+      return key, vals
+    end
+  end # of class MultiStream 
+
 
 
   # ComparisonStream is a bit different from the other Stream classes in
@@ -301,87 +376,4 @@ module Streams
 
   end # of class ComparisonStream
 
-
-  # The MultiStream constructor takes an arbitrary number of streams.
-  # Return the next key/container pair from a list of streams; the
-  # container holds values found on the streams for a given key, thus
-  # is of mixed arity.
-
-  class MultiStream 
-
-    include CommonStreamMethods
-
-
-    attr_reader   :streams
-
-    def initialize *streams
-      @values_container = Array   # subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
-      @streams = streams
-      @ungot   = false
-      @last    = nil
-    end
-
-    def to_s
-      "#<#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}>"
-    end
-
-    def closed?
-      @streams.inject(true) { |sum, stream|  sum and stream.closed? }
-    end
-
-    def close
-      @streams.each { |s| s.close }
-    end
-
-    def eos?
-      not @ungot and @streams.inject(true) { |sum, stream|  sum and stream.eos? }
-    end
-
-    def rewind
-      @streams.each { |s| s.rewind }
-      self
-    end
-
-    def unget
-      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
-      @ungot = true
-    end
-
-    # Sort the keys from the the set of values returned by a GET on
-    # all streams to find the smallest key; assemble a container of
-    # the values that match the smallest key; push all other key/value
-    # pairs back onto their associated streams for later processing.
-    # Returns the key/container pair.
-
-    def get
-      if @ungot
-        @ungot = false
-        return @last[0], @last[1]
-      end
-
-      scorecard = []
-
-      @streams.each do |s|
-        k, v = s.get
-        scorecard.push [ s, k, v ] unless k.nil?
-      end
-
-      return if scorecard.empty?
-
-      key  = scorecard.map{ |s, k, v|  k  }.sort[0]
-      vals = @values_container.new
-
-      scorecard.each do |s, k, v|
-        if k == key
-          vals << v
-        else
-          s.unget
-        end
-      end
-
-      @last = [ key, vals ]
-      return    key, vals
-    end
-
-  end # of class MultiStream 
 end # of module Streams

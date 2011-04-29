@@ -38,9 +38,9 @@ def teardown config, streams
     File.delete pid_path if File.exists? pid_path and File.writable? pid_path
   end
 
-  if streams 
-    streams.each { |stream| stream.close unless stream.closed? }
-  end
+#   if streams 
+#     streams.each { |stream| stream.close unless stream.closed? }
+#   end
 end
 
 
