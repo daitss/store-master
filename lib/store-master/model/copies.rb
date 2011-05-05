@@ -39,8 +39,6 @@ module StoreMasterModel
 
     def quiet_delete
 
-      raise 'oops' if rand(2).odd?
-
       silo_resource = self.url
 
       http = Net::HTTP.new(silo_resource.host, silo_resource.port)
