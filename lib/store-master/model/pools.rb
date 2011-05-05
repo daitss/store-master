@@ -61,13 +61,13 @@ module StoreMasterModel
         request = Net::HTTP::Get.new(url.path)
         request.basic_auth(basic_auth_username, basic_auth_password) if basic_auth_username or basic_auth_password
         response = Net::HTTP.new(url.host, url.port).start do |http|
-          http.open_timeout = 60 * 15
-          http.read_timeout = 60 * 15
+          http.open_timeout = OPEN_TIMEOUT
+          http.read_timeout = READ_TIMEOUT
           http.request(request)
         end
 
-      rescue => e
-        raise SiloUnreachable, "Couldn't contact the silo service at URL #{services_location}: #{e.message}"
+      rescue Exception => e
+        raise SiloUnreachable, "Couldn't contact the silo service at URL #{services_location}: #{e.class} - #{e.message}"
 
       else
         raise SiloStoreError, "Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}." unless response.code == '200'
@@ -151,7 +151,6 @@ module StoreMasterModel
     def self.lookup services_location
       first(:services_location => services_location)
     end
-  end # of Pool
 
-
-end
+  end # of class Pool
+end # of module StoreMasterModel

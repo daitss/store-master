@@ -8,6 +8,14 @@ module StoreMaster
     end
   end
 
+  # Not really an error;  we use this in the case of a partial silo deletion failure
+
+  class Http207 < HttpError
+    def status_code; 207; end
+    def status_text; "Multi-Status"; end
+  end
+
+
   # Most of the following comments are pretty darn obvious - they
   # are included for easy navigation in the generated rdoc html files.
 

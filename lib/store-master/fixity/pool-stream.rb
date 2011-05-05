@@ -5,11 +5,8 @@ require 'store-master/model'
 require 'store-master/exceptions'
 
 # Create a variety of sorted data streams from the silo-pool services keyed by package-name.
-# This returns what the silos have, not what store-master thinks they have.
 
 module Streams
-
-  # TODO: can we get rid of timestamp and thus speed this up a bit?
 
   # Create a struct to contain individual pool fixity records: PoolFixityStream will return the
   # key/value pairs <String:package-name>, <Struct:PoolFixityRecord>
@@ -142,6 +139,7 @@ module Streams
       @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
       @prefix = StoreMasterModel::Package.server_location + '/packages/'
     end
+
 
     def get
       k, v = super

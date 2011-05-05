@@ -3,13 +3,10 @@ require 'store-master/model'
 
 module StoreMasterModel
 
-
   class Package
 
     include DataMapper::Resource
     include StoreMaster
-    
-    @@server_location = nil 
 
     def self.default_repository_name
       :store_master
@@ -28,9 +25,20 @@ module StoreMasterModel
 
     attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes filled in on succesful store
 
-    # return URI objects for all of the copies we have, in pool-preference order
+    @@server_location = nil
 
-    # TODO: this next method should really be named copy_locations
+    # e.g. http://store-master.example.com:8080 - we're required to set this up initially
+
+    def self.server_location= prefix
+      @@server_location = prefix.gsub(/:80$/, '')
+    end
+
+    def self.server_location
+      @@server_location
+    end
+
+
+    # return URI objects for all of the copies we have, in pool-preference order
 
     def locations
       copies.sort { |a,b| b.pool.read_preference <=> a.pool.read_preference }.map { |copy| copy.url }
@@ -40,15 +48,6 @@ module StoreMasterModel
       "#{@@server_location || 'http://localhost'}/packages/#{name}"
     end
 
-    # e.g. http://store-master.example.com:8080
-
-    def self.server_location= prefix
-      @@server_location = prefix.gsub(/:80$/, '')
-    end
-
-    def self.server_location
-      @@server_location
-    end
 
     def self.exists? name
       not first(:name => name, :extant => true).nil?
@@ -62,8 +61,9 @@ module StoreMasterModel
       first(:name => name, :extant => true)
     end
 
-    # TODO: now that names are not sequential we're probably susceptible to drop material in subsequent 
-    # slices when new random ids are inserted during processing.  check. order by time instead
+    # TODO: now that names are not sequential we may have a timing issue:
+    # When a chunk is being processed, new random ids may be inserted
+    # anywhere.  We don't have the capability to order by  time here.
 
     def self.package_chunks
       offset = 0
@@ -81,154 +81,80 @@ module StoreMasterModel
       end
     end
 
-    ### TODO
+    # Store a received data stream to multiple silo pools.
 
-    # def safe_delete loc
-    #   delete_copy loc
-    # rescue => e
-    #   "failed in cleanup when trying to delete copy at #{loc}: #{e.message}"
-    # end
-
-
-    def self.store data_io, metadata
+    def self.store io, metadata
+      copies = []
 
       required_metadata = [ :name, :ieid, :md5, :size, :type ]
       missing_metadata  = required_metadata - (required_metadata & metadata.keys)
 
-      raise "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
-      raise "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
-      raise "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
+      raise SiloStoreError, "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
 
-      # TODO: we need to wrap the package insert with the copy insert in a transaction.
-      # TODO: when there's a pacakge without copies, a GET on the package will cause a 500 error; there's a race condition here...
+      raise PackageUsed, "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
+      raise PackageUsed, "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
 
-      pkg = create(:name => metadata[:name], :ieid => metadata[:ieid])
+      pkg = new(:name => metadata[:name], :ieid => metadata[:ieid])
 
-      begin
-        Pool.list_active.each do |pool|
-          location = pkg.store_copy(data_io, pool.post_url(pkg.name), metadata)
-          pkg.copies << Copy.create(:store_location => location, :pool => pool)
-        end
+      pkg.md5  = metadata[:md5]
+      pkg.size = metadata[:size].to_i
+      pkg.type = metadata[:type]
 
-      # TODO: exception wrapper to DRY
+      pkg.transaction do |trans|
+        begin
+          Pool.list_active.each do |pool|
+            cpy = Copy.store(io, pkg, pool)
+            copies.push cpy
 
-      rescue => e1
-        msg = "Failure storing a copy of #{metadata[:name]}: #{e1.message}"
-        pkg.locations.each do |loc|
-          begin
-            pkg.delete_copy(loc)
-          rescue Exception => e2
-            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e2.message}"
+            msg = "Error copying package #{pkg.name} to #{cpy.store_location}:"
+
+            raise SiloStoreError, "#{msg} md5 mismatch (we have #{pkg.md5}, got back #{cpy.md5})"         unless pkg.md5  == cpy.md5
+            raise SiloStoreError, "#{msg} size mismatch (we have #{pkg.size}, got back #{cpy.size})"      unless pkg.size == cpy.size
+            raise SiloStoreError, "#{msg} mime-type mismatch (we have #{pkg.type}, got back #{cpy.type})" unless pkg.type == cpy.type
           end
+
+          copies.each { |cp| pkg.copies << cp }
+
+          if not pkg.save
+            errors = []
+            errors.push pkg.errors.full_messages.join(', ')
+            pkg.copies { |cp|  errors.push  cp.errors.full_messages.join(', ')  }
+            raise "Database error saving package #{pkg.name}: " + errors.join('; ')
+          end
+
+        rescue => e
+          trans.rollback
+          raise
         end
-        pkg.destroy if pkg.respond_to? :destroy
-        raise e1, msg
       end
 
-      if not pkg.save
-        msg = "DB error recording #{name} - #{pkg.errors.full_messages.join('; ')}"
-        pkg.locations.each do |loc|
-          begin
-            pkg.delete_copy(loc)
-          rescue Exception => e
-            msg += "; also, failed in cleanup, when trying to delete copy at #{loc}: #{e.message}"
-          end
-        end
-        raise DataBaseError, msg
-      end
+
+    rescue => e
+      copies.each { |cp| cp.quiet_delete }
+      raise
+    else
       pkg
     end
 
-    # on failure may leave orphan
+    # On failure may leave orphaned packages in remote silo pools.  We'll log a 207 MultiStatus on partial error,
+    # and have to dig out what happened on the remote end, if possible.  TODO: add diagnostics to quiet_delete
+    # and pass them up, if it proves necessary.
 
     def delete
       self.extant = false
-      raise  DataBaseError, "error deleting #{self.name} - #{self.errors.full_messages.join('; ')}" unless self.save
-      errs = []
-      locations.each do |loc|
-        begin
-          delete_copy(loc)
-        rescue Exception => e
-          errs.push "failed to delete storage at #{loc}: #{e.message}"
-        end
-      end
-      raise DriveByError, errs.join('; ') unless errs.empty?
-    end
 
+      raise SiloStoreError, "Error saving package #{name} to database: #{errors.full_messages.join(', ')}" unless self.save
 
-    def store_copy io, posting_url, metadata
-
-      # Note: posting_url may have credentials, but URI#to_s has been redefined in store-master/model.rb to sanitize the printed output
-
-      http = Net::HTTP.new(posting_url.host, posting_url.port)
-      http.open_timeout = 60 * 15
-      http.read_timeout = 60 * 120
-      request = Net::HTTP::Post.new(posting_url.request_uri)
-      io.rewind if io.respond_to?('rewind')
-      request.body_stream = io
-      request.initialize_http_header("Content-MD5" => StoreUtils.md5hex_to_base64(metadata[:md5]), "Content-Length" => metadata[:size].to_s, "Content-Type" => metadata[:type])
-      request.basic_auth(posting_url.user, posting_url.password) if posting_url.user or posting_url.password
-      response = http.request(request)
-      status = response.code.to_i
-
-      # TODO: timeout in the above doesn't cause the package entry to be deleted; so we get a package entry without 
-      # copy entry - boom! later.
-      #
-      # TODO: we need to wrap the package insert with the copy insert in a transaction, on an error run down and delete any created copies
-
-
-      raise(SiloStoreError, "#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}") if status >= 300
-
-      # Example XML document returned from POST to a silo, giving details about the resource
-      # 
-      #   <?xml version="1.0" encoding="UTF-8"?>                              
-      #   <created type="application/x-tar"                                                                            
-      #            time="2010-10-21T10:29:19-04:00"                                                                    
-      #            sha1="ac4d813081e066422bc1dc7e7997ace1bfb858b2"                                                     
-      #            etag="a3f07bc57127112f2a2c40d026b1abe1"                                                             
-      #            md5="32e2ce3af2f98a115e121285d042c9bd"                                                              
-      #            size="6031360"                                                                                      
-      #            location="http://silo.example.com/001/data/E20101021_LJLAMU.001"                                         
-      #            name="E20101021_LJLAMU.001"/>
-
-      returned_data = {}
-      begin
-        parser = XML::Parser.string(response.body).parse
-        parser.find('/created')[0].each_attr { |attr| returned_data[attr.name] = attr.value }
-      rescue => e
-        raise SiloStoreError, "Invalid XML document returned when saving package to #{posting_url}: #{e.message}"
+      probs = []
+      copies.each do |copy|
+        probs.push copy.store_location unless copy.quiet_delete
       end
 
-      # check the md5, size, type vs. our request to that returned by remotely created copy.
-
-      raise SiloStoreError, "Error storing to #{posting_url} - md5 mismatch"   if returned_data["md5"]  != metadata[:md5]
-      raise SiloStoreError, "Error storing to #{posting_url} - size mismatch"  if returned_data["size"] != metadata[:size].to_s
-      raise SiloStoreError, "Error storing to #{posting_url} - type mismatch"  if returned_data["type"] != metadata[:type]
-
-      self.md5  = returned_data['md5']
-      self.sha1 = returned_data['sha1']
-      self.type = returned_data['type']
-      self.size = returned_data['size'].to_i
-      self.etag = returned_data['etag']
-
-      returned_data['location']
+      if not probs.empty?
+        word = (probs.length == 1 ? 'entry' : 'entries')
+        raise PartialDelete, "For package #{name}, failed to delete silo #{word} #{probs.join(', ')}"
+      end
     end
 
-    # TODO: raise an exception, maybe, for 'come back later' if remote service too busy and we get a timeout...
-
-    def delete_copy silo_resource
-
-      http = Net::HTTP.new(silo_resource.host, silo_resource.port) 
-      http.open_timeout = 60 * 15
-      http.read_timeout = 60 * 30  # deletes can take some time for large packages on active filesystems
-
-      request = Net::HTTP::Delete.new(silo_resource.request_uri)
-      request.basic_auth(silo_resource.user, silo_resource.password) if silo_resource.user or silo_resource.password
-
-      response = http.request(request)
-      status = response.code.to_i
-
-      raise SiloStoreError, "#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource} - #{response.body}" if status >= 300
-    end
   end # of class Package
 end # of module StoreMasterModel

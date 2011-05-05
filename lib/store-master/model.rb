@@ -29,7 +29,10 @@ end
 
 module StoreMasterModel
 
-include StoreMaster
+  OPEN_TIMEOUT = 60 * 30
+  READ_TIMEOUT = 60 * 90
+
+  include StoreMaster
 
   def self.setup_db yaml_file, key
     dm = DataMapper.setup(:store_master, StoreUtils.connection_string(yaml_file, key))

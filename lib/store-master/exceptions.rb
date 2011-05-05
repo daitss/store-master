@@ -47,13 +47,7 @@ module StoreMaster
 
   class BadName                    < Http412; end
 
-  # DriveByError is just meant to be caught so the message logged somewhere appropriate; the
-  # error is non-fatal and should not be percolated to the top...
-
-  class DriveByError               < StandardError; end
-
-  # Some Precondition failed on storing to a silo, could be a configuration issue like
-  # bad username/password
+  # Some Precondition failed on storing to a silo
 
   class SiloStoreError             < Http500;       end
 
@@ -64,6 +58,19 @@ module StoreMaster
   # No IEID was supplied
 
   class NoIEID                     < Http412;       end 
+
+  # trying to delete something not around
+
+  class PackageNotHere             < Http404;       end
+
+  class PackageNotHereAnymore      < Http410;       end
+
+  # for when we couldn't actually delete all silo copies, though we do mark StoreMaster as having deleted the package.
+
+  class PartialDelete              < Http207;       end
+
+  class PackageUsed                < Http409;       end
+
 
 end # of module
 

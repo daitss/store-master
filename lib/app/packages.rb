@@ -81,11 +81,7 @@ delete '/packages/:name' do |name|
 
   raise_exception_if_missing(name)
 
-  begin
-    Package.lookup(name).delete
-  rescue DriveByError => e
-    Logger.err "Orphan alert - DELETE of resource #{this_resource} partially failed:  #{e.message}"
-  end
+  Package.lookup(name).delete
 
   status 204
 end
