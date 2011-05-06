@@ -12,12 +12,12 @@
   # 
   # Then include CommonStreamMethods, which give you:
   #
-  #    each do |key, value| - successively yields key/value pairs off the stream.
-  #    filters              - a list of procs (takes k, v; returns true/false) that will filter the stream
-  #    key, value = get     - reads a single key/value pair off the stream. Returns nil when there is no unget pending and your provided eos? is true.
-  #    unget                - forget that we've read the last key/value pair - we'll get it on next pass - only one level
+  #    each do |key, value| - successively yields key/value pairs off the stream after applying filters
+  #    filters              - a list of procs (takes k, v; returns true/false) that will filter the stream provided by each (not get)
+  #    get                  - reads a single key/value pair off the stream. Returns nil when there is no unget pending and your provided eos? is true.
+  #    unget                - push the last read key/value pair back on the stream, we'll get it on next pass - only one level deep allowed
+  #    ungetting?           - for use in your eos? method, means there's a datum pending from a prior unget.
   #    <=> stream           - returns a specialized comparison stream between self and second stream
-  #    ungetting?           - for use in your eos? method, means there's a datum get will
   #
   # Additionally, there should be a good diagnostic #to_s method on
   # all stream classes; that string will often appear in log messages.
@@ -38,6 +38,7 @@ module CommonStreamMethods
   end
 
   def unget
+    raise "streams error: cannot unget twice in a row" if @_handle_unget
     @_handle_unget = true
   end
 

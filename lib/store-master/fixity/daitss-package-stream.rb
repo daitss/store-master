@@ -41,9 +41,9 @@ module Streams
 
     def eos?
       return false if ungetting?
-      return @buff.empty? and @ieids.empty?
+      return (@buff.empty? and @ieids.empty?)
     end
-
+    
     def read 
       return if eos?
 
