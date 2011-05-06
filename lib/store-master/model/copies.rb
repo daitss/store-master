@@ -35,7 +35,7 @@ module StoreMasterModel
     end
 
     # Delete the resource at silo_resource, a URI object, with no possibilitiy of raising an exception.
-    # By using this we'll silently leave orphaned material on the silos, but there's really no way
+    # Returns true on success, false on failure.
 
     def quiet_delete
 
@@ -72,9 +72,7 @@ module StoreMasterModel
       response = http.request(request)
       status = response.code.to_i
 
-
-
-      if not (status >= 200 and status < 300)
+      if status < 200 or status >= 300
         message =   "Store of package #{package.name} to #{post_address} failed with status #{response.code} - #{response.message}"
         message +=  "; response from server was: #{response.body.strip}" if response.body and not response.body.strip.empty?
 

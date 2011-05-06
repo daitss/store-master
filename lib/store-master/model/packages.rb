@@ -111,6 +111,8 @@ module StoreMasterModel
             raise SiloStoreError, "#{msg} md5 mismatch (we have #{pkg.md5}, got back #{cpy.md5})"         unless pkg.md5  == cpy.md5
             raise SiloStoreError, "#{msg} size mismatch (we have #{pkg.size}, got back #{cpy.size})"      unless pkg.size == cpy.size
             raise SiloStoreError, "#{msg} mime-type mismatch (we have #{pkg.type}, got back #{cpy.type})" unless pkg.type == cpy.type
+
+            pkg.sha1 = cpy.sha1
           end
 
           copies.each { |cp| pkg.copies << cp }
