@@ -36,53 +36,32 @@ module Streams
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} IEIDs prior to #{@before}>"
+      "#<#{self.class} IEIDs prior to #{@before}>"
     end
 
     def eos?
-      @ieids.empty? and @buff.empty? and not @ungot
+      return false if ungetting?
+      return @buff.empty? and @ieids.empty?
     end
 
-    def get
+    def read 
       return if eos?
-
-      if @ungot
-        @ungot = false
-        return @last.url, @last
-      end
 
       if @buff.empty?
         @buff = Daitss::Package.package_copies @ieids.shift(CHUNK_SIZE)
       end
 
-      @last = @buff.shift
+      return if @buff.empty?
 
-      return @last.url, @last
-    end
-
-    def unget
-      raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}" if @ungot
-      @ungot = true
-    end
-
-    # closing is just for consistency; really a no-op
-
-    def close
-      @closed = true
-    end
-
-    def closed?
-      @closed
+      datum = @buff.shift
+      return datum.url, datum
     end
 
     private 
 
     def setup
       @ieids  = Daitss::Package.package_copies_ids @before
-      @last   = nil
       @buff   = []
-      @closed = false
-      @ungot  = false
     end
 
   end # of class DaitssPackageStream

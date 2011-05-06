@@ -50,6 +50,11 @@ module Streams
       end
       file.rewind
       super(file)
+
+    rescue StoreMaster::ConfigurationError => e
+      raise
+    rescue Exception => e
+      raise "Error initializing pool data from #{@url}: #{e.class} - #{e.message}"
     end
 
     def to_s

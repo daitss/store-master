@@ -72,7 +72,6 @@ module Streams
 
     include CommonStreamMethods
 
-
     CHUNK_SIZE = 5000
 
     def initialize before = nil
@@ -87,51 +86,29 @@ module Streams
 
     def setup
       @ids    = StoreMasterModel::Package.package_copies_ids @before
-      @last   = nil
       @buff   = []
-      @closed = false
-      @ungot  = false
     end
 
     def to_s
-      "#<#{self.class}##{self.object_id} IEIDs prior to #{@before}>"
+      "#<#{self.class} IEIDs prior to #{@before}>"
     end
 
     def eos?
-      @ids.empty? and @buff.empty? and not @ungot
+      return false if ungetting?
+      return @ids.empty? and @buff.empty?
     end
 
-    def get
+    def read
       return if eos?
 
-      if @ungot
-        @ungot = false
-        return @last.name, @last
-      end
-
       if @buff.empty?
-        @buff = StoreMasterModel::Package.package_copies @ids.shift(CHUNK_SIZE)
+         @buff = StoreMasterModel::Package.package_copies @ids.shift(CHUNK_SIZE)
       end
 
-      @last = @buff.shift
-      return @last.name, @last
-    end
-
-    def unget
-      if @ungot
-        raise "The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}"
-      end
-      @ungot = true
-    end
-
-    # closing is just for consistency; really a no-op
-
-    def close
-      @closed = true
-    end
-
-    def closed?
-      @closed
+      return if @buff.empty?
+      
+      datum = @buff.shift
+      return datum.name, datum
     end
 
   end # of class StoreMasterPackageStream

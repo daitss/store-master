@@ -9,13 +9,15 @@
   #    eos?     - true if at end of stream
   #    rewind   - resets the stream to the beginning and returns the stream
   #
+  # 
   # Then include CommonStreamMethods, which give you:
   #
   #    each do |key, value| - successively yields key/value pairs off the stream.
   #    filters              - a list of procs (takes k, v; returns true/false) that will filter the stream
-  #    key, value = get     - reads a single key/value pair off the stream. Returns nil when eos? is true.
+  #    key, value = get     - reads a single key/value pair off the stream. Returns nil when there is no unget pending and your provided eos? is true.
   #    unget                - forget that we've read the last key/value pair - we'll get it on next pass - only one level
   #    <=> stream           - returns a specialized comparison stream between self and second stream
+  #    ungetting?           - for use in your eos? method, means there's a datum get will
   #
   # Additionally, there should be a good diagnostic #to_s method on
   # all stream classes; that string will often appear in log messages.
