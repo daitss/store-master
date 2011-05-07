@@ -215,43 +215,6 @@ module Streams
 
   end # of class FoldedStream
 
-  # FoldedStream is a stream filter; given a stream, it returns a stream
-  # that has folded values for identical keys together in an array.
-  # Thus the values for a FoldedStream are of mixed arity, but will
-  # always be an array. As for all streams, the keys must be sorted.
-
-  # class FoldedStream
-
-  #   def get
-  #     return if eos?
-
-  #     if @ungot
-  #        @ungot = false
-  #        return @unbuff[0], @unbuff[1]
-  #     end
-
-  #     ku, vu = @stream.get
-
-  #     @vals = Array.new
-  #     @vals << vu
-
-  #     loop do
-  #       break if eos?
-  #       k, v = @stream.get
-  #       if k != ku
-  #         @stream.unget
-  #         break
-  #       else
-  #         @vals << v
-  #       end
-  #     end
-
-  #     @unbuff = [ ku, @vals ]
-  #     return ku, @vals
-  #   end
-
-  # end # of class FoldedStream
-
 
   # The MultiStream constructor takes an arbitrary number of streams.
   # The get method returns the next key/container pair from a list of streams; the
@@ -351,15 +314,6 @@ module Streams
 
     def eos?
       @first_stream.eos? and  @second_stream.eos?
-    end
-
-    def close
-      @first_stream.close
-      @second_stream.close
-    end
-
-    def closed?
-      @first_stream.closed? and @second_stream.closed?
     end
 
     def get
