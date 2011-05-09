@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby; -*-
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'store-master'
+
+
+# To setup an instance of storemaster, create a new postgres database and enter 
+# the configuration information in a yaml file. 
+#
+# The yaml file consists of lines of account information similar to the following
+# (quote anything with white space in it):
+#
+# your_new_db: { vendor: postgres, hostname: localhost, database: storemaster, username: dbuser, password: "top secret!" }
+
+
+StoreMasterModel.setup_db('/opt/fda/etc/db.yml', 'your_new_db')
+StoreMasterModel.create_tables
+
+
+
+
