@@ -81,6 +81,48 @@ module StoreMasterModel
       end
     end
 
+    # Sort of like /dev/null, for the case we have no underlying silos.
+    # Entirely for testing.
+
+    def self.stub io, metadata
+      required_metadata = [ :name, :ieid, :md5, :size, :type ]
+      missing_metadata  = required_metadata - (required_metadata & metadata.keys)
+
+      raise SiloStoreError, "Can't store data package, missing information for #{missing_metadata.join(', ')}"         unless missing_metadata.empty?
+
+      raise PackageUsed, "Can't store package #{metadata[:name]}, it already exists"                                    if exists? metadata[:name]
+      raise PackageUsed, "Can't store package using name #{metadata[:name]}, it's been previously created and deleted"  if was_deleted? metadata[:name]
+
+      pkg = new(:name => metadata[:name], :ieid => metadata[:ieid])
+
+      io.rewind if io.respond_to?('rewind')
+      sha1 = Digest::SHA1.new
+      md5  = Digest::MD5.new
+      size = 0
+      while buff = io.read(1_048_576)
+        size += buff.length
+        sha1 << buff
+        md5  << buff
+      end
+
+      msg = "Error receiving package #{pkg.name} to stub service:"
+
+      pkg.type = metadata[:type]
+      pkg.md5  = md5.hexdigest
+      pkg.size = size
+      pkg.sha1 = sha1.hexdigest
+
+      raise SiloStoreError, "#{msg} md5 mismatch (expected #{metadata[:md5]},  got #{pkg.md5})"      unless pkg.md5  == metadata[:md5]
+      raise SiloStoreError, "#{msg} size mismatch (expected #{metadata[:size]}, got #{pkg.size})"    unless pkg.size == metadata[:size].to_i
+
+      if not pkg.save        
+        raise "Database error saving package #{pkg.name}: " + pkg.errors.full_messages.join(', ')
+      end
+
+      return pkg
+    end
+
+
     # Store a received data stream to multiple silo pools.
 
     def self.store io, metadata

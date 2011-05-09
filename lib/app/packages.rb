@@ -52,11 +52,15 @@ put '/packages/:name' do |name|
 
   pools = Pool.list_active
 
-  raise ConfigurationError, "No active pools are configured." if not pools or pools.empty?
-
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  pkg = Package.store(request.body, metadata)
+  # This next
+
+  if not pools or pools.empty? # then we're a stub server
+    pkg = Package.stub(request.body, metadata)    # raise ConfigurationError, "No active pools are configured."
+  else
+    pkg = Package.store(request.body, metadata)
+  end
 
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
@@ -93,11 +97,8 @@ get '/packages/:name' do |name|
   raise_exception_if_missing(name)
 
   locations = Package.lookup(name).locations
-
-  # TODO, maybe: ping them (via head) in order with an aggressive timeout,  using first that responds.
-  # needs to wait on silo rework to make sure we can do HEADs on tape-based systems quickly.
-
-  raise "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
+  
+  raise Http404, "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
 
   redirect locations[0].to_s_with_userinfo, 303
 end
