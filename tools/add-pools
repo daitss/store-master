@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby; -*-
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'store-master'
+require 'optparse'
+require 'ostruct'
+require 'uri'
+
+def parse_command_line args
+  conf = OpenStruct.new(:file => nil, :key => nil)
+  opts = OptionParser.new do |opts|
+    opts.on("--file DB_CONFIG_FILE",  String, "The database configuration filename for this service") do |filename|
+      conf.file = filename
+    end
+    opts.on("--key DB_CONFIG_KEY",  String, "The key in the database configuration file for this service") do |key|
+      conf.key = key
+    end
+  end
+  opts.parse!(args)
+  raise "No key to the DB configuration file provided"        unless conf.key
+  raise "No filename for the DB configuration file provided"  unless conf.file
+  raise "Configuration yaml file #{conf.file} not found"      unless File.exists? conf.file
+  raise "Configuration yaml file #{conf.file} not readable"   unless File.readable? conf.file
+rescue => e
+  STDERR.puts e, opts
+  exit
+else
+  return conf
+end
+
+
+conf = parse_command_line ARGV
+
+StoreMasterModel.setup_db(conf.file, conf.key)
+
+
+ARGV.each do |pool_server|
+
+  url = 'http://' + pool_server.gsub('/', '') + '/services'
+
+  begin 
+    URI.parse(url)
+  rescue => e
+    STDERR.puts "There's a syntax error in the pool server address #{pool_server}, skipping."
+    next
+  end
+
+  StoreMasterModel::Pool.add(url)
+end
