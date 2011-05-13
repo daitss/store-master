@@ -3,6 +3,7 @@ shared
 *-
 .#*
 \#*
+irb*.rb
 .emacs*
 .yardoc
 TAGS
@@ -12,4 +13,4 @@ spec/reports
 coverage
 junk
 .bundle
-vendor
+bundle
