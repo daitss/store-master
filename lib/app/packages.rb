@@ -52,12 +52,14 @@ put '/packages/:name' do |name|
 
   pools = Pool.list_active
 
+  if pools.length < settings.minimum_required_pools
+    raise ConfigurationError, "This service is configured to require #{poolses(settings.minimum_required_pools)}, but only found #{poolses(pools.length)} available from a database lookup in the pools table"
+  end
+
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  # This next
-
-  if not pools or pools.empty? # then we're a stub server
-    pkg = Package.stub(request.body, metadata)    # raise ConfigurationError, "No active pools are configured."
+  if not pools or pools.empty?                   # then we're a stub server
+    pkg = Package.stub(request.body, metadata)    
   else
     pkg = Package.store(request.body, metadata)
   end

@@ -1,26 +1,15 @@
+Some of the utilities provided here are specific to the Florida
+Digital Archive and are included as a starting point for your
+development of additional DAITSS services.
 
-prime-store-master reads a datafile in from the following format:
+Generally applicable:
 
-E20051012_AAAAAA        http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAA
-E20051012_AAAAAA        http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAA
-E20051012_AAAAAB        http://silos.darchive.fcla.edu/007/data/E20051012_AAAAAB
-E20051012_AAAAAB        http://silos.tarchive.fcla.edu/007/data/E20051012_AAAAAB
+  collect-fixities	a script to cron, collects fixity information for the DAITSS events table
+  add-pools		utility to add silo-pools to the store master db on installation and later
+  create-db		utility to initialize database tables on installation
+	
+FDA specific, no warranties expressed or implied:
 
-
-We can generate that data from the silo records directly, as so:
-
-echo "select name, concat('http://', hostname, filesystem, '/data/', name) from packages, silos where packages.silo_record_id = silos.id and packages.extant" \
-   | my TarchiveSilo_testRW  \
-   | grep ^E2 \
-   | sed 's|/daitssfs/|/|' \
-   | grep -v /037/ > data.tarchive
-
-Do for tarchive, darchive and combine, sort.
-
-
-Or from the DAITSS db:
-
-select IEID, concat(URL, '/', PATH) from SILO, COPY where not SILO.RETIRED and SILO.ID = COPY.SILO and SILO.ID NOT IN (77,78) | grep ^E | sort
-
-
-Both methods should should give identical results.
+  ieid			generate a test IEID, a package identifier
+  put-to-silo		test script to simulate store-master's forwarding of a package to a silo pool service
+  put-to-storemaster	test script to simulate DAITSS's submission of a package to a store master service

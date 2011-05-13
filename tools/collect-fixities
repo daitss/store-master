@@ -24,8 +24,8 @@ def setup config
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
-  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
   # DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
+  Reporter.max_lines_to_write = 100   # each report will have at most these lines, though everything will go to syslog
   StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
   Daitss.setup_db(config.db_config_file, config.db_daitss_key)
@@ -38,20 +38,10 @@ def teardown config, streams
     File.delete pid_path if File.exists? pid_path and File.writable? pid_path
   end
 
-#   if streams 
-#     streams.each { |stream| stream.close unless stream.closed? }
-#   end
 end
 
 
 # MAIN:
-
-#  config = FixityUtils.parse_options(ARGV)
-#
-#                                   syslog_facility   server_address                  db_config_file         db_store_master_key       db_daitss_key      pid_directory  required_copies  expiration_days
-#                                   ---------------   -----------                     --------------         -------------------       -------------      -------------  ---------------  ---------------
-# config=  Struct::FixityConfig.new('LOCAL4',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'store_master_dual_pool', 'tarchive_daitss', nil,           2,               45)
-# config = Struct::FixityConfig.new('LOCAL3',         'betastore.tarchive.fcla.edu',  '/opt/fda/etc/db.yml', 'ps_store_master',        'ps_daitss_2',     nil,           1,               45)
 
 config = FixityUtils.parse_options(ARGV) or exit
 setup(config)
@@ -68,10 +58,9 @@ begin
 
   reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days, start_time).run.reports
 
-  # TODO: these turn out to be redundant, maybe put into their own script?
+  # TODO: these turn out to be somewhat redundant, maybe put into their own script?
   #
   # store_master_stream  = Streams::StoreMasterPackageStream.new
-  #
   #
   # reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   # reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports

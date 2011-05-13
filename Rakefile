@@ -76,9 +76,9 @@ task :ripple do
   sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
 
-desc "Deploy to franco's storemaster on ripple"
-task :francos do
-  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/francos-storemaster -S who=daitss:daitss"
+desc "Deploy to stub-storemaster on ripple"
+task :ripple_stub do
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/stub-master -S who=daitss:daitss"
 end
 
 
@@ -108,9 +108,9 @@ task :docs do
   end
 end
 
-# Build local (not deployed) bundled files for in-place development.
+# Build local bundled Gems; 
 
-desc "Reset bundles"
+desc "Gem bundles"
 task :bundle do
   sh "bundle install --path vendor/bundle"
 end

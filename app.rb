@@ -21,6 +21,8 @@ configure do
   set :environment,  :production  # Get some exceptional defaults.
   set :raise_errors, false        # Handle our own exceptions.
 
+  set :minimum_required_pools, (ENV['MINIMUM_REQUIRED_POOLS'] || '2').to_i
+
   Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
@@ -29,9 +31,11 @@ configure do
 
   Logger.info "Starting #{REVISION}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
-  (ENV.keys - ['BASIC_AUTH_PASSWORD', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
-    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
-  end
+  Logger.info "Requiring #{settings.minimum_required_pools} pools for storage"
+
+#  (ENV.keys - ['BASIC_AUTH_PASSWORD', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
+#    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
+#  end
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if ENV['DATABASE_LOGGING']
 
@@ -54,25 +58,25 @@ end
 
 # testing stuff:
 
-get '/settings/?' do
-  myopts = {}
-  [ :app_file, :clean_trace, :dump_errors, :environment, :host, :lock,
-    :logging, :method_override, :port, :public, :raise_errors, :root, 
-    :run, :server, :sessions, :show_exceptions, :static, :views ].each  do |key|
-
-    if settings.respond_to? key
-      value = settings.send key
-      rep = value
-      if rep.class == Array
-        rep = '[' + value.join(', ') + ']'
-      elsif rep.class == Symbol
-        rep = ':' + value.to_s
-      end
-      myopts[key] = rep
-    else
-      myopts[key] = '--'   # undefined
-    end
-  end
-  erb :settings, :locals => { :opts => myopts, :revision => REVISION }
-end
+# get '/settings/?' do
+#   myopts = {}
+#   [ :app_file, :clean_trace, :dump_errors, :environment, :host, :lock,
+#     :logging, :method_override, :port, :public, :raise_errors, :root, 
+#     :run, :server, :sessions, :show_exceptions, :static, :views ].each  do |key|
+#
+#     if settings.respond_to? key
+#       value = settings.send key
+#       rep = value
+#       if rep.class == Array
+#         rep = '[' + value.join(', ') + ']'
+#       elsif rep.class == Symbol
+#         rep = ':' + value.to_s
+#       end
+#       myopts[key] = rep
+#     else
+#       myopts[key] = '--'   # undefined
+#     end
+#   end
+#   erb :settings, :locals => { :opts => myopts, :revision => REVISION }
+# end
 

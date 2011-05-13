@@ -49,5 +49,15 @@ helpers do
     raise Http404, "The resource #{this_resource} doesn't exist"                       unless Package.exists?(name)
   end
 
+  def poolses num
+    case num.to_i
+    when 0    ; "no pools"
+    when 1    ; "one pool"
+    when 2    ; "two pools"
+    when 3    ; "three pools"
+    else      ; "#{num} pools"
+    end
+  end
+
 end # of helpers do
 
