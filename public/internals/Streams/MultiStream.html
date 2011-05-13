@@ -71,7 +71,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2">Enumerable</dd>
+      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
       
     
   
@@ -86,8 +86,10 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     <p>
-Return the next key/container pair from a list of streams; the container
-holds values found on the streams for a given key, thus is of mixed arity.
+The MultiStream constructor takes an arbitrary number of streams. The get
+method returns the next key/container pair from a list of streams; the
+container holds values found on the streams for a given key, thus is of
+mixed arity.
 </p>
 
 
@@ -101,6 +103,9 @@ holds values found on the streams for a given key, thus is of mixed arity.
 </div>
 
 
+  
+  
+  
   
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
@@ -146,69 +151,6 @@ Returns the value of attribute streams.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#closed%3F-instance_method" title="#closed? (instance method)">- (Boolean) <strong>closed?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#eos%3F-instance_method" title="#eos? (instance method)">- (Boolean) <strong>eos?</strong> </a>
     
 
@@ -223,33 +165,6 @@ Returns the value of attribute streams.
 
   
     <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-Sort the keys from the the set of values returned by a GET on all streams
-to find the smallest key; assemble a container of the values that match the
-smallest key; push all other key/value pairs back onto their associated
-streams for later processing.
-</p>
-</div></span>
   
 </li>
 
@@ -276,6 +191,27 @@ streams for later processing.
 A new instance of MultiStream.
 </p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read-instance_method" title="#read (instance method)">- (Object) <strong>read</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -322,32 +258,20 @@ A new instance of MultiStream.
 </li>
 
       
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#unget-instance_method" title="#unget (instance method)">- (Object) <strong>unget</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
     </ul>
   
 
 
-  <div id="constructor_details" class="method_details_list">
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -374,21 +298,17 @@ A new instance of MultiStream
       <pre class="lines">
 
 
-289
-290
-291
-292
-293
-294</pre>
+230
+231
+232
+233</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 289</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 230</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='mult op'>*</span><span class='streams identifier id'>streams</span>
   <span class='@values_container ivar id'>@values_container</span> <span class='assign token'>=</span> <span class='Array constant id'>Array</span>   <span class='comment val'># subclass MultiStream to use a specialized container for assembling the merged values - it must support '&lt;&lt;'</span>
   <span class='@streams ivar id'>@streams</span> <span class='assign token'>=</span> <span class='streams identifier id'>streams</span>
-  <span class='@ungot ivar id'>@ungot</span>   <span class='assign token'>=</span> <span class='false false kw'>false</span>
-  <span class='@last ivar id'>@last</span>    <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -428,12 +348,12 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-287
-288
-289</pre>
+228
+229
+230</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 287</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 228</span>
 
 <span class='def def kw'>def</span> <span class='streams identifier id'>streams</span>
   <span class='@streams ivar id'>@streams</span>
@@ -452,119 +372,7 @@ Returns the value of attribute streams
     
     
       <div class="method_details first">
-  <p class="signature first" id="close-instance_method">
-  
-    - (<tt>Object</tt>) <strong>close</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-304
-305
-306</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 304</span>
-
-<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
-  <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='rbrace token'>}</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="closed?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>closed?</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
-  
-    <li>
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-300
-301
-302</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 300</span>
-
-<span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
-  <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span> <span class='rbrace token'>}</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="each-instance_method">
-  
-    - (<tt>Object</tt>) <strong>each</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-359
-360
-361
-362
-363</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 359</span>
-
-<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-  <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
-    <span class='yield yield kw'>yield</span> <span class='get identifier id'>get</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="eos?-instance_method">
+  <p class="signature first" id="eos?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>eos?</strong> 
   
@@ -597,15 +405,15 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-308
-309
-310</pre>
+239
+240
+241</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 308</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 239</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
-  <span class='not not kw'>not</span> <span class='@ungot ivar id'>@ungot</span> <span class='and and kw'>and</span> <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='rbrace token'>}</span>
+  <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='inject identifier id'>inject</span><span class='lparen token'>(</span><span class='true true kw'>true</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sum identifier id'>sum</span><span class='comma token'>,</span> <span class='stream identifier id'>stream</span><span class='bitor op'>|</span>  <span class='sum identifier id'>sum</span> <span class='and and kw'>and</span> <span class='stream identifier id'>stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='rbrace token'>}</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -614,71 +422,46 @@ Returns the value of attribute streams
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="get-instance_method">
+  <p class="signature " id="read-instance_method">
   
-    - (<tt>Object</tt>) <strong>get</strong> 
+    - (<tt>Object</tt>) <strong>read</strong> 
   
 
   
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-Sort the keys from the the set of values returned by a GET on all streams
-to find the smallest key; assemble a container of the values that match the
-smallest key; push all other key/value pairs back onto their associated
-streams for later processing. Returns the key/container pair.
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
+</p><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355
-356</pre>
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 328</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 248</span>
 
-<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
-  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-    <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-    <span class='return return kw'>return</span> <span class='@last ivar id'>@last</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='@last ivar id'>@last</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
-  <span class='end end kw'>end</span>
-
+<span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='scorecard identifier id'>scorecard</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
 
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span>
@@ -699,8 +482,7 @@ streams for later processing. Returns the key/container pair.
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
 
-  <span class='@last ivar id'>@last</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span> <span class='rbrack token'>]</span>
-  <span class='return return kw'>return</span>    <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
+  <span class='return return kw'>return</span> <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -721,13 +503,13 @@ streams for later processing. Returns the key/container pair.
       <pre class="lines">
 
 
-312
-313
-314
-315</pre>
+243
+244
+245
+246</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 312</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 243</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='@streams ivar id'>@streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='s identifier id'>s</span><span class='bitor op'>|</span> <span class='s identifier id'>s</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span> <span class='rbrace token'>}</span>
@@ -752,46 +534,15 @@ streams for later processing. Returns the key/container pair.
       <pre class="lines">
 
 
-296
-297
-298</pre>
+235
+236
+237</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 296</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 235</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}&gt;&quot;</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="unget-instance_method">
-  
-    - (<tt>Object</tt>) <strong>unget</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-317
-318
-319
-320</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 317</span>
-
-<span class='def def kw'>def</span> <span class='unget identifier id'>unget</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}&quot;</span> <span class='if if_mod kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-  <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -804,7 +555,7 @@ streams for later processing. Returns the key/container pair.
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:57 2011 by 
+  Generated on Thu May 12 23:37:21 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

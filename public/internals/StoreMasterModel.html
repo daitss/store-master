@@ -96,6 +96,22 @@ list what the silos report as present.
 
   <h2>Constant Summary</h2>
   
+    <dl class="constants">
+      
+        <dt id="OPEN_TIMEOUT-constant" class="">OPEN_TIMEOUT =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>30</span>
+</pre></dd>
+      
+        <dt id="READ_TIMEOUT-constant" class="">READ_TIMEOUT =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>90</span>
+</pre></dd>
+      
+    </dl>
+  
 
 
   
@@ -130,7 +146,34 @@ list what the silos report as present.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+drops and recreates as well.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#patch_tables-class_method" title="patch_tables (class method)">+ (Object) <strong>patch_tables</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+special purpose setup.
+</p>
+</div></span>
   
 </li>
 
@@ -196,7 +239,10 @@ list what the silos report as present.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+will make minor schema changes.
+</p>
+</div></span>
   
 </li>
 
@@ -227,21 +273,88 @@ list what the silos report as present.
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+drops and recreates as well
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-54
-55
-56</pre>
+58
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 54</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 58</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>                
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_migrate!</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='patch_tables identifier id'>patch_tables</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="patch_tables-class_method">
+  
+    + (<tt>Object</tt>) <strong>patch_tables</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+special purpose setup
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 67</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='patch_tables identifier id'>patch_tables</span>                 
+  <span class='db identifier id'>db</span> <span class='assign token'>=</span> <span class='repository identifier id'>repository</span><span class='lparen token'>(</span><span class='symbol val'>:store_master</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='adapter identifier id'>adapter</span>
+  <span class='postgres_commands identifier id'>postgres_commands</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> 
+                       <span class='string val'>'alter table copies alter datetime type timestamp with time zone'</span><span class='comma token'>,</span>
+                      <span class='rbrack token'>]</span>
+
+  <span class='if if kw'>if</span> <span class='db identifier id'>db</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'postgres_version'</span>
+    <span class='postgres_commands identifier id'>postgres_commands</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sql identifier id'>sql</span><span class='bitor op'>|</span> <span class='db identifier id'>db</span><span class='dot token'>.</span><span class='execute identifier id'>execute</span> <span class='sql identifier id'>sql</span> <span class='rbrace token'>}</span> 
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -283,26 +396,26 @@ list what the silos report as present.
       <pre class="lines">
 
 
-34
-35
-36
-37
 38
 39
 40
 41
 42
 43
-44</pre>
+44
+45
+46
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 34</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
   <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:store_master</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
   <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='resource_naming_convention identifier id'>resource_naming_convention</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='colon2 op'>::</span><span class='NamingConventions constant id'>NamingConventions</span><span class='colon2 op'>::</span><span class='Resource constant id'>Resource</span><span class='colon2 op'>::</span><span class='UnderscoredAndPluralizedWithoutModule constant id'>UnderscoredAndPluralizedWithoutModule</span>
   <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='finalize identifier id'>finalize</span>
-  <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>
+  <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1'</span><span class='rparen token'>)</span>  <span class='comment val'># make sure we can connect</span>
   <span class='return return kw'>return</span> <span class='dm identifier id'>dm</span>
 
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
@@ -341,12 +454,12 @@ flexibility (e.g., specialized indcies for some of the sql we do)
       <pre class="lines">
 
 
-50
-51
-52</pre>
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 50</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 54</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
   <span class='lbrack token'>[</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Pool constant id'>Pool</span><span class='comma token'>,</span> <span class='Reservation constant id'>Reservation</span> <span class='rbrack token'>]</span>
@@ -364,20 +477,31 @@ flexibility (e.g., specialized indcies for some of the sql we do)
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+will make minor schema changes
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-58
-59
-60</pre>
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 58</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 63</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>                
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_upgrade!</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -391,7 +515,7 @@ flexibility (e.g., specialized indcies for some of the sql we do)
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:01 2011 by 
+  Generated on Thu May 12 23:37:36 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

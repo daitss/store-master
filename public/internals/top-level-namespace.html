@@ -69,11 +69,11 @@
 <p class="children">
    
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Analyzer.html" title="Analyzer (module)">Analyzer</a></span>, <span class='object_link'><a href="Daitss.html" title="Daitss (module)">Daitss</a></span>, <span class='object_link'><a href="FixityUtils.html" title="FixityUtils (module)">FixityUtils</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>, <span class='object_link'><a href="Streams.html" title="Streams (module)">Streams</a></span>, <span class='object_link'><a href="URI.html" title="URI (module)">URI</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Analyzer.html" title="Analyzer (module)">Analyzer</a></span>, <span class='object_link'><a href="CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span>, <span class='object_link'><a href="Daitss.html" title="Daitss (module)">Daitss</a></span>, <span class='object_link'><a href="FixityUtils.html" title="FixityUtils (module)">FixityUtils</a></span>, <span class='object_link'><a href="StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span>, <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span>, <span class='object_link'><a href="StoreUtils.html" title="StoreUtils (module)">StoreUtils</a></span>, <span class='object_link'><a href="Streams.html" title="Streams (module)">Streams</a></span>, <span class='object_link'><a href="URI.html" title="URI (module)">URI</a></span>
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>, <span class='object_link'><a href="Reporter.html" title="Reporter (class)">Reporter</a></span>, <span class='object_link'><a href="Trie.html" title="Trie (class)">Trie</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="DateTime.html" title="DateTime (class)">DateTime</a></span>, <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>, <span class='object_link'><a href="Reporter.html" title="Reporter (class)">Reporter</a></span>, <span class='object_link'><a href="Trie.html" title="Trie (class)">Trie</a></span>
     
   
 </p>
@@ -97,7 +97,7 @@ compressed&#8230;fah.  Need to check for this&#8230;
   
 </div>
         </dt>
-        <dd><pre class="code"><span class='StoreMaster constant id'>StoreMaster</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span>
+        <dd><pre class="code"><span class='StoreMaster constant id'>StoreMaster</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
 </pre></dd>
       
     </dl>
@@ -108,6 +108,9 @@ compressed&#8230;fah.  Need to check for this&#8230;
   
   
   
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="StoreMasterModel.html#OPEN_TIMEOUT-constant" title="StoreMasterModel::OPEN_TIMEOUT (constant)">OPEN_TIMEOUT</a></span>, <span class='object_link'><a href="StoreMasterModel.html#READ_TIMEOUT-constant" title="StoreMasterModel::READ_TIMEOUT (constant)">READ_TIMEOUT</a></span></p>
+
   
   
   
@@ -188,7 +191,7 @@ the code into a directory created under ../releases/, with names such as
   
   
   <h3 class="inherited">Methods included from <span class='object_link'><a href="StoreMasterModel.html" title="StoreMasterModel (module)">StoreMasterModel</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="StoreMasterModel.html#create_tables-class_method" title="StoreMasterModel.create_tables (method)">create_tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#setup_db-class_method" title="StoreMasterModel.setup_db (method)">setup_db</a></span>, <span class='object_link'><a href="StoreMasterModel.html#tables-class_method" title="StoreMasterModel.tables (method)">tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#update_tables-class_method" title="StoreMasterModel.update_tables (method)">update_tables</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="StoreMasterModel.html#create_tables-class_method" title="StoreMasterModel.create_tables (method)">create_tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#patch_tables-class_method" title="StoreMasterModel.patch_tables (method)">patch_tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#setup_db-class_method" title="StoreMasterModel.setup_db (method)">setup_db</a></span>, <span class='object_link'><a href="StoreMasterModel.html#tables-class_method" title="StoreMasterModel.tables (method)">tables</a></span>, <span class='object_link'><a href="StoreMasterModel.html#update_tables-class_method" title="StoreMasterModel.update_tables (method)">update_tables</a></span></p>
 
   
   
@@ -232,13 +235,13 @@ return its contents.
       <pre class="lines">
 
 
-16
-17
-18
-19</pre>
+26
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 16</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='get_capistrano_git_revision identifier id'>get_capistrano_git_revision</span>
   <span class='revision_file identifier id'>revision_file</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>'..'</span><span class='comma token'>,</span> <span class='string val'>'REVISION'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -283,13 +286,13 @@ includes configuration information that may not be checked in.
       <pre class="lines">
 
 
-33
-34
-35
-36</pre>
+43
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 33</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='get_capistrano_release identifier id'>get_capistrano_release</span>
   <span class='full_path identifier id'>full_path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='__FILE__ __file__ kw'>__FILE__</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -306,7 +309,7 @@ includes configuration information that may not be checked in.
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:24 2011 by 
+  Generated on Thu May 12 23:37:57 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

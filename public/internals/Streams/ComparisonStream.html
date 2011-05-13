@@ -70,15 +70,11 @@
     
   
     
-      <dt class="r2">Includes:</dt>
-      <dd class="r2">Enumerable</dd>
-      
-    
   
   
   
-    <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -97,7 +93,11 @@ ComparisonStream is a bit different from the other Stream classes in that
   <span class='key identifier id'>key</span> <span class='exists identifier id'>exists</span> <span class='only identifier id'>only</span> <span class='on identifier id'>on</span> <span class='the identifier id'>the</span> <span class='second identifier id'>second</span> <span class='stream identifier id'>stream</span> <span class='minus op'>-</span> <span class='yields identifier id'>yields</span> <span class='key identifier id'>key</span><span class='comma token'>,</span>  <span class='nil nil kw'>nil</span><span class='comma token'>,</span>    <span class='data identifier id'>data</span><span class='minus op'>-</span><span class='integer val'>2</span>
 </pre>
 <p>
-The two input streams must have unique and sorted keys.
+Note: the two input streams must have unique and sorted keys.
+</p>
+<p>
+All basic streams support the <=> method,  which provides a comparison
+stream.
 </p>
 
 
@@ -107,7 +107,6 @@ The two input streams must have unique and sorted keys.
   
 </div>
 
-  
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
     
@@ -148,48 +147,6 @@ Returns the value of attribute streams.
     </h2>
 
     <ul class="summary">
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#closed%3F-instance_method" title="#closed? (instance method)">- (Boolean) <strong>closed?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
       
         <li class="public ">
   <span class="summary_signature">
@@ -325,8 +282,7 @@ A new instance of ComparisonStream.
     </ul>
   
 
-
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -353,14 +309,14 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-229
-230
-231
-232
-233</pre>
+293
+294
+295
+296
+297</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 229</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 293</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='first_stream identifier id'>first_stream</span><span class='comma token'>,</span> <span class='second_stream identifier id'>second_stream</span>
   <span class='@first_stream ivar id'>@first_stream</span>  <span class='assign token'>=</span> <span class='first_stream identifier id'>first_stream</span>
@@ -405,12 +361,12 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-227
-228
-229</pre>
+291
+292
+293</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 227</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 291</span>
 
 <span class='def def kw'>def</span> <span class='streams identifier id'>streams</span>
   <span class='@streams ivar id'>@streams</span>
@@ -429,88 +385,7 @@ Returns the value of attribute streams
     
     
       <div class="method_details first">
-  <p class="signature first" id="close-instance_method">
-  
-    - (<tt>Object</tt>) <strong>close</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-249
-250
-251
-252</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 249</span>
-
-<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
-  <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
-  <span class='@second_stream ivar id'>@second_stream</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="closed?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>closed?</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
-  
-    <li>
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-254
-255
-256</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 254</span>
-
-<span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
-  <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span> <span class='and and kw'>and</span> <span class='@second_stream ivar id'>@second_stream</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="each-instance_method">
+  <p class="signature first" id="each-instance_method">
   
     - (<tt>Object</tt>) <strong>each</strong> 
   
@@ -522,14 +397,14 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-272
-273
-274
-275
-276</pre>
+299
+300
+301
+302
+303</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 272</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 299</span>
 
 <span class='def def kw'>def</span> <span class='each identifier id'>each</span>
   <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
@@ -576,12 +451,12 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-245
-246
-247</pre>
+315
+316
+317</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 245</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 315</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
   <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='and and kw'>and</span>  <span class='@second_stream ivar id'>@second_stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span>
@@ -605,22 +480,22 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270</pre>
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 258</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 319</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span>
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
@@ -631,7 +506,7 @@ Returns the value of attribute streams
   <span class='if if kw'>if</span>    <span class='k2 identifier id'>k2</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span><span class='semicolon token'>;</span>                        <span class='return return kw'>return</span> <span class='k1 identifier id'>k1</span><span class='comma token'>,</span>   <span class='v1 identifier id'>v1</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span>
   <span class='elsif elsif kw'>elsif</span> <span class='k1 identifier id'>k1</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span><span class='semicolon token'>;</span>                        <span class='return return kw'>return</span> <span class='k2 identifier id'>k2</span><span class='comma token'>,</span>  <span class='nil nil kw'>nil</span><span class='comma token'>,</span>  <span class='v2 identifier id'>v2</span>
   <span class='elsif elsif kw'>elsif</span> <span class='k1 identifier id'>k1</span> <span class='lt op'>&lt;</span>  <span class='k2 identifier id'>k2</span><span class='semicolon token'>;</span> <span class='@second_stream ivar id'>@second_stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span><span class='semicolon token'>;</span> <span class='return return kw'>return</span> <span class='k1 identifier id'>k1</span><span class='comma token'>,</span>   <span class='v1 identifier id'>v1</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span>
-  <span class='elsif elsif kw'>elsif</span> <span class='k2 identifier id'>k2</span> <span class='lt op'>&lt;</span>  <span class='k1 identifier id'>k1</span><span class='semicolon token'>;</span> <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span><span class='semicolon token'>;</span>  <span class='return return kw'>return</span> <span class='k2 identifier id'>k2</span><span class='comma token'>,</span>  <span class='nil nil kw'>nil</span><span class='comma token'>,</span>  <span class='v2 identifier id'>v2</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='k1 identifier id'>k1</span> <span class='gt op'>&gt;</span>  <span class='k2 identifier id'>k2</span><span class='semicolon token'>;</span> <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span><span class='semicolon token'>;</span>  <span class='return return kw'>return</span> <span class='k2 identifier id'>k2</span><span class='comma token'>,</span>  <span class='nil nil kw'>nil</span><span class='comma token'>,</span>  <span class='v2 identifier id'>v2</span>
   <span class='elsif elsif kw'>elsif</span> <span class='k1 identifier id'>k1</span> <span class='eq op'>==</span> <span class='k2 identifier id'>k2</span><span class='semicolon token'>;</span>                       <span class='return return kw'>return</span> <span class='k1 identifier id'>k1</span><span class='comma token'>,</span>   <span class='v1 identifier id'>v1</span><span class='comma token'>,</span>  <span class='v2 identifier id'>v2</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
@@ -654,14 +529,14 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-239
-240
-241
-242
-243</pre>
+309
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 239</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 309</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='@first_stream ivar id'>@first_stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
@@ -687,15 +562,15 @@ Returns the value of attribute streams
       <pre class="lines">
 
 
-235
-236
-237</pre>
+305
+306
+307</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 235</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 305</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} wrapping #{@streams.map{ |stream| stream.to_s }.join(', ')}&gt;&quot;</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} comparing stream #{@first_stream} with #{@second_stream}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -708,7 +583,7 @@ Returns the value of attribute streams
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:45 2011 by 
+  Generated on Thu May 12 23:37:40 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

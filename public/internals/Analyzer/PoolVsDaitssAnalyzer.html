@@ -125,6 +125,27 @@ Returns the value of attribute reports.
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#anything_interesting%3F-instance_method" title="#anything_interesting? (instance method)">- (Boolean) <strong>anything_interesting?</strong>(reports) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#fixity_issues-instance_method" title="#fixity_issues (instance method)">- (Object) <strong>fixity_issues</strong>(pool_data, daitss_data) </a>
     
 
@@ -146,7 +167,7 @@ Returns the value of attribute reports.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolVsDaitssAnalyzer) <strong>initialize</strong>(pool_fixity_streams, daitss_fixity_stream, required_copies) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolVsDaitssAnalyzer) <strong>initialize</strong>(pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, no_later_than) </a>
     
 
     
@@ -173,6 +194,27 @@ A new instance of PoolVsDaitssAnalyzer.
   <span class="summary_signature">
     
       <a href="#md5_inconsistent%3F-instance_method" title="#md5_inconsistent? (instance method)">- (Boolean) <strong>md5_inconsistent?</strong>(pool_data_array, daitss_data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#pluralize-instance_method" title="#pluralize (instance method)">- (Object) <strong>pluralize</strong>(count, singular, plural) </a>
     
 
     
@@ -227,7 +269,11 @@ A new instance of PoolVsDaitssAnalyzer.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+the daitss_fixity_stream  provides the same key as the above, and a
+DataMapper-supplied record of the DAITSS information about the package:.
+</p>
+</div></span>
   
 </li>
 
@@ -236,6 +282,27 @@ A new instance of PoolVsDaitssAnalyzer.
   <span class="summary_signature">
     
       <a href="#size_inconsistent%3F-instance_method" title="#size_inconsistent? (instance method)">- (Boolean) <strong>size_inconsistent?</strong>(pool_data_array, daitss_data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#too_recent-instance_method" title="#too_recent (instance method)">- (Object) <strong>too_recent</strong>(pool_data) </a>
     
 
     
@@ -262,7 +329,7 @@ A new instance of PoolVsDaitssAnalyzer.
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="Analyzer::PoolVsDaitssAnalyzer (class)">PoolVsDaitssAnalyzer</a></span></tt>) <strong>initialize</strong>(pool_fixity_streams, daitss_fixity_stream, required_copies) 
+    - (<tt><span class='object_link'><a href="" title="Analyzer::PoolVsDaitssAnalyzer (class)">PoolVsDaitssAnalyzer</a></span></tt>) <strong>initialize</strong>(pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, no_later_than) 
   
 
   
@@ -283,41 +350,45 @@ A new instance of PoolVsDaitssAnalyzer
       <pre class="lines">
 
 
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234</pre>
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 219</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 246</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>  <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='comma token'>,</span> <span class='daitss_fixity_stream identifier id'>daitss_fixity_stream</span><span class='comma token'>,</span> <span class='required_copies identifier id'>required_copies</span>
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>  <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='comma token'>,</span> <span class='daitss_fixity_stream identifier id'>daitss_fixity_stream</span><span class='comma token'>,</span> <span class='required_copies identifier id'>required_copies</span><span class='comma token'>,</span> <span class='expiration_days identifier id'>expiration_days</span><span class='comma token'>,</span> <span class='no_later_than identifier id'>no_later_than</span>
 
-  <span class='@daitss_fixities ivar id'>@daitss_fixities</span>   <span class='assign token'>=</span> <span class='daitss_fixity_stream identifier id'>daitss_fixity_stream</span>    
-  <span class='@pool_fixities ivar id'>@pool_fixities</span>     <span class='assign token'>=</span> <span class='Streams constant id'>Streams</span><span class='colon2 op'>::</span><span class='StoreUrlMultiFixities constant id'>StoreUrlMultiFixities</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='rparen token'>)</span>
-  <span class='@comparison_stream ivar id'>@comparison_stream</span> <span class='assign token'>=</span> <span class='Streams constant id'>Streams</span><span class='colon2 op'>::</span><span class='ComparisonStream constant id'>ComparisonStream</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@pool_fixities ivar id'>@pool_fixities</span><span class='comma token'>,</span> <span class='@daitss_fixities ivar id'>@daitss_fixities</span><span class='rparen token'>)</span>
+  <span class='@pool_fixity_stream ivar id'>@pool_fixity_stream</span>    <span class='assign token'>=</span> <span class='Streams constant id'>Streams</span><span class='colon2 op'>::</span><span class='StoreUrlMultiFixities constant id'>StoreUrlMultiFixities</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='rparen token'>)</span>
+  <span class='@daitss_fixity_stream ivar id'>@daitss_fixity_stream</span>  <span class='assign token'>=</span> <span class='daitss_fixity_stream identifier id'>daitss_fixity_stream</span>
 
-  <span class='@required_copies ivar id'>@required_copies</span>   <span class='assign token'>=</span> <span class='required_copies identifier id'>required_copies</span>
+  <span class='@cutoff_time ivar id'>@cutoff_time</span>         <span class='assign token'>=</span> <span class='no_later_than identifier id'>no_later_than</span><span class='dot token'>.</span><span class='to_utc identifier id'>to_utc</span>
+  <span class='@required_copies ivar id'>@required_copies</span>     <span class='assign token'>=</span> <span class='required_copies identifier id'>required_copies</span>
+  <span class='@expiration_days ivar id'>@expiration_days</span>     <span class='assign token'>=</span> <span class='expiration_days identifier id'>expiration_days</span>
 
-  <span class='@report_missing ivar id'>@report_missing</span>    <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Missing Packages From Pools&quot;</span>
-  <span class='@report_orphaned ivar id'>@report_orphaned</span>   <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Orphaned Package Copies - Found In The Pools, But Not Recorded By DAITTS&quot;</span>
-  <span class='@report_integrity ivar id'>@report_integrity</span>  <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Packages With Integrity Issues&quot;</span>
-  <span class='@report_fixity ivar id'>@report_fixity</span>     <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Packages With Fixity Errors&quot;</span>
+  <span class='@report_missing ivar id'>@report_missing</span>      <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Missing Packages&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Expected DAITSS Packages Were Not Found In Pools&quot;</span>
+  <span class='@report_orphaned ivar id'>@report_orphaned</span>     <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Unexpected Packages&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Pools Contain Packages Not Listed By DAITSS&quot;</span>
+  <span class='@report_integrity ivar id'>@report_integrity</span>    <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Integrity Errors&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Incorrect Number Of Package Copies&quot;</span>
+  <span class='@report_fixity ivar id'>@report_fixity</span>       <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Fixity Errors&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Package Copies With Fixity Errors&quot;</span>
+  <span class='@report_expired ivar id'>@report_expired</span>      <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Fixity Expirations&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Package Copies With Fixities Over #{expiration_days} Days Old&quot;</span>
+  <span class='@report_summary ivar id'>@report_summary</span>      <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Summary of DAITSS Package Fixity Checks&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package&quot;</span>
 
-  <span class='@reports ivar id'>@reports</span>    <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='@report_missing ivar id'>@report_missing</span><span class='comma token'>,</span> <span class='@report_orphaned ivar id'>@report_orphaned</span><span class='comma token'>,</span> <span class='@report_integrity ivar id'>@report_integrity</span><span class='comma token'>,</span> <span class='@report_fixity ivar id'>@report_fixity</span> <span class='rbrack token'>]</span>
-  <span class='@score_card ivar id'>@score_card</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:orphans</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:missing</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:checked</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:fixity_successes</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:fixity_failures</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:wrong_number</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span> <span class='rbrace token'>}</span>
+  <span class='@reports ivar id'>@reports</span>             <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='@report_summary ivar id'>@report_summary</span><span class='comma token'>,</span> <span class='@report_missing ivar id'>@report_missing</span><span class='comma token'>,</span> <span class='@report_fixity ivar id'>@report_fixity</span><span class='comma token'>,</span> <span class='@report_integrity ivar id'>@report_integrity</span><span class='comma token'>,</span> <span class='@report_orphaned ivar id'>@report_orphaned</span><span class='comma token'>,</span> <span class='@report_expired ivar id'>@report_expired</span> <span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -357,12 +428,12 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-217
-218
-219</pre>
+244
+245
+246</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 217</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 244</span>
 
 <span class='def def kw'>def</span> <span class='reports identifier id'>reports</span>
   <span class='@reports ivar id'>@reports</span>
@@ -381,7 +452,61 @@ Returns the value of attribute reports
     
     
       <div class="method_details first">
-  <p class="signature first" id="fixity_issues-instance_method">
+  <p class="signature first" id="anything_interesting?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>anything_interesting?</strong>(reports) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+313
+314
+315
+316
+317</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 313</span>
+
+<span class='def def kw'>def</span> <span class='anything_interesting? fid id'>anything_interesting?</span> <span class='reports identifier id'>reports</span>
+  <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='reports identifier id'>reports</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rep identifier id'>rep</span><span class='bitor op'>|</span> <span class='result identifier id'>result</span> <span class='opasgn op'>||=</span> <span class='rep identifier id'>rep</span><span class='dot token'>.</span><span class='interesting? fid id'>interesting?</span> <span class='rbrace token'>}</span>
+  <span class='return return kw'>return</span> <span class='result identifier id'>result</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="fixity_issues-instance_method">
   
     - (<tt>Object</tt>) <strong>fixity_issues</strong>(pool_data, daitss_data) 
   
@@ -393,41 +518,41 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278</pre>
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 261</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 288</span>
 
 <span class='def def kw'>def</span> <span class='fixity_issues identifier id'>fixity_issues</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
   <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
 
   <span class='if if kw'>if</span> <span class='sha1_inconsistent? fid id'>sha1_inconsistent?</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
-    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;#{daitss_data.url}: DAITSS recorded SHA1 of #{daitss_data.sha1}, but we have &quot;</span> <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span> \
+    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;Expected SHA1 #{daitss_data.sha1}, have &quot;</span>  <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='md5_inconsistent? fid id'>md5_inconsistent?</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
-    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;#{daitss_data.url}: DAITSS recorded MD5 of #{daitss_data.md5}, but we have &quot;</span>   <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span>
+    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;Expected MD5 #{daitss_data.md5}, have &quot;</span>    <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='size_inconsistent? fid id'>size_inconsistent?</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
-    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span>  <span class='dstring node'>&quot;#{daitss_data.url}: DAITSS recorded size of #{daitss_data.size}, but we have &quot;</span> <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span>
+    <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span>  <span class='dstring node'>&quot;Expected size #{daitss_data.size} have &quot;</span> <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>' at '</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>';  '</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
@@ -473,15 +598,46 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-257
-258
-259</pre>
+284
+285
+286</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 257</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 284</span>
 
 <span class='def def kw'>def</span> <span class='md5_inconsistent? fid id'>md5_inconsistent?</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
   <span class='pool_data_array identifier id'>pool_data_array</span><span class='dot token'>.</span><span class='inconsistent? fid id'>inconsistent?</span> <span class='symbol val'>:md5</span> <span class='or or kw'>or</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span> <span class='neq op'>!=</span> <span class='daitss_data identifier id'>daitss_data</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="pluralize-instance_method">
+  
+    - (<tt>Object</tt>) <strong>pluralize</strong>(count, singular, plural) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+307
+308
+309
+310</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 307</span>
+
+<span class='def def kw'>def</span> <span class='pluralize identifier id'>pluralize</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='singular identifier id'>singular</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span>
+  <span class='return return kw'>return</span> <span class='singular identifier id'>singular</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
+  <span class='return return kw'>return</span> <span class='plural identifier id'>plural</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -502,53 +658,6 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
 328
 329
 330
@@ -570,76 +679,235 @@ Returns the value of attribute reports
 346
 347
 348
-349</pre>
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 281</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 328</span>
 
 <span class='def def kw'>def</span> <span class='run identifier id'>run</span>
-  <span class='@comparison_stream ivar id'>@comparison_stream</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span><span class='bitor op'>|</span>
+  <span class='score_card identifier id'>score_card</span>    <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:orphans</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:missing</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:checked</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:fixity_successes</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:fixity_failures</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:wrong_number</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:expired_fixities</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='symbol val'>:daitss_packages</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>0</span> <span class='rbrace token'>}</span>
+  <span class='event_counter identifier id'>event_counter</span> <span class='assign token'>=</span> <span class='EventCounter constant id'>EventCounter</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
 
-    <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='lookup_from_url identifier id'>lookup_from_url</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>   <span class='comment val'># TODO: when these are placed onto </span>
+  <span class='lparen token'>(</span><span class='@pool_fixity_stream ivar id'>@pool_fixity_stream</span> <span class='cmp op'>&lt;=&gt;</span> <span class='@daitss_fixity_stream ivar id'>@daitss_fixity_stream</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span><span class='bitor op'>|</span>
 
+    <span class='comment val'># for example:</span>
+    <span class='comment val'>#</span>
+    <span class='comment val'># url:          http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000</span>
+    <span class='comment val'># pool_data:    [ #&lt;struct Struct::PoolFixityRecord location=&quot;http...&quot;, sha1=&quot;4ab..&quot;, md5=&quot;0d7...&quot;, size=&quot;131..&quot;, fixity_time=&quot;2011-04-27T11:38:30Z&quot;, put_time=&quot;2011-04-20T20:21:33Z&quot;, status=&quot;ok&quot;&gt; .. more structs .. ]</span>
+    <span class='comment val'># daitss_data:  #&lt;Struct::DataMapper ieid=&quot;EYMZSFV43_8A2KCD&quot;, url=&quot;http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000&quot;, md5=&quot;06cd2880ad13eed3255706752be8a6b1&quot;, sha1=&quot;b73aabefe9f98f421047eb66526dc33420e85e04&quot;, size=119244800&gt;</span>
+
+
+    <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='too_recent identifier id'>too_recent</span><span class='lparen token'>(</span><span class='pool_data identifier id'>pool_data</span><span class='rparen token'>)</span>
+
+    <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='lookup_from_url identifier id'>lookup_from_url</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+
+    <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:daitss_packages</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span> <span class='if if_mod kw'>if</span> <span class='daitss_data identifier id'>daitss_data</span>
+    
     <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='pool_data identifier id'>pool_data</span>                         <span class='comment val'># missing package</span>
-      <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:missing</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+      <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:missing</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
       <span class='@report_missing ivar id'>@report_missing</span><span class='dot token'>.</span><span class='err identifier id'>err</span>  <span class='url identifier id'>url</span>
-      <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='dstring node'>&quot;No copies available for #{url}&quot;</span>
+      <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='dstring node'>&quot;No copies found for #{url}&quot;</span>
 
     <span class='elsif elsif kw'>elsif</span> <span class='not not kw'>not</span> <span class='daitss_data identifier id'>daitss_data</span>                    <span class='comment val'># orphaned package</span>
-      <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:orphans</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+      <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:orphans</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
       <span class='@report_orphaned ivar id'>@report_orphaned</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cpy identifier id'>cpy</span><span class='bitor op'>|</span> <span class='cpy identifier id'>cpy</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>
 
     <span class='else else kw'>else</span>
-      <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:checked</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
-      
-      <span class='comment val'>### @score_card = { :orphans =&gt; 0, :missing =&gt; 0, :checked =&gt; 0, :fixity_successes =&gt; 0, :fixity_failures =&gt; 0, :wrong_number =&gt; 0 }</span>
-      <span class='comment val'>## puts '', url, pool_data.inspect, daitss_data.inspect</span>
-      <span class='comment val'>##    =&gt;</span>
-      <span class='comment val'>## http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000</span>
-      <span class='comment val'>##</span>
-      <span class='comment val'>## [#&lt;Struct::PoolFixityRecord location=&quot;http://betasilos.tarchive.fcla.edu/001/data/EYMZSFV43_8A2KCD.000&quot;, sha1=&quot;b73aabefe9f98f421047eb66526dc33420e85e04&quot;, md5=&quot;06cd2880ad13eed3255706752be8a6b1&quot;, size=&quot;119244800&quot;, timestamp=&quot;2011-02-18T19:50:46-05:00&quot;, status=&quot;ok&quot;&gt;]</span>
-      <span class='comment val'>##</span>
-      <span class='comment val'>##  #&lt;Struct::DataMapper ieid=&quot;EYMZSFV43_8A2KCD&quot;, url=&quot;http://betastore.tarchive.fcla.edu/packages/EYMZSFV43_8A2KCD.000&quot;, md5=&quot;06cd2880ad13eed3255706752be8a6b1&quot;, sha1=&quot;b73aabefe9f98f421047eb66526dc33420e85e04&quot;, size=119244800&gt;</span>
-
+      <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:checked</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
       <span class='all_good identifier id'>all_good</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
 
-      <span class='comment val'># integrity error</span>
-      
-      <span class='case case kw'>case</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='cmp op'>&lt;=&gt;</span> <span class='@required_copies ivar id'>@required_copies</span>
+      <span class='case case kw'>case</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='cmp op'>&lt;=&gt;</span> <span class='@required_copies ivar id'>@required_copies</span>              <span class='comment val'># integrity error</span>
       <span class='when when kw'>when</span> <span class='integer val'>-1</span>
         <span class='message identifier id'>message</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;Too few copies available for #{url} - &quot;</span> <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>
         <span class='@report_integrity ivar id'>@report_integrity</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='message identifier id'>message</span>
-        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span>
-        <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:wrong_number</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+        <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='message identifier id'>message</span>
+        <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:wrong_number</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
         <span class='all_good identifier id'>all_good</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
       <span class='when when kw'>when</span> <span class='integer val'>+1</span>
         <span class='message identifier id'>message</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;Too many copies available for #{url} - &quot;</span> <span class='plus op'>+</span> <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='location identifier id'>location</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>
         <span class='@report_integrity ivar id'>@report_integrity</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='message identifier id'>message</span>
-        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='message identifier id'>message</span>
-        <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:wrong_number</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+        <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='message identifier id'>message</span>
+        <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:wrong_number</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
         <span class='all_good identifier id'>all_good</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
       <span class='end end kw'>end</span>
 
-      <span class='comment val'># fixity errors</span>
-
-      <span class='if if kw'>if</span> <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='fixity_issues identifier id'>fixity_issues</span><span class='lparen token'>(</span><span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span><span class='rparen token'>)</span>
-        <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='msg identifier id'>msg</span><span class='bitor op'>|</span>
-          <span class='@report_fixity ivar id'>@report_fixity</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='msg identifier id'>msg</span>
-          <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='fixity_failure_event identifier id'>fixity_failure_event</span> <span class='msg identifier id'>msg</span>
-          <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_failures</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
-          <span class='all_good identifier id'>all_good</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-        <span class='end end kw'>end</span>
+      <span class='if if kw'>if</span> <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='fixity_issues identifier id'>fixity_issues</span><span class='lparen token'>(</span><span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span><span class='rparen token'>)</span>    <span class='comment val'># fixity error</span>
+        <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_failures</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+        <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='msg identifier id'>msg</span><span class='bitor op'>|</span> <span class='@report_fixity ivar id'>@report_fixity</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='url identifier id'>url</span> <span class='plus op'>+</span> <span class='string val'>': '</span> <span class='plus op'>+</span> <span class='msg identifier id'>msg</span> <span class='rbrace token'>}</span>
+        <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='fixity_failure_event identifier id'>fixity_failure_event</span> <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' - '</span><span class='rparen token'>)</span>
+        <span class='all_good identifier id'>all_good</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
       <span class='end end kw'>end</span>
 
       <span class='if if kw'>if</span> <span class='all_good identifier id'>all_good</span>
-        <span class='@score_card ivar id'>@score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_successes</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
-        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='fixity_success_event identifier id'>fixity_success_event</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='rparen token'>)</span>
+        <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_successes</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+        <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='fixity_success_event identifier id'>fixity_success_event</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='fixity_time identifier id'>fixity_time</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='rparen token'>)</span>
       <span class='end end kw'>end</span>
-
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
 
-  <span class='comment val'>### TODO: assemble a summary</span>
+  <span class='expiration_date identifier id'>expiration_date</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='@expiration_days ivar id'>@expiration_days</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+
+  <span class='@pool_fixity_stream ivar id'>@pool_fixity_stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+  <span class='@daitss_fixity_stream ivar id'>@daitss_fixity_stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+
+  <span class='lparen token'>(</span><span class='@pool_fixity_stream ivar id'>@pool_fixity_stream</span> <span class='cmp op'>&lt;=&gt;</span> <span class='@daitss_fixity_stream ivar id'>@daitss_fixity_stream</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span><span class='bitor op'>|</span>
+
+    <span class='next next kw'>next</span> <span class='unless unless_mod kw'>unless</span> <span class='daitss_data identifier id'>daitss_data</span> <span class='and and kw'>and</span> <span class='pool_data identifier id'>pool_data</span> <span class='comment val'># skip reporting expired orphans</span>
+    <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+    <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='fix identifier id'>fix</span><span class='bitor op'>|</span>
+      <span class='if if kw'>if</span> <span class='fix identifier id'>fix</span><span class='dot token'>.</span><span class='fixity_time identifier id'>fixity_time</span> <span class='lt op'>&lt;</span> <span class='expiration_date identifier id'>expiration_date</span>
+        <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='string val'>' has expired copy at '</span> <span class='plus op'>+</span> <span class='fix identifier id'>fix</span><span class='dot token'>.</span><span class='location identifier id'>location</span> <span class='plus op'>+</span> <span class='string val'>' - last fixity '</span> <span class='plus op'>+</span> <span class='fix identifier id'>fix</span><span class='dot token'>.</span><span class='fixity_time identifier id'>fixity_time</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+      <span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:expired_fixities</span><span class='rbrack token'>]</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+      <span class='messages identifier id'>messages</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='msg identifier id'>msg</span><span class='bitor op'>|</span> <span class='@report_expired ivar id'>@report_expired</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='url identifier id'>url</span> <span class='plus op'>+</span> <span class='msg identifier id'>msg</span> <span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+
+  <span class='comment val'># We are looking for a report that looks roughly like the following: </span>
+  <span class='comment val'>#</span>
+  <span class='comment val'># Summary of DAITSS Package Fixity Checks</span>
+  <span class='comment val'># :::::::::::::::::::::::::::::::::::::::</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'># 1,242 ingested package records as of 2011-12-01 04:15:00</span>
+  <span class='comment val'># 1,242 ingested package records were checked against fixity data.</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'># 1,240 correct fixities</span>
+  <span class='comment val'>#     1 incorrect fixity</span>
+  <span class='comment val'>#     1 missing package</span>
+  <span class='comment val'>#     0 packages with wrong number of copies in pools</span>
+  <span class='comment val'># -----</span>
+  <span class='comment val'># 1,242 events, 2 new, 0 failed to be updated</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'># Additionally:</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'>#     1 package had an expired fixity</span>
+  <span class='comment val'>#     1 unexpected package (orphan?) in silo pools</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'># Details Follow:</span>
+  <span class='comment val'># ...</span>
+
+  <span class='len identifier id'>len</span> <span class='assign token'>=</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='dot token'>.</span><span class='values identifier id'>values</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='length identifier id'>length</span>
+
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s ingested package records as of %s&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:daitss_packages</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span><span class='dot token'>.</span><span class='strftime identifier id'>strftime</span><span class='lparen token'>(</span><span class='string val'>'%F %T'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s ingested package records were checked against fixity data&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:checked</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_successes</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s missing&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:missing</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s incorrect #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:fixity_failures</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s with the wrong number of copies in pools&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:wrong_number</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>'-'</span> <span class='mult op'>*</span> <span class='len identifier id'>len</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s total events, %s new, %s failed to be recorded&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='total identifier id'>total</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='total identifier id'>total</span> <span class='minus op'>-</span> <span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='unchanged identifier id'>unchanged</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='event_counter identifier id'>event_counter</span><span class='dot token'>.</span><span class='failures identifier id'>failures</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>'Additionally:'</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:orphans</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='sprintf identifier id'>sprintf</span><span class='lparen token'>(</span><span class='dstring node'>&quot;%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}&quot;</span><span class='comma token'>,</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span><span class='lparen token'>(</span><span class='score_card identifier id'>score_card</span><span class='lbrack token'>[</span><span class='symbol val'>:expired_fixities</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span>
+  <span class='@report_summary ivar id'>@report_summary</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>'Details Follow:'</span> <span class='if if_mod kw'>if</span> <span class='anything_interesting? fid id'>anything_interesting?</span> <span class='@reports ivar id'>@reports</span> <span class='minus op'>-</span> <span class='lbrack token'>[</span> <span class='@report_summary ivar id'>@report_summary</span> <span class='rbrack token'>]</span>
 
   <span class='@reports ivar id'>@reports</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='report identifier id'>report</span><span class='bitor op'>|</span> <span class='report identifier id'>report</span><span class='dot token'>.</span><span class='done identifier id'>done</span> <span class='rbrace token'>}</span>
   <span class='self self kw'>self</span>
@@ -659,7 +927,26 @@ Returns the value of attribute reports
   
 </p><div class="docstring">
   <div class="discussion">
-    
+    <p>
+the daitss_fixity_stream  provides the same key as the above, and a
+DataMapper-supplied record of the DAITSS information about the package:
+</p>
+<p>
+<a
+href="http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000">store-master.com/packages/EZQQYQMC2_6PYZMQ.000</a>
+#<Struct::DataMapper ieid=&#8220;EZQQYQMC2_6PYZMQ&#8221;, url=&#8220;<a
+href="http://store-master.com/packages/EZQQYQMC2_6PYZMQ.000">store-master.com/packages/EZQQYQMC2_6PYZMQ.000</a>&#8220;,
+md5=&#8220;7e45d204d270da0f8aab2a65f59a2429&#8221;,
+sha1=&#8220;e541c693e56edd9a7e04cab94de5740092ae3953&#8221;, size=4761600>
+<a
+href="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000">store-master.com/packages/EZYNH5CZC_ZP2B9Y.000</a>
+#<Struct::DataMapper ieid=&#8220;EZYNH5CZC_ZP2B9Y&#8221;, url=&#8220;<a
+href="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000">store-master.com/packages/EZYNH5CZC_ZP2B9Y.000</a>&#8220;,
+md5=&#8220;52076e3d8a9196d365c8381e135b6812&#8221;,
+sha1=&#8220;b046c58503f570ea090b8c5e46cc5f4e0c27f003&#8221;,
+size=1962598400> &#8230;
+</p>
+
 
   </div>
 </div>
@@ -684,12 +971,12 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-249
-250
-251</pre>
+276
+277
+278</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 249</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 276</span>
 
 <span class='def def kw'>def</span> <span class='sha1_inconsistent? fid id'>sha1_inconsistent?</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
   <span class='pool_data_array identifier id'>pool_data_array</span><span class='dot token'>.</span><span class='inconsistent? fid id'>inconsistent?</span> <span class='symbol val'>:sha1</span> <span class='or or kw'>or</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='neq op'>!=</span> <span class='daitss_data identifier id'>daitss_data</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span>
@@ -734,15 +1021,52 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-253
-254
-255</pre>
+280
+281
+282</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 253</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 280</span>
 
 <span class='def def kw'>def</span> <span class='size_inconsistent? fid id'>size_inconsistent?</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
   <span class='pool_data_array identifier id'>pool_data_array</span><span class='dot token'>.</span><span class='inconsistent? fid id'>inconsistent?</span> <span class='symbol val'>:size</span> <span class='or or kw'>or</span> <span class='pool_data_array identifier id'>pool_data_array</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='neq op'>!=</span> <span class='daitss_data identifier id'>daitss_data</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="too_recent-instance_method">
+  
+    - (<tt>Object</tt>) <strong>too_recent</strong>(pool_data) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+320
+321
+322
+323
+324
+325
+326</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 320</span>
+
+<span class='def def kw'>def</span> <span class='too_recent identifier id'>too_recent</span> <span class='pool_data identifier id'>pool_data</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='unless unless_mod kw'>unless</span> <span class='pool_data identifier id'>pool_data</span>
+  <span class='pool_data identifier id'>pool_data</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pool_record identifier id'>pool_record</span><span class='bitor op'>|</span>
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='pool_record identifier id'>pool_record</span><span class='dot token'>.</span><span class='put_time identifier id'>put_time</span> <span class='gt op'>&gt;</span> <span class='@cutoff_time ivar id'>@cutoff_time</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -755,7 +1079,7 @@ Returns the value of attribute reports
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:16 2011 by 
+  Generated on Thu May 12 23:37:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

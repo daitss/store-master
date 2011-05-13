@@ -199,20 +199,20 @@ A new instance of StoreMasterAnalyzer
       <pre class="lines">
 
 
+178
 179
 180
 181
 182
-183
-184</pre>
+183</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 179</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 178</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='store_master_stream identifier id'>store_master_stream</span><span class='comma token'>,</span> <span class='required_number identifier id'>required_number</span>
   <span class='@required_number ivar id'>@required_number</span>     <span class='assign token'>=</span> <span class='required_number identifier id'>required_number</span>
   <span class='@store_master_stream ivar id'>@store_master_stream</span> <span class='assign token'>=</span> <span class='store_master_stream identifier id'>store_master_stream</span>
-  <span class='@report_wrong_number ivar id'>@report_wrong_number</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;StoreMaster Has The Wrong Number Of Copies (#{required_number} Required)&quot;</span><span class='rparen token'>)</span>
+  <span class='@report_wrong_number ivar id'>@report_wrong_number</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Store-Master Copy Check&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Store-Master Didn't Record The Required #{required_number} #{FixityUtils.pluralize @required_number, 'Copy', 'Copies'}&quot;</span><span class='rparen token'>)</span>
   <span class='@reports ivar id'>@reports</span>             <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='@report_wrong_number ivar id'>@report_wrong_number</span> <span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -253,12 +253,12 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
+176
 177
-178
-179</pre>
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 177</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 176</span>
 
 <span class='def def kw'>def</span> <span class='reports identifier id'>reports</span>
   <span class='@reports ivar id'>@reports</span>
@@ -289,6 +289,7 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
+185
 186
 187
 188
@@ -313,21 +314,20 @@ Returns the value of attribute reports
 207
 208
 209
-210
-211</pre>
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 186</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 185</span>
 
 <span class='def def kw'>def</span> <span class='run identifier id'>run</span>
   <span class='comment val'># StoreMasterPackageStream returns information about what the StoreMaster thinks should be on the silos;</span>
   <span class='comment val'># the folded data looks as so:</span>
   <span class='comment val'>#</span>
-  <span class='comment val'># E20110210_ROGMBP.000  [ #&lt;struct name=&quot;E20110210_ROGMBP.000&quot;, store_location=&quot;http://one.example.com/.../E20110210_ROGMBP.000&quot;, ieid=&quot;E20110210_ROGMBP&quot;&gt;,</span>
-  <span class='comment val'>#                         #&lt;struct name=&quot;E20110210_ROGMBP.000&quot;, store_location=&quot;http://two.example.com/.../E20110210_ROGMBP.000&quot;, ieid=&quot;E20110210_ROGMBP&quot;&gt;,</span>
+  <span class='comment val'># E20110210_ROGMBP.000  [ #&lt;struct name=&quot;E20110210_ROGMBP.000&quot;, store_location=&quot;http://pool-one.example.com/.../E20110210_ROGMBP.000&quot;, ieid=&quot;E20110210_ROGMBP&quot;&gt;,</span>
+  <span class='comment val'>#                         #&lt;struct name=&quot;E20110210_ROGMBP.000&quot;, store_location=&quot;http://pool-two.example.com/.../E20110210_ROGMBP.000&quot;, ieid=&quot;E20110210_ROGMBP&quot;&gt;,</span>
   <span class='comment val'>#                         ... ]</span>
-  <span class='comment val'># E20110210_ROIUIC.000  [ #&lt;struct name=&quot;E20110210_ROIUIC.000&quot;, store_location=&quot;http://one.example.com/.../E20110210_ROIUIC.000&quot;, ieid=&quot;E20110210_ROIUIC&quot;&gt;,</span>
-  <span class='comment val'>#                         #&lt;struct name=&quot;E20110210_ROIUIC.000&quot;, store_location=&quot;http://two.example.com/.../E20110210_ROIUIC.000&quot;, ieid=&quot;E20110210_ROIUIC&quot;&gt;,</span>
+  <span class='comment val'># E20110210_ROIUIC.000  [ #&lt;struct name=&quot;E20110210_ROIUIC.000&quot;, store_location=&quot;http://pool-two.example.com/.../E20110210_ROIUIC.000&quot;, ieid=&quot;E20110210_ROIUIC&quot;&gt;,</span>
+  <span class='comment val'>#                         #&lt;struct name=&quot;E20110210_ROIUIC.000&quot;, store_location=&quot;http://pool-six.example.com/.../E20110210_ROIUIC.000&quot;, ieid=&quot;E20110210_ROIUIC&quot;&gt;,</span>
   <span class='comment val'>#                         ... ]</span>
   <span class='comment val'>#</span>
   <span class='comment val'># We check that we have the expected number of copies for each package.</span>
@@ -356,7 +356,7 @@ Returns the value of attribute reports
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:03 2011 by 
+  Generated on Thu May 12 23:37:30 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

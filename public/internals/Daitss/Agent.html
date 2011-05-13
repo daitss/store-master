@@ -79,7 +79,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/agent.rb<span class="defines">,<br />
-  /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb</span>
+  /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb</span>
 </dd>
   
 </dl>
@@ -259,20 +259,20 @@
       <pre class="lines">
 
 
+10
 11
 12
 13
 14
-15
-16</pre>
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 11</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 10</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='store_master identifier id'>store_master</span>
   <span class='return return kw'>return</span> <span class='@@store_master ivar id'>@@store_master</span> <span class='if if_mod kw'>if</span> <span class='@@store_master ivar id'>@@store_master</span>
-  <span class='sys identifier id'>sys</span> <span class='assign token'>=</span> <span class='Account constant id'>Account</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'SYSTEM'</span><span class='rparen token'>)</span> <span class='or or kw'>or</span> 
-    <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't find the SYSTEM account, so cannot find/create the #{StoreMaster.version.uri} Software Agent&quot;</span>
+  <span class='sys identifier id'>sys</span> <span class='assign token'>=</span> <span class='Account constant id'>Account</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'SYSTEM'</span><span class='rparen token'>)</span> <span class='or or kw'>or</span>
+    <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't find the SYSTEM account - this is a database setup issue - so can neither find nor create the #{StoreMaster.version.uri} Software Agent&quot;</span>
   <span class='@@store_master ivar id'>@@store_master</span> <span class='assign token'>=</span> <span class='Program constant id'>Program</span><span class='dot token'>.</span><span class='first_or_create identifier id'>first_or_create</span><span class='lparen token'>(</span><span class='symbol val'>:id</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='uri identifier id'>uri</span><span class='comma token'>,</span> <span class='symbol val'>:account</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='sys identifier id'>sys</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -350,7 +350,7 @@
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:23 2011 by 
+  Generated on Thu May 12 23:37:51 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

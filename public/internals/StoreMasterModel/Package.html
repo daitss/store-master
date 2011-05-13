@@ -71,7 +71,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2">DataMapper::Resource</dd>
+      <dd class="r2">DataMapper::Resource, <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></dd>
       
     
   
@@ -99,6 +99,13 @@
     </dl>
   
 
+
+  
+  
+  
+  
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#NAME-constant" title="StoreMaster::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="../StoreMaster.html#RELEASE-constant" title="StoreMaster::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="../StoreMaster.html#REVISION-constant" title="StoreMaster::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="../StoreMaster.html#VERSION-constant" title="StoreMaster::VERSION (constant)">VERSION</a></span></p>
 
   
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
@@ -350,7 +357,11 @@ scratch pad attributes filled in on succesful store.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+TODO: now that names are not sequential we may have a timing issue: When a
+chunk is being processed, new random ids may be inserted anywhere.
+</p>
+</div></span>
   
 </li>
 
@@ -379,7 +390,7 @@ scratch pad attributes filled in on succesful store.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#package_copies_ids-class_method" title="package_copies_ids (class method)">+ (Object) <strong>package_copies_ids</strong>(before = DateTime.now) </a>
+      <a href="#package_copies_ids-class_method" title="package_copies_ids (class method)">+ (Object) <strong>package_copies_ids</strong>(before = nil) </a>
     
 
     
@@ -445,7 +456,7 @@ e.g.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#store-class_method" title="store (class method)">+ (Object) <strong>store</strong>(data_io, metadata) </a>
+      <a href="#store-class_method" title="store (class method)">+ (Object) <strong>store</strong>(io, metadata) </a>
     
 
     
@@ -458,7 +469,34 @@ e.g.
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'><p>
+Store a received data stream to multiple silo pools.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stub-class_method" title="stub (class method)">+ (Object) <strong>stub</strong>(io, metadata) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Sort of like /dev/null, for the case we have no underlying silos.
+</p>
+</div></span>
   
 </li>
 
@@ -510,32 +548,7 @@ e.g.
 
   
     <span class="summary_desc"><div class='inline'><p>
-on failure may leave orphan.
-</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#delete_copy-instance_method" title="#delete_copy (instance method)">- (Object) <strong>delete_copy</strong>(silo_resource) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-TODO: raise an exception, maybe, for &#8216;come back later&#8217; if
-remote service too busy and we get a timeout&#8230;
+On failure may leave orphaned packages in remote silo pools.
 </p>
 </div></span>
   
@@ -559,30 +572,9 @@ remote service too busy and we get a timeout&#8230;
 
   
     <span class="summary_desc"><div class='inline'><p>
-TODO: this next method should really be named copy_locations.
+return URI objects for all of the copies we have, in pool-preference order.
 </p>
 </div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#store_copy-instance_method" title="#store_copy (instance method)">- (Object) <strong>store_copy</strong>(io, posting_url, metadata) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -611,6 +603,16 @@ TODO: this next method should really be named copy_locations.
     </ul>
   
 
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
 
   
   <div id="instance_attr_details" class="attr_details">
@@ -643,12 +645,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-28
-29
-30</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='etag identifier id'>etag</span>
   <span class='@etag ivar id'>@etag</span>
@@ -686,12 +688,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-28
-29
-30</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='md5 identifier id'>md5</span>
   <span class='@md5 ivar id'>@md5</span>
@@ -729,12 +731,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-28
-29
-30</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='sha1 identifier id'>sha1</span>
   <span class='@sha1 ivar id'>@sha1</span>
@@ -772,12 +774,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-28
-29
-30</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='size identifier id'>size</span>
   <span class='@size ivar id'>@size</span>
@@ -815,12 +817,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-28
-29
-30</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='type identifier id'>type</span>
   <span class='@type ivar id'>@type</span>
@@ -851,12 +853,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-13
-14
-15</pre>
+11
+12
+13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 11</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_repository_name identifier id'>default_repository_name</span>
   <span class='symbol val'>:store_master</span>
@@ -930,16 +932,16 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-72
-73
-74
-75
 76
 77
-78</pre>
+78
+79
+80
+81
+82</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 72</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list identifier id'>list</span>
   <span class='package_chunks identifier id'>package_chunks</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='records identifier id'>records</span><span class='bitor op'>|</span>
@@ -990,22 +992,35 @@ scratch pad attributes filled in on succesful store
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO: now that names are not sequential we may have a timing issue: When a
+chunk is being processed, new random ids may be inserted anywhere.  We
+don&#8217;t have the capability to order by  time here.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-64
-65
-66
-67
 68
 69
-70</pre>
+70
+71
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 64</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_chunks identifier id'>package_chunks</span>
   <span class='offset identifier id'>offset</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
@@ -1033,7 +1048,6 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-44
 45
 46
 47
@@ -1042,10 +1056,11 @@ scratch pad attributes filled in on succesful store
 50
 51
 52
-53</pre>
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 45</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='ids identifier id'>ids</span>
   <span class='return return kw'>return</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='not not kw'>not</span> <span class='ids identifier id'>ids</span> <span class='or or kw'>or</span> <span class='ids identifier id'>ids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
@@ -1066,7 +1081,7 @@ scratch pad attributes filled in on succesful store
       <div class="method_details ">
   <p class="signature " id="package_copies_ids-class_method">
   
-    + (<tt>Object</tt>) <strong>package_copies_ids</strong>(before = DateTime.now) 
+    + (<tt>Object</tt>) <strong>package_copies_ids</strong>(before = nil) 
   
 
   
@@ -1085,12 +1100,14 @@ scratch pad attributes filled in on succesful store
 39
 40
 41
-42</pre>
+42
+43</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 33</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span>  <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span> <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='before identifier id'>before</span> <span class='opasgn op'>||=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
   <span class='sql identifier id'>sql</span> <span class='assign token'>=</span> <span class='string val'>&quot;SELECT packages.id &quot;</span>                     <span class='plus op'>+</span>
           <span class='string val'>&quot;FROM packages, copies &quot;</span>                <span class='plus op'>+</span>
          <span class='string val'>&quot;WHERE packages.extant &quot;</span>                 <span class='plus op'>+</span>
@@ -1119,12 +1136,12 @@ scratch pad attributes filled in on succesful store
       <pre class="lines">
 
 
-48
-49
-50</pre>
+36
+37
+38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 48</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='server_location identifier id'>server_location</span>
   <span class='@@server_location ivar id'>@@server_location</span>
@@ -1147,6 +1164,7 @@ scratch pad attributes filled in on succesful store
     <p>
 e.g. <a
 href="http://store-master.example.com:8080">store-master.example.com:8080</a>
+- we&#8217;re required to set this up initially
 </p>
 
 
@@ -1160,12 +1178,12 @@ href="http://store-master.example.com:8080">store-master.example.com:8080</a>
       <pre class="lines">
 
 
-44
-45
-46</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='server_location identifier id'>server_location</span><span class='assign token'>=</span> <span class='prefix identifier id'>prefix</span>
   <span class='@@server_location ivar id'>@@server_location</span> <span class='assign token'>=</span> <span class='prefix identifier id'>prefix</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/:80$/</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
@@ -1179,16 +1197,198 @@ href="http://store-master.example.com:8080">store-master.example.com:8080</a>
       <div class="method_details ">
   <p class="signature " id="store-class_method">
   
-    + (<tt>Object</tt>) <strong>store</strong>(data_io, metadata) 
+    + (<tt>Object</tt>) <strong>store</strong>(io, metadata) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Store a received data stream to multiple silo pools.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/SiloStoreError.html" title="StoreMaster::SiloStoreError (class)">SiloStoreError</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 128</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='store identifier id'>store</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span>
+  <span class='copies identifier id'>copies</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+
+  <span class='required_metadata identifier id'>required_metadata</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:ieid</span><span class='comma token'>,</span> <span class='symbol val'>:md5</span><span class='comma token'>,</span> <span class='symbol val'>:size</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='rbrack token'>]</span>
+  <span class='missing_metadata identifier id'>missing_metadata</span>  <span class='assign token'>=</span> <span class='required_metadata identifier id'>required_metadata</span> <span class='minus op'>-</span> <span class='lparen token'>(</span><span class='required_metadata identifier id'>required_metadata</span> <span class='bitand op'>&amp;</span> <span class='metadata identifier id'>metadata</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='rparen token'>)</span>
+
+  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store data package, missing information for #{missing_metadata.join(', ')}&quot;</span>         <span class='unless unless_mod kw'>unless</span> <span class='missing_metadata identifier id'>missing_metadata</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+
+  <span class='raise identifier id'>raise</span> <span class='PackageUsed constant id'>PackageUsed</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store package #{metadata[:name]}, it already exists&quot;</span>                                    <span class='if if_mod kw'>if</span> <span class='exists? fid id'>exists?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='PackageUsed constant id'>PackageUsed</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store package using name #{metadata[:name]}, it's been previously created and deleted&quot;</span>  <span class='if if_mod kw'>if</span> <span class='was_deleted? fid id'>was_deleted?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
+
+  <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:ieid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:ieid</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span>
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='type identifier id'>type</span> <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span>
+
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='transaction identifier id'>transaction</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='trans identifier id'>trans</span><span class='bitor op'>|</span>
+    <span class='begin begin kw'>begin</span>
+      <span class='Pool constant id'>Pool</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pool identifier id'>pool</span><span class='bitor op'>|</span>
+        <span class='cpy identifier id'>cpy</span> <span class='assign token'>=</span> <span class='Copy constant id'>Copy</span><span class='dot token'>.</span><span class='store identifier id'>store</span><span class='lparen token'>(</span><span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='pkg identifier id'>pkg</span><span class='comma token'>,</span> <span class='pool identifier id'>pool</span><span class='rparen token'>)</span>
+        <span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='cpy identifier id'>cpy</span>
+
+        <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;Error copying package #{pkg.name} to #{cpy.store_location}:&quot;</span>
+
+        <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{msg} md5 mismatch (we have #{pkg.md5}, got back #{cpy.md5})&quot;</span>         <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>  <span class='eq op'>==</span> <span class='cpy identifier id'>cpy</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>
+        <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{msg} size mismatch (we have #{pkg.size}, got back #{cpy.size})&quot;</span>      <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='cpy identifier id'>cpy</span><span class='dot token'>.</span><span class='size identifier id'>size</span>
+        <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{msg} mime-type mismatch (we have #{pkg.type}, got back #{cpy.type})&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='type identifier id'>type</span> <span class='eq op'>==</span> <span class='cpy identifier id'>cpy</span><span class='dot token'>.</span><span class='type identifier id'>type</span>
+
+        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='cpy identifier id'>cpy</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span>
+      <span class='end end kw'>end</span>
+
+      <span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cp identifier id'>cp</span><span class='bitor op'>|</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='copies identifier id'>copies</span> <span class='lshft op'>&lt;&lt;</span> <span class='cp identifier id'>cp</span> <span class='rbrace token'>}</span>
+
+      <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+        <span class='errors identifier id'>errors</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+        <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='full_messages identifier id'>full_messages</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>
+        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='copies identifier id'>copies</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cp identifier id'>cp</span><span class='bitor op'>|</span>  <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='push identifier id'>push</span>  <span class='cp identifier id'>cp</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='full_messages identifier id'>full_messages</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>  <span class='rbrace token'>}</span>
+        <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Database error saving package #{pkg.name}: &quot;</span> <span class='plus op'>+</span> <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+
+    <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+      <span class='trans identifier id'>trans</span><span class='dot token'>.</span><span class='rollback identifier id'>rollback</span>
+      <span class='raise identifier id'>raise</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+
+
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='cp identifier id'>cp</span><span class='bitor op'>|</span> <span class='cp identifier id'>cp</span><span class='dot token'>.</span><span class='quiet_delete identifier id'>quiet_delete</span> <span class='rbrace token'>}</span>
+  <span class='raise identifier id'>raise</span>
+<span class='else else kw'>else</span>
+  <span class='pkg identifier id'>pkg</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="stub-class_method">
+  
+    + (<tt>Object</tt>) <strong>stub</strong>(io, metadata) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Sort of like /dev/null, for the case we have no underlying silos. Entirely
+for testing.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/SiloStoreError.html" title="StoreMaster::SiloStoreError (class)">SiloStoreError</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+87
+88
 89
 90
 91
@@ -1223,71 +1423,47 @@ href="http://store-master.example.com:8080">store-master.example.com:8080</a>
 120
 121
 122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136</pre>
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 89</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 87</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='store identifier id'>store</span> <span class='data_io identifier id'>data_io</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span>
-
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='stub identifier id'>stub</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span>
   <span class='required_metadata identifier id'>required_metadata</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='symbol val'>:name</span><span class='comma token'>,</span> <span class='symbol val'>:ieid</span><span class='comma token'>,</span> <span class='symbol val'>:md5</span><span class='comma token'>,</span> <span class='symbol val'>:size</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='rbrack token'>]</span>
   <span class='missing_metadata identifier id'>missing_metadata</span>  <span class='assign token'>=</span> <span class='required_metadata identifier id'>required_metadata</span> <span class='minus op'>-</span> <span class='lparen token'>(</span><span class='required_metadata identifier id'>required_metadata</span> <span class='bitand op'>&amp;</span> <span class='metadata identifier id'>metadata</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='rparen token'>)</span>
 
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't store data package, missing information for #{missing_metadata.join(', ')}&quot;</span>         <span class='unless unless_mod kw'>unless</span> <span class='missing_metadata identifier id'>missing_metadata</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't store package #{metadata[:name]}, it already exists&quot;</span>                                    <span class='if if_mod kw'>if</span> <span class='exists? fid id'>exists?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't store package using name #{metadata[:name]}, it's been previously created and deleted&quot;</span>  <span class='if if_mod kw'>if</span> <span class='was_deleted? fid id'>was_deleted?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store data package, missing information for #{missing_metadata.join(', ')}&quot;</span>         <span class='unless unless_mod kw'>unless</span> <span class='missing_metadata identifier id'>missing_metadata</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 
-  <span class='comment val'># TODO: we need to wrap the package insert with the copy insert in a transaction.</span>
-  <span class='comment val'># TODO: when there's a pacakge without copies, a GET on the package will cause a 500 error; there's a race condition here...</span>
+  <span class='raise identifier id'>raise</span> <span class='PackageUsed constant id'>PackageUsed</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store package #{metadata[:name]}, it already exists&quot;</span>                                    <span class='if if_mod kw'>if</span> <span class='exists? fid id'>exists?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='PackageUsed constant id'>PackageUsed</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't store package using name #{metadata[:name]}, it's been previously created and deleted&quot;</span>  <span class='if if_mod kw'>if</span> <span class='was_deleted? fid id'>was_deleted?</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span>
 
-  <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:ieid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:ieid</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:name</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:ieid</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:ieid</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
 
-  <span class='begin begin kw'>begin</span>
-    <span class='Pool constant id'>Pool</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pool identifier id'>pool</span><span class='bitor op'>|</span>
-      <span class='location identifier id'>location</span> <span class='assign token'>=</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='store_copy identifier id'>store_copy</span><span class='lparen token'>(</span><span class='data_io identifier id'>data_io</span><span class='comma token'>,</span> <span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='post_url identifier id'>post_url</span><span class='lparen token'>(</span><span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span><span class='rparen token'>)</span>
-      <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='copies identifier id'>copies</span> <span class='lshft op'>&lt;&lt;</span> <span class='Copy constant id'>Copy</span><span class='dot token'>.</span><span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='symbol val'>:store_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='symbol val'>:pool</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='pool identifier id'>pool</span><span class='rparen token'>)</span>
-    <span class='end end kw'>end</span>
-
-  <span class='comment val'># TODO: exception wrapper to DRY</span>
-
-  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e1 identifier id'>e1</span>
-    <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;Failure storing a copy of #{metadata[:name]}: #{e1.message}&quot;</span>
-    <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='locations identifier id'>locations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='loc identifier id'>loc</span><span class='bitor op'>|</span>
-      <span class='begin begin kw'>begin</span>
-        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='delete_copy identifier id'>delete_copy</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span>
-      <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e2 identifier id'>e2</span>
-        <span class='msg identifier id'>msg</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; also, failed in cleanup, when trying to delete copy at #{loc}: #{e2.message}&quot;</span>
-      <span class='end end kw'>end</span>
-    <span class='end end kw'>end</span>
-    <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span> <span class='if if_mod kw'>if</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span> <span class='symbol val'>:destroy</span>
-    <span class='raise identifier id'>raise</span> <span class='e1 identifier id'>e1</span><span class='comma token'>,</span> <span class='msg identifier id'>msg</span>
+  <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span> <span class='if if_mod kw'>if</span> <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='string val'>'rewind'</span><span class='rparen token'>)</span>
+  <span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='SHA1 constant id'>SHA1</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+  <span class='while while kw'>while</span> <span class='buff identifier id'>buff</span> <span class='assign token'>=</span> <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='read identifier id'>read</span><span class='lparen token'>(</span><span class='integer val'>1_048_576</span><span class='rparen token'>)</span>
+    <span class='size identifier id'>size</span> <span class='opasgn op'>+=</span> <span class='buff identifier id'>buff</span><span class='dot token'>.</span><span class='length identifier id'>length</span>
+    <span class='sha1 identifier id'>sha1</span> <span class='lshft op'>&lt;&lt;</span> <span class='buff identifier id'>buff</span>
+    <span class='md5 identifier id'>md5</span>  <span class='lshft op'>&lt;&lt;</span> <span class='buff identifier id'>buff</span>
   <span class='end end kw'>end</span>
 
-  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
-    <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;DB error recording #{name} - #{pkg.errors.full_messages.join('; ')}&quot;</span>
-    <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='locations identifier id'>locations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='loc identifier id'>loc</span><span class='bitor op'>|</span>
-      <span class='begin begin kw'>begin</span>
-        <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='delete_copy identifier id'>delete_copy</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span>
-      <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-        <span class='msg identifier id'>msg</span> <span class='opasgn op'>+=</span> <span class='dstring node'>&quot;; also, failed in cleanup, when trying to delete copy at #{loc}: #{e.message}&quot;</span>
-      <span class='end end kw'>end</span>
-    <span class='end end kw'>end</span>
-    <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='msg identifier id'>msg</span>
+  <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;Error receiving package #{pkg.name} to stub service:&quot;</span>
+
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='type identifier id'>type</span> <span class='assign token'>=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span>
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='md5 identifier id'>md5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span>
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='size identifier id'>size</span>
+  <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='sha1 identifier id'>sha1</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span>
+
+  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{msg} md5 mismatch (expected #{metadata[:md5]},  got #{pkg.md5})&quot;</span>      <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>  <span class='eq op'>==</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{msg} size mismatch (expected #{metadata[:size]}, got #{pkg.size})&quot;</span>    <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
+
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='save identifier id'>save</span>        
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Database error saving package #{pkg.name}: &quot;</span> <span class='plus op'>+</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='full_messages identifier id'>full_messages</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
-  <span class='pkg identifier id'>pkg</span>
+
+  <span class='return return kw'>return</span> <span class='pkg identifier id'>pkg</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1361,81 +1537,10 @@ href="http://store-master.example.com:8080">store-master.example.com:8080</a>
 </p><div class="docstring">
   <div class="discussion">
     <p>
-on failure may leave orphan
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Raises:</h3>
-<ul class="raise">
-  
-    <li>
-      
-        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/DataBaseError.html" title="StoreMaster::DataBaseError (class)">DataBaseError</a></span></tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 140</span>
-
-<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='extant identifier id'>extant</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-  <span class='raise identifier id'>raise</span>  <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;error deleting #{self.name} - #{self.errors.full_messages.join('; ')}&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
-  <span class='errs identifier id'>errs</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  <span class='locations identifier id'>locations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='loc identifier id'>loc</span><span class='bitor op'>|</span>
-    <span class='begin begin kw'>begin</span>
-      <span class='delete_copy identifier id'>delete_copy</span><span class='lparen token'>(</span><span class='loc identifier id'>loc</span><span class='rparen token'>)</span>
-    <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-      <span class='errs identifier id'>errs</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;failed to delete storage at #{loc}: #{e.message}&quot;</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
-  <span class='raise identifier id'>raise</span> <span class='DriveByError constant id'>DriveByError</span><span class='comma token'>,</span> <span class='errs identifier id'>errs</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span> <span class='unless unless_mod kw'>unless</span> <span class='errs identifier id'>errs</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="delete_copy-instance_method">
-  
-    - (<tt>Object</tt>) <strong>delete_copy</strong>(silo_resource) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-TODO: raise an exception, maybe, for &#8216;come back later&#8217; if
-remote service too busy and we get a timeout&#8230;
+On failure may leave orphaned packages in remote silo pools.  We&#8217;ll
+log a 207 MultiStatus on partial error, and have to dig out what happened
+on the remote end, if possible.  TODO: add diagnostics to quiet_delete and
+pass them up, if it proves necessary.
 </p>
 
 
@@ -1462,37 +1567,39 @@ remote service too busy and we get a timeout&#8230;
       <pre class="lines">
 
 
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228</pre>
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 215</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 187</span>
 
-<span class='def def kw'>def</span> <span class='delete_copy identifier id'>delete_copy</span> <span class='silo_resource identifier id'>silo_resource</span>
+<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='extant identifier id'>extant</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
 
-  <span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span> 
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>5</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>5</span>  <span class='comment val'># deletes can take some time for large packages on active filesystems</span>
+  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error saving package #{name} to database: #{errors.full_messages.join(', ')}&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
 
-  <span class='request identifier id'>request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Delete constant id'>Delete</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='request_uri identifier id'>request_uri</span><span class='rparen token'>)</span>
-  <span class='request identifier id'>request</span><span class='dot token'>.</span><span class='basic_auth identifier id'>basic_auth</span><span class='lparen token'>(</span><span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='or or kw'>or</span> <span class='silo_resource identifier id'>silo_resource</span><span class='dot token'>.</span><span class='password identifier id'>password</span>
+  <span class='probs identifier id'>probs</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='copy identifier id'>copy</span><span class='bitor op'>|</span>
+    <span class='probs identifier id'>probs</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='copy identifier id'>copy</span><span class='dot token'>.</span><span class='store_location identifier id'>store_location</span> <span class='unless unless_mod kw'>unless</span> <span class='copy identifier id'>copy</span><span class='dot token'>.</span><span class='quiet_delete identifier id'>quiet_delete</span>
+  <span class='end end kw'>end</span>
 
-  <span class='response identifier id'>response</span> <span class='assign token'>=</span> <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='request identifier id'>request</span><span class='rparen token'>)</span>
-  <span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
-
-  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{response.code} #{response.message} was returned for a failed delete of the package copy at #{silo_resource} - #{response.body}&quot;</span> <span class='if if_mod kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
+  <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='probs identifier id'>probs</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+    <span class='word identifier id'>word</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='probs identifier id'>probs</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span> <span class='question op'>?</span> <span class='string val'>'entry'</span> <span class='colon op'>:</span> <span class='string val'>'entries'</span><span class='rparen token'>)</span>
+    <span class='raise identifier id'>raise</span> <span class='PartialDelete constant id'>PartialDelete</span><span class='comma token'>,</span> <span class='dstring node'>&quot;For package #{name}, failed to delete silo #{word} #{probs.join(', ')}&quot;</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1510,7 +1617,7 @@ remote service too busy and we get a timeout&#8230;
 </p><div class="docstring">
   <div class="discussion">
     <p>
-TODO: this next method should really be named copy_locations
+return URI objects for all of the copies we have, in pool-preference order
 </p>
 
 
@@ -1524,173 +1631,15 @@ TODO: this next method should really be named copy_locations
       <pre class="lines">
 
 
-34
-35
-36</pre>
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 34</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='locations identifier id'>locations</span>
   <span class='copies identifier id'>copies</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span> <span class='b identifier id'>b</span><span class='dot token'>.</span><span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span> <span class='cmp op'>&lt;=&gt;</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='read_preference identifier id'>read_preference</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='copy identifier id'>copy</span><span class='bitor op'>|</span> <span class='copy identifier id'>copy</span><span class='dot token'>.</span><span class='url identifier id'>url</span> <span class='rbrace token'>}</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="store_copy-instance_method">
-  
-    - (<tt>Object</tt>) <strong>store_copy</strong>(io, posting_url, metadata) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Raises:</h3>
-<ul class="raise">
-  
-    <li>
-      
-        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/SiloStoreError.html" title="StoreMaster::SiloStoreError (class)">SiloStoreError</a></span></tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 155</span>
-
-<span class='def def kw'>def</span> <span class='store_copy identifier id'>store_copy</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='posting_url identifier id'>posting_url</span><span class='comma token'>,</span> <span class='metadata identifier id'>metadata</span>
-
-  <span class='comment val'># Note: posting_url may have credentials, but URI#to_s has been redefined in store-master/model.rb to sanitize the printed output</span>
-
-  <span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>5</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span>
-  <span class='request identifier id'>request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Post constant id'>Post</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='request_uri identifier id'>request_uri</span><span class='rparen token'>)</span>
-  <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span> <span class='if if_mod kw'>if</span> <span class='io identifier id'>io</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='string val'>'rewind'</span><span class='rparen token'>)</span>
-  <span class='request identifier id'>request</span><span class='dot token'>.</span><span class='body_stream identifier id'>body_stream</span> <span class='assign token'>=</span> <span class='io identifier id'>io</span>
-  <span class='request identifier id'>request</span><span class='dot token'>.</span><span class='initialize_http_header identifier id'>initialize_http_header</span><span class='lparen token'>(</span><span class='string val'>&quot;Content-MD5&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;Content-Length&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='comma token'>,</span> <span class='string val'>&quot;Content-Type&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-  <span class='request identifier id'>request</span><span class='dot token'>.</span><span class='basic_auth identifier id'>basic_auth</span><span class='lparen token'>(</span><span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='or or kw'>or</span> <span class='posting_url identifier id'>posting_url</span><span class='dot token'>.</span><span class='password identifier id'>password</span>
-  <span class='response identifier id'>response</span> <span class='assign token'>=</span> <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='request identifier id'>request</span><span class='rparen token'>)</span>
-  <span class='status identifier id'>status</span> <span class='assign token'>=</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
-
-  <span class='comment val'># TODO: timeout in the above doesn't cause the package entry to be deleted; so we get a package entry without </span>
-  <span class='comment val'># copy entry - boom! later.</span>
-  <span class='comment val'>#</span>
-  <span class='comment val'># TODO: we need to wrap the package insert with the copy insert in a transaction.</span>
-
-
-  <span class='raise identifier id'>raise</span><span class='lparen token'>(</span><span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{response.code} #{response.message} - when saving package #{metadata[:name]} to silo #{posting_url} - #{response.body}&quot;</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='status identifier id'>status</span> <span class='geq op'>&gt;=</span> <span class='integer val'>300</span>
-
-  <span class='comment val'># Example XML document returned from POST to a silo, giving details about the resource</span>
-  <span class='comment val'># </span>
-  <span class='comment val'>#   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;                              </span>
-  <span class='comment val'>#   &lt;created type=&quot;application/x-tar&quot;                                                                            </span>
-  <span class='comment val'>#            time=&quot;2010-10-21T10:29:19-04:00&quot;                                                                    </span>
-  <span class='comment val'>#            sha1=&quot;ac4d813081e066422bc1dc7e7997ace1bfb858b2&quot;                                                     </span>
-  <span class='comment val'>#            etag=&quot;a3f07bc57127112f2a2c40d026b1abe1&quot;                                                             </span>
-  <span class='comment val'>#            md5=&quot;32e2ce3af2f98a115e121285d042c9bd&quot;                                                              </span>
-  <span class='comment val'>#            size=&quot;6031360&quot;                                                                                      </span>
-  <span class='comment val'>#            location=&quot;http://silo.example.com/001/data/E20101021_LJLAMU.001&quot;                                         </span>
-  <span class='comment val'>#            name=&quot;E20101021_LJLAMU.001&quot;/&gt;</span>
-
-  <span class='returned_data identifier id'>returned_data</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
-  <span class='begin begin kw'>begin</span>
-    <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='response identifier id'>response</span><span class='dot token'>.</span><span class='body identifier id'>body</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
-    <span class='parser identifier id'>parser</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'/created'</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each_attr identifier id'>each_attr</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='attr identifier id'>attr</span><span class='bitor op'>|</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='attr identifier id'>attr</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='attr identifier id'>attr</span><span class='dot token'>.</span><span class='value identifier id'>value</span> <span class='rbrace token'>}</span>
-  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-    <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Invalid XML document returned when saving package to #{posting_url}: #{e.message}&quot;</span>
-  <span class='end end kw'>end</span>
-
-  <span class='comment val'># check the md5, size, type vs. our request to that returned by remotely created copy.</span>
-
-  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error storing to #{posting_url} - md5 mismatch&quot;</span>   <span class='if if_mod kw'>if</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;md5&quot;</span><span class='rbrack token'>]</span>  <span class='neq op'>!=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:md5</span><span class='rbrack token'>]</span>
-  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error storing to #{posting_url} - size mismatch&quot;</span>  <span class='if if_mod kw'>if</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;size&quot;</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:size</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
-  <span class='raise identifier id'>raise</span> <span class='SiloStoreError constant id'>SiloStoreError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error storing to #{posting_url} - type mismatch&quot;</span>  <span class='if if_mod kw'>if</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>&quot;type&quot;</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='metadata identifier id'>metadata</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span>
-
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'md5'</span><span class='rbrack token'>]</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'sha1'</span><span class='rbrack token'>]</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='type identifier id'>type</span> <span class='assign token'>=</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'type'</span><span class='rbrack token'>]</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='assign token'>=</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'size'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
-  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='etag identifier id'>etag</span> <span class='assign token'>=</span> <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'etag'</span><span class='rbrack token'>]</span>
-
-  <span class='returned_data identifier id'>returned_data</span><span class='lbrack token'>[</span><span class='string val'>'location'</span><span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1711,12 +1660,12 @@ TODO: this next method should really be named copy_locations
       <pre class="lines">
 
 
-38
-39
-40</pre>
+47
+48
+49</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 38</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/packages.rb', line 47</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='dstring node'>&quot;#{@@server_location || 'http://localhost'}/packages/#{name}&quot;</span>
@@ -1732,7 +1681,7 @@ TODO: this next method should really be named copy_locations
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:49:19 2011 by 
+  Generated on Thu May 12 23:37:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

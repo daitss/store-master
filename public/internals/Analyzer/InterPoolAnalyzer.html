@@ -215,24 +215,24 @@ A new instance of InterPoolAnalyzer
       <pre class="lines">
 
 
-84
 85
 86
 87
 88
 89
 90
-91</pre>
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 84</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='comma token'>,</span> <span class='required_copies identifier id'>required_copies</span>
   <span class='@pool_fixity_streams ivar id'>@pool_fixity_streams</span>  <span class='assign token'>=</span> <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span>
   <span class='@required_copies ivar id'>@required_copies</span>      <span class='assign token'>=</span> <span class='required_copies identifier id'>required_copies</span>
 
-  <span class='@report_wrong_number ivar id'>@report_wrong_number</span>  <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='dstring node'>&quot;Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools&quot;</span>
-  <span class='@report_copy_mismatch ivar id'>@report_copy_mismatch</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools&quot;</span>
+  <span class='@report_wrong_number ivar id'>@report_wrong_number</span>  <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Inter-Pool Copy Check&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools&quot;</span>
+  <span class='@report_copy_mismatch ivar id'>@report_copy_mismatch</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='string val'>&quot;Inter-Pool Fixity Check&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools&quot;</span>
   <span class='@reports ivar id'>@reports</span>              <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='@report_wrong_number ivar id'>@report_wrong_number</span><span class='comma token'>,</span> <span class='@report_copy_mismatch ivar id'>@report_copy_mismatch</span> <span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -273,12 +273,12 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-82
 83
-84</pre>
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 83</span>
 
 <span class='def def kw'>def</span> <span class='reports identifier id'>reports</span>
   <span class='@reports ivar id'>@reports</span>
@@ -309,7 +309,6 @@ Returns the value of attribute reports
       <pre class="lines">
 
 
-93
 94
 95
 96
@@ -324,10 +323,12 @@ Returns the value of attribute reports
 105
 106
 107
-108</pre>
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 93</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='run identifier id'>run</span>
   <span class='Streams constant id'>Streams</span><span class='colon2 op'>::</span><span class='PoolMultiFixities constant id'>PoolMultiFixities</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@pool_fixity_streams ivar id'>@pool_fixity_streams</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='pool_records identifier id'>pool_records</span><span class='bitor op'>|</span>
@@ -342,6 +343,7 @@ Returns the value of attribute reports
     <span class='@report_copy_mismatch ivar id'>@report_copy_mismatch</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='dstring node'>&quot;MD5 mismatch for #{name}: &quot;</span>  <span class='plus op'>+</span>  <span class='pool_records identifier id'>pool_records</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span>  <span class='dstring node'>&quot;#{p.location} has #{p.md5}&quot;</span>  <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>  <span class='if if_mod kw'>if</span> <span class='pool_records identifier id'>pool_records</span><span class='dot token'>.</span><span class='inconsistent? fid id'>inconsistent?</span> <span class='symbol val'>:md5</span>
     <span class='@report_copy_mismatch ivar id'>@report_copy_mismatch</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='dstring node'>&quot;Size mismatch for #{name}: &quot;</span> <span class='plus op'>+</span>  <span class='pool_records identifier id'>pool_records</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='p identifier id'>p</span><span class='bitor op'>|</span>  <span class='dstring node'>&quot;#{p.location} has #{p.size}&quot;</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>', '</span><span class='rparen token'>)</span>  <span class='if if_mod kw'>if</span> <span class='pool_records identifier id'>pool_records</span><span class='dot token'>.</span><span class='inconsistent? fid id'>inconsistent?</span> <span class='symbol val'>:size</span>
   <span class='end end kw'>end</span>
+
   <span class='@reports ivar id'>@reports</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='report identifier id'>report</span><span class='bitor op'>|</span> <span class='report identifier id'>report</span><span class='dot token'>.</span><span class='done identifier id'>done</span> <span class='rbrace token'>}</span>
   <span class='self self kw'>self</span>
 <span class='end end kw'>end</span>
@@ -356,7 +358,7 @@ Returns the value of attribute reports
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:46 2011 by 
+  Generated on Thu May 12 23:37:15 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

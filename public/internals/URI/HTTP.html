@@ -97,7 +97,7 @@
     
 
     
-      (also: #old_to_s)
+      (also: #to_s_with_userinfo)
     
   </span>
   
@@ -130,7 +130,7 @@
 
   
     <span class="aliases">Also known as:
-    <span class="names"><span id='old_to_s-instance_method'>old_to_s</span></span>
+    <span class="names"><span id='to_s_with_userinfo-instance_method'>to_s_with_userinfo</span></span>
     </span>
   
 </p><table class="source_code">
@@ -139,15 +139,15 @@
       <pre class="lines">
 
 
-21
 22
-23</pre>
+23
+24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 21</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='userinfo identifier id'>userinfo</span> <span class='integer val'>? </span><span class='old_to_s identifier id'>old_to_s</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='userinfo identifier id'>userinfo</span> <span class='plus op'>+</span> <span class='string val'>'@'</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='old_to_s identifier id'>old_to_s</span>
+  <span class='userinfo identifier id'>userinfo</span> <span class='integer val'>? </span><span class='to_s_with_userinfo identifier id'>to_s_with_userinfo</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='userinfo identifier id'>userinfo</span> <span class='plus op'>+</span> <span class='string val'>'@'</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='to_s_with_userinfo identifier id'>to_s_with_userinfo</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -160,7 +160,7 @@
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:48 2011 by 
+  Generated on Thu May 12 23:37:14 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

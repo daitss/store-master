@@ -71,7 +71,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2">Enumerable</dd>
+      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
       
     
   
@@ -107,6 +107,9 @@ an array of strings.
 
 
   
+  
+  
+  
 
   
     <h2>
@@ -119,91 +122,7 @@ an array of strings.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#closed%3F-instance_method" title="#closed? (instance method)">- (Boolean) <strong>closed?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#eos%3F-instance_method" title="#eos? (instance method)">- (Boolean) <strong>eos?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
     
 
     
@@ -263,10 +182,7 @@ A new instance of DataFileStream.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-semi-private:.
-</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -313,32 +229,20 @@ semi-private:.
 </li>
 
       
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#unget-instance_method" title="#unget (instance method)">- (Object) <strong>unget</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
     </ul>
   
 
 
-  <div id="constructor_details" class="method_details_list">
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -365,21 +269,15 @@ A new instance of DataFileStream
       <pre class="lines">
 
 
-37
-38
-39
-40
-41
-42</pre>
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 37</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 90</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>  <span class='io identifier id'>io</span>
-  <span class='@io ivar id'>@io</span>            <span class='assign token'>=</span> <span class='io identifier id'>io</span>
-  <span class='@last_key ivar id'>@last_key</span>      <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
-  <span class='@last_val ivar id'>@last_val</span>      <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
-  <span class='@unget_pending ivar id'>@unget_pending</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@io ivar id'>@io</span> <span class='assign token'>=</span> <span class='io identifier id'>io</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -395,119 +293,7 @@ A new instance of DataFileStream
     
     
       <div class="method_details first">
-  <p class="signature first" id="close-instance_method">
-  
-    - (<tt>Object</tt>) <strong>close</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-87
-88
-89</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 87</span>
-
-<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
-  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='unless unless_mod kw'>unless</span> <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="closed?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>closed?</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
-  
-    <li>
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-83
-84
-85</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 83</span>
-
-<span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
-  <span class='return return kw'>return</span> <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="each-instance_method">
-  
-    - (<tt>Object</tt>) <strong>each</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-77
-78
-79
-80
-81</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 77</span>
-
-<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-  <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
-    <span class='yield yield kw'>yield</span> <span class='get identifier id'>get</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="eos?-instance_method">
+  <p class="signature first" id="eos?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>eos?</strong> 
   
@@ -540,64 +326,15 @@ A new instance of DataFileStream
       <pre class="lines">
 
 
-54
-55
-56</pre>
+104
+105
+106</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 54</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 104</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
-  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='eof? fid id'>eof?</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='@unget_pending ivar id'>@unget_pending</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="get-instance_method">
-  
-    - (<tt>Object</tt>) <strong>get</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 58</span>
-
-<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
-  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-
-  <span class='if if kw'>if</span> <span class='@unget_pending ivar id'>@unget_pending</span>
-     <span class='@unget_pending ivar id'>@unget_pending</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-     <span class='return return kw'>return</span> <span class='@last_key ivar id'>@last_key</span><span class='comma token'>,</span> <span class='@last_val ivar id'>@last_val</span>
-  <span class='end end kw'>end</span>
-
-  <span class='@last_key ivar id'>@last_key</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='tail identifier id'>tail</span> <span class='assign token'>=</span> <span class='read identifier id'>read</span>
-  <span class='@last_val ivar id'>@last_val</span> <span class='assign token'>=</span> <span class='tail identifier id'>tail</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>1</span> <span class='question op'>?</span> <span class='tail identifier id'>tail</span> <span class='colon op'>:</span> <span class='tail identifier id'>tail</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
-
-  <span class='return return kw'>return</span> <span class='@last_key ivar id'>@last_key</span><span class='comma token'>,</span> <span class='@last_val ivar id'>@last_val</span>
+  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='eof? fid id'>eof?</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='ungetting? fid id'>ungetting?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -612,32 +349,41 @@ A new instance of DataFileStream
   
 
   
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-semi-private:
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
+</p><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-93
-94
-95</pre>
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 93</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 108</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
-  <span class='return return kw'>return</span> <span class='mult op'>*</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\s+/</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='eof? fid id'>eof?</span>
+  <span class='head identifier id'>head</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='tail identifier id'>tail</span> <span class='assign token'>=</span> <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='dot token'>.</span><span class='strip identifier id'>strip</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/\s+/</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='head identifier id'>head</span>
+  <span class='tail identifier id'>tail</span> <span class='assign token'>=</span> <span class='if if kw'>if</span> <span class='tail identifier id'>tail</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+           <span class='nil nil kw'>nil</span>
+         <span class='elsif elsif kw'>elsif</span> <span class='tail identifier id'>tail</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
+           <span class='tail identifier id'>tail</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+         <span class='else else kw'>else</span>
+           <span class='tail identifier id'>tail</span>
+         <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='head identifier id'>head</span><span class='comma token'>,</span> <span class='tail identifier id'>tail</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -658,14 +404,14 @@ semi-private:
       <pre class="lines">
 
 
-48
-49
-50
-51
-52</pre>
+98
+99
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 48</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 98</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Stream #{@io} can't be rewound: it has been closed&quot;</span>  <span class='if if_mod kw'>if</span> <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span>
@@ -691,46 +437,15 @@ semi-private:
       <pre class="lines">
 
 
-44
-45
-46</pre>
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} from #{io.to_s}&gt;&quot;</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="unget-instance_method">
-  
-    - (<tt>Object</tt>) <strong>unget</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-72
-73
-74
-75</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 72</span>
-
-<span class='def def kw'>def</span> <span class='unget identifier id'>unget</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}&quot;</span> <span class='if if_mod kw'>if</span> <span class='@unget_pending ivar id'>@unget_pending</span>
-  <span class='@unget_pending ivar id'>@unget_pending</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} from io #{@io}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -743,7 +458,7 @@ semi-private:
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:50 2011 by 
+  Generated on Thu May 12 23:37:21 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

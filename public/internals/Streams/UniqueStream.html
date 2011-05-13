@@ -70,38 +70,25 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
-<h2>Overview</h2><div class="docstring">
-  <div class="discussion">
-    <p>
-UniqueStream takes a stream and filters it so that the returned
-stream&#8217;s keys are always unique; if a UniqueStream encounters two
-identical keys, it returns the key/value pair of the first of them,
-discarding the second.
-</p>
-<p>
-It supports unget
-</p>
 
 
-  </div>
-</div>
-<div class="tags">
   
-</div><div id="subclasses">
-  <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="FoldedStream.html" title="Streams::FoldedStream (class)">FoldedStream</a></span></p>
-</div>
-
-
+  
+  
+  
 
   
     <h2>
@@ -114,91 +101,7 @@ It supports unget
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#closed%3F-instance_method" title="#closed? (instance method)">- (Boolean) <strong>closed?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#eos%3F-instance_method" title="#eos? (instance method)">- (Boolean) <strong>eos?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
     
 
     
@@ -245,6 +148,27 @@ A new instance of UniqueStream.
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#read-instance_method" title="#read (instance method)">- (Object) <strong>read</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#rewind-instance_method" title="#rewind (instance method)">- (Object) <strong>rewind</strong> </a>
     
 
@@ -284,33 +208,19 @@ A new instance of UniqueStream.
 </li>
 
       
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#unget-instance_method" title="#unget (instance method)">- (Object) <strong>unget</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-we only support one level of unget.
-</p>
-</div></span>
-  
-</li>
-
-      
     </ul>
   
 
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -338,19 +248,15 @@ A new instance of UniqueStream
       <pre class="lines">
 
 
-108
-109
-110
-111
-112</pre>
+134
+135
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 108</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 134</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='stream identifier id'>stream</span>
-  <span class='@stream ivar id'>@stream</span> <span class='assign token'>=</span> <span class='stream identifier id'>stream</span>
-  <span class='@unbuff ivar id'>@unbuff</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  <span class='@ungot ivar id'>@ungot</span>  <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='@stream ivar id'>@stream</span>  <span class='assign token'>=</span> <span class='stream identifier id'>stream</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -366,119 +272,7 @@ A new instance of UniqueStream
     
     
       <div class="method_details first">
-  <p class="signature first" id="close-instance_method">
-  
-    - (<tt>Object</tt>) <strong>close</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-122
-123
-124</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 122</span>
-
-<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
-  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='close identifier id'>close</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="closed?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>closed?</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
-  
-    <li>
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-118
-119
-120</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 118</span>
-
-<span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
-  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='closed? fid id'>closed?</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="each-instance_method">
-  
-    - (<tt>Object</tt>) <strong>each</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-165
-166
-167
-168
-169</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 165</span>
-
-<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-  <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
-    <span class='yield yield kw'>yield</span> <span class='get identifier id'>get</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="eos?-instance_method">
+  <p class="signature first" id="eos?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>eos?</strong> 
   
@@ -511,15 +305,15 @@ A new instance of UniqueStream
       <pre class="lines">
 
 
-126
-127
-128</pre>
+142
+143
+144</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 126</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 142</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
-  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='@ungot ivar id'>@ungot</span>
+  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -528,9 +322,9 @@ A new instance of UniqueStream
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="get-instance_method">
+  <p class="signature " id="read-instance_method">
   
-    - (<tt>Object</tt>) <strong>get</strong> 
+    - (<tt>Object</tt>) <strong>read</strong> 
   
 
   
@@ -540,14 +334,6 @@ A new instance of UniqueStream
       <pre class="lines">
 
 
-142
-143
-144
-145
-146
-147
-148
-149
 150
 151
 152
@@ -561,32 +347,30 @@ A new instance of UniqueStream
 160
 161
 162
-163</pre>
+163
+164
+165
+166</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 142</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 150</span>
 
-<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
-  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-
-  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-     <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-     <span class='return return kw'>return</span> <span class='@unbuff ivar id'>@unbuff</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='@unbuff ivar id'>@unbuff</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
-  <span class='end end kw'>end</span>
-
-  <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='vu identifier id'>vu</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
+<span class='def def kw'>def</span> <span class='read identifier id'>read</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='upcoming identifier id'>upcoming</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
 
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
-    <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-    <span class='k identifier id'>k</span><span class='comma token'>,</span> <span class='v identifier id'>v</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
-    <span class='if if kw'>if</span> <span class='k identifier id'>k</span> <span class='neq op'>!=</span> <span class='ku identifier id'>ku</span>
-      <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span>
-      <span class='break break kw'>break</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
+    <span class='next_record identifier id'>next_record</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
 
-  <span class='@unbuff ivar id'>@unbuff</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='vu identifier id'>vu</span> <span class='rbrack token'>]</span>
-  <span class='return return kw'>return</span> <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='vu identifier id'>vu</span>
+    <span class='if if kw'>if</span> <span class='next_record identifier id'>next_record</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='return return kw'>return</span> <span class='upcoming identifier id'>upcoming</span>
+    <span class='end end kw'>end</span>
+
+    <span class='if if kw'>if</span> <span class='next_record identifier id'>next_record</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='upcoming identifier id'>upcoming</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+      <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span>
+      <span class='return return kw'>return</span> <span class='upcoming identifier id'>upcoming</span>
+    <span class='end end kw'>end</span>
+
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -607,17 +391,15 @@ A new instance of UniqueStream
       <pre class="lines">
 
 
-130
-131
-132
-133</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 130</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 146</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
-  <span class='@stream ivar id'>@stream</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -638,57 +420,15 @@ A new instance of UniqueStream
       <pre class="lines">
 
 
-114
-115
-116</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 114</span>
-
-<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} wrapping #{@stream.to_s}&gt;&quot;</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="unget-instance_method">
-  
-    - (<tt>Object</tt>) <strong>unget</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-we only support one level of unget
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-137
 138
 139
 140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 137</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 138</span>
 
-<span class='def def kw'>def</span> <span class='unget identifier id'>unget</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}&quot;</span> <span class='if if_mod kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-  <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} wrapping #{@stream.to_s}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -701,7 +441,7 @@ we only support one level of unget
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:52 2011 by 
+  Generated on Thu May 12 23:37:55 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

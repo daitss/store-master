@@ -71,7 +71,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2">DataMapper::Resource</dd>
+      <dd class="r2">DataMapper::Resource, <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></dd>
       
     
   
@@ -95,6 +95,16 @@ For reserving names for URLs based on IEIDs.
 <div class="tags">
   
 </div>
+  <h2>Constant Summary</h2>
+  
+
+
+  
+  
+  
+  
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#NAME-constant" title="StoreMaster::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="../StoreMaster.html#RELEASE-constant" title="StoreMaster::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="../StoreMaster.html#REVISION-constant" title="StoreMaster::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="../StoreMaster.html#VERSION-constant" title="StoreMaster::VERSION (constant)">VERSION</a></span></p>
 
   
 
@@ -174,6 +184,16 @@ For reserving names for URLs based on IEIDs.
 
 
   
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
+
+  
 
   <div id="class_method_details" class="method_details_list">
     <h2>Class Method Details</h2>
@@ -192,12 +212,12 @@ For reserving names for URLs based on IEIDs.
       <pre class="lines">
 
 
+12
 13
-14
-15</pre>
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 12</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_repository_name identifier id'>default_repository_name</span>
   <span class='symbol val'>:store_master</span>
@@ -242,14 +262,14 @@ For reserving names for URLs based on IEIDs.
       <pre class="lines">
 
 
+22
 23
 24
 25
-26
-27</pre>
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_ieid identifier id'>find_ieid</span> <span class='name identifier id'>name</span>
   <span class='res identifier id'>res</span> <span class='assign token'>=</span> <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
@@ -296,6 +316,7 @@ For reserving names for URLs based on IEIDs.
       <pre class="lines">
 
 
+28
 29
 30
 31
@@ -310,11 +331,10 @@ For reserving names for URLs based on IEIDs.
 40
 41
 42
-43
-44</pre>
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 29</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/reservations.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='make identifier id'>make</span> <span class='ieid identifier id'>ieid</span>
 
@@ -343,7 +363,7 @@ For reserving names for URLs based on IEIDs.
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:30 2011 by 
+  Generated on Thu May 12 23:37:41 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

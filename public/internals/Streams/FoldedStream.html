@@ -53,12 +53,10 @@
   
     <dt class="r1">Inherits:</dt>
     <dd class="r1">
-      <span class="inheritName"><span class='object_link'><a href="UniqueStream.html" title="Streams::UniqueStream (class)">UniqueStream</a></span></span>
+      <span class="inheritName">Object</span>
       
         <ul class="fullTree">
           <li>Object</li>
-          
-            <li class="next"><span class='object_link'><a href="UniqueStream.html" title="Streams::UniqueStream (class)">UniqueStream</a></span></li>
           
             <li class="next">Streams::FoldedStream</li>
           
@@ -72,11 +70,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -84,13 +86,10 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     <p>
-FoldedStream is a stream filter; given a stream, it returns a stream that
-has folded values for identical keys together in an array. Thus the values
-for a FoldedStream are of mixed arity, but will always be an array. As for
-all streams, the keys must be sorted.
-</p>
-<p>
-It subclasses UniqueStream and supports one level of unget
+FoldedStream is initialized from stream, returning a stream that has folded
+the values for identical keys together in an array. Thus the values for a
+FoldedStream are always an array, possibly of mixed arity. As for all
+streams, the keys must be sorted.
 </p>
 
 
@@ -116,7 +115,96 @@ It subclasses UniqueStream and supports one level of unget
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
+      <a href="#eos%3F-instance_method" title="#eos? (instance method)">- (Boolean) <strong>eos?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (FoldedStream) <strong>initialize</strong>(stream) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of FoldedStream.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read-instance_method" title="#read (instance method)">- (Object) <strong>read</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rewind-instance_method" title="#rewind (instance method)">- (Object) <strong>rewind</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_s-instance_method" title="#to_s (instance method)">- (Object) <strong>to_s</strong> </a>
     
 
     
@@ -145,12 +233,50 @@ It subclasses UniqueStream and supports one level of unget
   
   
   
-  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="UniqueStream.html" title="Streams::UniqueStream (class)">UniqueStream</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="UniqueStream.html#close-instance_method" title="Streams::UniqueStream#close (method)">#close</a></span>, <span class='object_link'><a href="UniqueStream.html#closed%3F-instance_method" title="Streams::UniqueStream#closed? (method)">#closed?</a></span>, <span class='object_link'><a href="UniqueStream.html#each-instance_method" title="Streams::UniqueStream#each (method)">#each</a></span>, <span class='object_link'><a href="UniqueStream.html#eos%3F-instance_method" title="Streams::UniqueStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="UniqueStream.html#initialize-instance_method" title="Streams::UniqueStream#initialize (method)">#initialize</a></span>, <span class='object_link'><a href="UniqueStream.html#rewind-instance_method" title="Streams::UniqueStream#rewind (method)">#rewind</a></span>, <span class='object_link'><a href="UniqueStream.html#to_s-instance_method" title="Streams::UniqueStream#to_s (method)">#to_s</a></span>, <span class='object_link'><a href="UniqueStream.html#unget-instance_method" title="Streams::UniqueStream#unget (method)">#unget</a></span></p>
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
-    <p class="notice">This class inherits a constructor from <span class='object_link'><a href="UniqueStream.html#initialize-instance_method" title="Streams::UniqueStream#initialize (method)">Streams::UniqueStream</a></span></p>
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Streams::FoldedStream (class)">FoldedStream</a></span></tt>) <strong>initialize</strong>(stream) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of FoldedStream
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+180
+181
+182</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 180</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='stream identifier id'>stream</span>
+  <span class='@stream ivar id'>@stream</span>  <span class='assign token'>=</span> <span class='stream identifier id'>stream</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
   
 </div>
 
@@ -160,9 +286,59 @@ It subclasses UniqueStream and supports one level of unget
     
     
       <div class="method_details first">
-  <p class="signature first" id="get-instance_method">
+  <p class="signature first" id="eos?-instance_method">
   
-    - (<tt>Object</tt>) <strong>get</strong> 
+    - (<tt>Boolean</tt>) <strong>eos?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+188
+189
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 188</span>
+
+<span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
+  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="read-instance_method">
+  
+    - (<tt>Object</tt>) <strong>read</strong> 
   
 
   
@@ -172,20 +348,6 @@ It subclasses UniqueStream and supports one level of unget
       <pre class="lines">
 
 
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
 196
 197
 198
@@ -198,37 +360,93 @@ It subclasses UniqueStream and supports one level of unget
 205
 206
 207
-208</pre>
+208
+209
+210
+211
+212
+213
+214</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 182</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 196</span>
 
-<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
-  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-
-  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-     <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-     <span class='return return kw'>return</span> <span class='@unbuff ivar id'>@unbuff</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='@unbuff ivar id'>@unbuff</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
-  <span class='end end kw'>end</span>
-
-  <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='vu identifier id'>vu</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
-
-  <span class='@vals ivar id'>@vals</span> <span class='assign token'>=</span> <span class='Array constant id'>Array</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-  <span class='@vals ivar id'>@vals</span> <span class='lshft op'>&lt;&lt;</span> <span class='vu identifier id'>vu</span>
+<span class='def def kw'>def</span> <span class='read identifier id'>read</span>
+  <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='upcoming identifier id'>upcoming</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
+  <span class='vals identifier id'>vals</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='upcoming identifier id'>upcoming</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
 
   <span class='loop identifier id'>loop</span> <span class='do do kw'>do</span>
-    <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-    <span class='k identifier id'>k</span><span class='comma token'>,</span> <span class='v identifier id'>v</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
-    <span class='if if kw'>if</span> <span class='k identifier id'>k</span> <span class='neq op'>!=</span> <span class='ku identifier id'>ku</span>
-      <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span>
-      <span class='break break kw'>break</span>
+    <span class='next_record identifier id'>next_record</span> <span class='assign token'>=</span> <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
+
+    <span class='if if kw'>if</span> <span class='next_record identifier id'>next_record</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='return return kw'>return</span> <span class='upcoming identifier id'>upcoming</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
+    <span class='end end kw'>end</span>
+
+    <span class='if if kw'>if</span> <span class='next_record identifier id'>next_record</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='upcoming identifier id'>upcoming</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+      <span class='vals identifier id'>vals</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='next_record identifier id'>next_record</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
     <span class='else else kw'>else</span>
-      <span class='@vals ivar id'>@vals</span> <span class='lshft op'>&lt;&lt;</span> <span class='v identifier id'>v</span>
+      <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='unget identifier id'>unget</span>
+      <span class='return return kw'>return</span> <span class='upcoming identifier id'>upcoming</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='vals identifier id'>vals</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="rewind-instance_method">
+  
+    - (<tt>Object</tt>) <strong>rewind</strong> 
+  
 
-  <span class='@unbuff ivar id'>@unbuff</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='@vals ivar id'>@vals</span> <span class='rbrack token'>]</span>
-  <span class='return return kw'>return</span> <span class='ku identifier id'>ku</span><span class='comma token'>,</span> <span class='@vals ivar id'>@vals</span>
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+192
+193
+194</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 192</span>
+
+<span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
+  <span class='@stream ivar id'>@stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_s-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_s</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/datyl/streams.rb', line 184</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} folding #{@stream}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -241,7 +459,7 @@ It subclasses UniqueStream and supports one level of unget
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:50 2011 by 
+  Generated on Thu May 12 23:37:35 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

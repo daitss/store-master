@@ -216,6 +216,7 @@ A new instance of IntraPoolAnalyzer
       <pre class="lines">
 
 
+35
 36
 37
 38
@@ -224,19 +225,18 @@ A new instance of IntraPoolAnalyzer
 41
 42
 43
-44
-45</pre>
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 35</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='comma token'>,</span> <span class='max_days identifier id'>max_days</span>
   <span class='@expiration_date ivar id'>@expiration_date</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='max_days identifier id'>max_days</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
   <span class='@pool_fixity_streams ivar id'>@pool_fixity_streams</span>  <span class='assign token'>=</span> <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span>
 
-  <span class='@redundant_package_report ivar id'>@redundant_package_report</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Multiple Packages Within A Pool&quot;</span><span class='rparen token'>)</span>
-  <span class='@expired_fixity_report ivar id'>@expired_fixity_report</span>    <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;Packages With Expired Fixities (Older Than #{max_days} Days)&quot;</span><span class='rparen token'>)</span>
-  <span class='@bad_status_report ivar id'>@bad_status_report</span>        <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Packages With Bad Fixity Status (From Silo Pool Data)&quot;</span><span class='rparen token'>)</span>
+  <span class='@redundant_package_report ivar id'>@redundant_package_report</span> <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Per-Pool Redundancy Report&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Multiple Copies Within A Pool&quot;</span><span class='rparen token'>)</span>
+  <span class='@expired_fixity_report ivar id'>@expired_fixity_report</span>    <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Per-Pool Expiration Report&quot;</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Packages With Expired Fixities - Older Than #{max_days} Days&quot;</span><span class='rparen token'>)</span>
+  <span class='@bad_status_report ivar id'>@bad_status_report</span>        <span class='assign token'>=</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;Per-Pool Status Report&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;Packages Currently Marked With Failed Fixity&quot;</span><span class='rparen token'>)</span>
 
   <span class='@reports ivar id'>@reports</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> <span class='@redundant_package_report ivar id'>@redundant_package_report</span><span class='comma token'>,</span> <span class='@expired_fixity_report ivar id'>@expired_fixity_report</span><span class='comma token'>,</span> <span class='@bad_status_report ivar id'>@bad_status_report</span> <span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
@@ -267,13 +267,9 @@ A new instance of IntraPoolAnalyzer
 Recall that each of the PoolFixityStreamss given to us yield key/value
 pairs: <String::package>, <Struct::PoolFixityRecord>, e.g.
 </p>
-<p>
-E20110129_CYXBHO.000, #<Struct::PoolFixityRecord location=&#8220;<a
-href="http://pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000">pool.b.local/silo-pool.b.1/data/E20110129_CYXBHO.000</a>&#8220;,
-sha1=&#8220;ccd53fa068173b4f5e52e55e3f1e863fc0e0c201&#8221;,
-md5=&#8220;4732518c5fe6dbeb8429cdda11d65c3d&#8221;,
-timestamp=&#8220;2011-01-29T02:43:50-05:00&#8221;, status=&#8220;ok&#8221;>
-</p>
+<pre class="code">
+ <span class='EO05UJJHZ_HPDFHG constant id'>EO05UJJHZ_HPDFHG</span><span class='integer val'>.001</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001&quot;, sha1=&quot;4abc7ec5f02b946dc4812f0b60bda34940ae62f3&quot;, md5=&quot;0d736ef6585b44bf0552a61b95ad9b87&quot;, size=&quot;1313843200&quot;, fixity_time=&quot;2011-04-27T11:38:30Z&quot;, put_time=&quot;2011-04-20T20:21:33Z&quot;, status=&quot;ok&quot;&gt;</span>
+</pre>
 <p>
 All fields within the struct are simple strings.
 </p>
@@ -289,12 +285,12 @@ All fields within the struct are simple strings.
       <pre class="lines">
 
 
+33
 34
-35
-36</pre>
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 34</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 33</span>
 
 <span class='def def kw'>def</span> <span class='reports identifier id'>reports</span>
   <span class='@reports ivar id'>@reports</span>
@@ -325,6 +321,7 @@ All fields within the struct are simple strings.
       <pre class="lines">
 
 
+46
 47
 48
 49
@@ -348,17 +345,18 @@ All fields within the struct are simple strings.
 67
 68
 69
-70</pre>
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 47</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/analyzer.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='run identifier id'>run</span>
   <span class='@pool_fixity_streams ivar id'>@pool_fixity_streams</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pool_fixity_stream identifier id'>pool_fixity_stream</span><span class='bitor op'>|</span>
 
     <span class='pool_fixity_stream identifier id'>pool_fixity_stream</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='package_name identifier id'>package_name</span><span class='comma token'>,</span> <span class='fixity_record identifier id'>fixity_record</span><span class='bitor op'>|</span>
       <span class='if if kw'>if</span> <span class='fixity_record identifier id'>fixity_record</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='neq op'>!=</span> <span class='string val'>'ok'</span>
-        <span class='@bad_status_report ivar id'>@bad_status_report</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;#{fixity_record.location} has fixity status #{fixity_record.status}, last checked #{Time.parse(fixity_record.timestamp).asctime}&quot;</span>
+        <span class='@bad_status_report ivar id'>@bad_status_report</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;#{fixity_record.location} fixity status of '#{fixity_record.status}' as of  #{Time.parse(fixity_record.timestamp)}&quot;</span>
       <span class='end end kw'>end</span>
 
       <span class='if if kw'>if</span> <span class='fixity_record identifier id'>fixity_record</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='lt op'>&lt;</span> <span class='@expiration_date ivar id'>@expiration_date</span>
@@ -375,6 +373,8 @@ All fields within the struct are simple strings.
       <span class='end end kw'>end</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
+
+  <span class='@reports ivar id'>@reports</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='report identifier id'>report</span><span class='bitor op'>|</span> <span class='report identifier id'>report</span><span class='dot token'>.</span><span class='done identifier id'>done</span> <span class='rbrace token'>}</span>
   <span class='self self kw'>self</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -388,7 +388,7 @@ All fields within the struct are simple strings.
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:55 2011 by 
+  Generated on Thu May 12 23:37:24 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

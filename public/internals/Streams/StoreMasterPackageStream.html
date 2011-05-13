@@ -70,11 +70,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -106,6 +110,10 @@ can reset it to zero on rewind.
   
 
 
+  
+  
+  
+  
 
   
     <h2>
@@ -114,72 +122,6 @@ can reset it to zero on rewind.
     </h2>
 
     <ul class="summary">
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-closing is just for consistency; really a no-op.
-</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#closed%3F-instance_method" title="#closed? (instance method)">- (Boolean) <strong>closed?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
       
         <li class="public ">
   <span class="summary_signature">
@@ -205,28 +147,7 @@ closing is just for consistency; really a no-op.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (StoreMasterPackageStream) <strong>initialize</strong>(before = DateTime.now) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (StoreMasterPackageStream) <strong>initialize</strong>(before = nil) </a>
     
 
     
@@ -245,6 +166,27 @@ closing is just for consistency; really a no-op.
 A new instance of StoreMasterPackageStream.
 </p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#read-instance_method" title="#read (instance method)">- (Object) <strong>read</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -312,37 +254,26 @@ A new instance of StoreMasterPackageStream.
 </li>
 
       
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#unget-instance_method" title="#unget (instance method)">- (Object) <strong>unget</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
     </ul>
   
 
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="Streams::StoreMasterPackageStream (class)">StoreMasterPackageStream</a></span></tt>) <strong>initialize</strong>(before = DateTime.now) 
+    - (<tt><span class='object_link'><a href="" title="Streams::StoreMasterPackageStream (class)">StoreMasterPackageStream</a></span></tt>) <strong>initialize</strong>(before = nil) 
   
 
   
@@ -363,16 +294,16 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-74
-75
-76
-77</pre>
+77
+78
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 74</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 77</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
-  <span class='@before ivar id'>@before</span> <span class='assign token'>=</span> <span class='before identifier id'>before</span>
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='@before ivar id'>@before</span> <span class='assign token'>=</span> <span class='before identifier id'>before</span> <span class='orop op'>||</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
   <span class='setup identifier id'>setup</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -389,130 +320,7 @@ A new instance of StoreMasterPackageStream
     
     
       <div class="method_details first">
-  <p class="signature first" id="close-instance_method">
-  
-    - (<tt>Object</tt>) <strong>close</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-closing is just for consistency; really a no-op
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-131
-132
-133</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 131</span>
-
-<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
-  <span class='@closed ivar id'>@closed</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="closed?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>closed?</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  <h3>Returns:</h3>
-<ul class="return">
-  
-    <li>
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-135
-136
-137</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 135</span>
-
-<span class='def def kw'>def</span> <span class='closed? fid id'>closed?</span>
-  <span class='@closed ivar id'>@closed</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="each-instance_method">
-  
-    - (<tt>Object</tt>) <strong>each</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-123
-124
-125
-126
-127</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 123</span>
-
-<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-  <span class='while while kw'>while</span> <span class='not not kw'>not</span> <span class='eos? fid id'>eos?</span>
-    <span class='yield yield kw'>yield</span> <span class='get identifier id'>get</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="eos?-instance_method">
+  <p class="signature first" id="eos?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>eos?</strong> 
   
@@ -547,13 +355,15 @@ closing is just for consistency; really a no-op
 
 96
 97
-98</pre>
+98
+99</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
-  <span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='@ungot ivar id'>@ungot</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='ungetting? fid id'>ungetting?</span>
+  <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -562,9 +372,9 @@ closing is just for consistency; really a no-op
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="get-instance_method">
+  <p class="signature " id="read-instance_method">
   
-    - (<tt>Object</tt>) <strong>get</strong> 
+    - (<tt>Object</tt>) <strong>read</strong> 
   
 
   
@@ -574,7 +384,6 @@ closing is just for consistency; really a no-op
       <pre class="lines">
 
 
-100
 101
 102
 103
@@ -586,27 +395,22 @@ closing is just for consistency; really a no-op
 109
 110
 111
-112
-113
-114</pre>
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 100</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 101</span>
 
-<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
+<span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
 
-  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-    <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-    <span class='return return kw'>return</span> <span class='@last ivar id'>@last</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='@last ivar id'>@last</span>
-  <span class='end end kw'>end</span>
-
   <span class='if if kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-    <span class='@buff ivar id'>@buff</span> <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='lparen token'>(</span><span class='CHUNK_SIZE constant id'>CHUNK_SIZE</span><span class='rparen token'>)</span>
+     <span class='@buff ivar id'>@buff</span> <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='lparen token'>(</span><span class='CHUNK_SIZE constant id'>CHUNK_SIZE</span><span class='rparen token'>)</span>
   <span class='end end kw'>end</span>
 
-  <span class='@last ivar id'>@last</span> <span class='assign token'>=</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
-  <span class='return return kw'>return</span> <span class='@last ivar id'>@last</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='@last ivar id'>@last</span>
+  <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  
+  <span class='datum identifier id'>datum</span> <span class='assign token'>=</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+  <span class='return return kw'>return</span> <span class='datum identifier id'>datum</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='datum identifier id'>datum</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -627,13 +431,13 @@ closing is just for consistency; really a no-op
       <pre class="lines">
 
 
-79
-80
-81
-82</pre>
+82
+83
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 79</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 82</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='setup identifier id'>setup</span>
@@ -658,23 +462,17 @@ closing is just for consistency; really a no-op
       <pre class="lines">
 
 
-84
-85
-86
 87
 88
 89
 90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 84</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='setup identifier id'>setup</span>
   <span class='@ids ivar id'>@ids</span>    <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span> <span class='@before ivar id'>@before</span>
-  <span class='@last ivar id'>@last</span>   <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='@buff ivar id'>@buff</span>   <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  <span class='@closed ivar id'>@closed</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
-  <span class='@ungot ivar id'>@ungot</span>  <span class='assign token'>=</span> <span class='false false kw'>false</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -703,42 +501,7 @@ closing is just for consistency; really a no-op
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 92</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class}##{self.object_id} IEIDs prior to #{@before}&gt;&quot;</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="unget-instance_method">
-  
-    - (<tt>Object</tt>) <strong>unget</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-116
-117
-118
-119
-120
-121</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 116</span>
-
-<span class='def def kw'>def</span> <span class='unget identifier id'>unget</span>
-  <span class='if if kw'>if</span> <span class='@ungot ivar id'>@ungot</span>
-    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;The unget method only supports one level of unget; unfortunately, two consecutitve ungets have been called on #{self.to_s}&quot;</span>
-  <span class='end end kw'>end</span>
-  <span class='@ungot ivar id'>@ungot</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} IEIDs prior to #{@before}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -751,7 +514,7 @@ closing is just for consistency; really a no-op
 </div>
     
     <div id="footer">
-  Generated on Fri Feb 25 21:48:40 2011 by 
+  Generated on Thu May 12 23:37:14 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
