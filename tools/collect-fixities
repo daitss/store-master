@@ -49,6 +49,8 @@ setup(config)
 begin
   start_time = DateTime.now
 
+  Logger.info "Starting CollectFixities"
+
   # Get our data streams, some from web services, some from various databases
 
   pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
@@ -68,6 +70,8 @@ begin
   # reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
 
   reports.each { |report| report.write if report.interesting? }
+
+  Logger.info "Finished CollectFixities"
 
 rescue => e
   lede = "#{e.class}: #{e.message} - backtrace follows:"
