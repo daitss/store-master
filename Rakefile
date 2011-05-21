@@ -108,11 +108,12 @@ task :docs do
   end
 end
 
-# Build local bundled Gems; 
+# rebuild local bundled Gems, as well as the distributed Gemfile.lock
 
 desc "Gem bundles"
 task :bundle do
-  sh "bundle install --path vendor/bundle"
+  sh "rm -rf bundle Gemfile.lock .bundle"
+  sh "bundle install --path bundle"
 end
 
 desc "Make emacs tags files"
