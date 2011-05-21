@@ -35,7 +35,7 @@ module Daitss
               "FROM packages, aips, copies "         +
              "WHERE packages.id = aips.package_id "  +
                "AND aips.id = copies.aip_id "        +
-               "AND copies.timestamp < '#{before}' " +               # TODO: make sure all variations of timestamps work
+               "AND copies.timestamp < '#{before}' " +
           "ORDER BY copies.url"
 
       repository(:daitss).adapter.select(sql)
@@ -86,7 +86,7 @@ module Daitss
       return e.save
     end
 
-    ### TODO - there may be a better way to do these en masses, something like?
+    ### TODO - there may be a better way to do these en masse, something like?
     #
     #   collection = Event.first(0)      
     #   event = Event.first_or_new 

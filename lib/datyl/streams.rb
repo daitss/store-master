@@ -228,7 +228,7 @@ module Streams
     attr_reader   :streams
 
     def initialize *streams
-      @values_container = Array   # subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
+      @values_container = Array   # you can subclass MultiStream to use a specialized container for assembling the merged values - it must support '<<'
       @streams = streams
     end
 
