@@ -1,0 +1,28 @@
+!!! 5
+%html{ :lang => "en" }
+
+  %head
+
+    %meta{ :charset => "utf-8" }
+
+    %style{ :type => "text/css", :media => "screen" } @import "/std.css"
+
+    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
+
+    %title Search for Packages Managed by StoreMaster
+      
+  %body
+
+    %h1 Search for Packages Managed by StoreMaster
+
+    - @search_str = @search.nil? ? "" : "&search=#{@search}"
+    
+    %table
+      %tr
+        %td{ :class => "tr" }
+          %form
+            No package names matched your search
+            %input{ :type => "text", :name => "search", :value => "#{@search}", :style => "background-color: #fdd;" }
+          
+    %p{ :class => "footer" }
+      =@revision

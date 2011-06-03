@@ -1,0 +1,60 @@
+!!! 5
+%html{ :lang => "en" }
+
+  %head
+
+    %meta{ :charset => "utf-8" }
+
+    %style{ :type => "text/css", :media => "screen" } @import "/std.css"
+
+    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
+
+    %script{ :type => "text/javascript" }
+      
+    %title Search for Packages Managed by StoreMaster
+      
+  %body
+
+    %h1 Search for Packages Managed by StoreMaster
+
+    - @search_str = @search.nil? ? "" : "&search=#{@search}"
+    
+    %table{ :style => "width: 75%; " }
+      %tr{ :class => "border" }
+        %td{ :class => "tl" }
+          =@note
+        %td{ :class => "tr" }
+          %form
+            %input{ :type => "text", :name => "search", :value => "#{@search}", :style => "background-color: #fdd;" }
+            
+      %tr
+        %td{ :class => "tl", :colspan => 2 }          
+          %table{ :class => "expansive", :style => "border: 1px solid black; border-collapse: collapse;" }
+            %thead
+              %tr
+                %th Name
+                %th{ :class => "tl" } Location
+                %th{ :class => "tl" } Date
+            %tbody
+              %tr
+                %td{ :colspan => 3 }
+              - @packages.each do |pkg|
+                %tr
+                  %td{ :colspan => 3,  :class => "tl" }
+                    - if url = inspection_url(pkg)
+                      %a{ :href => url }
+                        %img{ :src =>  "/mag.png" }
+                    - else
+                      %img{ :src => "/no-mag.png" }
+                    %a{ :href => pkg.url } #{pkg.name}
+                - pkg.copies.each do |cpy|
+                  %tr
+                    %td
+                    %td #{cpy.store_location}
+                    %td #{cpy.datetime.strftime('%F %T')}
+                %tr
+                  %td{ :colspan => 3 }
+                    
+          
+    %p{ :class => "footer" }
+      =@revision
