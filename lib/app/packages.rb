@@ -136,3 +136,21 @@ end
 get '/packages/?' do
   redirect '/packages.xml', 301
 end
+
+SEARCH_LIMIT = 50
+
+get '/ieids' do
+  Package.server_location = service_name  # TODO: we need to do better setting this up.
+
+  @search   = (params[:search].nil? or params[:search] == '') ?  nil : params[:search]
+  @packages = @search.nil? ? [] : Package.search(@search, SEARCH_LIMIT)
+  @note     = (@packages.length == SEARCH_LIMIT ? "This search exceeded the #{SEARCH_LIMIT} package results limit; please consider a more restricted search" : '')
+  @revision = StoreMaster.version.name
+
+  if @packages.empty?
+    haml :'no-search-results'
+  else
+    haml :'search-results'
+  end
+end
+

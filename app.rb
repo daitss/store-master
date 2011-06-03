@@ -3,6 +3,7 @@ require 'app/helpers'
 require 'app/package-reports'
 require 'app/errors'
 require 'app/packages'
+require 'haml'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
@@ -23,13 +24,15 @@ configure do
 
   set :minimum_required_pools, (ENV['MINIMUM_REQUIRED_POOLS'] || '2').to_i
 
+  set :haml, :format => :html5, :escape_html => true
+
   Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')
 
-  Logger.info "Starting #{REVISION}."
+  Logger.info "Starting #{StoreMaster.version.name}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
   Logger.info "Requiring #{settings.minimum_required_pools} pools for storage"
 
@@ -51,6 +54,9 @@ configure do
     raise e
   end
 end
+
+
+
 
 get '/' do
   erb :site, :locals => { :base_url => service_name, :revision => REVISION }

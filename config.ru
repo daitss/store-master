@@ -19,13 +19,6 @@ ENV['VIRTUAL_HOSTNAME']       ||= Socket.gethostname    # Used for logging; wish
 
 ENV['MINIMUM_REQUIRED_POOLS'] ||= '2'                   # Required number of pools to store to.  0 turns us into a stub server 
 
-if ENV['BASIC_AUTH_USERNAME'] or ENV['BASIC_AUTH_PASSWORD']
-  use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password| 
-    username == ENV['BASIC_AUTH_USERNAME']
-    password == ENV['BASIC_AUTH_PASSWORD']
-  end
-end
-
 require 'sinatra'
 require 'app'
 

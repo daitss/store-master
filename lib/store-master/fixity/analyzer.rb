@@ -309,13 +309,10 @@ module Analyzer
       return plural
     end
 
-
     def anything_interesting? reports
-      result = false
-      reports.each { |rep| result ||= rep.interesting? }
-      return result
+      reports.each { |rep| return true if rep.interesting? }
+      return false
     end
-
 
     def too_recent pool_data
       return false unless pool_data
@@ -445,7 +442,7 @@ module Analyzer
       @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
       @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
       @report_summary.warn
-      @report_summary.warn 'Details Follow:' if anything_interesting? @reports - [ @report_summary ]
+      @report_summary.warn 'Details Follow:' if anything_interesting?(@reports - [ @report_summary ])
 
       @reports.each { |report| report.done }
       self

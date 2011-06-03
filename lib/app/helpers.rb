@@ -1,3 +1,4 @@
+
 helpers do
   include Rack::Utils     # to get escape_html
 
@@ -10,9 +11,7 @@ helpers do
   # can sometime come with port attached.
 
   def service_name
-    'http://' +
-      (@env['HTTP_HOST'] || @env['SERVER_NAME']).gsub(/:\d+$/, '') +
-      (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
+    'http://' + (@env['HTTP_HOST'] || @env['SERVER_NAME']).gsub(/:\d+$/, '') + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
   def good_ieid name
@@ -58,6 +57,21 @@ helpers do
     else      ; "#{num} pools"
     end
   end
+
+  # TODO: learn how to best use this
+
+  def partial(page, options={})
+    haml page, options.merge!(:layout => false)
+  end
+
+  # return the URL of the preferred copy of package, with '/' appended so we get the inspection page for the package
+
+  def inspection_url package
+    return nil unless package
+    return nil if package.copies.empty?
+    return package.copies[0].store_location + '/'
+  end
+
 
 end # of helpers do
 

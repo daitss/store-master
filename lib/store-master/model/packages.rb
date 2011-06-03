@@ -61,6 +61,11 @@ module StoreMasterModel
       first(:name => name, :extant => true)
     end
 
+    def self.search name, limit = 1
+      first(limit, :name.like => "%#{name}%", :extant => true, :order => [:name.asc ])
+    end
+
+
     # TODO: now that names are not sequential we may have a timing issue:
     # When a chunk is being processed, new random ids may be inserted
     # anywhere.  We don't have the capability to order by  time here.

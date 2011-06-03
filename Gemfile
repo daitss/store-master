@@ -11,6 +11,7 @@ gem 'log4r',               '>= 1.1.5'
 gem 'sinatra',             '>= 1.2.1' 
 gem 'rack',                '>= 1.2.2' 
 gem 'sys-filesystem',      '>= 0.3.2'
+gem 'haml',		   '>= 3.1.0'
 
 # development
 

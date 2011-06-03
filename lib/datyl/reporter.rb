@@ -2,8 +2,6 @@ require 'datyl/logger'
 require 'tempfile'
 require 'time'
 
-# TODO:  rspec tests
-
 # This class combines logging and an abbreviated, written report. The Logger system is assumed to have
 # been initialized (logging will be a no-op otherwise).  
 #
@@ -63,7 +61,7 @@ class Reporter
 
   # for debugging - if you call 'done' the report will add to the
   # title its total runtime - from the creation time of the
-  # constructor to the point 'done' was called'
+  # constructor to the point 'done' was called
 
   def done
     @done = Time.now
@@ -142,5 +140,13 @@ class Reporter
       io.puts line
     end
   end
+
+  # A class version of the above, for immediate gratification
+
+  def self.note message, io = STDOUT
+    Logger.info message
+    io.puts message
+  end
+
 
 end # of class Reporter

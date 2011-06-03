@@ -31,7 +31,7 @@ end
 module StoreMasterModel
 
   OPEN_TIMEOUT = 60 * 30
-  READ_TIMEOUT = 60 * 90
+  READ_TIMEOUT = 60 * 60 * 4  
 
   include StoreMaster
 

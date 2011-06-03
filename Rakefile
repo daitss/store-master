@@ -122,6 +122,13 @@ task :etags do
   sh "xctags -e #{files}"
 end
 
+
+desc "Hit the restart button"
+task :restart do
+  sh "touch #{HOME}/tmp/restart.txt"
+end
+
+
 defaults = [:spec]
 defaults.push :etags   if dev_host
 
