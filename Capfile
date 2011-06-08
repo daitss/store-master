@@ -1,11 +1,10 @@
 # -*- mode:ruby; -*-
 #
-#  Set deploy target host/filesystem and test proxy to use from cap command line as so:
+#  Set deploy target host/filesystem 
 #
-#  cap deploy  -S target=ripple.fcla.edu:/opt/web-services/sites/storemaster  -S test_proxy=sake.fcla.edu:3128
+#  cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storemaster 
 #
-#  The test-proxy is used only in remote spec tests.
-#  One can over-ride user and group settings using -S who=user:group
+#  Defaults to install as daitss:daitss, you can over-ride user and group settings using -S who=user:group
 
 require 'rubygems'
 require 'railsless-deploy'
@@ -46,8 +45,7 @@ end
 
 role :app, domain
 
-
-after "deploy:update", "deploy:layout"
+after "deploy:update", "deploy:layout", "deploy:cleanup"
 
 namespace :deploy do
 
