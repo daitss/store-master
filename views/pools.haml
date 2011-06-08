@@ -1,0 +1,66 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :charset => "utf-8" }
+    %link{ :rel => "stylesheet", :href => "/std.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
+    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
+
+    %script{ :type => "text/javascript" }    
+      $(document).ready(function() {
+      $('.pool_entries tbody tr:odd').addClass('odd');
+      $('.pool_entries tbody tr:even').addClass('even');
+      });
+    %title Manage Pools
+  %body
+    %h1 Manage Pools
+
+    %p
+      =@name
+      
+      - case @required
+      - when 0
+        is a stub server; no data is stored on silo pools.
+      - when 1
+        requires at least one silo pool to be active.
+      - else
+        requires at least #{@required} silo pools to be active.
+
+      The required number of pools is made in the store master configuration file with the MINIMUM_REQUIRED_POOLS setting.
+
+
+      
+    - id = 'label000'
+    - @pools.each do |pool|
+
+      %p
+        %form{ :method => "post", :action => "pool/#{pool['id']}" }
+
+          %fieldset
+            %legend pool id #{pool.id} on host #{pool.name}
+            %ul
+              %li
+                Required:
+                %input{ :id => id.succ!, :type => "radio", :name => "required", :value => "true", :checked => pool.required ? true : nil  }
+                %label{ :for => id }
+                  true
+                %input{ :id => id.succ!, :type => "radio", :name => "required", :value => "false", :checked => pool.required ? nil  : true }
+                %label{ :for => id }
+                  false
+              %li
+                Preference:  
+                %input{ :id => id.succ!, :type => "input", :name => "read_preference",     :value => pool.read_preference } 
+              %li
+                URL:
+                %input{ :id => id.succ!, :type => "input", :name => "services_location",   :value => pool.services_location }
+              %li
+                Username: 
+                %input{ :id => id.succ!, :type => "input", :name => "basic_auth_username", :value => pool.basic_auth_username }
+              %li
+                Password: 
+                %input{ :id => id.succ!, :type => "input", :name => "basic_auth_password", :value => pool.basic_auth_password }
+            %input{ :type => "submit", :value => "proceed" }
+
+    %p
+      %form{ :method => "get", :action => "/" }
+        %input{ :type => "submit", :value => "cancel" }

@@ -71,6 +71,10 @@ module StoreMaster
 
   class PackageUsed                < Http409;       end
 
+  # for when someone passes bad data to change a pool
+
+  class BadPoolParameter           < Http400;       end
+
 
 end # of module
 

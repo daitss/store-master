@@ -1,40 +1,30 @@
 !!! 5
 %html{ :lang => "en" }
-
   %head
-
     %meta{ :charset => "utf-8" }
-
-    %style{ :type => "text/css", :media => "screen" } @import "/std.css"
-
+    %link{ :rel => "stylesheet", :href => "/std.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
     %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
+    %title Search for Packages Managed by StoreMaster      
 
-    %script{ :type => "text/javascript" }
-      
-    %title Search for Packages Managed by StoreMaster
-      
   %body
-
     %h1 Search for Packages Managed by StoreMaster
-
-    - @search_str = @search.nil? ? "" : "&search=#{@search}"
     
-    %table{ :style => "width: 75%; " }
+    %table{ :style => "width: 75%;" }
       %tr{ :class => "border" }
-        %td{ :class => "tl" }
-          =@note
-        %td{ :class => "tr" }
+        %td{ :colspan => 2,  :class => "tr" }
           %form
-            %input{ :type => "text", :name => "search", :value => "#{@search}", :style => "background-color: #fdd;" }
+            =@note
+            %input{ :type => "text", :name => "pattern", :value => "#{@pattern}", :style => "background-color: #fdd;" }
             
       %tr
         %td{ :class => "tl", :colspan => 2 }          
           %table{ :class => "expansive", :style => "border: 1px solid black; border-collapse: collapse;" }
             %thead
               %tr
-                %th Name
-                %th{ :class => "tl" } Location
-                %th{ :class => "tl" } Date
+              %th Name
+              %th{ :class => "tl" } Location
+              %th{ :class => "tl" } Date
             %tbody
               %tr
                 %td{ :colspan => 3 }

@@ -130,7 +130,7 @@ module StoreMasterModel
 
     # Store a received data stream to multiple silo pools.
 
-    def self.store io, metadata
+    def self.store io, metadata, pools
       copies = []
 
       required_metadata = [ :name, :ieid, :md5, :size, :type ]
@@ -149,7 +149,7 @@ module StoreMasterModel
 
       pkg.transaction do |trans|
         begin
-          Pool.list_active.each do |pool|
+          pools.each do |pool|
             cpy = Copy.store(io, pkg, pool)
             copies.push cpy
 

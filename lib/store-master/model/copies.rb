@@ -92,7 +92,8 @@ module StoreMasterModel
       #            name="E20101021_LJLAMU.001"/>
 
       info = {}
-      parser = XML::Parser.string(response.body).parse
+
+      parser = LibXML::XML::Parser.string(response.body).parse
       parser.find('/created')[0].each_attr { |attr| info[attr.name] = attr.value }
 
       [ 'location', 'time', 'sha1', 'md5', 'size', 'etag' ].each do |required|
@@ -114,7 +115,6 @@ module StoreMasterModel
 
     rescue Exception => e
       raise SiloStoreError, "Store of package #{package.name} to #{post_address} failed with exception #{e.class} - #{e.message}"
-
     else
       return cpy
     end

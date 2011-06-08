@@ -10,7 +10,7 @@ require 'store-master/model/reservations'
 require 'store-master/utils'
 require 'time'
 require 'uri'
-require 'xml'
+require 'libxml'
 
 # URI#to_s method prints basic credentials if they exist.  This provides an sanitized print method.
 # We use URIs throughout our models.
@@ -30,8 +30,8 @@ end
 
 module StoreMasterModel
 
-  OPEN_TIMEOUT = 60 * 30
-  READ_TIMEOUT = 60 * 60 * 4  
+  OPEN_TIMEOUT = 60 * 60
+  READ_TIMEOUT = 60 * 60 * 6
 
   include StoreMaster
 

@@ -72,6 +72,5 @@ helpers do
     return package.copies[0].store_location + '/'
   end
 
-
 end # of helpers do
 

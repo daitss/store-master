@@ -34,6 +34,8 @@ module StoreMasterModel
       @name or @name = URI.parse(services_location).host
     end
 
+
+
     # We have a protocol that silo pools must follow: they must return a service
     # document (XML) that describes where we can locate essential silo services.
     # Here's an example document:
@@ -81,7 +83,8 @@ module StoreMasterModel
 
     def post_url name
       text = service_document
-      parser = XML::Parser.string(text).parse
+
+      parser = LibXML::XML::Parser.string(text).parse
       node  = parser.find('create')[0]
 
       raise ConfigurationError, "When retreiving service information from the silo pool at #{services_location}, no create service was declared. The service document returned was was:\n#{text}." unless node
@@ -107,7 +110,7 @@ module StoreMasterModel
 
     def fixity_url mime_type = 'text/csv'
       text = service_document
-      parser = XML::Parser.string(text).parse
+      parser = LibXML::XML::Parser.string(text).parse
       if  parser.find('fixity') == 0
         raise ConfigurationError, "When retreiving service information from the silo at #{services_location}, no fixity service was declared. The service document returned was was:\n#{text}."
       end

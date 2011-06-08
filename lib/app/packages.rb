@@ -50,18 +50,18 @@ put '/packages/:name' do |name|
 
   ieid = Reservation.find_ieid(name)
 
-  pools = Pool.list_active
+  pools = Pool.list_active   # greatest preference first
 
   if pools.length < settings.minimum_required_pools
-    raise ConfigurationError, "This service is configured to require #{poolses(settings.minimum_required_pools)}, but only found #{poolses(pools.length)} available from a database lookup in the pools table"
+    raise ConfigurationError, "This service is configured to require #{poolses(settings.minimum_required_pools)}, but only found #{poolses(pools.length)} available from in our pools database table"
   end
 
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  if not pools or pools.empty?                   # then we're a stub server
+  if settings.minimum_required_pools == 0                   # then we're a stub server
     pkg = Package.stub(request.body, metadata)    
   else
-    pkg = Package.store(request.body, metadata)
+    pkg = Package.store(request.body, metadata, pools[0 .. settings.minimum_required_pools - 1])
   end
 
   xml = Builder::XmlMarkup.new(:indent => 2)
@@ -136,21 +136,3 @@ end
 get '/packages/?' do
   redirect '/packages.xml', 301
 end
-
-SEARCH_LIMIT = 50
-
-get '/ieids' do
-  Package.server_location = service_name  # TODO: we need to do better setting this up.
-
-  @search   = (params[:search].nil? or params[:search] == '') ?  nil : params[:search]
-  @packages = @search.nil? ? [] : Package.search(@search, SEARCH_LIMIT)
-  @note     = (@packages.length == SEARCH_LIMIT ? "This search exceeded the #{SEARCH_LIMIT} package results limit; please consider a more restricted search" : '')
-  @revision = StoreMaster.version.name
-
-  if @packages.empty?
-    haml :'no-search-results'
-  else
-    haml :'search-results'
-  end
-end
-
