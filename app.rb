@@ -1,6 +1,7 @@
 require 'store-master' 
 require 'app/helpers'
 require 'app/package-reports'
+require 'app/misc'
 require 'app/errors'
 require 'app/packages'
 require 'haml'
@@ -30,15 +31,9 @@ configure do
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
-  use Rack::CommonLogger, Logger.new(:info, 'Rack:')
-
   Logger.info "Starting #{StoreMaster.version.name}."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
   Logger.info "Requiring #{settings.minimum_required_pools} pools for storage"
-
-#  (ENV.keys - ['BASIC_AUTH_PASSWORD', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
-#    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
-#  end
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if ENV['DATABASE_LOGGING']
 
@@ -55,12 +50,42 @@ configure do
   end
 end
 
+def log_incoming
+  @started = Time.now
+  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s"',
+                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+                      env["REMOTE_USER"] || "-",
+                      env["SERVER_PROTOCOL"],
+                      env["REQUEST_METHOD"],
+                      env["PATH_INFO"],
+                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
+end
 
+def log_outgoing
+  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s" %d %s %0.4f',
+                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+                      env["REMOTE_USER"] || "-",
+                      env["SERVER_PROTOCOL"],
+                      env["REQUEST_METHOD"],
+                      env["PATH_INFO"],
+                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"],
+                      response.status.to_s[0..3],
+                      response.length,
+                      Time.now - @started)
+end
+  
+before do
+  log_incoming
+end
 
+after do
+  log_outgoing 
+end
 
 get '/' do
   erb :site, :locals => { :base_url => service_name, :revision => REVISION }
 end
+
 
 # testing stuff:
 
