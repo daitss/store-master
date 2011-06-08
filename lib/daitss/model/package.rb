@@ -22,19 +22,18 @@ module Daitss
     has n,    :requests
     has 1,    :sip
     has 0..1, :aip
-#   has 0..1, :intentity            # brings in too much baggage - we can do without
-    has 0..1, :report_delivery      # we can probably drop this as well (remove report_delivery.rb)
+
+# These are things we don't need, since we never delete or modify packages:
+
+#   has 0..1, :intentity              # brings in way too much baggage
+#   has 0..1, :report_delivery
+#   has n, :batch_assignments
+#   has n, :batches, :through => :batch_assignments
+
 
     belongs_to :project
-    belongs_to :batch, :required => false
 
-    # add an operations event for abort
-    # def abort user
-    #   event = Event.new :name => 'abort', :package => self, :agent => user
-    #   event.save or raise "cannot save abort event"
-    # end
-
-    # make an event for this package
+    # makes an event for this package
 
     def log name, options={}
       e = Event.new :name => name, :package => self
@@ -46,14 +45,6 @@ module Daitss
         raise "cannot save op event: #{name} (#{e.errors.size}):\n#{e.errors.map.join "\n"}"
       end
     end
-
-    # def rejected?
-    #   events.first :name => 'reject'
-    # end
-
-    # def migrated_from_pt?
-    #   events.first :name => "migrated from package tracker"
-    # end
 
     def status
 
