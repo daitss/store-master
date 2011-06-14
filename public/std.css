@@ -1,69 +1,92 @@
 body { 
-	font: 75% georgia, sans-serif;
-	line-height: 1.5;
-	color: #000;
-	background: #fee;
-	margin: 5; 
-	padding: 5;
-	}
-h1 { 
-	font: italic normal 1.4em georgia, sans-serif;
-	letter-spacing: 1px; 
-	margin-bottom: 1; 
-	font-weight: bold;
-	color: #000;
-	}
+    font: 85% georgia, sans-serif;
+/*    line-height: 1.88889; */
+    color: #000;
+    background: #ffe7e7;   /* #fee; */
+    margin: 10px 10px 10px 20px; 
+    padding: 10;
+}
 
-h2 { 
-	font: italic normal 1.2em georgia, sans-serif;
-	letter-spacing: 1px; 
-	margin-bottom: 1; 
-	font-weight: bold;
-	color: #000;
-	}
+h1 { 
+    font: italic normal 1.25em georgia, sans-serif;
+    letter-spacing: 1px; 
+    margin-bottom: 10; 
+    font-weight: bold;
+    color: #000;}
+
+p {
+    width: 75%
+}
+
+/* fieldset { */
+/*     margin: 20px; */
+/*     width: 50%; */
+/*     border: solid; */
+/*     border-width: 1px; */
+/*     background: #ecc; */
+/* } */
+
+/* legend { */
+/*   font: italic normal 1.0em georgia, sans-serif; */
+/*   letter-spacing: 0px;  */
+/*   font-weight: bold; */
+/*   color: #000; */
+/*   border: solid;  */
+/*   border-width: 1px;  */
+/*   padding: 0.25em;  */
+/*   background: #fee; */
+/* } */
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+}
+
+input {
+    background-color: #fdd;
+}
 
 a:link { 
-	font-weight: bold; 
-	text-decoration: none; 
-	color: #622;
-	}
+    font-weight: bold; 
+    text-decoration: none; 
+    color: #622;
+}
 
 a:visited { 
-	font-weight: bold; 
-	text-decoration: none; 
-	color: #844;
-	}
+    font-weight: bold; 
+    text-decoration: none; 
+    color: #844;
+}
 
 a:hover, a:active { 
-	text-decoration: underline; 
-	color: #844;
-	}
+    text-decoration: underline; 
+    color: #844;
+}
 
-table, td, th {
-    border: none;
-    }
+table {
+    border: solid;
+    border-width: 1px;
+    border-collapse: collapse;
+}
+
 
 td {
-   padding: 0.35em;
-   }
+    padding: 0.25em 1em 0.25em 1em;
+}
 
-th {
+thead th {
     font: italic bold 1.0em georgia, sans-serif;
     text-align: left;
-
     padding: 0.5em 1em 0.5em 1em;
+    color: black;
     background-color: #ebb;
-
-    border: 1px solid black;
-    border-collapse: collapse;
-
 }
-
-tr.border {
-    border: solid;
-    border-width: 0.5px;
-}
-
 
 .bl { 
     text-align: left;
@@ -80,18 +103,9 @@ tr.border {
     vertical-align: top;
 }
 
-.bl { 
-    text-align: left;
-    vertical-align: bottom;
-}
-
 .tl { 
     text-align: left;
     vertical-align: top;
-}
-
-.expansive {
-    width: 100%;
 }
 
 .footer {
@@ -99,4 +113,7 @@ tr.border {
     font: italic 0.65em georgia, sans-serif;    
 }
 
-
+.warning {
+    color: red;
+    font-weight: bold;
+}
