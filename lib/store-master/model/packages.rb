@@ -120,7 +120,7 @@ module StoreMasterModel
       raise SiloStoreError, "#{msg} md5 mismatch (expected #{metadata[:md5]},  got #{pkg.md5})"      unless pkg.md5  == metadata[:md5]
       raise SiloStoreError, "#{msg} size mismatch (expected #{metadata[:size]}, got #{pkg.size})"    unless pkg.size == metadata[:size].to_i
 
-      if not pkg.save        
+      if not pkg.save
         raise "Database error saving package #{pkg.name}: " + pkg.errors.full_messages.join(', ')
       end
 

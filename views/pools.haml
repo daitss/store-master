@@ -1,66 +1,80 @@
 !!! 5
 %html{ :lang => "en" }
+
   %head
     %meta{ :charset => "utf-8" }
-    %link{ :rel => "stylesheet", :href => "/std.css",  :type => "text/css"  }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
     %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
-    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
 
-    %script{ :type => "text/javascript" }    
-      $(document).ready(function() {
-      $('.pool_entries tbody tr:odd').addClass('odd');
-      $('.pool_entries tbody tr:even').addClass('even');
-      });
-    %title Manage Pools
+    %title Store Master Pools on #{@service_name}
   %body
-    %h1 Manage Pools
+    %h1
+      %a{ :href => '/' }
+        =@service_name
+      &rArr; Pools
 
     %p
-      =@name
-      
-      - case @required
+      DAITSS sends packages to a storage service; the storage service
+      forwards the packages off to one or more pool services. This
+      page lets you specify which pool servers should be used by this
+      storage service, and how the pool servers should be contacted.
+
+    %p
+      Click on the pool's name to change the settings this storage
+      service will use when contacting the pool server.
+
+    - if @pools.select{ |p| p.required }.length < @required
+
+      %p{ :class => "warning" }
+        Note: there are too few pools configured for this storage server.
+
+    %p
+
+      %table
+        %thead
+          %tr        
+            %th Pool Name
+            %th Use this Pool?
+            %th Preference
+            %th Access
+        %tbody
+          - @pools.each do |pool|
+            %tr
+              %td
+                %a{ :href => "pool/#{pool['id']}" }
+                  =pool.name
+              %td
+                - if pool.required
+                  yes
+                - else
+                  no
+              %td
+                =pool.read_preference
+              %td
+                - if pool.basic_auth_username or pool.basic_auth_password
+                  using credentials
+                - else
+                  expecting open access
+                      
+
+    %p
+
+      The storage service at #{@service_name} 
+    
+      - case @required      
       - when 0
-        is a stub server; no data is stored on silo pools.
+        is configured as a stub server; no data is actually stored to pools.
       - when 1
-        requires at least one silo pool to be active.
+        is configured to require at least one pool be active.
       - else
-        requires at least #{@required} silo pools to be active.
+        is configured to require at least #{@required} pools be active.
 
-      The required number of pools is made in the store master configuration file with the MINIMUM_REQUIRED_POOLS setting.
+      The required number of pools is specified in the storage service
+      configuration file (typically an Apache configuration file) using
+      the MINIMUM_REQUIRED_POOLS setting.  You must restart the storage
+      service when that setting is changed.
 
-
+  
+    %p{ :class => "footer" }
+      =@revision
       
-    - id = 'label000'
-    - @pools.each do |pool|
-
-      %p
-        %form{ :method => "post", :action => "pool/#{pool['id']}" }
-
-          %fieldset
-            %legend pool id #{pool.id} on host #{pool.name}
-            %ul
-              %li
-                Required:
-                %input{ :id => id.succ!, :type => "radio", :name => "required", :value => "true", :checked => pool.required ? true : nil  }
-                %label{ :for => id }
-                  true
-                %input{ :id => id.succ!, :type => "radio", :name => "required", :value => "false", :checked => pool.required ? nil  : true }
-                %label{ :for => id }
-                  false
-              %li
-                Preference:  
-                %input{ :id => id.succ!, :type => "input", :name => "read_preference",     :value => pool.read_preference } 
-              %li
-                URL:
-                %input{ :id => id.succ!, :type => "input", :name => "services_location",   :value => pool.services_location }
-              %li
-                Username: 
-                %input{ :id => id.succ!, :type => "input", :name => "basic_auth_username", :value => pool.basic_auth_username }
-              %li
-                Password: 
-                %input{ :id => id.succ!, :type => "input", :name => "basic_auth_password", :value => pool.basic_auth_password }
-            %input{ :type => "submit", :value => "proceed" }
-
-    %p
-      %form{ :method => "get", :action => "/" }
-        %input{ :type => "submit", :value => "cancel" }

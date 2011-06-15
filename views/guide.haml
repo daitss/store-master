@@ -1,0 +1,162 @@
+!!! 5
+%html{ :lang => "en" }
+
+  %head
+    %meta{ :charset => "utf-8" }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
+
+    %title A Guide to the Storage Master Service on #{@service_name}
+
+  %body
+    
+    %h1
+      %a{ :href => '/' }
+        =@service_name
+      &rArr; An Overview of the Store Master Service 
+
+    %p
+
+      This page describes the storage service used by the DAITSS
+      storage master service.  Packages need to be stored to a
+      multiple number of disparate destinations.  These desinations
+      are in turn web services termed pool servers (the term
+      %i pool server
+      comes from computers hosting
+      %i pools
+      of disks or tapes).
+
+  %p
+
+    This service, then, acts as a one-stop
+    front end that stores and retrieves packages to and from those
+    locations. This insulates DAITSS from back-end changes to particular storage
+    locations.
+
+  %p
+
+    This document will describe the wire-level activity between
+    DAITSS and the storage master service, and between the storage
+    master service and the pool servers, where the packages are
+    ultimately stored.
+
+  %h2 Saving Packages to the Storage Master
+
+  %p
+
+    Storage proceeds in a two step process:
+
+  %ol
+    %li  A request for a one-time URL for a given IEID is made to the server via a POST request
+    %li  a location returned in the response is used to PUT the package at the one-time URL
+
+  %p      
+    The initial request must include an IEID.  To illustrate, we'll use the curl program to display the
+    sequence of events.  We assume an
+    %code IEID
+    of
+    %code E20100727_AAAAAA
+    and local tarfile of our package called
+    %code my-package.tar.
+    The following command issues a
+    %code POST
+    request to the service with an
+    %code IEID
+    of
+    %code E20100727_AAAAAB:
+
+  .code_listing
+
+    $ curl -s -d ieid=E20100727_AAAAAB  #{@service_name}/reserve/
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <reserved ieid="E20100727_AAAAAB" location="#{@service_name}/packages/E20100727_AAAAAB.000"/>
+
+  %p
+    which will return document a document similar to the following:
+
+  .code_listing
+
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;reserved ieid="E20100727_AAAAAB" location="#{@service_name}/packages/E20100727_AAAAAB.000"/&gt;
+
+  %p
+    The next step is to store the package to the service; to do so we require three standard HTTP headers:
+
+  .code_listing
+    Content-Type: application/x-tar
+    Content-Length: &lt;Integer Length&gt;
+    Content-MD5: &lt;Base-64 Encoded MD5&gt;
+
+  %p
+    The curl program supplies the
+    %code Content-Length
+    header directly; we use the
+    %code md5-base64
+    program (in the
+    %code /tools
+    directory distributed with the service source code) to compute and encode the base-64 MD5 checksum.
+    The entire sequence of request and response headers are shown as well as the returned XML document.
+
+
+  .code_listing
+    $ curl -sv  -X PUT \
+    &nbsp; -H 'Content-Type: application/x-tar' \
+    &nbsp; -H "Content-MD5: `md5-base64 my-package.tar`" \
+    &nbsp; --upload-file my-package.tar \
+    &nbsp; #{@service_name}/packages/E20100727_AAAAAB.000
+    &nbsp;
+    &nbsp;
+    * About to connect() to #{@service_name}
+    *   Trying 203.42.113.69... connected
+    * Connected to #{@service_name}
+    &nbsp;
+    &nbsp;
+    &gt; PUT /packages/E20100727_AAAAAB.000 HTTP/1.1
+    &gt; User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8l zlib/1.2.3
+    &gt; Host: #{@service_name}
+    &gt; Accept: */*
+    &gt; Content-Type: application/x-tar
+    &gt; Content-MD5: FeSurhBdwM/I7bLdTHlFTg==
+    &gt; Content-Length: 8172435
+    &nbsp;
+    &nbsp;
+    &lt; HTTP/1.1 201 Created
+    &lt; Date: Tue, 14 Jun 2011 20:54:31 GMT
+    &lt; Server: Apache/2.2.17 (Unix) mod_ssl/2.2.17 OpenSSL/0.9.8l DAV/2 Phusion_Passenger/2.2.15
+    &lt; X-Powered-By: Phusion Passenger (mod_rails/mod_rack) 2.2.15
+    &lt; Location: #{@service_name}/packages/E20100727_AAAAAB.000
+    &lt; Content-Length: 293
+    &lt; Status: 201
+    &lt; Connection: close
+    &lt; Content-Type: application/xml
+    &nbsp;
+    &nbsp;
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;created type="application/x-tar"
+    &nbsp;        sha1="a5ffd229992586461450851d434e3ce51debb626"
+    &nbsp;        ieid="E20100727_AAAAAB"
+    &nbsp;    location="#{@service_name}/packages/E20100727_AAAAAB.000"
+    &nbsp;        size="8172435"
+    &nbsp;        name="E20100727_AAAAAB.000"
+    &nbsp;         md5="15e4aeae105dc0cfc8edb2dd4c79454e"/&gt;
+    &nbsp;
+    &nbsp;
+    * Closing connection
+
+  %p
+    The StoreMaster service returns success only when it has stored multiple copies of the package. The package is,
+    however, retrievable and deletable via the storage master.
+
+  %p
+    A retrieval of the package is 
+
+
+
+
+
+
+
+  %p{ :class => "footer" }
+    =@revision
+

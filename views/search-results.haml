@@ -2,49 +2,50 @@
 %html{ :lang => "en" }
   %head
     %meta{ :charset => "utf-8" }
-    %link{ :rel => "stylesheet", :href => "/std.css",  :type => "text/css"  }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
     %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
-    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
-    %title Search for Packages Managed by StoreMaster      
+
+    %title Search for Packages by Name or IEID on #{@service_name}
 
   %body
-    %h1 Search for Packages Managed by StoreMaster
-    
-    %table{ :style => "width: 75%;" }
-      %tr{ :class => "border" }
-        %td{ :colspan => 2,  :class => "tr" }
-          %form
-            =@note
-            %input{ :type => "text", :name => "pattern", :value => "#{@pattern}", :style => "background-color: #fdd;" }
+    %h1
+      %a{ :href => '/' }
+        =@service_name
+      &rArr; Search for Packages by Name or IEID
+
+    %form{ :class => "search", :method => "get", :action => "/search" }
+      %label
+        =@note
+        %input{ :type => "text", :name => "pattern", :value => "#{@pattern}" }
             
-      %tr
-        %td{ :class => "tl", :colspan => 2 }          
-          %table{ :class => "expansive", :style => "border: 1px solid black; border-collapse: collapse;" }
-            %thead
+    %p
+      %table{ :class => "search_results" }
+        %thead
+          %tr
+          %th Name
+          %th Location
+          %th Date
+        %tbody
+          %tr
+            %td{ :colspan => 3 }
+          - @packages.each do |pkg|
+            %tr
+              %td{ :colspan => 3,  :class => "tl" }
+                - if url = inspection_url(pkg)
+                  %a{ :href => url }
+                    %img{ :src =>  "/mag.png" }
+                - else
+                  %img{ :src => "/no-mag.png" }
+                %a{ :href => pkg.url } #{pkg.name}
+            - pkg.copies.each do |cpy|
               %tr
-              %th Name
-              %th{ :class => "tl" } Location
-              %th{ :class => "tl" } Date
-            %tbody
-              %tr
-                %td{ :colspan => 3 }
-              - @packages.each do |pkg|
-                %tr
-                  %td{ :colspan => 3,  :class => "tl" }
-                    - if url = inspection_url(pkg)
-                      %a{ :href => url }
-                        %img{ :src =>  "/mag.png" }
-                    - else
-                      %img{ :src => "/no-mag.png" }
-                    %a{ :href => pkg.url } #{pkg.name}
-                - pkg.copies.each do |cpy|
-                  %tr
-                    %td
-                    %td #{cpy.store_location}
-                    %td #{cpy.datetime.strftime('%F %T')}
-                %tr
-                  %td{ :colspan => 3 }
+                %td
+                %td #{cpy.store_location}
+                %td #{cpy.datetime.strftime('%F %T')}
+            %tr
+              %td{ :colspan => 3 }
                     
-          
     %p{ :class => "footer" }
       =@revision
+
+      

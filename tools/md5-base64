@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'digest/md5'
+
+# takes a filename and returns the base64 checksum of that....
+
+def usage(message = nil)
+  STDERR.puts "Usage: #{$0} filename => base64-md5-sum"
+  STDERR.puts message if message
+  exit
+end
+
+filename = ARGV[0]
+
+usage("You must supply a filename.")      unless filename
+usage("File #{filename} doesn't exist.")  unless File.exists? filename
+usage("File #{filename} isn't readable.") unless File.readable? filename
+
+md5 = Digest::MD5.new
+md5 << File.read(filename)
+
+puts [md5.hexdigest.scan(/../).pack("H2" * 16)].pack("m").chomp
+

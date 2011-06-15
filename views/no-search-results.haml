@@ -1,19 +1,21 @@
 !!! 5
 %html{ :lang => "en" }
+
   %head
     %meta{ :charset => "utf-8" }
-    %link{ :rel => "stylesheet", :href => "/std.css",  :type => "text/css"  }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
     %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
-    %script{ :type => "text/javascript", :src => "/jquery-1.4.js" }
-    %title Search for Packages Managed by StoreMaster      
+
+    %title Search for Packages by Name or IEID on #{@service_name}
 
   %body
-
-    %h1 Search for Packages Managed by StoreMaster
     
-    %form
+    %h1 
+      %a{ :href => '/' }
+        =@service_name
+      &rArr; Search for Packages by Name or IEID
+
+    %form{ :class => "search", :method => "get",  :action => "/search" }
       =@note
-      %input{ :type => "text", :name => "pattern", :value => "#{@pattern}", :style => "background-color: #fdd;" }
+      %input{ :type => "text", :name => "pattern", :value => "#{@pattern}" }
           
-    %p{ :class => "footer" }
-      =@revision

@@ -30,8 +30,13 @@ module StoreMasterModel
 
     attr_accessor :name
 
-    def name 
+    def name
       @name or @name = URI.parse(services_location).host
+    end
+
+    def server_url
+      u = URI.parse(services_location)
+      u.scheme + '://' + u.host + (u.port == 80 ? '' : ':' + u.port) + '/'
     end
 
 
@@ -147,8 +152,12 @@ module StoreMasterModel
       all(:required => true, :order => [ :read_preference.desc ])
     end
 
+    def self.list_all
+      all(:order => [ :read_preference.desc ])
+    end
+
     def self.exists? services_location
-      not first(:services_location => services_location).nil? 
+      not first(:services_location => services_location).nil?
     end
 
     def self.lookup services_location

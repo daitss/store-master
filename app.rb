@@ -8,10 +8,20 @@ require 'haml'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
-REVISION = StoreMaster.version.name
-
 include StoreMaster
 include StoreMasterModel
+
+def initialize_database config_file, config_key
+  StoreMasterModel.setup_db(config_file, config_key)
+
+rescue ConfigurationError => e
+  Logger.err e.message
+  raise e
+rescue => e
+  Logger.err e.message
+  e.backtrace.each { |line| Logger.err e.message }
+  raise e
+end
 
 configure do
   $KCODE = 'UTF8'
@@ -37,18 +47,12 @@ configure do
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if ENV['DATABASE_LOGGING']
 
-  begin
-    StoreMasterModel.setup_db(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
-
-  rescue ConfigurationError => e
-    Logger.err e.message
-    raise e
-  rescue => e
-    Logger.err e.message
-    e.backtrace.each { |line| Logger.err e.message }
-    raise e
-  end
+  initialize_database(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 end
+
+# Rack::CommonLogger works well enough, I guess, but we really need to
+# log on the beggining of long-running requests to get the sense of
+# what's happening on our system.
 
 def log_incoming
   @started = Time.now
@@ -75,6 +79,9 @@ def log_outgoing
 end
   
 before do
+  @revision = StoreMaster.version.name
+  @service_name = service_name()
+  Package.server_location = @service_name
   log_incoming
 end
 
@@ -82,8 +89,17 @@ after do
   log_outgoing 
 end
 
+get '/internals?' do
+  redirect '/internals/index.html'
+end
+
+
 get '/' do
-  erb :site, :locals => { :base_url => service_name, :revision => REVISION }
+  haml :index
+end
+
+get '/guide' do
+  haml :guide
 end
 
 

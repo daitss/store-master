@@ -1,0 +1,25 @@
+!!! 5
+%html{ :lang => "en" }
+
+  %head
+
+    %meta{ :charset => "utf-8" }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
+
+    %title The Store Master Service at #{@service_name}
+
+  %body
+
+    %h1 The Store Master Service at #{@service_name}
+
+    %ul
+      %li
+        %a{ :href => "search" } Search for a package
+      %li
+        %a{ :href => "pools" } Manage silo pools
+      %li
+        %a{ :href => "guide" } Overview of the Store Master service
+      %li
+        %a{ :href => "internals/index.html" } Developer's documentation
+                        

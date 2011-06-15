@@ -1,0 +1,100 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :charset => "utf-8" }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
+
+    %title Manage Pool #{@pool.name} on #{@service_name}
+
+  %body
+    %h1 
+      %a{ :href => '/' }
+        =@service_name
+      &rArr;
+      %a{ :href => '/pools'}
+        Pools
+      &rArr;
+      Manage
+      =@pool.name
+
+
+    %form{ :class => "pool", :method => "post", :action => "/pool-handler/#{@pool['id']}" }
+      %fieldset
+        %legend
+          Settings for Contacting the Pool Server 
+          %a{ :href => @pool.server_url } #{@pool.server_url}
+        %ul
+          %li
+            %fieldset
+              %legend Use This Pool?
+
+              %label{ :for => "id06", :class => "indent" } 
+                %input{ :id  => "id06", :type => "radio",    :name => "required", :value => "true",  :checked => @pool.required ? true : nil  }
+                Yes
+              %label{ :for => "id07", :class => "indent" }
+                %input{ :id  => "id07", :type => "radio",    :name => "required", :value => "false", :checked => @pool.required ? nil  : true }
+                No
+          %li
+            %label{ :for => "id01"}
+              Username 
+            %input{ :id  => "id01", :type => "text",    :name => "basic_auth_username", :value => @pool.basic_auth_username }
+          %li
+            %label{ :for => "id02"}
+              Password
+            %input{ :id  => "id02", :type => "password", :name => "basic_auth_password", :value => @pool.basic_auth_password }
+          %li
+            %label{ :for => "id03" }
+              Preference
+            %select{ :id => "id03", :name => "read_preference" }
+              - 10.times do |pref|
+                %option{ :value => pref, :selected => pref == @pool.read_preference ? true : nil }
+                  =pref
+          %li
+            %label{ :for => "id08" }
+              Service URL
+            %input{ :id => "id08", :name => "services_location", :class => "wide", :type => "text", :value => @pool.services_location }
+
+          %li
+            %input{ :type => "submit", :value => "Proceed" }
+              
+    %p
+      %dl
+        %dt
+          Use This Pool?
+        %dd
+          determines whether the  pool service at #{@pool.server_url} may be used when
+          storing or reteiving a package.
+          
+        %dt
+          Username and Password
+        %dd          
+
+          indicates that the pool server is password protected.  These
+          credentials are only required for operations that would
+          change the pool server, that is, storing or deleting
+          packages. Set both of these to blank if the pool server
+          never requires credentials.  You will need to visit
+
+          %a{ :href => @pool.server_url }
+            =@pool.server_url
+
+          to set up the pool server to use the same credentials, or to
+          allow open access.
+
+        %dt
+          Preference
+        %dd
+          the storage service will use the pool server with the
+          highest preference to retrieve a package; when determining
+          the pool servers to use to store a package, those with the
+          highest preference are selected first.
+
+        %dt
+          Service URL
+        %dd
+          is the URL of the pool service that tells how packages are
+          stored and retrieved. 
+
+          
+            
