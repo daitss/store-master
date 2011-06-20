@@ -15,11 +15,22 @@
 
     %ul
       %li
-        %a{ :href => "search" } Search for a package
+        %a{ :class => "i", :href => "/search" }<
+          Search
+        for a package by name or IEID
       %li
-        %a{ :href => "pools" } Manage silo pools
+        %a{ :class => "i", :href => "/pools" }<
+          Manage
+        the pools that this service will use to store packages
       %li
-        %a{ :href => "guide" } Overview of the Store Master service
+        %a{ :class => "i", :href => "/security" }<
+          Secure
+        this service by setting an access password
       %li
-        %a{ :href => "internals/index.html" } Developer's documentation
-                        
+        %a{ :class => "i", :href => "/guide" }<
+          Ponder
+        the protocol this service uses for storing and retrieving packages
+      %li
+        %a{ :class => "i", :href => "/internals/index.html" }<
+          Deliberate
+        over the developer's documentation for the source code 

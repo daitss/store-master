@@ -2,9 +2,17 @@ body {
     font: 85% georgia, sans-serif;
     line-height: 1.5;
     color: #000;
-    background: #fdefef;
+    background: #fdefef;  /* 253 239 239 */
     margin: 1em 1em 1em 2em;
     padding: 10;
+}
+
+.i {
+    font: italic normal 85% georgia, sans-serif; 
+}
+
+img {
+    margin: 0.5em 0.5em 0.5em 5em;
 }
 
 h1 {
@@ -171,3 +179,5 @@ form.pool fieldset fieldset legend {
     margin: 3em 0;
     font: italic 0.65em georgia, sans-serif;    
 }
+
+
