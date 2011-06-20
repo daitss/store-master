@@ -31,7 +31,7 @@
 
       of disks or tapes).
 
-    %img{ :src => "/Storage-Sequences.001.png" }
+    %img{ :src => "/Storage-Sequences.001.png", :class => "main_img" }
     
     %p
 
@@ -60,7 +60,7 @@
         %li  The Storage Master forwards one or more copies of the package to a configurable number of pool servers
         %li  The outcome status is returned to DAITSS, along with an XML document giving details of the operation on succesful stores
 
-      %img{ :src => "/Storage-Sequences.002.png" }
+      %img{ :src => "/Storage-Sequences.002.png", :class => "main_img" }
 
     %p
 
@@ -189,15 +189,73 @@
 
       The StoreMaster service returns success only when it has stored multiple copies of the package.
 
-    %h2 Retrieving and Deleting Packages from the Storage Master
+    %h2 Retrieving and Deleting Packages from the Storage Master....
 
     %p
+
+      A package is retrieved from DAITSS via the
+
+      %code location
+
+      attribute in the XML document returned by the Storage Master in response to a successful PUT.
+      in our example above, that is
+
+      %code #{@service_name}/packages/E20100727_AAAAAB.000.
+
+    %p
+
+      A session using
+
+      %code curl
+
+      will illustrate the 
+
+      
+    %h2 Forwarding Packages from the Storage Master to a Pool Server...
+
+    %p
+      The Storage Master maintains a simple database table named
+
+      %code pools
+
+      to record information about the pools it should contact.  The relevant columns are listed in the following table.
+
+    %table{ :style => "margin: 1em 1em 1em 5em;" }
+      %thead
+        %tr
+          %th Column
+          %th Meaning
+      %tbody
+        %tr
+          %td{ :class => "tl" } required
+          %td{ :class => "tl" } A boolean value that determines if this pool should be used
+        %tr
+          %td{ :class => "tl" } services_location
+          %td{ :class => "tl" } A string value that provides a URL locating the XML that describes the services this pool provides
+        %tr
+          %td{ :class => "tl" } read_preference
+          %td{ :class => "tl" } A numeric value to indicate if this silo should be used in preference to another silo for read requests
+        %tr
+          %td{ :class => "tl" } username
+          %td{ :class => "tl" } A string or null: if present, use the username and password for authentication when communicating with the server
+        %tr
+          %td{ :class => "tl" } password
+          %td{ :class => "tl" } A string or null: present if and only if username is present
+
+    %p
+      
+    
+    %p
+      %ol
+        %li get service document; parse and contstruct a URL for posting
+        %li post the document; parse the returned document
           
-    %h2 Forwarding Packages from the Storage Master to a Pool Server
+      %img{ :src => "/Storage-Sequences.003.png", :class => "main_img" }
+      
 
+    %h2 Fixity Checking Support...
 
-    %h2 Fixity Checking Support
-
+    %p
 
     %p{ :class => "footer" }
       =@revision

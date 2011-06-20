@@ -6,14 +6,9 @@ background='#fdefef'
 scale=0.66
 
 if [ -z $1 ] ; then
-   echo Usage: $0 source-png
+   echo Usage: $0 source-png ...
    exit 1
 fi
-
-source=$1
-destination=../public/`basename $source`
-
-echo $destination
 
 if [ ! -f $source ] ; then
    echo "Source image $source doesnt exist"
@@ -26,4 +21,9 @@ fi
 
 # when we're trying to blend in
 
-pngtopnm $source | pnmscale $scale | pnmcrop | pnmmargin -color "$background" 2 | pnmtopng -transparent "$background" > $destination
+for i in "$@"; do
+  source="$i"
+  destination=../public/"`basename $source`"
+  echo $destination
+  pngtopnm $source | pnmscale $scale | pnmcrop | pnmmargin -color "$background" 2 | pnmtopng -transparent "$background" > $destination
+done

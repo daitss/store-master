@@ -18,33 +18,32 @@
         =@note
         %input{ :type => "text", :name => "pattern", :value => "#{@pattern}" }
             
-    %p
-      %table{ :class => "search_results" }
-        %thead
-          %tr
+    %table
+      %thead
+        %tr
           %th Name
           %th Location
           %th Date
-        %tbody
+      %tbody
+        %tr
+          %td{ :colspan => 3 }
+        - @packages.each do |pkg|
+          %tr
+            %td{ :colspan => 3,  :class => "tl" }
+              - if url = inspection_url(pkg)
+                %a{ :href => url }
+                  %img{ :src =>  "/mag.png" }
+              - else
+                %img{ :src => "/no-mag.png" }
+              %a{ :href => pkg.url } #{pkg.name}
+          - pkg.copies.each do |cpy|
+            %tr
+              %td
+              %td #{cpy.store_location}
+              %td #{cpy.datetime.strftime('%F %T')}
           %tr
             %td{ :colspan => 3 }
-          - @packages.each do |pkg|
-            %tr
-              %td{ :colspan => 3,  :class => "tl" }
-                - if url = inspection_url(pkg)
-                  %a{ :href => url }
-                    %img{ :src =>  "/mag.png" }
-                - else
-                  %img{ :src => "/no-mag.png" }
-                %a{ :href => pkg.url } #{pkg.name}
-            - pkg.copies.each do |cpy|
-              %tr
-                %td
-                %td #{cpy.store_location}
-                %td #{cpy.datetime.strftime('%F %T')}
-            %tr
-              %td{ :colspan => 3 }
-                    
+                
     %p{ :class => "footer" }
       =@revision
 
