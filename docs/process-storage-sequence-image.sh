@@ -3,7 +3,7 @@
 background='#fdefef'
 
 
-scale=0.66
+scale=0.8
 
 if [ -z $1 ] ; then
    echo Usage: $0 source-png ...

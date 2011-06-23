@@ -193,24 +193,50 @@
 
     %p
 
-      A package is retrieved from DAITSS via the
+      DAITSS records the 
 
       %code location
 
       attribute in the XML document returned by the Storage Master in response to a successful PUT.
-      in our example above, that is
+      In our example above, that is
 
       %code #{@service_name}/packages/E20100727_AAAAAB.000.
 
+      DAITSS will use normal HTTP
+
+      %code GET
+
+      and
+
+      %code DELETE
+
+      requests on that location to retrieve or remove that package.
+      
     %p
 
       A session using
 
       %code curl
 
-      will illustrate the 
+      will illustrate how the Storage Master handles these HTTP methods.
+
+
+    .code_listing
+
+      curl -sv #{@service_name}/packages/E20100727_AAAAAB.000
+
+    %p
+
+
+
+    %p
+    
 
       
+    .code_listing
+  
+
+  
     %h2 Forwarding Packages from the Storage Master to a Pool Server...
 
     %p
@@ -228,19 +254,19 @@
       %tbody
         %tr
           %td{ :class => "tl" } required
-          %td{ :class => "tl" } A boolean value that determines if this pool should be used
+          %td{ :class => "tl" } boolean value that determines if this pool should be used
         %tr
           %td{ :class => "tl" } services_location
-          %td{ :class => "tl" } A string value that provides a URL locating the XML that describes the services this pool provides
+          %td{ :class => "tl" } string value that provides a URL locating the XML that describes the services this pool provides
         %tr
           %td{ :class => "tl" } read_preference
-          %td{ :class => "tl" } A numeric value to indicate if this silo should be used in preference to another silo for read requests
+          %td{ :class => "tl" } numeric value to indicate if this pool should be used in preference to another poo for read requests. a higher number means more preferred
         %tr
           %td{ :class => "tl" } username
-          %td{ :class => "tl" } A string or null: if present, use the username and password for authentication when communicating with the server
+          %td{ :class => "tl" } string or null: if present, use the username and password for authentication when communicating with the server
         %tr
           %td{ :class => "tl" } password
-          %td{ :class => "tl" } A string or null: present if and only if username is present
+          %td{ :class => "tl" } string or null: present if and only if username is present
 
     %p
       

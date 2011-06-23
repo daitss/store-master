@@ -24,11 +24,6 @@
       Click on the pool's name to change the settings this storage
       service will use when contacting the pool server.
 
-    - if @pools.select{ |p| p.required }.length < @required
-
-      %p{ :class => "warning" }
-        Note: there are too few pools configured for this storage server.
-
     %p
 
       %table
@@ -70,10 +65,22 @@
       - else
         is configured to require at least #{@required} pools be active.
 
+
+      - if @pools.select{ |p| p.required }.length < @required
+
+        %p{ :class => "warning" }
+          Note: there are too few pools configured for this storage server.
+
+    %p
+
       The required number of pools is specified in the storage service
-      configuration file (typically an Apache configuration file) using
-      the MINIMUM_REQUIRED_POOLS setting.  You must restart the storage
-      service when that setting is changed.
+      configuration file (typically an Apache configuration file)
+      using the
+
+      %code MINIMUM_REQUIRED_POOLS
+
+      setting.  You must restart the storage service when that setting
+      is changed.
 
   
     %p{ :class => "footer" }

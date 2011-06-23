@@ -428,8 +428,10 @@ module Analyzer
 
       len = StoreUtils.commify(score_card.values.max).length
 
-      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), DateTime.now.strftime('%F %T'))
-      @report_summary.warn sprintf("%#{len}s ingested package records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
+      ### TODO: compare against Lydia's SQL
+
+      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), no_later_than.strftime('%F %T'))
+      @report_summary.warn sprintf("%#{len}s of these records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
       @report_summary.warn sprintf("%#{len}s missing", StoreUtils.commify(score_card[:missing]))
