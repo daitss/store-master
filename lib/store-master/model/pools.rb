@@ -36,7 +36,7 @@ module StoreMasterModel
 
     def server_url
       u = URI.parse(services_location)
-      u.scheme + '://' + u.host + (u.port == 80 ? '' : ':' + u.port) + '/'
+      u.scheme + "://#{u.host}" + (u.port == 80 ? "/" : ":#{u.port}/")
     end
 
 
