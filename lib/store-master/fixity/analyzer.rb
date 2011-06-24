@@ -248,7 +248,7 @@ module Analyzer
       @pool_fixity_stream    = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
       @daitss_fixity_stream  = daitss_fixity_stream
 
-      @cutoff_time         = no_later_than.to_utc
+      @cutoff_time         = no_later_than
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
@@ -316,8 +316,9 @@ module Analyzer
 
     def too_recent pool_data
       return false unless pool_data
+      no_later = @cutoff_time.to_utc
       pool_data.each do |pool_record|
-        return true if pool_record.put_time > @cutoff_time
+        return true if pool_record.put_time > no_later
       end
       return false
     end
@@ -430,7 +431,7 @@ module Analyzer
 
       ### TODO: compare against Lydia's SQL
 
-      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), no_later_than.strftime('%F %T'))
+      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), @cutoff_time.strftime('%F %T'))
       @report_summary.warn sprintf("%#{len}s of these records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
