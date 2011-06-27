@@ -147,7 +147,7 @@ module StoreMasterModel
       pkg.size = metadata[:size].to_i
       pkg.type = metadata[:type]
 
-      pkg.transaction do |trans|
+      Package.transaction do |trans|
         begin
           pools.each do |pool|
             cpy = Copy.store(io, pkg, pool)
