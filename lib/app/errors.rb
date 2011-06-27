@@ -5,21 +5,27 @@
 error do
   e = @env['sinatra.error']
 
-  # Passenger phusion complains to STDERR about the dropped body data
+  # Phusion passenger complains to STDERR about the dropped body data
   # unless we rewind.
 
-  request.body.rewind if request.body.respond_to?('rewind')  
+  request.body.rewind if request.body.respond_to?('rewind')
 
   # The StoreMastrer::HttpError classes carry along their own messages and
   # HTTP status codes; it's safe to return these to a client.  These will
   # not need backtraces, since they are reasonably diagnostic.
 
   if e.is_a? StoreMaster::HttpError
-    Logger.warn e.client_message, @env
+
+    if e.status_code >= 500
+      Logger.err e.client_message, @env
+    else
+      Logger.warn e.client_message, @env   # 4xx and 207 both get logged this way
+    end
+
     [ halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message ]
-    
+
   # ConfigurationErrors are usually fatal errors, reported when
-  # something hasn't been set up correctly. They have sensitive 
+  # something hasn't been set up correctly. They have sensitive
   # information,  but are transient by nature, pre-production
 
   elsif e.is_a? StoreMaster::ConfigurationError
@@ -46,9 +52,9 @@ end
 
 not_found  do
   e = @env['sinatra.error']
-  request.body.rewind if request.body.respond_to?(:rewind)  
+  request.body.rewind if request.body.respond_to?(:rewind)
 
-  message = if e.is_a? StoreMaster::Http404 
+  message = if e.is_a? StoreMaster::Http404
               e.client_message
             else
               "404 Not Found - #{request.url} doesn't exist.\n"

@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby; -*-
 
+# TODO:  print out all configuration information in log
+
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
 
 require 'datyl/reporter'
@@ -15,7 +17,7 @@ def setup config
   if config.syslog_facility
     Logger.facility  = config.syslog_facility
   else
-    Logger.stderr 
+    Logger.stderr
   end
 
   if config.pid_directory

@@ -7,7 +7,7 @@
 #
 #   <?xml version="1.0" encoding="UTF-8"?>
 #   <reserved
-#        ieid="E20000000_AAAAAA" 
+#        ieid="E20000000_AAAAAA"
 #    location="http://store-master.example.com/packages/E20000000_AAAAAA.001"
 #   />
 
@@ -31,7 +31,7 @@ end
 # about the created resource with an XML document. For example:
 #
 #  <?xml version="1.0" encoding="UTF-8"?>
-#  <created 
+#  <created
 #        ieid="E20000000_AAAAAA"
 #    location="http://store-master.example.com/packages/E20000000_AAAAAA.001"
 #         md5="4732518c5fe6dbeb8429cdda11d65c3d"
@@ -42,6 +42,7 @@ end
 #  />
 
 put '/packages/:name' do |name|
+  log_start_of_request
 
   raise_exception_if_in_use(name)
 
@@ -59,7 +60,7 @@ put '/packages/:name' do |name|
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
   if settings.minimum_required_pools == 0                   # then we're a stub server
-    pkg = Package.stub(request.body, metadata)    
+    pkg = Package.stub(request.body, metadata)
   else
     pkg = Package.store(request.body, metadata, pools[0 .. settings.minimum_required_pools - 1])
   end
@@ -84,24 +85,17 @@ end
 # Delete a package by name.
 
 delete '/packages/:name' do |name|
-
   raise_exception_if_missing(name)
-
   Package.lookup(name).delete
-
   status 204
 end
 
 # Return a package via redirect
 
 get '/packages/:name' do |name|
-
   raise_exception_if_missing(name)
-
   locations = Package.lookup(name).locations
-  
   raise Http404, "No remote storage locations are associated with #{this_resource}" unless locations.length > 0
-
   redirect locations[0].to_s_with_userinfo, 303
 end
 
@@ -116,6 +110,7 @@ end
 #  </packages>
 
 get '/packages.xml' do
+  log_start_of_request
   [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]   ## TODO: use Package.server_location= in setup
 end
 
@@ -128,6 +123,7 @@ end
 #   "E20111201_AAAAAA.001","http://store-master.local/packages/E20111201_AAAAAA.001","E20111201_AAAAAA"
 
 get '/packages.csv' do
+  log_start_of_request
   [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]        ## TODO: use Package.server_location= in setup
 end
 

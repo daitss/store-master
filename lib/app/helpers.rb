@@ -22,7 +22,6 @@ helpers do
     StoreUtils.base64_to_md5hex(@env["HTTP_CONTENT_MD5"])
   end
 
-
   def web_location path
     service_name + (path =~ %r{^/} ?  path : '/' + path)
   end
@@ -86,7 +85,7 @@ helpers do
     # An empty string in the form is considered nil, but both username and password should be blank if we really want to do without any credentials
 
     params['basic_auth_username'] = nil if params['basic_auth_username'] == ''
-    params['basic_auth_password'] = nil if params['basic_auth_password'] == ''
+    params['basic_auth_password'] = nil if params['basic_auth_password'] ==  ''
 
     if (params['basic_auth_username'] != pool.basic_auth_username) or (params['basic_auth_password'] != pool.basic_auth_password)
       changes['basic_auth_username'] = params['basic_auth_username']
@@ -113,6 +112,65 @@ helpers do
     changes['services_location'] = params['services_location'] if params['services_location'] != pool.services_location
 
     changes
+  end
+
+  # We want to log changes made in POSTs but we don't want to display password information;
+
+  def display_params_safely params
+
+    list = []
+    params.keys.sort.each do |k|
+      val = params[k]
+      case val.class
+      when String;         val = "'" + val + "'"
+      when NilClass;       val = 'null'
+      else;                val = val.inspect
+      end
+
+      if k =~ /passw/i and not params[k].nil? and not params[k].length == 0
+        val = '******'
+      end
+      list.push "#{k} = #{val}"
+    end
+
+    list * ';  '
+  end
+
+  # Stolen, with minor corrections, from Rack::CommonLogger - format request information
+
+  def log_prefix intro = ''
+    intro += ' ' unless intro.empty?
+    sprintf('%s%s %s %s %s "%s%s"',
+            intro,
+            env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+            env["REMOTE_USER"] || "-",
+            env["SERVER_PROTOCOL"],
+            env["REQUEST_METHOD"],
+            env["PATH_INFO"],
+            env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
+  end
+
+  # Rack::CommonLogger works well enough, I guess, but we really need to
+  # log on the beggining of long-running requests to get the sense of
+  # what's happening on our system, which means we provide logging on
+  # the start of a request; this could be done in a before do ... end
+  # block, or in selected routes.
+
+  def log_start_of_request
+    Logger.info log_prefix('Sinatra Starting:')
+  end
+
+  # This is effectively what Rack::CommonLogger does:
+
+  def log_end_of_request time_started
+    line = sprintf('%s %d %s %0.4f', log_prefix('Sinatra:'), response.status.to_s[0..3], response.length, Time.now - time_started)
+    if response.status >= 500
+      Logger.err line
+    elsif response.status >= 400
+      Logger.warn line
+    else
+      Logger.info line
+    end
   end
 
 end # of helpers do

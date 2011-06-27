@@ -8,7 +8,7 @@
     %title Manage Pool #{@pool.name} on #{@service_name}
 
   %body
-    %h1 
+    %h1
       %a{ :href => '/' }
         =@service_name
       &rArr;
@@ -22,14 +22,14 @@
     %form{ :class => "pool", :method => "post", :action => "/pool-handler/#{@pool['id']}" }
       %fieldset
         %legend
-          Settings for Contacting the Pool Server 
+          Settings for Contacting the Pool Server
           %a{ :href => @pool.server_url } #{@pool.server_url}
         %ul
           %li
             %fieldset
               %legend Use This Pool?
 
-              %label{ :for => "id06", :class => "indent" } 
+              %label{ :for => "id06", :class => "indent" }
                 %input{ :id  => "id06", :type => "radio",    :name => "required", :value => "true",  :checked => @pool.required ? true : nil  }
                 Yes
               %label{ :for => "id07", :class => "indent" }
@@ -37,7 +37,7 @@
                 No
           %li
             %label{ :for => "id01"}
-              Username 
+              Username
             %input{ :id  => "id01", :type => "text",    :name => "basic_auth_username", :value => @pool.basic_auth_username }
           %li
             %label{ :for => "id02"}
@@ -57,7 +57,7 @@
 
           %li
             %input{ :type => "submit", :value => "Proceed" }
-              
+
     %p
       %dl
         %dt
@@ -65,10 +65,10 @@
         %dd
           determines whether the pool service at #{@pool.server_url}
           may be used when storing or reteiving a package.
-          
+
         %dt
           Username and Password
-        %dd          
+        %dd
           indicates that the pool server is password protected.  These
           credentials are only required for operations that would
           change the pool server, that is, storing or deleting
@@ -80,6 +80,17 @@
 
           to set up the pool server to use the same credentials, or to
           allow open access.
+
+          %p
+            %img{ :src => "/Password.001.png", :class => "main_img" }
+
+          You may also want to
+
+          %a{ :href => '/security' }
+            set up a username/password
+
+          for clients to access the Store Master, and then configure
+          DAITSS to use those credentials.
 
         %dt
           Preference
@@ -93,4 +104,4 @@
           Service URL
         %dd
           is the URL of the pool service that tells how packages are
-          stored and retrieved. 
+          stored and retrieved.

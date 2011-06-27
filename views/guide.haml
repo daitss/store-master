@@ -9,12 +9,12 @@
     %title A Guide to the Storage Master Service Protocol on #{@service_name}
 
   %body
-    
+
     %h1
       %a{ :href => '/' }
         =@service_name
       &rArr; A Guide to the Store Master Service Protocol
-      
+
     %p
 
       This page describes the Storage Master service which is used by
@@ -32,7 +32,7 @@
       of disks or tapes).
 
     %img{ :src => "/Storage-Sequences.001.png", :class => "main_img" }
-    
+
     %p
 
       The Store Master service acts as a one-stop front end that both
@@ -47,13 +47,13 @@
       and the pool servers on which the packages are ultimately stored.
 
     %h2 Sending Packages to the Storage Master
-    
+
     %p
 
       The diagram above shows an overview of the Storage Master
       protocol.  The detailed sequence between DAITSS and the Storage
       Master is in fact a four-step process:
- 
+
       %ol
         %li  DAITSS makes a request to the Storage Master service for a one-use URL, sending an IEID via a POST request
         %li  The Storage Master returns a URL to DAITSS, which uses the URL to send the package data in a PUT request
@@ -96,14 +96,14 @@
       $ curl -s -d ieid=E20100727_AAAAAB  #{@service_name}/reserve/
 
     %p
-      
+
       which will return a document similar to the following:
 
     .code_listing
 
       &lt;?xml version="1.0" encoding="UTF-8"?&gt;
       &lt;reserved ieid="E20100727_AAAAAB" location="#{@service_name}/packages/E20100727_AAAAAB.000"/&gt;
-    
+
     %p
       The next step is to store the package to the service; to do so we require three standard HTTP headers:
 
@@ -112,7 +112,7 @@
       Content-Type: application/x-tar
       Content-Length: &lt;Integer Length&gt;
       Content-MD5: &lt;Base-64 Encoded MD5&gt;
-      
+
     %p
 
       The curl program supplies the
@@ -138,7 +138,7 @@
       response headers are shown below, as well as the returned XML
       document.
 
-    
+
     .code_listing
 
       $ curl -sv  -X PUT \
@@ -184,16 +184,18 @@
       &nbsp;
       &nbsp;
       * Closing connection
-      
+
     %p
 
-      The StoreMaster service returns success only when it has stored multiple copies of the package.
+      The StoreMaster service is configured to store a specific number
+      of copies of a package; it returns success only when it has
+      stored that number of copies.
 
     %h2 Retrieving and Deleting Packages from the Storage Master....
 
     %p
 
-      DAITSS records the 
+      DAITSS records the
 
       %code location
 
@@ -211,7 +213,7 @@
       %code DELETE
 
       requests on that location to retrieve or remove that package.
-      
+
     %p
 
       A session using
@@ -227,16 +229,21 @@
 
     %p
 
-
+      Here we show the results of a GET request:
 
     %p
-    
 
-      
+
+
     .code_listing
-  
 
-  
+      to do
+
+    %p
+
+      As you can see, this provides a redirect to the
+
+
     %h2 Forwarding Packages from the Storage Master to a Pool Server...
 
     %p
@@ -260,7 +267,7 @@
           %td{ :class => "tl" } string value that provides a URL locating the XML that describes the services this pool provides
         %tr
           %td{ :class => "tl" } read_preference
-          %td{ :class => "tl" } numeric value to indicate if this pool should be used in preference to another poo for read requests. a higher number means more preferred
+          %td{ :class => "tl" } numeric value to indicate if this pool should be used in preference to another pool for read requests. a higher number means more preferred
         %tr
           %td{ :class => "tl" } username
           %td{ :class => "tl" } string or null: if present, use the username and password for authentication when communicating with the server
@@ -269,15 +276,15 @@
           %td{ :class => "tl" } string or null: present if and only if username is present
 
     %p
-      
-    
+
+
     %p
       %ol
         %li get service document; parse and contstruct a URL for posting
         %li post the document; parse the returned document
-          
+
       %img{ :src => "/Storage-Sequences.003.png", :class => "main_img" }
-      
+
 
     %h2 Fixity Checking Support...
 
