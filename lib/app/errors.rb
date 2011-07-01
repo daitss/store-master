@@ -22,7 +22,7 @@ error do
       Logger.warn e.client_message, @env   # 4xx and 207 both get logged this way
     end
 
-    [ halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message ]
+    halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message
 
   # ConfigurationErrors are usually fatal errors, reported when
   # something hasn't been set up correctly. They have sensitive
@@ -30,7 +30,7 @@ error do
 
   elsif e.is_a? StoreMaster::ConfigurationError
     Logger.err e.client_message, @env
-    [ halt 500, { 'Content-Type' => 'text/plain' }, e.client_message ]
+    halt 500, { 'Content-Type' => 'text/plain' }, e.client_message
 
   # Anything else we raise is unexpected and likely to have sensitive
   # information, so we don't return the messages to the client - just
@@ -42,7 +42,7 @@ error do
   else
     Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
     e.backtrace.each { |line| Logger.err line, @env }
-    [ halt 500, { 'Content-Type' => 'text/plain' }, "Internal Service Error - See system logs for more information\n" ]
+    halt 500, { 'Content-Type' => 'text/plain' }, "Internal Service Error - See system logs for more information\n"
   end
 end
 

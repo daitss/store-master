@@ -2,6 +2,7 @@ require 'digest/md5'
 require 'fileutils'
 require 'optparse'
 require 'ostruct'
+require 'socket'
 require 'sys/filesystem'
 require 'yaml'
 
@@ -17,12 +18,12 @@ module StoreUtils
     fs = Sys::Filesystem.stat(path)
     fs.fragment_size * fs.blocks            # fragment_size is used in preference to block_size, which is just the OS's preference
   end
-  
+
   def StoreUtils.disk_size(path)
     fs = Sys::Filesystem.stat(path)
     fs.fragment_size * fs.blocks_available  # blocks_available < blocks_free; some are reserved for root's exclusive use.
   end
-  
+
   def StoreUtils.strip_trailing_slash_maybe(string)
     return string if string.length == 1
     return string.gsub(/#{File::SEPARATOR}+$/, "")
@@ -30,7 +31,7 @@ module StoreUtils
 
   def StoreUtils.valid_ieid_name? string
     string =~ /^E[A-Z0-9]{8}_[A-Z0-9]{6}$/ ? true : false
-  end 
+  end
 
   def StoreUtils.xml_escape str
     str.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub("'", '&apos;').gsub('"', '&quot;')
@@ -41,16 +42,16 @@ module StoreUtils
   end
 
   # N.B. We depend on a trailing slash being removed
-  
+
   def StoreUtils.disk_mount_point(path)
     path = File.expand_path(path)
     path = File.dirname(path) unless File.directory? path
     path = path.gsub(%r{/+$}, '')
-    
+
     id = disk_id path
     components = path.split File::SEPARATOR  # break into path components and remove leading empty string
     components.shift
-    
+
     topdown = File::SEPARATOR
     components.each do |c|
       return strip_trailing_slash_maybe(topdown) if disk_id(topdown) == id
@@ -58,8 +59,8 @@ module StoreUtils
     end
     return strip_trailing_slash_maybe(topdown)
   end
-  
-  # We need to provide the base64 of the original binary md5 checksum; however 
+
+  # We need to provide the base64 of the original binary md5 checksum; however
   # we typically have only the hexstring.  This funtion takes the hexstring, packs it
   # into the binary representation, then encodes that into a base64 representation.
 
@@ -78,13 +79,13 @@ module StoreUtils
 
   def StoreUtils.hashpath name
     md5  =  Digest::MD5.hexdigest name
-    File.join(md5[0..2], md5[3..-1])      
+    File.join(md5[0..2], md5[3..-1])
   end
 
   def StoreUtils.hashpath_parent name
     Digest::MD5.hexdigest(name)[0..2]
   end
-  
+
   # Without argument, give the name of the user running this process
   # as a string.  With argument PATH, a string, assume it is a
   # readable filepath and return the user name who owns it as a
@@ -112,6 +113,7 @@ module StoreUtils
   end
 
   # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
+  # This will probably go away.
 
   def StoreUtils.connection_string yaml_file, key
 
@@ -150,6 +152,38 @@ module StoreUtils
 
   def StoreUtils.pid_file dir
     File.join(dir, $0.split(File::SEPARATOR).pop + '.pid')
+  end
+
+  Struct.new('StoreConfig',
+             :database_connection_string,
+             :log_database_queries,
+             :log_syslog_facility,
+             :required_pools,
+             :temp_directory,
+             :virtual_hostname
+             )
+
+  def StoreUtils.read_config yaml_file
+
+    conf = Struct::StoreConfig.new
+
+    begin
+      hash = YAML::load(File.open(yaml_file))
+    rescue => e
+      raise "Can't parse the Store Master configuration file '#{yaml_file}': #{e.message}."
+    else
+      raise "Can't parse the data in the Store Master configuration file '#{yaml_file}'." if hash.class != Hash
+    end
+
+    conf.members.each { |x| conf[x] = hash[x] }
+
+    # set reasonable defaults for missing values:
+
+    conf.required_pools    ||= 2
+    conf.temp_directory    ||= '/var/tmp'
+    conf.virtual_hostname  ||= Socket.gethostname
+
+    return conf
   end
 
 end # of Module StoreUtils

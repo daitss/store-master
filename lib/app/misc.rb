@@ -22,7 +22,7 @@ end
 get '/pools' do
 
   @pools    = Pool.list_all.sort { |a,b| a.name <=> b.name }
-  @required = settings.minimum_required_pools
+  @required = settings.required_pools
 
   haml :pools
 end
@@ -49,4 +49,25 @@ post '/pool-handler/:id' do |id|
   changes.each { |method, new_value| pool.assign(method, new_value) }
 
   redirect '/pools'
+end
+
+
+# testing stuff:
+
+get '/settings' do
+  opts = {}
+
+  [ :absolute_redirects, :add_charsets, :app_file, :bind, :default_encoding, :dump_errors, :environment, :lock,
+    :logging, :method_override, :port, :prefixed_redirects, :public, :raise_errors, :reload_templates, :root,
+    :run, :running, :server, :sessions, :show_exceptions, :static, :views ].each  do |key|
+
+    if settings.respond_to? key
+      value = settings.send key
+      opts[key] = value.inspect
+    else
+      opts[key] = '<no setting defined>'
+    end
+  end
+
+  erb :settings, :locals => { :opts => opts }
 end

@@ -53,16 +53,16 @@ put '/packages/:name' do |name|
 
   pools = Pool.list_active   # greatest preference first
 
-  if pools.length < settings.minimum_required_pools
-    raise ConfigurationError, "This service is configured to require #{poolses(settings.minimum_required_pools)}, but only found #{poolses(pools.length)} available from in our pools database table"
+  if pools.length < settings.required_pools
+    raise ConfigurationError, "This service is configured to require #{poolses(settings.required_pools)}, but the database entires lists #{poolses(pools.length)}"
   end
 
   metadata = { :name => name, :ieid => ieid, :md5 => request_md5, :type => request.content_type, :size => request.content_length }
 
-  if settings.minimum_required_pools == 0                   # then we're a stub server
+  if settings.required_pools == 0                   # then we're a stub server
     pkg = Package.stub(request.body, metadata)
   else
-    pkg = Package.store(request.body, metadata, pools[0 .. settings.minimum_required_pools - 1])
+    pkg = Package.store(request.body, metadata, pools[0 .. settings.required_pools - 1])
   end
 
   xml = Builder::XmlMarkup.new(:indent => 2)

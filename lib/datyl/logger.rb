@@ -217,16 +217,21 @@ class Logger
   # prefix ENV
   #
   # Create an apache-style "METHOD /uri"  string, if possible, from the environment ENV.
-  # ENV is expected to be @env from a rack application,
+  # ENV is expected to be @env from a rack application
   #
   # Note that the object method #write will not use this.
 
   def Logger.prefix env
-    return '' if env['REQUEST_METHOD'].nil? and env['PATH_INFO'].nil?
-    sprintf('"%s %s%s" ',
-            env['REQUEST_METHOD'],
-            env['PATH_INFO'],
-            (env['QUERY_STRING'].nil? or env['QUERY_STRING'].empty?) ? '' : '?' + env['QUERY_STRING'])
+    return '' if env['REQUEST_METHOD'].nil? or env['PATH_INFO'].nil?
+
+    sprintf('%s %s %s %s "%s%s"',
+            env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+            env["REMOTE_USER"] || "-",
+            env["SERVER_PROTOCOL"],
+            env["REQUEST_METHOD"],
+            env["PATH_INFO"],
+            env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"]
+            )
   end
 
 

@@ -35,8 +35,15 @@ module StoreMasterModel
 
   include StoreMaster
 
-  def self.setup_db yaml_file, key
-    dm = DataMapper.setup(:store_master, StoreUtils.connection_string(yaml_file, key))
+  # We support two different styles of configuration; either a
+  # yaml_file and a key into that file that yields a hash of
+  # information, or the direct connection string itself.
+
+  def self.setup_db *args
+
+    connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
+
+    dm = DataMapper.setup(:store_master, connection_string)
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
     dm.select('select 1')  # make sure we can connect
@@ -66,9 +73,7 @@ module StoreMasterModel
 
   def self.patch_tables                 # special purpose setup
     db = repository(:store_master).adapter
-    postgres_commands = [ 
-                         'alter table copies alter datetime type timestamp with time zone',
-                        ]
+    postgres_commands = [ 'alter table copies alter datetime type timestamp with time zone', ]
 
     if db.methods.include? 'postgres_version'
       postgres_commands.each { |sql| db.execute sql } 
