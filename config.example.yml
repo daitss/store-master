@@ -1,0 +1,41 @@
+# Configuration settings for the Store Master Service. On start up,
+# the service will first look for a filename using the environment
+# variable STOREMASTER_CONFIG_FILE, then will look in the install
+# directory (where app.rb is) for a file named 'config.yml'.
+
+# Please avoid the use of TABs for this file.
+
+# Should we log database queries? defaults to false.  These generate
+# very large logs, so it's only recommended for troubleshooting.
+
+log_database_queries:        false
+
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf), otherwise log to STDERR.
+
+log_syslog_facility:       LOG_LOCAL0
+
+# Database connection string, formatted as  
+#
+#   vendor://username:password@hostname/database" 
+#
+# Supported vendors: postgres. Some fields are optional - for
+# instance, if there is no password,
+# "vendor://username@hostname/database"
+
+database_connection_string:  postgres://daitss:topsecret@example.org/store_master
+
+# What hostname are we running the service under?  It is entered in the logs. Defaults
+# to the hostname of the server
+
+virutal_hostname:            store-master.example.org
+
+# How many pool servers are we required to connect to?  Defaults to 2. Use zero for
+# a 'stub server' for testing - in that case, nothing will actually be stored.
+
+required_pools:              2
+
+# Where should temporary files be created? This should be at least twice the size of the
+# largest package you plan to ingest, plus headroom. 
+
+# temp_directory:           /var/tmp/
