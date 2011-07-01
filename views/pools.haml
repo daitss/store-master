@@ -6,7 +6,7 @@
     %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
     %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
 
-    %title Store Master Pools on #{@service_name}
+    %title Storage Master Pools on #{@service_name}
 
   %body
     %h1
@@ -55,7 +55,7 @@
 
     %p
 
-      The storage service at #{@service_name} 
+      The Storage Master service at #{@service_name} 
     
       - case @required      
       - when 0
@@ -73,15 +73,16 @@
 
     %p
 
-      The required number of pools is specified in the storage service
-      configuration file (typically an Apache configuration file)
-      using the
+      The required number of pools is specified in the Storage Master service
+      configuration file
 
-      %code MINIMUM_REQUIRED_POOLS
+      %code config.yml
 
-      setting.  You must restart the storage service when that setting
-      is changed.
+      (found in the root of the Storage Master installation directory) using the
 
+      %code required_pools
+      
+      setting.  You must restart the storage service when that setting is changed.
   
     %p{ :class => "footer" }
       =@revision
