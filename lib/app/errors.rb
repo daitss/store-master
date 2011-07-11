@@ -10,11 +10,17 @@ error do
 
   request.body.rewind if request.body.respond_to?('rewind')
 
+  if e.is_a? StoreMaster::Http401
+    Logger.warn e.client_message, @env
+    response['WWW-Authenticate'] = "Basic realm=\"Password-Protected Area for Storage Master\""
+
+    halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
+
   # The StoreMastrer::HttpError classes carry along their own messages and
   # HTTP status codes; it's safe to return these to a client.  These will
   # not need backtraces, since they are reasonably diagnostic.
 
-  if e.is_a? StoreMaster::HttpError
+  elsif e.is_a? StoreMaster::HttpError
 
     if e.status_code >= 500
       Logger.err e.client_message, @env

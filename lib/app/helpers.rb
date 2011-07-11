@@ -173,4 +173,24 @@ helpers do
     end
   end
 
+
+  def needs_authentication?
+
+    admin_credentials = StoreMasterModel::Authentication.lookup('admin')
+
+    return false if admin_credentials.nil?                    # we don't require authentication
+
+    auth =  Rack::Auth::Basic::Request.new(request.env)
+
+    if auth.provided? && auth.basic? && auth.credentials 
+      user, password = auth.credentials
+      return (user != 'admin' or not admin_credentials.authenticate(password))
+    else
+      return true
+    end
+  end
+
+
+
+
 end # of helpers do

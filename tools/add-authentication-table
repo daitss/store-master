@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby; -*-
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'store-master'
+require 'optparse'
+require 'ostruct'
+
+def parse_command_line args
+  conf = OpenStruct.new(:file => nil, :key => nil)
+  opts = OptionParser.new do |opts|
+    opts.on("--file DB_CONFIG_FILE",  String, "The database configuration filename for this service") do |filename|
+      conf.file = filename
+    end
+    opts.on("--key DB_CONFIG_KEY",  String, "The key in the database configuration file for this service") do |key|
+      conf.key = key
+    end
+  end
+  opts.parse!(args)
+  raise "No key to the DB configuration file provided"        unless conf.key
+  raise "No filename for the DB configuration file provided"  unless conf.file
+  raise "Configuration yaml file #{conf.file} not found"      unless File.exists? conf.file
+  raise "Configuration yaml file #{conf.file} not readable"   unless File.readable? conf.file
+rescue => e
+  STDERR.puts e, opts
+  exit
+else
+  return conf
+end
+
+# To setup an instance of storemaster, create a new postgres database and enter 
+# the configuration information in a yaml file. 
+#
+# The yaml file consists of lines of account information similar to the following
+# (quote anything with white space in it):
+#
+# your_new_db: { vendor: postgres, hostname: localhost, database: storemaster, username: dbuser, password: "top secret!" }
+
+
+conf = parse_command_line ARGV
+
+StoreMasterModel.setup_db(conf.file, conf.key)
+StoreMasterModel::Authentication.auto_migrate!
+
+
+
+
+

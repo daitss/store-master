@@ -20,13 +20,63 @@ end
 
 
 get '/pools' do
-
   @pools    = Pool.list_all.sort { |a,b| a.name <=> b.name }
   @required = settings.required_pools
-
   haml :pools
 end
 
+PASSWORD_SENTINEL    = '*' * 16  # we don't have access to the original password; we use this to indicate a password is set in the forms
+
+get '/security' do
+  credentials = StoreMasterModel::Authentication.lookup('admin')
+  Logger.warn credentials.inspect
+  @password   = (credentials.nil? ? '' : PASSWORD_SENTINEL)
+  haml :security
+end
+
+get '/password-set' do
+  @outcome = :set
+  haml :'password-status'
+end
+
+get '/password-unchanged' do
+  @outcome = :unchanged
+  haml :'password-status'
+end
+
+get '/password-cleared' do
+  @outcome = :cleared
+  haml :'password-status'
+end
+
+post '/credentials-handler' do
+  credentials = StoreMasterModel::Authentication.lookup('admin')
+
+  case params[:password]
+
+  when nil
+    raise BadPassword, 'no password supplied'
+
+  when PASSWORD_SENTINEL                                # no change was requested
+    redirect '/password-unchanged'
+
+  when /^$/                                             # no password; clear it if unset
+    if not credentials.nil?
+      Logger.warn "Request from #{@env['REMOTE_ADDR']} to clear the password protection for this storage master."
+      StoreMasterModel::Authentication.clear
+      redirect '/password-cleared'
+    else
+      redirect '/password-unchanged'
+    end
+
+  else
+    Logger.warn "Request from #{@env['REMOTE_ADDR']} to set a password for this storage master."
+    StoreMasterModel::Authentication.create('admin', params[:password]) 
+    redirect '/password-set'
+  end
+
+  redirect '/'
+end
 
 get '/pool/:id' do |id|
   @pool   = Pool.get(id)
@@ -34,7 +84,6 @@ get '/pool/:id' do |id|
 
   haml :pool
 end
-
 
 post '/pool-handler/:id' do |id|
 
@@ -50,7 +99,6 @@ post '/pool-handler/:id' do |id|
 
   redirect '/pools'
 end
-
 
 # testing stuff:
 

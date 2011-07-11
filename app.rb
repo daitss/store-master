@@ -47,6 +47,9 @@ configure do
   Logger.info "Starting #{StoreMaster.version.name}"
   Logger.info "Requiring #{settings.required_pools} pools for storage"
 
+  ## TODO: log other setups
+
+
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   ENV['TMPDIR'] = config.temp_directory if config.temp_directory
@@ -54,6 +57,7 @@ end
 
 before do
   @started = Time.now
+  raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
   @revision = StoreMaster.version.name
   @service_name = service_name()
   Package.server_location = @service_name

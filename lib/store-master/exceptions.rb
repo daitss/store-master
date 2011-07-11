@@ -75,6 +75,9 @@ module StoreMaster
 
   class BadPoolParameter           < Http400;       end
 
+  # for a bad (empty) password
+
+  class BadPassword                < Http400;  end   # empty or bad password
 
 end # of module
 

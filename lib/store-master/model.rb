@@ -7,6 +7,7 @@ require 'store-master/model/copies'
 require 'store-master/model/packages'
 require 'store-master/model/pools'
 require 'store-master/model/reservations'
+require 'store-master/model/authentications'
 require 'store-master/utils'
 require 'time'
 require 'uri'
@@ -59,7 +60,7 @@ module StoreMasterModel
   # sql we do)
 
   def self.tables
-    [ Copy, Package, Pool, Reservation ]
+    [ Copy, Package, Pool, Reservation, Authentication ]
   end
 
   def self.create_tables                # drops and recreates as well
@@ -79,7 +80,5 @@ module StoreMasterModel
       postgres_commands.each { |sql| db.execute sql } 
     end
   end
-
-
 
 end # of Module StoreMasterModel

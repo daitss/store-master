@@ -1,0 +1,32 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :charset => "utf-8" }
+    %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
+    %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
+
+    %title Manage Access Credentials on #{@service_name}
+
+  %body
+    %h1
+      %a{ :href => '/' }
+        =@service_name
+      &rArr;
+      Manage Access Credentials
+
+    %form{ :class => "pool", :method => "post", :action => "/credentials-handler" }
+      %fieldset
+        %legend
+          Credentials for Contacting #{@service_name}
+        %ul
+          %li
+            %label{ :for => "id01"}
+              Password for the
+              %u admin
+              user - an empty password disables credentials.
+              
+            %input{ :id  => "id01", :type => "password", :name => "password", :value => "#{@password}" }
+          %li
+            %input{ :type => "submit", :value => "Proceed" }
+
+
