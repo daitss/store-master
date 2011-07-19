@@ -46,9 +46,7 @@ configure do
 
   Logger.info "Starting #{StoreMaster.version.name}"
   Logger.info "Requiring #{settings.required_pools} pools for storage"
-
-  ## TODO: log other setups
-
+  Logger.info "Using temp directory #{config.temp_directory}" if config.temp_directory
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 

@@ -17,10 +17,12 @@ log_syslog_facility:       LOG_LOCAL0
 
 # Database connection string, formatted as  
 #
-#   vendor://username:password@hostname/database" 
+#   vendor://username:password@hostname:port/database" 
 #
 # Supported vendors: postgres. Some fields are optional - for
-# instance, if there is no password,
+# instance, if there is no password and you use the default port,
+# 5432: 
+#
 # "vendor://username@hostname/database"
 
 database_connection_string:  postgres://daitss:topsecret@example.org/store_master

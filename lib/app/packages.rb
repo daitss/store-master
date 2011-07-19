@@ -130,5 +130,5 @@ end
 # Redirect from plain old /packages or /packages/
 
 get '/packages/?' do
-  redirect '/packages.xml', 301
+  redirect '/packages.xml', 303
 end
