@@ -49,7 +49,7 @@ module StoreMaster
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '1.1.2'
+  VERSION  = '1.2.0'
   NAME     = 'Store Master Service'
 
   def self.version
