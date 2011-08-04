@@ -3,10 +3,11 @@
 # variable STOREMASTER_CONFIG_FILE, then will look in the install
 # directory (where app.rb is) for a file named 'config.yml'.
 
-# Please avoid the use of TABs for this file.
+# Please avoid the use of TABs in this file.
 
 # Should we log database queries? defaults to false.  These generate
-# very large logs, so it's only recommended for troubleshooting.
+# very large logs, so it's only recommended for troubleshooting, or,
+# you know, hacking around.
 
 log_database_queries:        false
 
@@ -24,13 +25,17 @@ log_syslog_facility:       LOG_LOCAL0
 # 5432: 
 #
 # "vendor://username@hostname/database"
+#
+# N.B.  This means that this config file should have read permissions
+# retricted to the user running the service, or an appropriately
+# restricted group.
 
 database_connection_string:  postgres://daitss:topsecret@example.org/store_master
 
-# What hostname are we running the service under?  It is entered in the logs. Defaults
+# What hostname are we running the service under?  This is used as a tag in the logs. Defaults
 # to the hostname of the server
 
-virutal_hostname:            store-master.example.org
+virtual_hostname:            store-master.example.org
 
 # How many pool servers are we required to connect to?  Defaults to 2. Use zero for
 # a 'stub server' for testing - in that case, nothing will actually be stored.

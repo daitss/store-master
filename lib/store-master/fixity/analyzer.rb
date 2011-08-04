@@ -347,7 +347,7 @@ module Analyzer
           @report_missing.err  url
           event_counter.status = pkg.integrity_failure_event "No copies found for #{url}"
 
-        elsif not daitss_data                    # orphaned package
+        elsif not daitss_data                    # orphaned package - we have it on the pool.  TODO: check put_time on pool_data and skip if necessary (> @cutoff_time)
           score_card[:orphans] += 1
           @report_orphaned.warn pool_data.map{ |cpy| cpy.location }.join(', ')
 
