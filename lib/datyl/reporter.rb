@@ -35,7 +35,7 @@ require 'time'
 
 class Reporter
 
-  @@max_lines = 1000    # will only write this many lines of text - first half, '...', second half.
+  @@max_lines = 5000    # will only write this many lines of text - first half, '...', second half.
 
   attr_reader   :title, :counter
 
