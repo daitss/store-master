@@ -114,7 +114,8 @@ class Logger
 
   def Logger.stderr
     return unless (@@virtual_hostname and @@service_name)
-    Log4r::Logger[@@virtual_hostname].add Log4r::StderrOutputter.new(@@service_name)
+    formatter = Log4r::PatternFormatter.new(:pattern => "%d %l %m")
+    Log4r::Logger[@@virtual_hostname].add Log4r::StderrOutputter.new(@@service_name, :formatter => formatter)
   end
 
   # Logger.facility = FACILITY
