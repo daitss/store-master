@@ -29,7 +29,6 @@ PASSWORD_SENTINEL    = '*' * 16  # we don't have access to the original password
 
 get '/security' do
   credentials = StoreMasterModel::Authentication.lookup('admin')
-  Logger.warn credentials.inspect
   @password   = (credentials.nil? ? '' : PASSWORD_SENTINEL)
   haml :security
 end
