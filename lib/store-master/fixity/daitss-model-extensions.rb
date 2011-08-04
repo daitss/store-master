@@ -43,11 +43,12 @@ module Daitss
 
     # provide a list of data mapper records for selected IEIDs  ordered by the copy URL
 
-    def self.package_copies  ieids
+    def self.package_copies  before, ieids
       return [] if ieids.empty?
       sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
               "FROM packages, aips, copies "                                                +
              "WHERE packages.id = aips.package_id "                                         +
+               "AND copies.timestamp < '#{before}' "                                        +
                "AND aips.id = copies.aip_id "                                               +
                "AND packages.id in ('#{ieids.join("', '")}') "                              +
           "ORDER BY copies.url"

@@ -48,7 +48,7 @@ module Streams
       return if eos?
 
       if @buff.empty?
-        @buff = Daitss::Package.package_copies @ieids.shift(CHUNK_SIZE)
+        @buff = Daitss::Package.package_copies @before, @ieids.shift(CHUNK_SIZE)
       end
 
       return if @buff.empty?
