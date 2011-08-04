@@ -79,3 +79,6 @@ get '/guide' do
   haml :guide
 end
 
+get '/status' do
+  [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
+end
