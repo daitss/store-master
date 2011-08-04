@@ -27,7 +27,7 @@ def setup config
   end
 
   # DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
-  Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
+  Reporter.max_lines_to_write = 3000   # each report will have at most these lines, though everything will go to syslog
   StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink
   StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
   Daitss.setup_db(config.db_config_file, config.db_daitss_key)
