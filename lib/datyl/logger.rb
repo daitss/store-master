@@ -159,7 +159,7 @@ class Logger
 
   def Logger.err message, env = {}
     return unless (@@virtual_hostname and @@service_name)
-    Log4r::Logger[@@virtual_hostname].error prefix(env) + message.chomp
+    Log4r::Logger[@@virtual_hostname].error prefix(env) + ' ' + message.chomp
   end
 
   # Logger.warn MESSAGE, [ ENV ]
@@ -170,7 +170,7 @@ class Logger
 
   def Logger.warn message, env = {}
     return unless (@@virtual_hostname and @@service_name)
-    Log4r::Logger[@@virtual_hostname].warn  prefix(env) + message.chomp
+    Log4r::Logger[@@virtual_hostname].warn  prefix(env) + ' ' + message.chomp
   end
 
   # Logger.info MESSAGE, [ ENV ]
@@ -181,7 +181,7 @@ class Logger
 
   def Logger.info message, env = {}
     return unless (@@virtual_hostname and @@service_name)
-    Log4r::Logger[@@virtual_hostname].info  prefix(env) + message.chomp
+    Log4r::Logger[@@virtual_hostname].info  prefix(env) + ' ' + message.chomp
   end
 
   # While we normally use the class methods to write our own log
