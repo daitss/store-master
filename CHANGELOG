@@ -1,3 +1,11 @@
+Version 1.3.1 Storemaster 2011-08-08
+
+  * starting to use datyl daitss utility project (remove our copies of trie, reporter, logger)
+  
+  * do datamapper setup of unused :default repository to work around problem intermittent setup issue
+ 
+  * better handling of version numbers, institute CHANGELOG
+
 
 Version 1.3.0 StoreMaster 2011-08-04
 
