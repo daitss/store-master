@@ -44,7 +44,8 @@ module StoreMasterModel
 
     connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
 
-    dm = DataMapper.setup(:store_master, connection_string)
+    # dm = DataMapper.setup(:store_master, connection_string)
+    dm = DataMapper.setup(:default, connection_string)
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
     dm.select('select 1')  # make sure we can connect
@@ -54,22 +55,6 @@ module StoreMasterModel
     raise ConfigurationError,
     "Failure setting up the store-master database: #{e.message}"
   end
-
-  # Because we are using a non-default repository, we have to set up a faked 
-  # default one, unless we are alreading using one.
-  #
-  #    From: http://datamapper.org/getting-started.html
-  #
-  #    Note: that currently you must setup a :default repository to work
-  #    with DataMapper (and to be able to use additional differently
-  #    named repositories). This might change in the future.
-  #
-  #
-
-  def self.setup_unnecessary_default
-    dm = DataMapper.setup(:default, 'sqlite:memory')
-  end
-
 
   # (Re)create tables for test or setup.  We'll also provide a mysql.ddl and psql.ddl for creating
   # the tables, which can give us a bit more flexibility (e.g., specialized indcies for some of the

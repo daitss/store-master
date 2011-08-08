@@ -52,7 +52,6 @@ configure do
 
   ENV['TMPDIR'] = config.temp_directory if config.temp_directory
 
-  StoreMasterModel.setup_unnecessary_default
   StoreMasterModel.setup_db(settings.database_connection_string)
 end
 

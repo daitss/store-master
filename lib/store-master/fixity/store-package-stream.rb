@@ -39,7 +39,8 @@ module StoreMasterModel
                "AND copies.datetime < '#{before}' "   +
           "ORDER BY packages.name"
 
-      repository(:store_master).adapter.select(sql)
+      # repository(:store_master).adapter.select(sql)
+      repository(:default).adapter.select(sql)
     end
 
     def self.package_copies ids
@@ -50,7 +51,8 @@ module StoreMasterModel
                "AND packages.id in ('" + ids.join("', '")  + "') "        +
           "ORDER BY packages.name"
 
-      repository(:store_master).adapter.select(sql)
+      # repository(:store_master).adapter.select(sql)
+      repository(:default).adapter.select(sql)
     end
 
   end # of class Package

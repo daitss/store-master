@@ -9,9 +9,9 @@ module  StoreMasterModel
     include DataMapper::Resource
     include StoreMaster
 
-    def self.default_repository_name
-      :store_master
-    end
+    # def self.default_repository_name
+    #   :store_master
+    # end
 
     property   :id,         Serial
     property   :ieid,       String,   :required => true, :index => true, :length => (16..16)

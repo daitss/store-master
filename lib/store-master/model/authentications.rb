@@ -8,9 +8,9 @@ module StoreMasterModel
     include StoreMaster
     include DataMapper::Resource
 
-    def self.default_repository_name
-      :store_master
-    end
+    # def self.default_repository_name
+    #   :store_master
+    # end
 
     include DataMapper::Resource
     
