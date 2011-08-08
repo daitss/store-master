@@ -1,0 +1,21 @@
+
+Version 1.3.0 StoreMaster 2011-08-04
+
+ * move out configuration variables into separate yaml file: /opt/web-services/conf.d/storemaster.yml
+
+ * pre-request logging now done only for long-running requests, includes experimental content-size
+
+ * added support for setting credentials to use this service
+
+ * added search page for packages
+
+ * added silo-pool management page (includes support for setting passwords to match silo credentials)
+
+ * added /status page for xymon
+
+ * fixed bug where refreshing pages caused collect-fixities to get confused
+
+ * much more on-line documentation
+
+ * diffs:  1653 lines of code added, 718 removed
+

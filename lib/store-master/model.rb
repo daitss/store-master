@@ -55,6 +55,22 @@ module StoreMasterModel
     "Failure setting up the store-master database: #{e.message}"
   end
 
+  # Because we are using a non-default repository, we have to set up a faked 
+  # default one, unless we are alreading using one.
+  #
+  #    From: http://datamapper.org/getting-started.html
+  #
+  #    Note: that currently you must setup a :default repository to work
+  #    with DataMapper (and to be able to use additional differently
+  #    named repositories). This might change in the future.
+  #
+  #
+
+  def self.setup_unnecessary_default
+    dm = DataMapper.setup(:default, 'sqlite:memory')
+  end
+
+
   # (Re)create tables for test or setup.  We'll also provide a mysql.ddl and psql.ddl for creating
   # the tables, which can give us a bit more flexibility (e.g., specialized indcies for some of the
   # sql we do)

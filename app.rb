@@ -51,6 +51,9 @@ configure do
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   ENV['TMPDIR'] = config.temp_directory if config.temp_directory
+
+  StoreMasterModel.setup_unnecessary_default
+  StoreMasterModel.setup_db(settings.database_connection_string)
 end
 
 before do
@@ -65,7 +68,6 @@ after do
   log_end_of_request @started
 end
 
-StoreMasterModel.setup_db(settings.database_connection_string)
 
 get '/internals?' do
   redirect '/internals/index.html'

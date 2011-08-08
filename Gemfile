@@ -2,6 +2,11 @@
 
 source "http://rubygems.org"
 
+gem "datyl", :git => "git://github.com/daitss/datyl.git"
+
+gem 'sqlite3'
+gem 'dm-sqlite-adapter'
+
 gem 'i18n'
 gem 'libxml-ruby', :require => 'libxml'
 gem 'data_mapper',         '>= 1.1.0'
@@ -20,5 +25,3 @@ gem 'ci_reporter',      '>= 1.6.2'
 gem 'cucumber',		'>= 0.8.5'
 gem 'rspec',		'>= 1.3.0'
 
-# this introduces too many problems - we've just done a cut and paste job for now
-# gem "daitss", :git => "git://github.com/daitss/core.git"
