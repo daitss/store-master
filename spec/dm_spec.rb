@@ -93,8 +93,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us retrieve an associated pool from a copy" do
 
-    pool1 = StoreMasterModel::Pool.add(:services_location => pool('g'))
-    pool2 = StoreMasterModel::Pool.add(:services_location => pool('h'))
+    pool1 = StoreMasterModel::Pool.add(pool('g'))
+    pool2 = StoreMasterModel::Pool.add(pool('h'))
 
     pool1.save.should == true
     pool2.save.should == true
@@ -123,7 +123,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us mark a package as deleted" do
 
-    pool = StoreMasterModel::Pool.add(:services_location => pool('i'))
+    pool = StoreMasterModel::Pool.add(pool('i'))
     pkg  = StoreMasterModel::Package.create(:ieid => IEID, :name => name(101))
     copy = StoreMasterModel::Copy.create(:store_location => 'http://bar.example.com/bar', :pool => pool)
     pkg.copies << copy
@@ -144,8 +144,8 @@ share_examples_for "DataMapper Package class with any DB, when it" do
 
   it "should let us associate copies URL with a packge, setting the time or defaulting it, storing and retreiving it" do
 
-    pool1 = StoreMasterModel::Pool.add(:services_location => pool('d'))
-    pool2 = StoreMasterModel::Pool.add(:services_location => pool('e'))
+    pool1 = StoreMasterModel::Pool.add(pool('d'))
+    pool2 = StoreMasterModel::Pool.add(pool('e'))
 
     pool1.save.should == true
     pool2.save.should == true
@@ -197,7 +197,7 @@ share_examples_for "DataMapper Package class with any DB, when it" do
     pass = 'top secret'
     user = 'fischer'
 
-    pool = StoreMasterModel::Pool.add(pool('e'))
+    pool = StoreMasterModel::Pool.add(pool('f'))
     pool.basic_auth_password = pass
     pool.basic_auth_username = user
 

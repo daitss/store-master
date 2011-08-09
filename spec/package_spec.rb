@@ -7,7 +7,7 @@ require 'digest/md5'
 require 'digest/sha1'
 
 # store-master needs a few pools, on my development host I've set two up,
-# pool.a.local and pool.b.local - each is made up of two silos, defined
+# pool.a.dev and pool.b.dev - each is made up of two silos, defined
 # as .dmg images 
 #
 
@@ -15,15 +15,15 @@ require 'digest/sha1'
 # Note that failing tests can leave orphaned junk on the silos that will need to be cleaned
 # out before proceeding, e.g.
 #
-#  curl -X DELETE http://storage.local/b/data/E20080805_AAAAAM.000
-#  curl -X DELETE http://storage.local/b/data/E20080805_AAAAAM.001
+#  curl -X DELETE http://storage.dev/b/data/E20080805_AAAAAM.000
+#  curl -X DELETE http://storage.dev/b/data/E20080805_AAAAAM.001
 #  ...
 #
 # something like this may help:
 #
 # #!/bin/sh
 #
-# for s in http://pool.a.local/silo-pool.a.1 http://pool.a.local/silo-pool.a.2 http://pool.b.local/silo-pool.b.1  http://pool.b.local/silo-pool.b.2; do
+# for s in http://pool.a.dev/silo-pool.a.1 http://pool.a.dev/silo-pool.a.2 http://pool.b.dev/silo-pool.b.1  http://pool.b.dev/silo-pool.b.2; do
 #   for p in `curl -s $s/fixity/ | grep FIXITY  | cut -d\" -f2`; do
 #     echo curl -s -X DELETE $s/data/$p
 #     curl -s -X DELETE $s/data/$p
@@ -40,10 +40,10 @@ def datamapper_setup
 end
 
 def test_pools
-  # [ 'http://storage.local/store-master-test-silo-1/data/', 'http://storage.local/store-master-test-silo-2/data/' ]
+  # [ 'http://storage.dev/store-master-test-silo-1/data/', 'http://storage.dev/store-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
-  [ 'http://pool.a.local/services', 'http://pool.b.local/services' ]
+  [ 'http://pool.a.dev/services', 'http://pool.b.dev/services' ]
 end
 
 @@IEID = ieid()
@@ -127,8 +127,9 @@ end
 describe Package do
 
   before(:all) do
+    @@pools = []
     datamapper_setup
-    test_pools.each { |pool| Pool.add(pool) }
+    test_pools.each { |pool| p = Pool.add(pool); @@pools.push p }
   end
 
   it "should let us determine that a package doesn't exist" do
@@ -149,7 +150,7 @@ describe Package do
     metadata = sample_metadata(name)
 
     io  = sample_tarfile
-    pkg = Package.store(io, metadata)
+    pkg = Package.store(io, metadata, @@pools)
     pkg.name.should == name
     pkg.md5.should   == @@MD5
     pkg.sha1.should  == @@SHA1
@@ -174,14 +175,14 @@ describe Package do
 
   it "should not let us recreate a package with an existing name" do
     nimby
-    lambda { Package.store(sample_tarfile, sample_metadata(name)) }.should raise_error
+    lambda { Package.store(sample_tarfile, sample_metadata(name), @@pools) }.should raise_error
   end
 
   it "should let us retrieve the locations of copies of a stored package" do    
     nimby
 
     name = Reservation.make(ieid);  @@all_package_names.push name
-    pkg  = Package.store(sample_tarfile, sample_metadata(name))
+    pkg  = Package.store(sample_tarfile, sample_metadata(name), @@pools)
     pkg.locations.length.should == test_pools.length
   end
 
@@ -194,7 +195,7 @@ describe Package do
     pending "This test requires 2 or more pools, skipping"  unless pools.length >= 2  
 
     name  = Reservation.make(ieid)
-    pkg   = Package.store(sample_tarfile, sample_metadata(name))
+    pkg   = Package.store(sample_tarfile, sample_metadata(name), @@pools)
 
     pkg.name.should == name
     @@all_package_names.push name
