@@ -74,7 +74,8 @@ module StoreMasterModel
   end
 
   def self.patch_tables                 # special purpose setup
-    db = repository(:store_master).adapter
+    # db = repository(:store_master).adapter
+    db = repository(:default).adapter
     postgres_commands = [ 'alter table copies alter datetime type timestamp with time zone', ]
 
     if db.methods.include? 'postgres_version'

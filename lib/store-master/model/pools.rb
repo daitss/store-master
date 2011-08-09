@@ -32,11 +32,15 @@ module StoreMasterModel
 
     def name
       @name or @name = URI.parse(services_location).host
+    rescue => e
+      raise ConfigurationError, "The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}"
     end
 
     def server_url
       u = URI.parse(services_location)
       u.scheme + "://#{u.host}" + (u.port == 80 ? "/" : ":#{u.port}/")
+    rescue => e
+      raise ConfigurationError, "The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}"
     end
 
 
@@ -61,7 +65,7 @@ module StoreMasterModel
 
 
     def service_document
-      url = URI.parse(services_location) rescue raise(ConfigurationError, "The silo services URL #{services_location} doesn't appear to be a valid URL")
+      url = URI.parse(services_location) rescue raise("The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}")
 
       begin # go get information from the silo services document to determine the URLs for the sub services we'll need
 
