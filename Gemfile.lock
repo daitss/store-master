@@ -42,6 +42,9 @@ GEM
       dm-core (~> 1.1.0)
     dm-migrations (1.1.0)
       dm-core (~> 1.1.0)
+    dm-mysql-adapter (1.1.0)
+      dm-do-adapter (~> 1.1.0)
+      do_mysql (~> 0.10.2)
     dm-postgres-adapter (1.1.0)
       dm-do-adapter (~> 1.1.0)
       do_postgres (~> 0.10.2)
@@ -62,6 +65,8 @@ GEM
       uuidtools (~> 2.1.2)
     dm-validations (1.1.0)
       dm-core (~> 1.1.0)
+    do_mysql (0.10.6)
+      data_objects (= 0.10.6)
     do_postgres (0.10.6)
       data_objects (= 0.10.6)
     fastercsv (1.5.4)
@@ -100,6 +105,7 @@ DEPENDENCIES
   cucumber (>= 0.8.5)
   data_mapper (>= 1.1.0)
   datyl!
+  dm-mysql-adapter
   dm-postgres-adapter (>= 1.1.0)
   haml (>= 3.1.0)
   i18n

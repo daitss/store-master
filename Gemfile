@@ -4,6 +4,8 @@ source "http://rubygems.org"
 
 gem "datyl", :git => "git://github.com/daitss/datyl.git"
 
+gem 'dm-mysql-adapter'
+
 gem 'i18n'
 gem 'libxml-ruby', :require => 'libxml'
 gem 'data_mapper',         '>= 1.1.0'
