@@ -22,9 +22,10 @@ storemaster:
 
 # defaults:temp_directory
 # -----------------------
-# Where should temporary files be created? This should be at least twice the size of the
-# largest package you plan to ingest, plus headroom.  Defaults to system-defined temp directory
-# (typically /tmp/)
+# Where should temporary files be created? This should be at least
+# twice the size of the largest package you plan to ingest, plus
+# headroom.  Defaults to system-defined temp directory (typically
+# /tmp/)
 #
 # database:storemaster_db
 # -----------------------

@@ -102,7 +102,7 @@ task :bundle do
   sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.development.lock #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
   sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
-  sh "cd #{HOME}; bundle install --path bundle"
+  sh "cd #{HOME}; bundle --gemfile Gemfile install --path bundle"
 end
 
 desc "Hit the restart button for apache/passenger, pow servers"

@@ -157,7 +157,6 @@ helpers do
   # block, or in selected routes.
 
   def log_start_of_request
-    #### TODO: IS THIS REALLY GOING TO WORK AS EXPECTED?
     Logger.info log_prefix('Sinatra Starting:') + (request.content_length ? " #{request.content_length} bytes" :  ' -no content length- ')
   end
 
