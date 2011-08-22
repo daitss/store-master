@@ -137,7 +137,6 @@ module StoreUtils
     raise "#{oops} get the user name from the configuration file '#{yaml_file}' using the key '#{key}'"                                unless dbinfo.include? 'username'
 
     # Example string: 'mysql://root:topsecret@localhost/silos'
-    # TODO: support different ports
 
     return \
       dbinfo['vendor']    + '://' +                                   # mysql://
@@ -154,36 +153,21 @@ module StoreUtils
     File.join(dir, $0.split(File::SEPARATOR).pop + '.pid')
   end
 
-  Struct.new('StoreConfig',
-             :database_connection_string,
-             :log_database_queries,
-             :log_syslog_facility,
-             :required_pools,
-             :temp_directory,
-             :virtual_hostname
-             )
 
-  def StoreUtils.read_config yaml_file
+  # Remove the password from the db connection string for logging
 
-    conf = Struct::StoreConfig.new
+  def StoreUtils.safen_connection_string str
 
-    begin
-      hash = YAML::load(File.open(yaml_file))
-    rescue => e
-      raise "Can't parse the Store Master configuration file '#{yaml_file}': #{e.message}."
-    else
-      raise "Can't parse the data in the Store Master configuration file '#{yaml_file}'." if hash.class != Hash
-    end
+    vendor, rest = str.split('://', 2)              # postgres://fischer:topsecret@example.org:5432/mydb => [ postgres, fischer:topsecret@example.org:5432/mydb ]
+    return str unless rest
 
-    conf.members.each { |x| conf[x] = hash[x] }
+    userinfo, host_and_db = rest.split('@', 2)      # fischer:topsecret@example.org:5432/mydb => [ fischer:topsecret, example.org:5432/mydb ]
+    return str unless host_and_db
 
-    # set reasonable defaults for missing values:
+    user, pass = userinfo.split(':', 2)                 # fischer:topsecret => [ fischer, topsecret ]
+    return str unless pass
 
-    conf.required_pools    ||= 2
-    conf.temp_directory    ||= '/var/tmp'
-    conf.virtual_hostname  ||= Socket.gethostname
-
-    return conf
+    return vendor + '://' + user + ':********@' + host_and_db
   end
 
 end # of Module StoreUtils

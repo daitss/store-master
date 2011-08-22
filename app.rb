@@ -4,17 +4,27 @@ require 'app/package-reports'
 require 'app/misc'
 require 'app/errors'
 require 'app/packages'
+require 'datyl/logger'
+require 'datyl/config'
 require 'haml'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
 include StoreMaster
 include StoreMasterModel
+include Datyl
 
 def get_config
-  filename = ENV['STOREMASTER_CONFIG_FILE'] || File.join(File.dirname(__FILE__), 'config.yml')
-  config = StoreUtils.read_config(filename)
+  raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, :storemaster)
+
+  raise ConfigurationError, "The database connection string ('storemaster_db') was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.storemaster_db
+  return config
 end
+
 
 configure do
   $KCODE = 'UTF8'
@@ -32,9 +42,9 @@ configure do
 
   set :haml, :format => :html5, :escape_html => true
 
-  set :required_pools, config.required_pools
+  set :required_pools, (config.required_pools || 2)
 
-  set :database_connection_string, config.database_connection_string
+  ENV['TMPDIR'] = config.temp_directory if config.temp_directory
 
   Logger.setup('StoreMaster', config.virtual_hostname)
 
@@ -44,15 +54,25 @@ configure do
     Logger.stderr
   end
 
+  use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
+
   Logger.info "Starting #{StoreMaster.version.name}"
-  Logger.info "Requiring #{settings.required_pools} pools for storage"
+
+  case settings.required_pools
+  when 0
+    Logger.info "No silo pools are required: this storage master will act as a testing-only stub server and not actually store to any silo-pools."
+  when 1
+    Logger.info "Requiring one silo pool for storage."
+  else
+    Logger.info "Requiring #{settings.required_pools} silo pools for storage."
+  end
+
   Logger.info "Using temp directory #{config.temp_directory}" if config.temp_directory
+  Logger.info "Using database #{StoreUtils.safen_connection_string(config.storemaster_db)}"
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
-  ENV['TMPDIR'] = config.temp_directory if config.temp_directory
-
-  StoreMasterModel.setup_db(settings.database_connection_string)
+  StoreMasterModel.setup_db(config.storemaster_db)
 end
 
 before do
@@ -62,11 +82,6 @@ before do
   @service_name = service_name()
   Package.server_location = @service_name
 end
-
-after do
-  log_end_of_request @started
-end
-
 
 get '/internals?' do
   redirect '/internals/index.html'

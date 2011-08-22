@@ -157,24 +157,9 @@ helpers do
   # block, or in selected routes.
 
   def log_start_of_request
-
     #### TODO: IS THIS REALLY GOING TO WORK AS EXPECTED?
     Logger.info log_prefix('Sinatra Starting:') + (request.content_length ? " #{request.content_length} bytes" :  ' -no content length- ')
   end
-
-  # This is effectively what Rack::CommonLogger does:
-
-  def log_end_of_request time_started
-    line = sprintf('%s %d %s %0.4f', log_prefix('Sinatra:'), response.status.to_s[0..3], response.length, Time.now - time_started)
-    if response.status >= 500
-      Logger.err line
-    elsif response.status >= 400
-      Logger.warn line
-    else
-      Logger.info line
-    end
-  end
-
 
   def needs_authentication?
 

@@ -1,5 +1,6 @@
 require 'datyl/reporter'
 require 'datyl/streams'
+require 'datyl/logger'
 require 'store-master/fixity/utils'
 
 # Analyzers run checks over various pool and daitss fixity data
@@ -338,7 +339,13 @@ module Analyzer
 
         next if too_recent(pool_data)
 
-        pkg = Daitss::Package.lookup_from_url(url)
+        if daitss_data
+          pkg = Daitss::Package.lookup_from_url(url)
+          if pkg.nil?
+            Logger.err "Can't find package information from DAITSS DB for #{url} - did it go away? (this is a temporary work-around for a known problem"
+            next
+          end
+        end
 
         score_card[:daitss_packages] += 1 if daitss_data
         

@@ -2,68 +2,51 @@
 
 require 'fileutils'
 require 'rake'
+require 'rspec'
+require 'rspec/core/rake_task'
+require 'cucumber/rake/task'
 require 'socket'
-require 'rake/rdoctask'
-require 'spec/rake/spectask'
-
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
 TMPDIR  = File.join(HOME, 'tmp')
-
 FILES   = FileList["#{LIBDIR}/**/*.rb", "views/**/*erb", "public/*",'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
+
+# require 'bundler/setup'
+
+# These days, bundle is called automatically, if a Gemfile exists, by a lot
+# of different libraries - rack and rspec among them.  Use the development
+# gemfile for those things run from this Rakefile.
+
+
+ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
 
 def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
 end
 
-# cleanup handling of CI & spec dependencies
 
-spec_dependencies = []
 
-# Working with continuous integration.  The CI servers out
-# there.... Sigh... Something that should be so easy...let's start
-# with ci/reporter...
-#
-# TODO: conditionally add to the spec tests, and send the output to
-# a web service
-
-begin
-  require 'ci/reporter/rake/rspec'
-rescue LoadError => e
-else
-  spec_dependencies.push "ci:setup:rspec"
+def dev_host
+  Socket.gethostname =~ /romeo-foxtrot/
 end
 
-begin
-  require 'ci/reporter/rake/cucumber'
-rescue LoadError => e
-else
-  spec_dependencies.push "ci:setup:cucumber"
+RSpec::Core::RakeTask.new do |task|
+  task.rspec_opts = [ '--color', '--format', 'documentation' ] 
+  ## task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
 end
 
-task :spec => spec_dependencies
-
-Spec::Rake::SpecTask.new do |task|
-  task.spec_opts = [ '--format', 'specdoc' ]    # ci/reporter is getting in the way of this being used.
-  task.libs << 'lib'
-  task.libs << 'spec'
-  task.rcov = true if dev_host   # do coverage tests on my devlopment box
+Cucumber::Rake::Task.new do |task|
+   task.rcov = true
 end
 
 # assumes git pushed out
 
 desc "Deploy to darchive's storemaster"
 task :darchive do
-  #  sh "rm -f /tmp/silos.diff"
-  #  sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
-  #  sh "test -s /tmp/silos.diff && git commit -a"
-  #  sh "git push"
   sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
 end
-
-# assumes git pushed out
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
 task :betastore do
@@ -114,10 +97,17 @@ end
 
 # rebuild local bundled Gems, as well as the distributed Gemfile.lock
 
-desc "Gem bundles"
+desc "Regenerate development and production gem bundles"
 task :bundle do
-  sh "rm -rf bundle Gemfile.lock .bundle"
-  sh "bundle install --path bundle"
+  sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.development.lock #{HOME}/Gemfile.lock"
+  sh "mkdir -p #{HOME}/bundle"
+  sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
+  sh "cd #{HOME}; bundle install --path bundle"
+end
+
+desc "Hit the restart button for apache/passenger, pow servers"
+task :restart do
+  sh "touch #{HOME}/tmp/restart.txt"
 end
 
 desc "Make emacs tags files"
@@ -126,14 +116,7 @@ task :etags do
   sh "xctags -e #{files}"
 end
 
-
-desc "Hit the restart button"
-task :restart do
-  sh "touch #{HOME}/tmp/restart.txt"
-end
-
-
-defaults = [:spec]
+defaults = [:restart, :spec]
 defaults.push :etags   if dev_host
 
 task :default => defaults

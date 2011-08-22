@@ -76,13 +76,17 @@
       The required number of pools is specified in the Storage Master service
       configuration file
 
-      %code config.yml
+      %code #{ENV['DAITSS_CONFIG']}
 
-      (found in the root of the Storage Master installation directory) using the
+      using the
 
       %code required_pools
       
-      setting.  You must restart the storage service when that setting is changed.
+      setting in the
+
+      %code storemaster
+
+      section.  You must restart the storage service when that setting is changed.
   
     %p{ :class => "footer" }
       =@revision

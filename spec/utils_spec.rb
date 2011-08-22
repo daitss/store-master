@@ -91,5 +91,17 @@ describe StoreUtils do
     StoreUtils.commify('100000').should  == '100,000'    
   end
 
+  it "should correctly remove passwords (and only passwords) in db connection strings" do
+
+    StoreUtils.safen_connection_string('postgres://localhost/db').should == 'postgres://localhost/db'
+    StoreUtils.safen_connection_string('postgres://localhost:5432/db').should == 'postgres://localhost:5432/db'
+    StoreUtils.safen_connection_string('postgres://fischer@localhost/db').should == 'postgres://fischer@localhost/db'
+    StoreUtils.safen_connection_string('postgres://fischer@localhost:5432/db').should == 'postgres://fischer@localhost:5432/db'
+    StoreUtils.safen_connection_string('postgres://fischer:topsecret@localhost/db').should == 'postgres://fischer:********@localhost/db'
+    StoreUtils.safen_connection_string('postgres://fischer:topsecret@localhost:6432/db').should == 'postgres://fischer:********@localhost:6432/db'
+   
+  end
+
+
 
 end
