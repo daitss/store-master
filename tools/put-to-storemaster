@@ -1,18 +1,13 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-
 require 'optparse'
 require 'time'
 require 'net/http'
 require 'uri'
 require 'xml'
-require 'store-master'
-
 
 # Put a file to a store-master server, which will attempt to store it in multiple
 # pool servers. Run w/o arguments to get usage.
-    
 
 def ieid
   range = 26 ** 6
