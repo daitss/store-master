@@ -16,4 +16,11 @@ gem 'rack',                '>= 1.2.2'
 gem 'sys-filesystem',      '>= 0.3.2'
 gem 'haml',		   '>= 3.1.0'
 
+# development
+
+gem 'rake'
+gem 'rcov'
+gem 'cucumber'
+gem 'rspec'
+
 

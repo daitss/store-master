@@ -46,7 +46,7 @@ code {
 }
 
 h1 {
-    font: italic normal 1.5em georgia, sans-serif;
+    font: italic normal 1.3em georgia, sans-serif;
     /* letter-spacing: 1px;  */
     margin: 1em 0 1em 0; 
     font-weight: bold;
@@ -54,7 +54,7 @@ h1 {
 }
 
 h2 {
-    font: italic normal 1.2em georgia, sans-serif;
+    font: italic normal 1.1em georgia, sans-serif;
     margin: 1em 0 1em 0; 
     font-weight: bold;
     color: #000;

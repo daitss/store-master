@@ -13,20 +13,6 @@ TMPDIR  = File.join(HOME, 'tmp')
 FILES   = FileList["#{LIBDIR}/**/*.rb", "views/**/*erb", "public/*",'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
-# require 'bundler/setup'
-
-# These days, bundle is called automatically, if a Gemfile exists, by a lot
-# of different libraries - rack and rspec among them.  Use the development
-# gemfile for those things run from this Rakefile.
-
-
-ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
-
-def dev_host
-  Socket.gethostname =~ /romeo-foxtrot/
-end
-
-
 
 def dev_host
   Socket.gethostname =~ /romeo-foxtrot/
@@ -101,7 +87,7 @@ desc "Regenerate development and production gem bundles"
 task :bundle do
   sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.development.lock #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
-  sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
+### sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
   sh "cd #{HOME}; bundle --gemfile Gemfile install --path bundle"
 end
 

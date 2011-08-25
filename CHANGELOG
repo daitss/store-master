@@ -1,5 +1,12 @@
+Version 1.3.3 - 2011-08-25
 
- * Added a development gemfile for bundle; testing against the Pow service (see .powrc).
+ * Reset bundle to most current gems
+
+ * Rakefile brought up-to-date on rspec/cucumber best practice.
+
+ * Added a development gemfile for bundle; testing against the Pow service (see .powrc).  
+
+ * Removed development gemfile; sigh.
 
  * Using rack common logger to log results of requests;
 
