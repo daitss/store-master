@@ -7,8 +7,11 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
 
 require 'datyl/reporter'
 require 'datyl/streams'
+require 'datyl/logger'
 require 'optparse'
 require 'store-master'
+
+include Datyl
 
 def setup config
   $0 = 'collect-fixities'

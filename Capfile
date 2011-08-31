@@ -18,6 +18,8 @@ set :use_sudo,     false
 set :user,         "daitss"
 set :group,        "daitss" 
 
+set :keep_releases, 5   # default is 5
+
 set :bundle_flags,        "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove the default --quiet
 set :bundle_without,      []
 
