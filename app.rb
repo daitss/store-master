@@ -16,12 +16,14 @@ include Datyl
 
 def get_config
   raise ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The VIRTUAL_HOSTNAME environment variable has not been set"                                               unless ENV['VIRTUAL_HOSTNAME']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
   raise ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
-  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, :storemaster)
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, ENV['VIRTUAL_HOSTNAME'])
 
   raise ConfigurationError, "The database connection string ('storemaster_db') was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.storemaster_db
+
   return config
 end
 
@@ -46,13 +48,14 @@ configure do
 
   ENV['TMPDIR'] = config.temp_directory if config.temp_directory
 
-  Logger.setup('StoreMaster', config.virtual_hostname)
+  Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
 
-  if config.log_syslog_facility
-    Logger.facility = config.log_syslog_facility
-  else
+  if not (config.log_filename or config.log_syslog_facility)
     Logger.stderr
   end
+
+  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Logger.filename = config.log_filename         if config.log_filename
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 

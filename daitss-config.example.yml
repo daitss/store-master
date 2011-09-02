@@ -1,5 +1,5 @@
 # This is an example of the DAITSS configuration file restricted to
-# the data necessary to run the xmlresolution service.
+# the data necessary to run the storemaster service.
 #
 # You must set up your web server to set the environment variable
 # DAITSS_CONFIG to point to a configuration file along these lines,
@@ -9,13 +9,22 @@
 # Please don't use tabs in this file.
 
 defaults:
+
      temp_directory:             /var/tmp
 
 database:
+
      storemaster_db:             postgres://storemaster:topsecret@localhost/storemaster_db
 
-storemaster:
-    virtual_hostname:            store-master.example.org
+# We normally name sections after the virtual hostname used by an
+# applcation (this is so one physical host can run multiple services
+# of the same kind).  An application's configuration code typically
+# checks the VIRTUAL_HOSTNAME environment variable to determine the
+# appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
+# the same place that the DAITTS_CONFIG environment is set.
+
+storemaster.example.org:
+
     log_syslog_facility:         LOG_LOCAL0
     log_database_queries:        false
     required_pools:              1
@@ -54,11 +63,6 @@ storemaster:
 # -------------------------------
 # If set, direct log information to this syslog facility (see
 # /etc/syslog.conf), otherwise log to STDERR.
-#
-# storemaster:virtual_hostname
-# ----------------------------
-# What hostname are we running the service under?  This is used as a
-# tag in the logs. Defaults to the hostname of the server
 #
 # storemaster:required_pools
 # --------------------------
