@@ -23,6 +23,14 @@ set :keep_releases, 5   # default is 5
 set :bundle_flags,        "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove the default --quiet
 set :bundle_without,      []
 
+# set :branch do
+#   default_tag = `git tag`.split("\n").last
+#   tag = Capistrano::CLI.ui.ask "Tag to deploy (make sure to push the tag first): [#{default_tag}] "
+#   tag = default_tag if tag.empty?
+#   tag
+# end
+
+
 def usage(*messages)
   STDERR.puts "Usage: cap deploy -S target=<host:filesystem>"  
   STDERR.puts messages.join("\n")

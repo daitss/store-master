@@ -26,8 +26,9 @@ database:
 storemaster.example.org:
 
     log_syslog_facility:         LOG_LOCAL0
+    log_filename:                /path/to/name/of/file.log
     log_database_queries:        false
-    required_pools:              1
+    required_pools:              2
 
 # defaults:temp_directory
 # -----------------------
@@ -62,9 +63,16 @@ storemaster.example.org:
 # storemaster:log_syslog_facility
 # -------------------------------
 # If set, direct log information to this syslog facility (see
-# /etc/syslog.conf), otherwise log to STDERR.
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# storemaster:log_filename
+# -------------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.
 #
 # storemaster:required_pools
 # --------------------------
-# How many pool servers are we required to connect to?  Defaults to 2. Use zero for
-# a 'stub server' for testing - in that case, nothing will actually be stored.
+# How many pool servers are we required to connect to?  Defaults to
+# 2. Use zero for a 'stub server' for testing - in that case, nothing
+# will actually be stored.
