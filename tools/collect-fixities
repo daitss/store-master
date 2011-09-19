@@ -11,29 +11,67 @@ require 'datyl/logger'
 require 'optparse'
 require 'store-master'
 
-include Datyl
+
+def get_config
+  raise StoreMaster::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+  
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'collect-fixities')
+
+
+  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'required_pools'].each do |options|
+    raise StoreMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
+  end
+
+  return config
+end
+
 
 def setup config
   $0 = 'collect-fixities'
-  Logger.setup('CollectFixities', config.server_address)
 
-  if config.syslog_facility
-    Logger.facility  = config.syslog_facility
-  else
-    Logger.stderr
+  ENV['TMPDIR'] = config.temp_directory
+
+  Datyl::Logger.setup('CollectFixities', config.server_address.gsub(/:.*/, ''))
+
+  Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.stderr     unless (config.log_filename or config.log_syslog_facility)
+
+  config.keys.sort.each do |option|
+
+    next unless [ 'fixity_expired_days', 'log_database_queries', 'pid_directory', 'temp_directory',
+                  'required_pools', 'server_address', 'daitss_db', 'storemaster_db' ].include? option
+
+    if option =~ /_db$/
+      Datyl::Logger.info "Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option])}"
+    else
+      Datyl::Logger.info "Configuration: #{option} =>  #{config[option]}"
+    end
   end
+
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
-    raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
+
+    if File.exists? pid_path
+      Datyl::Logger.warn "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"   
+      exit
+    end
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
-  # DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug)
-  Reporter.max_lines_to_write = 3000   # each report will have at most these lines, though everything will go to syslog
-  StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink
-  StoreMasterModel.setup_db(config.db_config_file, config.db_store_master_key)
-  Daitss.setup_db(config.db_config_file, config.db_daitss_key)
+  DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
+
+  Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
+  StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
+
+  StoreMasterModel.setup_db(config.storemaster_db)
+  Daitss.setup_db(config.daitss_db)
+
+
 end
 
 
@@ -48,7 +86,7 @@ end
 
 # MAIN:
 
-config = FixityUtils.parse_options(ARGV) or exit
+config = get_config()
 setup(config)
 
 begin
@@ -63,7 +101,7 @@ begin
 
   reports = []
 
-  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_copies, config.expiration_days, start_time).run.reports
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_pools, config.fixity_expired_days, start_time).run.reports
 
   # TODO: these turn out to be somewhat redundant, maybe put into their own script?
   #
@@ -84,8 +122,8 @@ rescue => e
   STDERR.puts lede
   e.backtrace.each { |line| STDERR.puts line }
 
-  Logger.err  lede
-  e.backtrace.each { |line| Logger.err line }
+  Datyl::Logger.err  lede
+  e.backtrace.each { |line| Datyl::Logger.err line }
 else
   teardown(config, pool_fixity_streams)
 end

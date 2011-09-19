@@ -10,11 +10,15 @@
 
 defaults:
 
-     temp_directory:             /var/tmp
+    fixity_expired_days:         60
+    fixity_stale_days:           45
+    temp_directory:              /var/daitss/tmp
+    required_pools:              2
 
 database:
 
-     storemaster_db:             postgres://storemaster:topsecret@localhost/storemaster_db
+    storemaster_db:              postgres://storemaster:topsecret@localhost/storemaster_db
+    daitss_db:                   postgres://daitss:topsecret@localhost/daitss_db
 
 # We normally name sections after the virtual hostname used by an
 # applcation (this is so one physical host can run multiple services
@@ -28,8 +32,23 @@ storemaster.example.org:
     log_syslog_facility:         LOG_LOCAL0
     log_filename:                /path/to/name/of/file.log
     log_database_queries:        false
-    required_pools:              2
 
+
+collect-fixities:
+
+    log_syslog_facility:         LOG_LOCAL0
+    log_filename:                /path/to/name/of/file.log
+    log_database_queries:        false
+    pid_directory:               /var/run/fixty
+    server_address:              storemaster.example.org:8080
+
+
+# defaults
+# ========
+#
+# These settings are required for two or more services and 
+# and scripts.
+#
 # defaults:temp_directory
 # -----------------------
 # Where should temporary files be created? This should be at least
@@ -37,6 +56,15 @@ storemaster.example.org:
 # headroom.  Defaults to system-defined temp directory (typically
 # /tmp/)
 #
+# defaults:required_pools
+# -----------------------
+# How many pool servers are we required to connect to?  Use zero for a
+# 'stub server' for testing - in that case, nothing will actually be
+# stored. Used by the storemaster web service and collect-fixities
+
+
+
+
 # database:storemaster_db
 # -----------------------
 # Required, the database connection string for storemaster database
@@ -54,11 +82,23 @@ storemaster.example.org:
 # retricted to the user running the service, or an appropriately
 # restricted group.
 #
+
+
+# storemaster
+# ===========
+# 
 # storemaster:log_database_queries
 # --------------------------------
 # Should we log database queries? defaults to false.  These generate
 # very large logs, so it's only recommended for troubleshooting and
 # learning.
+#
+# storemaster:log_filename
+# ------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.  log_filename should
+# be unique to this service.  If you want to share output from
+# multiple services to one file, use syslog.
 #
 # storemaster:log_syslog_facility
 # -------------------------------
@@ -66,13 +106,46 @@ storemaster.example.org:
 # /etc/syslog.conf). If neither log_filename nor log_syslog_facility
 # are set, log to STDERR.
 #
-# storemaster:log_filename
-# -------------------------------
-# If set, direct log information to this file. If neither log_filename
-# nor log_syslog_facility are set, log to STDERR.
+
+
+
+# collect-fixities
+# ================
+# The script collect-fixities retrieves fixity information from the
+# silo-pools via web service calls, then inserts events into the
+# daitss database.  Events are 'fixity success', 'fixity failure' and
+# 'integrity failure'.
 #
-# storemaster:required_pools
-# --------------------------
-# How many pool servers are we required to connect to?  Defaults to
-# 2. Use zero for a 'stub server' for testing - in that case, nothing
-# will actually be stored.
+#
+# collect-fixities:log_database_queries
+# -------------------------------------
+# Should we log database queries? defaults to false.  These generate
+# very large logs, so it's only recommended for troubleshooting and
+# learning.
+#
+# collect-fixities:log_filename
+# -----------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.  log_filename should
+# be unique to this service.  If you want to share output from
+# multiple services to one file, use syslog.
+#
+# collect-fixities:log_syslog_facility
+# ------------------------------------
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# collect-fixities:pid_directory
+# ------------------------------
+# If pid_directory is set, use it to write a lock file (named
+# disk-fixity.pid) so that there cannot be multiple copies of the
+# script running. If not present no locking will be done. At FDA
+# we use xymon to monitor our system, so the presence of the file
+# in the abscence of a process indicates an error
+#
+# collect-fixities:server_address
+# -------------------------------
+# The address of the storemaster webservice, including port,
+# that collect fixities is working against.
+# 
