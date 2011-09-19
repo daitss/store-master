@@ -18,8 +18,15 @@ require 'store-master/utils'
 
 module Daitss
 
-  def self.setup_db yaml_file, key
-    adapter = DataMapper.setup(:daitss, StoreUtils.connection_string(yaml_file, key))
+  # We support two different styles of configuration; either a
+  # yaml_file and a key into that file that yields a hash of
+  # information, or the direct connection string itself.
+
+  def self.setup_db *args
+
+    connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
+
+    adapter = DataMapper.setup(:daitss, connection_string)
     adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     DataMapper.finalize
     adapter.select('select 1 + 1')

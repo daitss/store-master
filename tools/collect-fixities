@@ -65,7 +65,7 @@ def setup config
 
   DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
-  Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
+  Datyl::Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
   StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
 
   StoreMasterModel.setup_db(config.storemaster_db)
@@ -92,7 +92,7 @@ setup(config)
 begin
   start_time = DateTime.now
 
-  Reporter.note "CollectFixities started at #{Time.now}"
+  Datyl::Reporter.note "CollectFixities started at #{Time.now}"
 
   # Get our data streams, some from web services, some from various databases
 
@@ -114,7 +114,7 @@ begin
 
   reports.each { |report| report.write if report.interesting? }
 
-  Reporter.note "CollectFixities finished at #{Time.now}"
+  Datyl::Reporter.note "CollectFixities finished at #{Time.now}"
 
 rescue => e
   lede = "#{e.class}: #{e.message} - backtrace follows:"
