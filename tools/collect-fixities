@@ -5,9 +5,10 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
 
+require 'datyl/config'
+require 'datyl/logger'
 require 'datyl/reporter'
 require 'datyl/streams'
-require 'datyl/logger'
 require 'optparse'
 require 'store-master'
 
@@ -21,7 +22,7 @@ def get_config
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'collect-fixities')
 
 
-  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'required_pools'].each do |options|
+  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'required_pools'].each do |option|
     raise StoreMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
   end
 
@@ -70,7 +71,6 @@ def setup config
 
   StoreMasterModel.setup_db(config.storemaster_db)
   Daitss.setup_db(config.daitss_db)
-
 
 end
 

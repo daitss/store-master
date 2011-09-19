@@ -37,9 +37,9 @@ module Analyzer
       @expiration_date = (DateTime.now - max_days).to_s
       @pool_fixity_streams  = pool_fixity_streams
 
-      @redundant_package_report = Reporter.new("Per-Pool Redundancy Report", "Multiple Copies Within A Pool")
-      @expired_fixity_report    = Reporter.new("Per-Pool Expiration Report", "Packages With Expired Fixities - Older Than #{max_days} Days")
-      @bad_status_report        = Reporter.new("Per-Pool Status Report", "Packages Currently Marked With Failed Fixity")
+      @redundant_package_report = Datyl::Reporter.new("Per-Pool Redundancy Report", "Multiple Copies Within A Pool")
+      @expired_fixity_report    = Datyl::Reporter.new("Per-Pool Expiration Report", "Packages With Expired Fixities - Older Than #{max_days} Days")
+      @bad_status_report        = Datyl::Reporter.new("Per-Pool Status Report", "Packages Currently Marked With Failed Fixity")
 
       @reports = [ @redundant_package_report, @expired_fixity_report, @bad_status_report ]
     end
@@ -87,8 +87,8 @@ module Analyzer
       @pool_fixity_streams  = pool_fixity_streams
       @required_copies      = required_copies
 
-      @report_wrong_number  = Reporter.new "Inter-Pool Copy Check", "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
-      @report_copy_mismatch = Reporter.new "Inter-Pool Fixity Check", "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
+      @report_wrong_number  = Datyl::Reporter.new "Inter-Pool Copy Check", "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
+      @report_copy_mismatch = Datyl::Reporter.new "Inter-Pool Fixity Check", "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
       @reports              = [ @report_wrong_number, @report_copy_mismatch ]
     end
 
@@ -142,8 +142,8 @@ module Analyzer
       @store_fixities    = Streams::FoldedStream.new(store_master_stream.rewind)
       @pool_fixities     = Streams::PoolMultiFixities.new(pool_fixity_streams)
 
-      @report_error_missing  = Reporter.new("Store-Master/Pools - Missing Packages", "Packages Recorded On The Store-Master, But Not Present In The Pools")
-      @report_warn_orphan    = Reporter.new("Store-Master/Pools - Unexpected Packages", "Packages Found In The Pools, But Not Recorded By The Store-Master")
+      @report_error_missing  = Datyl::Reporter.new("Store-Master/Pools - Missing Packages", "Packages Recorded On The Store-Master, But Not Present In The Pools")
+      @report_warn_orphan    = Datyl::Reporter.new("Store-Master/Pools - Unexpected Packages", "Packages Found In The Pools, But Not Recorded By The Store-Master")
 
       @reports = [ @report_error_missing, @report_warn_orphan ]
     end
@@ -179,7 +179,7 @@ module Analyzer
     def initialize store_master_stream, required_number
       @required_number     = required_number
       @store_master_stream = store_master_stream
-      @report_wrong_number = Reporter.new("Store-Master Copy Check", "Store-Master Didn't Record The Required #{required_number} #{FixityUtils.pluralize @required_number, 'Copy', 'Copies'}")
+      @report_wrong_number = Datyl::Reporter.new("Store-Master Copy Check", "Store-Master Didn't Record The Required #{required_number} #{FixityUtils.pluralize @required_number, 'Copy', 'Copies'}")
       @reports             = [ @report_wrong_number ]
     end
 
@@ -253,12 +253,12 @@ module Analyzer
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
-      @report_missing      = Reporter.new "Missing Packages", "Expected DAITSS Packages Were Not Found In Pools"
-      @report_orphaned     = Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
-      @report_integrity    = Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
-      @report_fixity       = Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
-      @report_expired      = Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Days Old"
-      @report_summary      = Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
+      @report_missing      = Datyl::Reporter.new "Missing Packages", "Expected DAITSS Packages Were Not Found In Pools"
+      @report_orphaned     = Datyl::Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
+      @report_integrity    = Datyl::Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
+      @report_fixity       = Datyl::Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
+      @report_expired      = Datyl::Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Days Old"
+      @report_summary      = Datyl::Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
       @reports             = [ @report_summary, @report_missing, @report_fixity, @report_integrity, @report_orphaned, @report_expired ]
     end
