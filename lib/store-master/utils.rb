@@ -119,7 +119,7 @@ module StoreUtils
 
     oops = "Database setup can't"
 
-    # This looks like excessive error checking, but configuration errors need a lot explanation for new users of DAITSS.
+    # This looks like excessive error checking, but configuration errors need a lot of explanation for new users of DAITSS.
 
     begin
       dict = YAML::load(File.open(yaml_file))
@@ -164,7 +164,7 @@ module StoreUtils
     userinfo, host_and_db = rest.split('@', 2)      # fischer:topsecret@example.org:5432/mydb => [ fischer:topsecret, example.org:5432/mydb ]
     return str unless host_and_db
 
-    user, pass = userinfo.split(':', 2)                 # fischer:topsecret => [ fischer, topsecret ]
+    user, pass = userinfo.split(':', 2)             # fischer:topsecret => [ fischer, topsecret ]
     return str unless pass
 
     return vendor + '://' + user + ':********@' + host_and_db
