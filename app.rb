@@ -23,7 +23,10 @@ def get_config
 
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, ENV['VIRTUAL_HOSTNAME'])
 
-  raise ConfigurationError, "The database connection string ('storemaster_db') was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.storemaster_db
+  
+  [ 'storemaster_db', 'required_pools' ].each do |option|
+    raise ConfigurationError, "The option '#{option}' was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config[option]
+  end
 
   return config
 end
@@ -41,7 +44,7 @@ configure do
 
   set :haml, :format => :html5, :escape_html => true
 
-  set :required_pools, (config.required_pools || 2)
+  set :required_pools, config.required_pools
 
   ENV['TMPDIR'] = config.temp_directory
 

@@ -86,6 +86,9 @@ collect-fixities:
 
 # storemaster
 # ===========
+#
+# The storemaster service requires variables database:storemaster_db,
+# defaults:required_pools, as well as the following:
 # 
 # storemaster:log_database_queries
 # --------------------------------
@@ -111,11 +114,11 @@ collect-fixities:
 
 # collect-fixities
 # ================
+#
 # The script collect-fixities retrieves fixity information from the
 # silo-pools via web service calls, then inserts events into the
-# daitss database.  Events are 'fixity success', 'fixity failure' and
-# 'integrity failure'.
-#
+# daitss database.  Events recorded are 'fixity success', 'fixity
+# failure' and 'integrity failure'.
 #
 # collect-fixities:log_database_queries
 # -------------------------------------
@@ -139,10 +142,10 @@ collect-fixities:
 # collect-fixities:pid_directory
 # ------------------------------
 # If pid_directory is set, use it to write a lock file (named
-# disk-fixity.pid) so that there cannot be multiple copies of the
-# script running. If not present no locking will be done. At FDA
-# we use xymon to monitor our system, so the presence of the file
-# in the abscence of a process indicates an error
+# collect-fixities.pid) so that there cannot be multiple copies of the
+# script running. If not present no locking will be done. At FDA we
+# use xymon to monitor our system, so the presence of the file in the
+# abscence of a process indicates an error
 #
 # collect-fixities:server_address
 # -------------------------------
