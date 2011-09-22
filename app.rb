@@ -46,8 +46,6 @@ configure do
 
   set :required_pools, config.required_pools
 
-  ENV['TMPDIR'] = config.temp_directory
-
   Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
 
   Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
@@ -67,7 +65,7 @@ configure do
     Logger.info "Requiring #{settings.required_pools} silo pools for storage."
   end
 
-  Logger.info "Using temp directory #{config.temp_directory}" if config.temp_directory
+  Logger.info "Using temp directory #{ENV['TMPDIR']}"
   Logger.info "Using database #{StoreUtils.safen_connection_string(config.storemaster_db)}"
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries

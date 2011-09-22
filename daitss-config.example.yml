@@ -12,7 +12,6 @@ defaults:
 
     fixity_expired_days:         60
     fixity_stale_days:           45
-    temp_directory:              /var/daitss/tmp
     required_pools:              2
 
 database:
@@ -48,13 +47,6 @@ collect-fixities:
 #
 # These settings are required for two or more services and 
 # and scripts.
-#
-# defaults:temp_directory
-# -----------------------
-# Where should temporary files be created? This should be at least
-# twice the size of the largest package you plan to ingest, plus
-# headroom.  Defaults to system-defined temp directory (typically
-# /tmp/)
 #
 # defaults:required_pools
 # -----------------------

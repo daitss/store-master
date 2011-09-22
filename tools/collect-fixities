@@ -33,8 +33,6 @@ end
 def setup config
   $0 = 'collect-fixities'
 
-  ENV['TMPDIR'] = config.temp_directory
-
   Datyl::Logger.setup('CollectFixities', config.server_address.gsub(/:.*/, ''))
 
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
@@ -43,7 +41,7 @@ def setup config
 
   config.keys.sort.each do |option|
 
-    next unless [ 'fixity_expired_days', 'log_database_queries', 'pid_directory', 'temp_directory',
+    next unless [ 'fixity_expired_days', 'log_database_queries', 'pid_directory',
                   'required_pools', 'server_address', 'daitss_db', 'storemaster_db' ].include? option
 
     if option =~ /_db$/
