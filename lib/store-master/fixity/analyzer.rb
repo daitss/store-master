@@ -296,9 +296,9 @@ module Analyzer
     def missing_issues url, pool_data_array
       messages = []
 
-      pool_data_array.each { |rec| messages.push(indent + rec.location + ' not present') if rec.sha1.nil? or rec.sha1.empty? or rec.md5.nil? or rec.md5.empty? }
+      pool_data_array.each { |rec| messages.push(indent + rec.location) if rec.sha1.nil? or rec.sha1.empty? or rec.md5.nil? or rec.md5.empty? }
       return if messages.empty?
-      return messages.unshift "#{url} #{messages.length > 1 ? 'has copies that are' : 'has a copy that is'} reported missing by the silo pool:"
+      return messages.unshift "#{url} missing #{messages.length} #{messages.length == 1 ? 'copy' : 'copies'}:"
     end
 
     def fixity_issues url, pool_data, daitss_data
