@@ -382,7 +382,6 @@ module Analyzer
         elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of orphan.
           score_card[:orphans] += 1
                     
-          @report_orphaned.warn "#{url}:"
           pool_data.each do |cp|            
             @report_orphaned.warn indent + cp.location
           end
@@ -435,7 +434,7 @@ module Analyzer
 
           if missing_issue_messages
             score_card[:missing] += 1
-            missing_issue_messages.each { |msg| @report_fixity.err(msg) }
+            missing_issue_messages.each { |msg| @report_integrity.err(msg) }
             event_counter.status = pkg.integrity_failure_event(missing_issue_messages.join)
             all_good = false
           end
