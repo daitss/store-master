@@ -65,7 +65,7 @@ configure do
     Logger.info "Requiring #{settings.required_pools} silo pools for storage."
   end
 
-  Logger.info "Using temp directory #{ENV['TMPDIR']}"
+  Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
   Logger.info "Using database #{StoreUtils.safen_connection_string(config.storemaster_db)}"
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries

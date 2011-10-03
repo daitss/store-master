@@ -216,13 +216,23 @@ module Analyzer
   # them,  and many 'fixity success' events are redundant and not recorded.
 
   class EventCounter
-    attr_reader :successes, :failures, :unchanged
+    attr_reader :successes, :failures, :unchanged, :double_counts
 
     def initialize
-      @failures   = 0
-      @successes  = 0
-      @unchanged  = 0
+      @failures      = 0    
+      @successes     = 0 
+      @unchanged     = 0
+      @double_counts = 0
     end
+
+
+    # Package#integrity_failure_event and Package#fixity_failure_event
+    # methods return true if a failure event was saved, false on DB error.
+    # Package#fixity_success_event additionally may return nil if the event
+    # already exists (and thus wasn't saved as a new even). 
+    #
+    # Our status= method keeps track of these.
+
 
     def status= res
         case res
@@ -232,6 +242,10 @@ module Analyzer
         else 
           raise "Unexpected value when recording event save status: #{res.inspect}"
         end
+    end
+
+    def double_count
+      @double_counts += 1
     end
 
     def total
@@ -253,11 +267,13 @@ module Analyzer
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
-      @report_missing      = Datyl::Reporter.new "Missing Packages", "Expected DAITSS Packages Were Not Found In Pools"
+      @report_missing      = Datyl::Reporter.new "Integrity Error", "Packages Missing From Silo Pools"
+      @report_integrity    = Datyl::Reporter.new "Integrity Error", "Incorrect Number Of Package Copies"
+
+      @report_fixity       = Datyl::Reporter.new "Fixity Error", "Package Copies With Fixity Errors"
+      @report_expired      = Datyl::Reporter.new "Fixity Expiration", "Package Copies With Fixities Over #{expiration_days} Days Old"
+
       @report_orphaned     = Datyl::Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
-      @report_integrity    = Datyl::Reporter.new "Integrity Errors", "Incorrect Number Of Package Copies"
-      @report_fixity       = Datyl::Reporter.new "Fixity Errors", "Package Copies With Fixity Errors"
-      @report_expired      = Datyl::Reporter.new "Fixity Expirations", "Package Copies With Fixities Over #{expiration_days} Days Old"
       @report_summary      = Datyl::Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
       @reports             = [ @report_summary, @report_missing, @report_fixity, @report_integrity, @report_orphaned, @report_expired ]
@@ -274,35 +290,32 @@ module Analyzer
     # http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000 #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://store-master.com/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
     # ...
 
-    def sha1_inconsistent? pool_data_array, daitss_data
-      pool_data_array.inconsistent? :sha1 or pool_data_array[0].sha1 != daitss_data.sha1
-    end
 
-    def size_inconsistent? pool_data_array, daitss_data
-      pool_data_array.inconsistent? :size or pool_data_array[0].size.to_i != daitss_data.size.to_i
-    end
-
-    def md5_inconsistent? pool_data_array, daitss_data
-      pool_data_array.inconsistent? :md5 or pool_data_array[0].md5 != daitss_data.md5
-    end
-
-    def fixity_issues pool_data, daitss_data
+    def missing_issues url, pool_data_array
       messages = []
 
-      if sha1_inconsistent? pool_data, daitss_data
-        messages.push "Expected SHA1 #{daitss_data.sha1}, have "  + pool_data.map { |rec| rec.sha1 + ' at ' + rec.location }.join(';  ')
-      end
+      pool_data_array.each { |rec| messages.push(rec.location + ' not present') if rec.sha1.nil? or rec.sha1.empty? or rec.md5.nil? or rec.md5.empty? }
+      return if messages.empty?
+      return messages.unshift "#{url} #{messages.length > 1 ? 'copies are' : 'copy is'} reported missing by the silo pool"
+    end
 
-      if md5_inconsistent? pool_data, daitss_data
-        messages.push "Expected MD5 #{daitss_data.md5}, have "    + pool_data.map { |rec| rec.md5 + ' at ' + rec.location }.join(';  ')
-      end
 
-      if size_inconsistent? pool_data, daitss_data
-        messages.push  "Expected size #{daitss_data.size} have " + pool_data.map { |rec| rec.size.to_s + ' at ' + rec.location }.join(';  ')
+    def fixity_issues url, pool_data, daitss_data
+      messages = []
+
+      pool_data.each do |rec|
+        next if rec.sha1.empty? and rec.md5.empty?   # this indicates a missing package; we'll report it in a separate integrity test
+
+        if rec.sha1 != daitss_data.sha1
+          messages.push "The DAITSS DB reports a SHA1 of #{daitss_data.sha1}, but silo at #{rec.location} reports #{rec.sha1}"
+        end
+        if rec.md5 != daitss_data.md5
+          messages.push "The DAITSS DB reports a MD5 of #{daitss_data.md5}, but silo at #{rec.location} reports #{rec.md5}"
+        end
       end
 
       return if messages.empty?
-      return messages
+      return messages.unshift "#{url} copy checksum mismatch"
     end
 
     def pluralize count, singular, plural
@@ -337,24 +350,29 @@ module Analyzer
         # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
 
 
+        Datyl::Logger.info url
+        Datyl::Logger.info pool_data.inspect
+        Datyl::Logger.info daitss_data.inspect
+
         next if too_recent(pool_data)
 
         if daitss_data
           pkg = Daitss::Package.lookup_from_url(url)
           if pkg.nil?
-            Logger.err "Can't find package information from DAITSS DB for #{url} - did it go away? (this is a temporary work-around for a known problem"
+            Datyl::Logger.err "Can't find package information from DAITSS DB for #{url} - did it go away? (this is a temporary work-around for a known problem"
             next
           end
         end
 
+
         score_card[:daitss_packages] += 1 if daitss_data
         
-        if not pool_data                         # missing package
+        if not pool_data             # but we do have daitss_data for this URL, so we have missing package
           score_card[:missing] += 1
           @report_missing.err  url
-          event_counter.status = pkg.integrity_failure_event "No copies found for #{url}"
+          event_counter.status = pkg.integrity_failure_event "No copies of #{url} were listed by any of the pools."
 
-        elsif not daitss_data                    # orphaned package - we have it on the pool.  TODO: check put_time on pool_data and skip if necessary (> @cutoff_time)
+        elsif not daitss_data        # but we do have pool_data for this URL, so we have some sort of orphan.
           score_card[:orphans] += 1
           @report_orphaned.warn pool_data.map{ |cpy| cpy.location }.join(', ')
 
@@ -364,25 +382,45 @@ module Analyzer
 
           case pool_data.length <=> @required_copies              # integrity error
           when -1
-            message = "Too few copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
+            message = "Too few copies available for #{url} - we only have " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
             event_counter.status = pkg.integrity_failure_event message
             score_card[:wrong_number] += 1
             all_good = false
           when +1
-            message = "Too many copies available for #{url} - " + pool_data.map{ |rec| rec.location}.join(', ')
+            message = "Too many copies available for #{url} - we have " + pool_data.map{ |rec| rec.location}.join(', ')
             @report_integrity.err message
             event_counter.status = pkg.integrity_failure_event message
             score_card[:wrong_number] += 1
             all_good = false
           end
 
-          if messages = fixity_issues(pool_data, daitss_data)    # fixity error
+          # this version of missing means that the silo reported the 
+
+          missing_issue_messages = missing_issues(url, pool_data)
+          fixity_issue_messages  = fixity_issues(url, pool_data, daitss_data) 
+
+          if fixity_issue_messages
             score_card[:fixity_failures] += 1
-            messages.each { |msg| @report_fixity.err url + ': ' + msg }
-            event_counter.status = pkg.fixity_failure_event messages.join(' - ')
+            fixity_issue_messages.each { |msg| @report_fixity.err(msg) }
+            event_counter.status = pkg.fixity_failure_event(fixity_issue_messages.join('; '))
             all_good = false
           end
+
+          if missing_issue_messages
+            score_card[:missing] += 1
+            missing_issue_messages.each { |msg| @report_fixity.err(msg) }
+            event_counter.status = pkg.integrity_failure_event(missing_issue_messages.join('; '))
+            all_good = false
+          end
+
+          # we're using event_counter to give us total number of packages; in the following
+          # case we'd be double counting, so keep track of it
+
+          if missing_issue_messages and fixity_issue_messages
+            event_counter.double_count
+          end
+
 
           if all_good
             score_card[:fixity_successes] += 1
@@ -431,30 +469,52 @@ module Analyzer
       #     1 package had an expired fixity
       #     1 unexpected package (orphan?) in silo pools
       #
-      # Details Follow:
+
       # ...
 
-      len = StoreUtils.commify(score_card.values.max).length
 
-      ### TODO: compare against Lydia's SQL
+      len = StoreUtils.commify(score_card.values.max).length
 
       @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), @cutoff_time.strftime('%F %T'))
       @report_summary.warn sprintf("%#{len}s of these records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
       @report_summary.warn
       @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
-      @report_summary.warn sprintf("%#{len}s missing", StoreUtils.commify(score_card[:missing]))
+      @report_summary.warn sprintf("%#{len}s had missing copies", StoreUtils.commify(score_card[:missing]))
       @report_summary.warn sprintf("%#{len}s incorrect #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))
       @report_summary.warn sprintf("%#{len}s with the wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
       @report_summary.warn '-' * len
-      @report_summary.warn sprintf("%#{len}s total events, %s new, %s failed to be recorded", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged), StoreUtils.commify(event_counter.failures))
+      @report_summary.warn sprintf("%#{len}s total events, %s new", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged))
+
       @report_summary.warn
       @report_summary.warn 'Additionally:'
       @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
       @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
-      @report_summary.warn
-      @report_summary.warn 'Details Follow:' if anything_interesting?(@reports - [ @report_summary ])
 
-      @reports.each { |report| report.done }
+      if event_counter.failures > 0      
+        n = event_counter.failures
+        @report_summary.err "There #{n == 1 ? 'was one failure' : sprintf('were %d failures', n) } writing to the DAITSS DB"
+      end
+
+      if event_counter.double_counts > 0
+        n = event_counter.double_counts
+        @report_summary.warn "Note that there were multiple events recorded for some packages (this can"
+        @report_summary.warn "happen when a package has one missing copy and another failing a fixity check)."
+        if n == 1
+          @report_summary.warn "There was one such double count."
+        else
+          @report_summary.warn "There were #{n} such doublle counts."
+        end      
+      end
+
+
+
+      # Note that this run method returns self, which has all of the
+      # reports on it; while the reports info/warn/err messages have
+      # already been sent to the log, the calling program may very
+      # well write all of them, in the order the reports were stored
+      # on @reports above - @report_summary is first.
+
+
       self
     end
 

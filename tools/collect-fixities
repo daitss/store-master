@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-# -*- mode: ruby; -*-
 
-# TODO:  print out all configuration information in log
+# TODO:  print out configuration information in log
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
 
@@ -44,11 +43,7 @@ def setup config
     next unless [ 'fixity_expired_days', 'log_database_queries', 'pid_directory',
                   'required_pools', 'server_address', 'daitss_db', 'storemaster_db' ].include? option
 
-    if option =~ /_db$/
-      Datyl::Logger.info "Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option])}"
-    else
-      Datyl::Logger.info "Configuration: #{option} =>  #{config[option]}"
-    end
+    Datyl::Logger.info "Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option].to_s)}"
   end
 
 
