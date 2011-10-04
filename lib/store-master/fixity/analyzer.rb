@@ -356,9 +356,9 @@ module Analyzer
         # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
 
 
-        Datyl::Logger.info url
-        Datyl::Logger.info pool_data.inspect
-        Datyl::Logger.info daitss_data.inspect
+        # # Datyl::Logger.info url
+        # # Datyl::Logger.info pool_data.inspect
+        # # Datyl::Logger.info daitss_data.inspect
 
         next if too_recent(pool_data)
 
