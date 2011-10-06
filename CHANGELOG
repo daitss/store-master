@@ -1,3 +1,19 @@
+Version 1.3.5 - 2011-10-06
+
+ * Refreshed bundler's Gemfile.lock to pull in new datyl code, removed Gemfile.development
+
+ * Better configuration setup for web service;  TMPFILE now explicitly set from environment
+
+ * collect-fixities section documented in example daitss-config.example.yaml
+
+ * collect-fixities logging/reports strategy documented
+
+ * datyl namespace issues corrected
+
+ * collect-fixities now collects missing files that are explicitly returned by the silo web service reports
+
+ * reformat collect-fixities logs and reports, using 'Fixity Errors:' and 'Integrity Errors:' consistently
+
 
 Version 1.3.4 - 2011-09-14
 
