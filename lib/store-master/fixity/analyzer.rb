@@ -267,10 +267,10 @@ module Analyzer
       @required_copies     = required_copies
       @expiration_days     = expiration_days
 
-      @report_integrity    = Datyl::Reporter.new "Integrity Error", "Package Copies Missing From Silo Pools"
-      @report_too_many     = Datyl::Reporter.new "Integrity Error", "Too Many Copies Of Packages"
-      @report_fixity       = Datyl::Reporter.new "Fixity Error", "Package Copies With Fixity Errors"
-      @report_expired      = Datyl::Reporter.new "Fixity Expiration", "Package Copies With Fixities Over #{expiration_days} Days Old"
+      @report_integrity    = Datyl::Reporter.new "Integrity Errors",    "Package Copies Missing From Silo Pools"
+      @report_too_many     = Datyl::Reporter.new "Integrity Errors",    "Too Many Copies Of Packages"
+      @report_fixity       = Datyl::Reporter.new "Fixity Errors",       "Package Copies With Fixity Errors"
+      @report_expired      = Datyl::Reporter.new "Fixity Expirations",  "Package Copies With Fixities Over #{expiration_days} Days Old"
       @report_orphaned     = Datyl::Reporter.new "Unexpected Packages", "Pools Contain Packages Not Listed By DAITSS"
       @report_summary      = Datyl::Reporter.new "Summary of DAITSS Package Fixity Checks", "Requiring #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} Per Package"
 
@@ -376,14 +376,14 @@ module Analyzer
         if not pool_data             # ..but we do have daitss_data for this URL, so we have a missing package
           score_card[:missing] += 1
 
-          @report_missing.err  "#{url}: no copies where listed by any of the pools."
+          @report_integrity.err  "#{url}: no copies where listed by any of the pools."
           event_counter.status = pkg.integrity_failure_event "No copies were listed by any of the pools."            
 
         elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of orphan.
           score_card[:orphans] += 1
                     
           pool_data.each do |cp|            
-            @report_orphaned.warn indent + cp.location
+            @report_orphaned.warn cp.location
           end
 
         else                         # .. we have records for both
@@ -396,23 +396,20 @@ module Analyzer
           when -1
 
             messages =  [ "#{url} has too few copies, only:" ]
-            @pool_data.each { |rec| messages.push indent + rec.locatation }
+            @pool_data.each { |rec| messages.push indent + rec.location }
 
             messages.each { |msg| @report_integrity.err msg }
 
-            @report_integrity.err message
             event_counter.status = pkg.integrity_failure_event messages.join
 
             score_card[:missing] += 1
             all_good = false
 
           when +1
-            messages =  [ "#{url} has too many copies, only:" ]
-            @pool_data.each { |rec| messages.push indent + rec.locatation }
+            messages =  [ "#{url} has too many copies:" ]
+            @pool_data.each { |rec| messages.push indent + rec.location }
 
-            messages.each { |msg| @report_integrity.err msg }
-
-            @report_too_many.err messages.join
+            messages.each { |msg| @report_too_many.err msg }
 
             event_counter.status = pkg.integrity_failure_event messages.join
 
@@ -425,9 +422,11 @@ module Analyzer
           missing_issue_messages = missing_issues(url, pool_data)
           fixity_issue_messages  = fixity_issues(url, pool_data, daitss_data) 
 
+
           if fixity_issue_messages
             score_card[:fixity_failures] += 1
             fixity_issue_messages.each { |msg| @report_fixity.err(msg) }
+            @report_fixity.warn
             event_counter.status = pkg.fixity_failure_event(fixity_issue_messages.join)
             all_good = false
           end
@@ -435,6 +434,7 @@ module Analyzer
           if missing_issue_messages
             score_card[:missing] += 1
             missing_issue_messages.each { |msg| @report_integrity.err(msg) }
+            @report_integrity.warn
             event_counter.status = pkg.integrity_failure_event(missing_issue_messages.join)
             all_good = false
           end
@@ -466,7 +466,7 @@ module Analyzer
         pool_data.each do |fix|
           if fix.fixity_time < expiration_date
             score_card[:expired_fixities] += 1
-            @report_expired.warn '#{url} at ' + fix.location + ' last checked at ' + fix.fixity_time
+            @report_expired.warn fix.location + " last checked at " + fix.fixity_time
           end
         end
 
@@ -485,7 +485,7 @@ module Analyzer
       #     1 missing package
       #     0 packages with wrong number of copies in pools
       # -----
-      # 1,242 events, 2 new, 0 failed to be updated
+      # 1,242 events, 2 new
       #
       # Additionally:
       #
@@ -528,8 +528,6 @@ module Analyzer
           @report_summary.warn "There were #{n} such doublle counts."
         end      
       end
-
-
 
       # Note that this run method returns self, which has all of the
       # reports on it; while the reports info/warn/err messages have

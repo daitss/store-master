@@ -1,0 +1,76 @@
+CollectFixities logging is as follows, with potentially long lines:
+
+[1]  ERROR  Fixity Errors: <storemaster url> checksum errors:  DAITSS DB has MD5 of <...>, but silo at <silo url> reports <...>  DAITSS DB has SHA1 of <...>, but silo at <silo url> reports <...>
+[2]  ERROR  Integrity Errors: <storemaster url> has too few copies, only: <silo url>
+     ERROR  Integrity Errors: <storemaster url> no copies where listed by any of the pools.
+     ERROR  Integrity Errors: <storemaster url> missing <1> copy: <silo url> ..
+[3]  ERROR  Integrity Errors: <storemaster url> has too many copies: <silo url> <silo url> ...
+[4]  WARN   Unexpected Packages: <silo url>
+[5]  WARN   Fixity Expirations: <silo url> last checked at <time>
+
+
+A full log entry for the above includes a prefix, as in:
+
+    Oct  5 12:43:24 fclnx30 CollectFixities[18915]: <phrase from above>
+
+The emailed Collect Fixity Report has same data as above, lightly
+formatted to be more readable. I've cross referenced the sections to
+their respective log entries as above. Note that sections are only
+mailed when there is a problem present.
+
+<storemaster url> is the URL that the DAITSS DB records, <silo url> is
+that reported by the silo.
+
+The overall summary for the CollectFixities reports precedes
+the following, and is not shown.
+
+
+[1]  
+Fixity Errors: Package Copies With Fixity Errors
+------------------------------------------------
+<storemaster url> checksum errors:
+   DAITSS DB has MD5 of <...>, but silo at <silo url> reports <...>  
+   DAITSS DB has SHA1 of <...>, but silo at <silo url> reports <...>
+
+<storemaster url> checksum errors
+   DAITSS DB has MD5 of <...>, but silo at <silo url> reports <...>  
+   DAITSS DB has SHA1 of <...>, but silo at <silo url> reports <...>
+
+
+[2] 
+Integrity Errors: Package Copies Missing From Silo Pools
+--------------------------------------------------------  
+<storemaster url> has too few copies, only:
+    <silo url>
+    <silo url>
+<storemaster url> no copies where listed by any of the pools.
+<storemaster url> missing <X> copies:
+    <silo url>
+    <silo url>
+
+
+[3] 
+Integrity Errors: Too Many Copies Of Packages
+---------------------------------------------
+<storemaster url> has too many copies: 
+    <silo url> 
+    <silo url> ...
+
+
+[4] 
+Unexpected Packages: Pools Contain Packages Not Listed By DAITSS
+----------------------------------------------------------------
+<silo url>
+...
+<silo url>
+
+
+[5]
+Fixity Expirations: Package Copies With Fixities Over <N> Days Old
+------------------------------------------------------------------
+<silo url> last checked at <time>
+<silo url> last checked at <time>
+<silo url> last checked at <time>
+
+
+
