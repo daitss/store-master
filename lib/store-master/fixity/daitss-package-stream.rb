@@ -14,16 +14,13 @@ module Streams
   # 'http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000' #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
   # 'http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000' #<Struct::DataMapper ieid="EZYVXE2TV_J9MW69", url="http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000", md5="0959a55d2b6b46c4080bc85b10b87947", sha1="05fc20aaebad2708b91ad4c0d372ca733da7417a", size=2763468800>
   #  ...
-  #
 
   class DaitssPackageStream
     
     include CommonStreamMethods
 
-    # TODO: we might be better off maintaining an index into @ieids and keeping it around, rather than shifting
+    # TODO: we might be better off maintaining an index into @buff and keeping it around, rather than shifting
     # materials off and having to re-create it with another database hit.  We'll see after how it's used in practice.
-
-    CHUNK_SIZE = 2000
 
     def initialize options = {}
       @before = options[:before] || DateTime.now
@@ -41,16 +38,11 @@ module Streams
 
     def eos?
       return false if ungetting?
-      return (@buff.empty? and @ieids.empty?)
+      return @buff.empty?
     end
     
     def read 
       return if eos?
-
-      if @buff.empty?
-        @buff = Daitss::Package.package_copies @before, @ieids.shift(CHUNK_SIZE)
-      end
-
       return if @buff.empty?
 
       datum = @buff.shift
@@ -60,10 +52,11 @@ module Streams
     private 
 
     def setup
-      @ieids  = Daitss::Package.package_copies_ids @before
-      @buff   = []
+      @buff  = Daitss::Package.package_copies @before
     end
 
   end # of class DaitssPackageStream
 
 end # of module Streams
+
+

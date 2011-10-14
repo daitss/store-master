@@ -30,28 +30,14 @@ module StoreMasterModel
     #  name   | character varying(50) | not null
 
 
-    def self.package_copies_ids before = nil
+    def self.package_copies  before = nil
       before ||= DateTime.now
-      sql = "SELECT packages.id "                     +
-              "FROM packages, copies "                +
-             "WHERE packages.extant "                 +
-               "AND packages.id = copies.package_id " +
-               "AND copies.datetime < '#{before}' "   +
-          "ORDER BY packages.name"
-
-      # repository(:store_master).adapter.select(sql)
-      repository(:default).adapter.select(sql)
-    end
-
-    def self.package_copies ids
-      return [] if not ids or ids.empty?
       sql = "SELECT packages.name, copies.store_location, packages.ieid " +
               "FROM packages, copies "                                    +
              "WHERE packages.id = copies.package_id "                     +
-               "AND packages.id in ('" + ids.join("', '")  + "') "        +
+               "AND copies.datetime < '#{before}' "                       +
           "ORDER BY packages.name"
 
-      # repository(:store_master).adapter.select(sql)
       repository(:default).adapter.select(sql)
     end
 
@@ -68,13 +54,10 @@ module Streams
   # E20110210_ROIUIC.000   #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">
   # ...
 
-  # TODO: keep the @ids as an array without shifting, keeping an offset, so we can reset it to zero on rewind.
 
   class StoreMasterPackageStream
 
     include CommonStreamMethods
-
-    CHUNK_SIZE = 5000
 
     def initialize before = nil
       @before = before || DateTime.now
@@ -87,8 +70,7 @@ module Streams
     end
 
     def setup
-      @ids    = StoreMasterModel::Package.package_copies_ids @before
-      @buff   = []
+      @buff  = StoreMasterModel::Package.package_copies @before
     end
 
     def to_s
@@ -97,16 +79,11 @@ module Streams
 
     def eos?
       return false if ungetting?
-      return (@ids.empty? and @buff.empty?)
+      return @buff.empty?
     end
 
     def read
       return if eos?
-
-      if @buff.empty?
-         @buff = StoreMasterModel::Package.package_copies @ids.shift(CHUNK_SIZE)
-      end
-
       return if @buff.empty?
       
       datum = @buff.shift

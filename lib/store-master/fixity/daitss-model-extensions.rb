@@ -27,30 +27,15 @@ module Daitss
 
   class Package
 
-    # Provide a list of all of the package ids sorted by the copy URL.
-    # There will be on the order of 10^6 of these
-
-    def self.package_copies_ids  before
-      sql = "SELECT packages.id "                    +
-              "FROM packages, aips, copies "         +
-             "WHERE packages.id = aips.package_id "  +
-               "AND aips.id = copies.aip_id "        +
-               "AND copies.timestamp < '#{before}' " +
-          "ORDER BY copies.url"
-
-      repository(:daitss).adapter.select(sql)
-    end
 
     # provide a list of data mapper records for selected IEIDs  ordered by the copy URL
 
-    def self.package_copies  before, ieids
-      return [] if ieids.empty?
+    def self.package_copies  before
       sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
               "FROM packages, aips, copies "                                                +
              "WHERE packages.id = aips.package_id "                                         +
                "AND copies.timestamp < '#{before}' "                                        +
                "AND aips.id = copies.aip_id "                                               +
-               "AND packages.id in ('#{ieids.join("', '")}') "                              +
           "ORDER BY copies.url"
 
       repository(:daitss).adapter.select(sql)
