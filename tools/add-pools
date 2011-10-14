@@ -9,7 +9,7 @@ require 'ostruct'
 require 'uri'
 
 def parse_command_line args
-  conf = OpenStruct.new(:file => nil, :key => nil)
+  conf = OpenStruct.new(:file => nil, :key => nil, :db_string => nil)
   opts = OptionParser.new do |opts|
     opts.on("--file DB_CONFIG_FILE",  String, "The database configuration filename for this service") do |filename|
       conf.file = filename
@@ -17,12 +17,16 @@ def parse_command_line args
     opts.on("--key DB_CONFIG_KEY",  String, "The key in the database configuration file for this service") do |key|
       conf.key = key
     end
+    opts.on("--db-string DB_STRING",  String, "Connection string for database (alternative to specifying --file and --key)") do |string|
+      conf.db_string = string
+      conf.file = ""
+    end
   end
   opts.parse!(args)
-  raise "No key to the DB configuration file provided"        unless conf.key
-  raise "No filename for the DB configuration file provided"  unless conf.file
-  raise "Configuration yaml file #{conf.file} not found"      unless File.exists? conf.file
-  raise "Configuration yaml file #{conf.file} not readable"   unless File.readable? conf.file
+  raise "No key to the DB configuration file provided"        unless conf.key or conf.db_string
+  raise "No filename for the DB configuration file provided"  unless conf.file or conf.db_string
+  raise "Configuration yaml file #{conf.file} not found"      unless File.exists?(conf.file) or conf.db_string
+  raise "Configuration yaml file #{conf.file} not readable"   unless File.readable?(conf.file) or conf.db_string
 rescue => e
   STDERR.puts e, opts
   exit
@@ -33,7 +37,11 @@ end
 
 conf = parse_command_line ARGV
 
-StoreMasterModel.setup_db(conf.file, conf.key)
+if conf.db_string
+  StoreMasterModel.setup_db(conf.db_string)
+else
+  StoreMasterModel.setup_db(conf.file, conf.key)
+end
 
 
 ARGV.each do |pool_server|
