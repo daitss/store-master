@@ -15,22 +15,22 @@
       &rArr; Pools
 
     %p
-      DAITSS sends packages to a storage service; the storage service
-      forwards the packages off to one or more pool services. This
-      page lets you specify which pool servers should be used by this
-      storage service, and how the pool servers should be contacted.
+      DAITSS sends packages to a storage master service; the storage master then
+      forwards the packages off to one or more silo pool services. This
+      page lets you specify which silo pool servers should be used by this
+      storage master service, and how the silo pool servers should be contacted.
 
     %p
-      Click on the pool's name to change the settings this storage
-      service will use when contacting the pool server.
+      Click on the silo pool's name to change the settings this storage master
+      will use when contacting the silo pool server.
 
     %p
 
       %table
         %thead
           %tr        
-            %th Pool Name
-            %th Use this Pool?
+            %th Silo Pool Name
+            %th Use this Silo Pool?
             %th Preference
             %th Access
         %tbody
@@ -84,9 +84,17 @@
       
       setting in the
 
-      %code storemaster
+      %code storage master
 
-      section.  You must restart the storage service when that setting is changed.
+      or
+
+      %code defaults
+
+      section.  You must restart the storage service when the
+
+      %code required_pools
+      
+      setting is changed.
   
     %p{ :class => "footer" }
       =@revision
