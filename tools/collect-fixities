@@ -21,11 +21,15 @@ def get_config
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'collect-fixities')
 
 
-  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'required_pools'].each do |option|
+  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'fixity_stale_days', 'required_pools'].each do |option|
     raise StoreMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
   end
 
   return config
+
+rescue => e
+  STDERR.puts e.message
+  exit 1
 end
 
 
@@ -40,7 +44,7 @@ def setup config
 
   config.keys.sort.each do |option|
 
-    next unless [ 'fixity_expired_days', 'log_database_queries', 'pid_directory',
+    next unless [ 'fixity_expired_days', 'fixity_stale_days', 'log_database_queries', 'pid_directory',
                   'required_pools', 'server_address', 'daitss_db', 'storemaster_db' ].include? option
 
     Datyl::Logger.info "Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option].to_s)}"
@@ -94,7 +98,7 @@ begin
 
   reports = []
 
-  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_pools, config.fixity_expired_days, start_time).run.reports
+  reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_pools, config.fixity_expired_days, config.fixity_stale_days, start_time).run.reports
 
   # TODO: these turn out to be somewhat redundant, maybe put into their own script?
   #

@@ -258,7 +258,7 @@ module Analyzer
 
     attr_reader :reports
 
-    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, no_later_than
+    def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, stale_days, no_later_than
       
       @pool_fixity_stream    = Streams::StoreUrlMultiFixities.new(pool_fixity_streams)
       @daitss_fixity_stream  = daitss_fixity_stream
@@ -380,8 +380,10 @@ module Analyzer
           event_counter.status = pkg.integrity_failure_event "No copies were listed by any of the pools."            
 
         elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of orphan.
-          score_card[:orphans] += 1
-                    
+
+          #### double check if this has appeared....
+
+          score_card[:orphans] += 1                             
           pool_data.each do |cp|            
             @report_orphaned.warn cp.location
           end
