@@ -5,13 +5,13 @@
     %link{ :rel => "stylesheet", :href => "/site.css",  :type => "text/css"  }
     %link{ :rel => "shortcut icon",  :href => "/favicon.ico" }
 
-    %title Search for Packages by Name or IEID on #{@service_name}
+    %title Search for Packages by IEID on #{@service_name}
 
   %body
     %h1
       %a{ :href => '/' }
         =@service_name
-      &rArr; Search for Packages by Name or IEID
+      &rArr; Search for Packages by IEID
 
     %form{ :class => "search", :method => "get", :action => "/search" }
       %label
@@ -21,7 +21,7 @@
     %table
       %thead
         %tr
-          %th Name
+          %th IEID
           %th Location
           %th Date
       %tbody
