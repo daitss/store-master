@@ -296,7 +296,8 @@ module Analyzer
     def missing_issues url, pool_data_array
       messages = []
 
-      pool_data_array.each { |rec| messages.push(indent + rec.location) if rec.sha1.nil? or rec.sha1.empty? or rec.md5.nil? or rec.md5.empty? }
+      pool_data_array.each { |rec| messages.push(indent + rec.location) if rec.status == "missing" }
+
       return if messages.empty?
       return messages.unshift "#{url} missing #{messages.length} #{messages.length == 1 ? 'copy' : 'copies'}:"
     end
@@ -305,7 +306,7 @@ module Analyzer
       messages = []
 
       pool_data.each do |rec|
-        next if rec.sha1.empty? and rec.md5.empty?   # this indicates a missing package; we'll report it in a separate integrity test
+        next if rec.status == "missing"   # this indicates a missing package; we'll report it as an integrity error elsewhere
 
         if rec.sha1 != daitss_data.sha1
           messages.push indent + "DAITSS DB has SHA1 of #{daitss_data.sha1}, but silo at #{rec.location} reports #{rec.sha1}"
@@ -321,7 +322,6 @@ module Analyzer
     end
 
 
-
     def pluralize count, singular, plural
       return singular if count == 1
       return plural
@@ -332,16 +332,6 @@ module Analyzer
       return false
     end
 
-    def too_recent pool_data
-      return false unless pool_data
-      no_later = @cutoff_time.to_utc
-      pool_data.each do |pool_record|
-        return true if pool_record.put_time > no_later
-      end
-      return false
-    end
-
-
 
     def run
       score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0, :daitss_packages => 0 }
@@ -349,108 +339,115 @@ module Analyzer
 
       (@pool_fixity_stream <=> @daitss_fixity_stream).each do |url, pool_data, daitss_data|
 
-        # for example:
+        # for example
         #
         # url:          http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000
-        # pool_data:    [ #<struct Struct::PoolFixityRecord location="http...", sha1="4ab..", md5="0d7...", size="131..", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok"> .. more structs .. ]
+        # pool_data:    [ #<struct Struct::PoolFixityRecord location="http...", sha1="4ab..", md5="0d7...", size="131..", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok"> .. more structs .. ]>,
         # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
+        
 
-
-        # # Datyl::Logger.info url
-        # # Datyl::Logger.info pool_data.inspect
-        # # Datyl::Logger.info daitss_data.inspect
-
-        next if too_recent(pool_data)
-
+        Datyl::Logger.info url + ' =>  ' + pool_data.inspect  + ' ::: ' + daitss_data.inspect
+          
         if daitss_data
           pkg = Daitss::Package.lookup_from_url(url)
           if pkg.nil?
-            Datyl::Logger.err "#{url} isn't in DAITSS DB - did it go away? (this is a temporary work-around for a known problem)"
+            Datyl::Logger.info "#{url} is no longer in the DAITSS DB; it was deleted by DAITSS during fixity record reconciliation."
             next
           end
+          score_card[:daitss_packages] += 1
         end
         
-
-        score_card[:daitss_packages] += 1 if daitss_data
         
-        if not pool_data             # ..but we do have daitss_data for this URL, so we have a missing package
-          score_card[:missing] += 1
+        if not pool_data             # ..but we do have daitss_data for this URL, so we have a missing package of which the silo is unaware
 
+          ### next if not pkg = current_pkg?     Daitss::Package.lookup_from_url(url)
+
+          score_card[:missing] += 1
           @report_integrity.err  "#{url}: no copies where listed by any of the pools."
           event_counter.status = pkg.integrity_failure_event "No copies were listed by any of the pools."            
 
-        elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of orphan.
-
-          #### double check if this has appeared....
+        elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of 'orphan'.
 
           score_card[:orphans] += 1                             
-          pool_data.each do |cp|            
-            @report_orphaned.warn cp.location
-          end
+          @report_orphaned.warn *(pool_data.map { |cp| cp.location })
 
         else                         # .. we have records for both
 
           score_card[:checked] += 1
           all_good = true
 
-          case pool_data.length <=> @required_copies              # integrity error
-            
-          when -1
+          case             
+          when pool_data.length < @required_copies
 
-            messages =  [ "#{url} has too few copies, only:" ]
-            @pool_data.each { |rec| messages.push indent + rec.location }
+            ### next if not pkg = current_pkg?
 
-            messages.each { |msg| @report_integrity.err msg }
+            messages =  [ "#{url} has too few copies, only:" ] + pool_data.map { |rec| indent + rec.location }
 
+            @report_integrity.err *messages
             event_counter.status = pkg.integrity_failure_event messages.join
 
             score_card[:missing] += 1
             all_good = false
 
-          when +1
-            messages =  [ "#{url} has too many copies:" ]
-            @pool_data.each { |rec| messages.push indent + rec.location }
+          when pool_data.length > @required_copies
 
-            messages.each { |msg| @report_too_many.err msg }
+            messages =  [ "#{url} has too many copies:" ] + pool_data.map { |rec| indent + rec.location }
 
+            @report_too_many.err *messages
             event_counter.status = pkg.integrity_failure_event messages.join
 
             score_card[:wrong_number] += 1
             all_good = false
           end
 
-          # this version of missing means that the silo reported the 
+          # Pools may sometimes be aware of missing packages and directly report them:
 
           missing_issue_messages = missing_issues(url, pool_data)
+
+          # Compare fixities:
+
           fixity_issue_messages  = fixity_issues(url, pool_data, daitss_data) 
 
-
           if fixity_issue_messages
+            
+            ### next if not pkg = current_pkg?
+
             score_card[:fixity_failures] += 1
-            fixity_issue_messages.each { |msg| @report_fixity.err(msg) }
-            @report_fixity.warn
+            @report_fixity.err *(fixity_issue_messages + [ '' ])
             event_counter.status = pkg.fixity_failure_event(fixity_issue_messages.join)
             all_good = false
           end
 
           if missing_issue_messages
+
+            ### next if not pkg = current_pkg?
+
             score_card[:missing] += 1
-            missing_issue_messages.each { |msg| @report_integrity.err(msg) }
-            @report_integrity.warn
+            @report_integrity.err *(missing_issue_messages + [ '' ])
             event_counter.status = pkg.integrity_failure_event(missing_issue_messages.join)
             all_good = false
           end
 
-          # we're using event_counter to give us total number of packages; in the following
-          # case we'd be double counting, so keep track of it
+          # we're using event_counter to keep track of the total number of packages; in the following
+          # very unlikely case we'd be double counting, so let's flag it and display a note when reporting.
 
           if missing_issue_messages and fixity_issue_messages
             event_counter.double_count
           end
 
-
           if all_good
+
+            ### pool_fixity_time = pool_data.map { |rec| rec.fixity_time }.min
+
+            ### next if daitss_data.last_successful_fixity_time == pool_fixity_time
+
+            ### next if not pkg = current_pkg?
+
+            #### how to get score_card and event doing the right thing here?
+
+
             score_card[:fixity_successes] += 1
+           
             event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.fixity_time }.min)
           end
         end
@@ -484,10 +481,10 @@ module Analyzer
       #
       # 1,240 correct fixities
       #     1 incorrect fixity
-      #     1 missing package
+      #     2 missing packages
       #     0 packages with wrong number of copies in pools
       # -----
-      # 1,242 events, 2 new
+      # 1,242 events, 3 new
       #
       # Additionally:
       #
