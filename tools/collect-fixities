@@ -34,9 +34,9 @@ end
 
 
 def setup config
-  $0 = 'collect-fixities'
+  $0 = 'test-cf'
 
-  Datyl::Logger.setup('CollectFixities', config.server_address.gsub(/:.*/, ''))
+  Datyl::Logger.setup('TestCF', config.server_address.gsub(/:.*/, ''))
 
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Datyl::Logger.filename = config.log_filename         if config.log_filename
@@ -55,8 +55,10 @@ def setup config
     pid_path = StoreUtils.pid_file(config.pid_directory)
 
     if File.exists? pid_path
-      Datyl::Logger.warn "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"   
-      exit
+      message = "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"
+      Datyl::Logger.warn message
+      STDERR.puts message
+      exit 1
     end
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
@@ -77,7 +79,6 @@ def teardown config, streams
     pid_path = StoreUtils.pid_file(config.pid_directory)
     File.delete pid_path if File.exists? pid_path and File.writable? pid_path
   end
-
 end
 
 
@@ -91,10 +92,19 @@ begin
 
   Datyl::Reporter.note "CollectFixities started at #{Time.now}"
 
-  # Get our data streams, some from web services, some from various databases
+  # Get our data streams to reconcile, some from web services
+  # (silo-pool), some from the DAITSS database.  The order we use to
+  # construct them next is important because it can take half a minute
+  # to get the list of active packages from DAITSS' db; DAITSS might
+  # be deleting or adding files at that time.  The problem of DAITSS
+  # adding files to storage is solved by using the stored-before time,
+  # but if DAITSS is deleting something while we wait for
+  # daitss_fixity_stream to build, then it might show up as an orphan,
+  # had we assembled the list of pool_fixity_streams first.
+  
 
-  pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool) }
   daitss_fixity_stream = Streams::DaitssPackageStream.new(:before => start_time)
+  pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool, { 'stored-before' => start_time } ) }
 
   reports = []
 
