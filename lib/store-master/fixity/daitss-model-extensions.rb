@@ -16,27 +16,43 @@ module Daitss
 
   end
 
-  ## TODO: there are smarter (faster?) ways to do some of these with datamapper-joins and slices, maybe
-  #
-  # get all the copy URL
-  #
-  # Copy.all(Copy.aip.package.id.not => nil, :timestamp.lt => DateTime.now, :order => :url).slice(0,1000).map { |elt| elt.url.path.split('/').pop } 
-  #
-  # Package.all(Package.aip.copy.timestamp.lt => DateTime, :order => :id).slice...
-
 
   class Package
 
-
     # provide a list of data mapper records for selected IEIDs  ordered by the copy URL
 
-    def self.package_copies  before
-      sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
-              "FROM packages, aips, copies "                                                +
-             "WHERE packages.id = aips.package_id "                                         +
-               "AND copies.timestamp < '#{before}' "                                        +
-               "AND aips.id = copies.aip_id "                                               +
-          "ORDER BY copies.url"
+    def self.package_copies before
+
+      ### TODO:  if we do this, we won't have top get individual package.new in fixity reconciliation,  it'll speed things tremendously
+      ### We do the package.new there to get package objects so we can check for events; it's usually a waste of resources, though.
+
+      sql = "SELECT package_copies.id AS ieid, " +
+                   "package_copies.url, " +
+                   "REPLACE(TO_CHAR(fixity_success_events.timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS last_successful_fixity_time, " +
+                   "REPLACE(TO_CHAR(package_copies.timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS package_store_time, " +
+                   "package_copies.md5, " +
+                   "package_copies.sha1, " +
+                   "package_copies.size " +
+
+            "FROM (SELECT packages.id, copies.url as url, copies.md5, copies.sha1, copies.size, copies.timestamp " +
+                    "FROM packages, aips, copies " +
+                   "WHERE packages.id = aips.package_id " +
+                     "AND copies.timestamp < '#{before}' " +
+                     "AND aips.id = copies.aip_id) " +
+            "AS package_copies " +
+
+            "LEFT JOIN (SELECT package_id, timestamp FROM events WHERE name = 'fixity success') " +
+            "AS fixity_success_events " +
+
+            "ON package_copies.id = fixity_success_events.package_id " +
+            "ORDER BY package_copies.url"
+
+      # sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
+      #         "FROM packages, aips, copies "                                                +
+      #        "WHERE packages.id = aips.package_id "                                         +
+      #          "AND copies.timestamp < '#{before}' "                                        +
+      #          "AND aips.id = copies.aip_id "                                               +
+      #     "ORDER BY copies.url"
 
       repository(:daitss).adapter.select(sql)
     end
@@ -59,7 +75,6 @@ module Daitss
     # event recording: return true if saved, false on error, and, in the case of success events, nil if unchanged
 
     def integrity_failure_event note
-
 
       return true ###### 
 
