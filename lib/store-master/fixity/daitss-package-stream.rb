@@ -10,17 +10,14 @@ module Streams
   # datamapper-provided struct giving the expected MD5, SHA1 and Size
   # of the package, as well as its IEID.
   #
-  # 'http://betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000' #<Struct::DataMapper ieid="EZQQYQMC2_6PYZMQ", url="http://betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000", md5="7e45d204d270da0f8aab2a65f59a2429", sha1="e541c693e56edd9a7e04cab94de5740092ae3953", size=4761600>
-  # 'http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000' #<Struct::DataMapper ieid="EZYNH5CZC_ZP2B9Y", url="http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000", md5="52076e3d8a9196d365c8381e135b6812", sha1="b046c58503f570ea090b8c5e46cc5f4e0c27f003", size=1962598400>
-  # 'http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000' #<Struct::DataMapper ieid="EZYVXE2TV_J9MW69", url="http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000", md5="0959a55d2b6b46c4080bc85b10b87947", sha1="05fc20aaebad2708b91ad4c0d372ca733da7417a", size=2763468800>
+  # "http://storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000",  #<struct ieid="E101W4TQQ_VGD9QW", url="http://storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000", last_successful_fixity_time="2011-10-02T03:38:38Z", package_store_time="2011-09-19T18:19:52Z", md5="f1b797725b64c4a06a81bcfac0c1f077", sha1="1a6f80fd868cda45e6f8413f8fc9dbd9c081f3f9", size=9256960>
+  # "http://storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000",  #<struct ieid="E104GJTXL_KZQB6L", url="http://storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000", last_successful_fixity_time="2011-09-30T10:39:50Z", package_store_time="2011-07-28T12:05:46Z", md5="c2e481ca90d60674b2de2a1279eb2dc6", sha1="c97a9aeba05f84461be8e73fa124b4435e4fea50", size=54087680>
+  # "http://storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000",  #<struct ieid="E1095RV78_SZTIN2", url="http://storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000", last_successful_fixity_time="2011-10-09T20:22:43Z", package_store_time="2011-06-02T05:06:19Z", md5="1203fd48d996a1baf3bc93ea4543d5ea", sha1="781c8b17429c3353c93464ffe0b0484549979de2", size=1572372480>
   #  ...
 
   class DaitssPackageStream
     
     include CommonStreamMethods
-
-    # TODO: we might be better off maintaining an index into @buff and keeping it around, rather than shifting
-    # materials off and having to re-create it with another database hit.  We'll see after how it's used in practice.
 
     def initialize options = {}
       @before = options[:before] || DateTime.now

@@ -55,11 +55,9 @@ def setup config
     pid_path = StoreUtils.pid_file(config.pid_directory)
 
     if File.exists? pid_path
-      message = "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"
-      Datyl::Logger.warn message
-      STDERR.puts message
-      exit 1
+      raise "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"
     end
+
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
@@ -68,9 +66,16 @@ def setup config
   Datyl::Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
   StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
 
-  StoreMasterModel.setup_db(config.storemaster_db)
-  Daitss.setup_db(config.daitss_db)
+  # StoreMasterModel.setup_db(config.storemaster_db)
+  # Daitss.setup_db(config.daitss_db)
 
+  StoreMaster.setup_databases(config.storemaster_db, config.daitss_db)
+
+
+rescue => e
+  Datyl::Logger.err e.message
+  STDERR.puts e.message
+  exit 1
 end
 
 

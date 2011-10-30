@@ -7,7 +7,7 @@ require 'store-master/fixity'
 require 'store-master/exceptions'  # brings in http-exceptions
 require 'store-master/utils'
 require 'time'
-
+require 'daitss/model'
 
 # Get a properly formatted UTC string from a DateTime object. 
 
@@ -50,10 +50,24 @@ module StoreMaster
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
   VERSION  = File.read(File.expand_path("../../VERSION",__FILE__)).strip
-  NAME     = 'Store Master Service'
+  NAME     = 'Storage Master Service'
 
   def self.version
     os = OpenStruct.new("name" => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
                         "uri"  => "info:fcla/daitss/store-master/#{VERSION}")
   end
+
+
+
+  def self.setup_databases(store_db_connection_string, daitss_db_connection_string = nil)
+
+    dms = []
+    dms.push StoreMasterModel.setup_db(store_db_connection_string)
+    dms.push Daitss.setup_db(daitss_db_connection_string) if daitss_db_connection_string
+
+    DataMapper.finalize
+    dms.each { |dm| dm.select('select 1 + 1') }   # fail fast
+  end
+
+
 end

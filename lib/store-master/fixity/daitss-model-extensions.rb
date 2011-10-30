@@ -23,8 +23,24 @@ module Daitss
 
     def self.package_copies before
 
-      ### TODO:  if we do this, we won't have top get individual package.new in fixity reconciliation,  it'll speed things tremendously
-      ### We do the package.new there to get package objects so we can check for events; it's usually a waste of resources, though.
+
+      # The following sql is meant to provide information from the
+      # DAITSS DB in the following form:
+      #
+      #        ieid       |                               url                                | last_successful_fixity_time |  package_store_time  |               md5                |                   sha1                   |    size     
+      #  E13LVY77R_4VP1BD | http://storemaster.fda.fcla.edu:70/packages/E13LVY77R_4VP1BD.000 |                             | 2011-10-29T23:04:04Z | 4108b06e33b4b742f66d2106aa58adbe | de78cfd8e8444c56b6e519cbec21d9f9c8b249e0 |   179752960
+      #  E1ADTX4PV_WPV7W3 | http://storemaster.fda.fcla.edu:70/packages/E1ADTX4PV_WPV7W3.000 | 2011-09-25T02:22:16Z        | 2011-07-14T01:41:29Z | 97E8E907719AA620B94D19AD5EB0838F | 4D9FEAB61C20AB1C20558BB11A49F72EF9F6F505 |   370350080
+      #  E1AFGE6DV_P6P6FK | http://storemaster.fda.fcla.edu:70/packages/E1AFGE6DV_P6P6FK.000 |                             | 2011-10-30T00:15:47Z | ba41f44d02fc1957085bb394f1953ff8 | 2944aeba54a190551865e5b23579ab39ed25b67f |    85872640
+      #  E1AK86W44_W77Z0G | http://storemaster.fda.fcla.edu:70/packages/E1AK86W44_W77Z0G.000 | 2011-09-06T05:02:13Z        | 2011-07-09T20:25:56Z | 241F5E2996B16C2F6E47781912ADDCBA | 73A66EA5BB5BADFDF0BA3441D18C29C71478F379 |   977510400
+      # 
+
+      # The important bit is that last_successful_fixity time can be
+      # null for the case of a new ieid, so that we can check if a
+      # succesful fixity check has been repeated, and not attempt to
+      # update the daitss database.  It has a bug that doesn't affect
+      # our use, however: the last_successful_fixity time may refer to
+      # an old version of the ieid on a recently refreshed package.
+
 
       sql = "SELECT package_copies.id AS ieid, " +
                    "package_copies.url, " +
@@ -47,18 +63,10 @@ module Daitss
             "ON package_copies.id = fixity_success_events.package_id " +
             "ORDER BY package_copies.url"
 
-      # sql = "SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size " +
-      #         "FROM packages, aips, copies "                                                +
-      #        "WHERE packages.id = aips.package_id "                                         +
-      #          "AND copies.timestamp < '#{before}' "                                        +
-      #          "AND aips.id = copies.aip_id "                                               +
-      #     "ORDER BY copies.url"
-
       repository(:daitss).adapter.select(sql)
     end
 
     # get a package object via a URL
-    # TODO: might be better to rework our algorithms to get a collection of packages...
 
     def self.lookup_from_url url
 
@@ -76,7 +84,7 @@ module Daitss
 
     def integrity_failure_event note
 
-      return true ###### 
+      #### return true ###### 
 
       e = Event.new :name => 'integrity failure', :package => self
       e.agent = Agent.store_master
@@ -86,7 +94,7 @@ module Daitss
 
     def fixity_failure_event note
 
-      return true ###### 
+      #### return true ###### 
 
       e = Event.new :name => 'fixity failure', :package => self
       e.agent = Agent.store_master
@@ -94,23 +102,22 @@ module Daitss
       return e.save
     end
 
-    ### TODO - there may be a better way to do these en masse, something like?
-    #
-    #   collection = Event.first(0)      
-    #   event = Event.first_or_new 
-    #   collection.push event if some-condition
-    # ...
-    #   collection.save      
+
+    # We're never supposed to have more than one success_fixity event at all, and this
+    # very expensive operation should not be called at all if the timestamps are the
+    # same - that's checked beforehand
 
 
     def fixity_success_event datetime
-      event = Event.first_or_new :name => 'fixity success', :package => self
-      return nil if event.timestamp == datetime
+      timestamp = DateTime.parse(datetime)
 
-      return true   ###### 
+      event = Event.first_or_new :name => 'fixity success', :package => self
+      return false if event.timestamp == timestamp
+
+      #### return true   ###### 
 
       event.agent     = Agent.store_master
-      event.timestamp = datetime
+      event.timestamp = timestamp
       return event.save
     end
 

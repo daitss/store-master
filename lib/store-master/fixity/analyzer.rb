@@ -15,241 +15,42 @@ require 'store-master/fixity/utils'
 
 module Analyzer
 
-  # IntraPoolAnalyzer
-  #
-  # Initialize with an array of streams, one for each of our pools.
-  # Check each pool for internal consistency, which here means we have
-  # exacly one fixity record for each package (no redundant packages
-  # in a silo-pool)
-
-  class IntraPoolAnalyzer
-
-    # Recall that each of the PoolFixityStreamss given to us yield key/value pairs:
-    # <String::package>, <Struct::PoolFixityRecord>, e.g.
-    #
-    #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
-    #
-    # All fields within the struct are simple strings.
-
-    attr_reader :reports
-
-    def initialize pool_fixity_streams, max_days
-      @expiration_date = (DateTime.now - max_days).to_s
-      @pool_fixity_streams  = pool_fixity_streams
-
-      @redundant_package_report = Datyl::Reporter.new("Per-Pool Redundancy Report", "Multiple Copies Within A Pool")
-      @expired_fixity_report    = Datyl::Reporter.new("Per-Pool Expiration Report", "Packages With Expired Fixities - Older Than #{max_days} Days")
-      @bad_status_report        = Datyl::Reporter.new("Per-Pool Status Report", "Packages Currently Marked With Failed Fixity")
-
-      @reports = [ @redundant_package_report, @expired_fixity_report, @bad_status_report ]
-    end
-
-    def run
-      @pool_fixity_streams.each do |pool_fixity_stream|
-
-        pool_fixity_stream.rewind.each do |package_name, fixity_record|
-          if fixity_record.status != 'ok'
-            @bad_status_report.err "#{fixity_record.location} fixity status of '#{fixity_record.status}' as of  #{Time.parse(fixity_record.timestamp)}"
-          end
-
-          if fixity_record.timestamp < @expiration_date
-            days = '%3.1f' % ((Time.parse(@expiration_date) - Time.parse(fixity_record.timestamp))/(60 * 60 * 24))
-            @expired_fixity_report.warn "#{fixity_record.location} fixity expired #{days} #{FixityUtils.pluralize(days,'day ago', 'days ago')}"
-          end
-        end
-      end
-
-      @pool_fixity_streams.each do |pool_fixity_stream|
-        Streams::FoldedStream.new(pool_fixity_stream.rewind).each do |package_name, fixity_records|      # fold values for identical keys into one array
-          if fixity_records.count > 1
-            @redundant_package_report.warn "#{package_name} #{fixity_records.map { |rec| rec.location }.join(', ')}"
-          end
-        end
-      end
-
-      @reports.each { |report| report.done }
-      self
-    end
-
-  end # of class IntraPoolAnalyzer
-
-  # InterPoolAnalyzer
-  #
-  # As above, we initialize with an array of streams, one for each of our pools.  Here, however
-  # consistency,  which here means we have exacly one fixity record for each package (no redundant
-  # packages in a silo-pool)
-
-  class InterPoolAnalyzer
-
-    attr_reader :reports
-
-    def initialize pool_fixity_streams, required_copies
-      @pool_fixity_streams  = pool_fixity_streams
-      @required_copies      = required_copies
-
-      @report_wrong_number  = Datyl::Reporter.new "Inter-Pool Copy Check", "Packages Not Having The Required #{@required_copies} #{FixityUtils.pluralize(@required_copies, 'Copy', 'Copies')} In Pools"
-      @report_copy_mismatch = Datyl::Reporter.new "Inter-Pool Fixity Check", "Packages Having Mismatched SHA1, MD5 Or Sizes Between The Silo Pools"
-      @reports              = [ @report_wrong_number, @report_copy_mismatch ]
-    end
-
-    def run
-      Streams::PoolMultiFixities.new(@pool_fixity_streams).each do |name, pool_records|
-
-        if pool_records.count < @required_copies
-          @report_wrong_number.err  "#{name} has too few copies - found only #{FixityUtils.pluralize(pool_records.count, 'this copy', 'these copies')} in the pools: #{pool_records.map{ |p| p.location}.sort.join(', ')}"
-        elsif pool_records.count > @required_copies
-          @report_wrong_number.ward "#{name} has too many #{FixityUtils.pluralize(pool_records.count, 'copy', 'copies')} in our pools: #{pool_records.map{ |p| p.location }.sort.join(', ')}"
-        end
-
-        @report_copy_mismatch.warn "SHA1 mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.sha1}" }.join(', ')  if pool_records.inconsistent? :sha1
-        @report_copy_mismatch.warn "MD5 mismatch for #{name}: "  +  pool_records.map { |p|  "#{p.location} has #{p.md5}"  }.join(', ')  if pool_records.inconsistent? :md5
-        @report_copy_mismatch.warn "Size mismatch for #{name}: " +  pool_records.map { |p|  "#{p.location} has #{p.size}" }.join(', ')  if pool_records.inconsistent? :size
-      end
-
-      @reports.each { |report| report.done }
-      self
-    end
-
-  end # of class InterPoolAnalyzer
-
-
-  class StoreMasterVsPoolAnalyzer
-
-    # StoreMasterPackageStream returns information about what the StoreMaster thinks should be on the silos;
-    # the folded data stream looks as so:
-    #
-    # E20110210_ROGMBP.000  [ #<struct name="E20110210_ROGMBP.000", store_location="http://one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
-    #                         #<struct name="E20110210_ROGMBP.000", store_location="http://two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP"> ]
-    #
-    # E20110210_ROIUIC.000  [ #<struct name="E20110210_ROIUIC.000", store_location="http://one.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
-    #                         #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC"> ]
-    # ....
-    #
-    # The Pool fixity records look as so:
-    #
-    #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
-    #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000", sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4", md5="c9672d29178ee51eafef97a4b8297a5b", size="587591680", fixity_time="2011-04-27T11:38:45Z", put_time="2011-04-20T22:08:41Z", status="ok">
-    #  ESKMPS0TO_7W4ASP.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000", sha1="a1bc6134dbc4dc0beffa94235f470bb7e0e8a016", md5="9fc127a90ec6c02b094d6f656f74232c", size="1003280384", fixity_time="2011-04-27T11:39:11Z", put_time="2011-04-21T14:20:13Z", status="ok">
-    # ....
-    #
-    # Our job here is to do a sanity check on these two streams, so we build a ComparisonStream. Cases:
-    #    get locations for a given package from the store-master, but not the pools:  error: report missing from pool
-    #    get locations for a given package name from the pools, but not the store-master:  warning: report orphan on the pool
-
-    attr_reader :reports
-
-    def initialize store_master_stream, pool_fixity_streams
-      @store_fixities    = Streams::FoldedStream.new(store_master_stream.rewind)
-      @pool_fixities     = Streams::PoolMultiFixities.new(pool_fixity_streams)
-
-      @report_error_missing  = Datyl::Reporter.new("Store-Master/Pools - Missing Packages", "Packages Recorded On The Store-Master, But Not Present In The Pools")
-      @report_warn_orphan    = Datyl::Reporter.new("Store-Master/Pools - Unexpected Packages", "Packages Found In The Pools, But Not Recorded By The Store-Master")
-
-      @reports = [ @report_error_missing, @report_warn_orphan ]
-    end
-
-    def run
-      (@store_fixities <=> @pool_fixities).each do |package_name, store_data, pool_data|
-
-        pool_locations  = pool_data  ? pool_data.map  { |datum| datum.location }.sort       : []
-        store_locations = store_data ? store_data.map { |datum| datum.store_location }.sort : []
-
-        in_pool_only    = pool_locations  - store_locations
-        in_store_only   = store_locations - pool_locations
-
-        unless in_pool_only.empty?
-          @report_warn_orphan.warn in_pool_only.join(', ')
-        end
-
-        unless in_store_only.empty?
-          @report_error_missing.err "#{package_name} is missing #{FixityUtils.pluralize(in_store_only.count, 'this copy', 'these copies')}: #{in_store_only.join(', ')}"
-        end
-      end
-      @reports.each { |report| report.done }
-      self
-    end
-  end # of class StoreVsPoolAnalyser
-
-
-
-  class StoreMasterAnalyzer
-
-    attr_reader :reports
-
-    def initialize store_master_stream, required_number
-      @required_number     = required_number
-      @store_master_stream = store_master_stream
-      @report_wrong_number = Datyl::Reporter.new("Store-Master Copy Check", "Store-Master Didn't Record The Required #{required_number} #{FixityUtils.pluralize @required_number, 'Copy', 'Copies'}")
-      @reports             = [ @report_wrong_number ]
-    end
-
-    def run
-      # StoreMasterPackageStream returns information about what the StoreMaster thinks should be on the silos;
-      # the folded data looks as so:
-      #
-      # E20110210_ROGMBP.000  [ #<struct name="E20110210_ROGMBP.000", store_location="http://pool-one.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
-      #                         #<struct name="E20110210_ROGMBP.000", store_location="http://pool-two.example.com/.../E20110210_ROGMBP.000", ieid="E20110210_ROGMBP">,
-      #                         ... ]
-      # E20110210_ROIUIC.000  [ #<struct name="E20110210_ROIUIC.000", store_location="http://pool-two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
-      #                         #<struct name="E20110210_ROIUIC.000", store_location="http://pool-six.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">,
-      #                         ... ]
-      #
-      # We check that we have the expected number of copies for each package.
-
-      Streams::FoldedStream.new(@store_master_stream.rewind).each do |name, copy_records|
-        locations = copy_records.map{ |rec| rec.store_location }.sort.join(', ')
-
-        if copy_records.count < @required_number
-          @report_wrong_number.err "#{name} has too few copies recorded by the store-master service, we have only these:  #{locations}"
-        elsif copy_records.count > @required_number
-          @report_wrong_number.warn "#{name} has too many copies recorded by the store-master service, we have all of these:  #{locations}"
-        end
-
-      end
-      @reports.each { |report| report.done }
-      self
-    end
-  end # of class StoreMasterAnalyser
-
-
   # A utility to keep track of how events are recorded - it's possbile the DB won't get capture some of
   # them,  and many 'fixity success' events are redundant and not recorded.
 
-  class EventCounter
-    attr_reader :successes, :failures, :unchanged, :double_counts
+  class StatCounter
 
+    attr_accessor :packages_double_counted, :packages_orphaned, :packages_missing, :packages_checked, :packages_fixity_success, :packages_fixity_failure, :packages_wrong_number, :packages_expired, :packages_total, :packages_fixity_unchanged
+    attr_accessor :events_new, :events_old, :events_err
     def initialize
-      @failures      = 0    
-      @successes     = 0 
-      @unchanged     = 0
-      @double_counts = 0
+
+      @events_err   = 0 
+      @events_new   = 0    
+      @events_old   = 0 
+
+      @packages_checked          = 0
+      @packages_double_counted   = 0
+      @packages_expired          = 0
+      @packages_fixity_failure   = 0
+      @packages_fixity_success   = 0
+      @packages_fixity_unchanged = 0  # implies successful fixity
+      @packages_missing          = 0
+      @packages_orphaned         = 0
+      @packages_total            = 0      
+      @packages_wrong_number     = 0
     end
 
-
-    # Package#integrity_failure_event and Package#fixity_failure_event
-    # methods return true if a failure event was saved, false on DB error.
-    # Package#fixity_success_event additionally may return nil if the event
-    # already exists (and thus wasn't saved as a new even). 
-    #
-    # Our status= method keeps track of these.
-
-
-    def status= res
-      case res
-      when nil;    @unchanged += 1
-      when true;   @successes += 1
-      when false;  @failures  += 1
-      else 
-        raise "Unexpected value when recording event save status: #{res.inspect}"
-      end
+    def events_total
+      @events_err + @events_new + @events_old
     end
 
-    def double_count
-      @double_counts += 1
-    end
+    def format_max_width
 
-    def total
-      @failures + @successes + @unchanged
+      StoreUtils.commify([ @events_new, @events_old, @events_err, @packages_double_counted,
+                           @packages_orphaned, @packages_missing, @packages_checked,
+                           @packages_fixity_success, @packages_fixity_failure,
+                           @packages_fixity_unchanged, @packages_wrong_number, @packages_expired,
+                           @packages_total ].max).length    
     end
   end
 
@@ -332,10 +133,16 @@ module Analyzer
       return false
     end
 
+    def get_package url
+      pkg = Daitss::Package.lookup_from_url(url)
+      if pkg.nil?
+        Datyl::Logger.info "#{url} is no longer in the DAITSS DB; it was deleted by DAITSS during fixity record reconciliation."
+      end
+      return pkg
+    end
 
     def run
-      score_card    = { :orphans => 0, :missing => 0, :checked => 0, :fixity_successes => 0, :fixity_failures => 0, :wrong_number => 0, :expired_fixities => 0, :daitss_packages => 0 }
-      event_counter = EventCounter.new
+      counter = StatCounter.new
 
       (@pool_fixity_stream <=> @daitss_fixity_stream).each do |url, pool_data, daitss_data|
 
@@ -343,60 +150,57 @@ module Analyzer
         #
         # url:          http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000
         # pool_data:    [ #<struct Struct::PoolFixityRecord location="http...", sha1="4ab..", md5="0d7...", size="131..", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok"> .. more structs .. ]>,
-        # daitss_data:  #<Struct::DataMapper ieid="EYMZSFV43_8A2KCD", url="http://store-master.fcla.edu/packages/EYMZSFV43_8A2KCD.000", md5="06cd2880ad13eed3255706752be8a6b1", sha1="b73aabefe9f98f421047eb66526dc33420e85e04", size=119244800>
-        
-
-        Datyl::Logger.info url + ' =>  ' + pool_data.inspect  + ' ::: ' + daitss_data.inspect
-          
-        if daitss_data
-          pkg = Daitss::Package.lookup_from_url(url)
-          if pkg.nil?
-            Datyl::Logger.info "#{url} is no longer in the DAITSS DB; it was deleted by DAITSS during fixity record reconciliation."
-            next
-          end
-          score_card[:daitss_packages] += 1
-        end
-        
-        
+        # daitss_data:  #<struct ieid="E101W4TQQ_VGD9QW", url="http://storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000", last_successful_fixity_time="2011-10-02T03:38:38Z", package_store_time="2011-09-19T18:19:52Z", md5="f1b797725b64c4a06a81bcfac0c1f077", sha1="1a6f80fd868cda45e6f8413f8fc9dbd9c081f3f9", size=9256960>
+                
         if not pool_data             # ..but we do have daitss_data for this URL, so we have a missing package of which the silo is unaware
 
-          ### next if not pkg = current_pkg?     Daitss::Package.lookup_from_url(url)
+          next unless pkg = get_package(url) # double check: is it still there in the DAITSS DB?  The deletion may have been in progress, and invisible, just as we started
 
-          score_card[:missing] += 1
+          counter.packages_total += 1
+          counter.packages_missing += 1
           @report_integrity.err  "#{url}: no copies where listed by any of the pools."
-          event_counter.status = pkg.integrity_failure_event "No copies were listed by any of the pools."            
 
-        elsif not daitss_data        # ..but we do have pool_data for this URL, so we have some sort of 'orphan'.
+          pkg.integrity_failure_event("No copies were listed by any of the pools.") ? counter.events_new += 1 : counter.events_err += 1
+          
+        elsif not daitss_data        # ..but we do have pool_data for this URL, so we may have some sort of 'orphan'.
 
-          score_card[:orphans] += 1                             
+          next if get_package(url)   # double check: has it appeared in the DAITSS DB?  The store may have been in progress, and invisible, just as we started
+
+          counter.packages_orphaned += 1
           @report_orphaned.warn *(pool_data.map { |cp| cp.location })
 
         else                         # .. we have records for both
 
-          score_card[:checked] += 1
           all_good = true
 
           case             
           when pool_data.length < @required_copies
 
-            ### next if not pkg = current_pkg?
+            next unless pkg = get_package(url)
+
+            counter.packages_total += 1
+            counter.packages_missing += 1
 
             messages =  [ "#{url} has too few copies, only:" ] + pool_data.map { |rec| indent + rec.location }
 
             @report_integrity.err *messages
-            event_counter.status = pkg.integrity_failure_event messages.join
-
-            score_card[:missing] += 1
+            
+            pkg.integrity_failure_event(messages.join) ? counter.events_new += 1 : counter.events_err += 1
             all_good = false
 
           when pool_data.length > @required_copies
 
+            next unless pkg = get_package(url)
+
+            counter.packages_total += 1
+            counter.packages_wrong_number += 1
+
             messages =  [ "#{url} has too many copies:" ] + pool_data.map { |rec| indent + rec.location }
 
             @report_too_many.err *messages
-            event_counter.status = pkg.integrity_failure_event messages.join
 
-            score_card[:wrong_number] += 1
+            pkg.integrity_failure_event(messages.join) ? counter.events_new += 1 : counter.events_err += 1
+
             all_good = false
           end
 
@@ -410,45 +214,58 @@ module Analyzer
 
           if fixity_issue_messages
             
-            ### next if not pkg = current_pkg?
+            next unless pkg = get_package(url)
 
-            score_card[:fixity_failures] += 1
+            counter.packages_fixity_failure += 1
+
             @report_fixity.err *(fixity_issue_messages + [ '' ])
-            event_counter.status = pkg.fixity_failure_event(fixity_issue_messages.join)
+
+            pkg.fixity_failure_event(fixity_issue_messages.join) ? counter.events_new += 1 : counter.events_err += 1
+
             all_good = false
           end
 
           if missing_issue_messages
 
-            ### next if not pkg = current_pkg?
+            next unless pkg = get_package(url)
 
-            score_card[:missing] += 1
+            counter.packages_missing += 1
+
             @report_integrity.err *(missing_issue_messages + [ '' ])
-            event_counter.status = pkg.integrity_failure_event(missing_issue_messages.join)
+
+            pkg.integrity_failure_event(missing_issue_messages.join) ? counter.events_new += 1 : counter.events_err += 1
+
             all_good = false
           end
 
-          # we're using event_counter to keep track of the total number of packages; in the following
+          # we're using counter to keep track of the total number of packages; in the following
           # very unlikely case we'd be double counting, so let's flag it and display a note when reporting.
 
           if missing_issue_messages and fixity_issue_messages
-            event_counter.double_count
+            counter.packages_double_counted += 1
           end
 
           if all_good
 
-            ### pool_fixity_time = pool_data.map { |rec| rec.fixity_time }.min
+            pool_fixity_time   = pool_data.map { |rec| rec.fixity_time }.min
+            daitss_fixity_time = daitss_data.last_successful_fixity_time
 
-            ### next if daitss_data.last_successful_fixity_time == pool_fixity_time
+            # count success if we've got a match
 
-            ### next if not pkg = current_pkg?
+            if pool_fixity_time == daitss_fixity_time
+              counter.packages_fixity_unchanged += 1
+              counter.events_old += 1
+              counter.packages_total += 1
+              counter.packages_checked += 1
+              next
+            end
 
-            #### how to get score_card and event doing the right thing here?
+            next unless pkg = get_package(url)
 
-
-            score_card[:fixity_successes] += 1
-           
-            event_counter.status = pkg.fixity_success_event DateTime.parse(pool_data.map { |rec| rec.fixity_time }.min)
+            pkg.fixity_success_event(pool_fixity_time) ? counter.events_new += 1 : counter.events_err += 1
+            counter.packages_fixity_success += 1
+            counter.packages_total += 1
+            counter.packages_checked += 1
           end
         end
       end
@@ -464,7 +281,7 @@ module Analyzer
 
         pool_data.each do |fix|
           if fix.fixity_time < expiration_date
-            score_card[:expired_fixities] += 1
+            counter.packages_expired += 1
             @report_expired.warn fix.location + " last checked at " + fix.fixity_time
           end
         end
@@ -493,38 +310,35 @@ module Analyzer
       #
 
       # ...
+      
+      width = counter.format_max_width
 
-
-      len = StoreUtils.commify(score_card.values.max).length
-
-      @report_summary.warn sprintf("%#{len}s ingested package records as of %s", StoreUtils.commify(score_card[:daitss_packages]), @cutoff_time.strftime('%F %T'))
-      @report_summary.warn sprintf("%#{len}s of these records were checked against fixity data", StoreUtils.commify(score_card[:checked]))
+      @report_summary.warn sprintf("%#{width}s ingested package records as of %s", StoreUtils.commify(counter.packages_total), @cutoff_time.strftime('%F %T'))
+      @report_summary.warn sprintf("%#{width}s of these records were checked against fixity data", StoreUtils.commify(counter.packages_checked))
       @report_summary.warn
-      @report_summary.warn sprintf("%#{len}s correct #{pluralize score_card[:fixity_successes], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_successes]))
-      @report_summary.warn sprintf("%#{len}s had missing copies", StoreUtils.commify(score_card[:missing]))
-      @report_summary.warn sprintf("%#{len}s incorrect #{pluralize score_card[:fixity_failures], 'fixity', 'fixities'}", StoreUtils.commify(score_card[:fixity_failures]))
-      @report_summary.warn sprintf("%#{len}s with the wrong number of copies in pools", StoreUtils.commify(score_card[:wrong_number]))
-      @report_summary.warn '-' * len
-      @report_summary.warn sprintf("%#{len}s total events, %s new", StoreUtils.commify(event_counter.total), StoreUtils.commify(event_counter.total - event_counter.unchanged))
+      @report_summary.warn sprintf("%#{width}s correct #{pluralize counter.packages_fixity_success, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_success))
+      @report_summary.warn sprintf("%#{width}s had missing copies", StoreUtils.commify(counter.packages_missing))
+      @report_summary.warn sprintf("%#{width}s incorrect #{pluralize counter.packages_fixity_failure, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_failure))
+      @report_summary.warn sprintf("%#{width}s with the wrong number of copies in pools", StoreUtils.commify(counter.packages_wrong_number))
+      @report_summary.warn '-' * width
+      @report_summary.warn sprintf("%#{width}s total events, %s new", StoreUtils.commify(counter.events_total), StoreUtils.commify(counter.events_total - counter.events_old))
 
       @report_summary.warn
       @report_summary.warn 'Additionally:'
-      @report_summary.warn sprintf("%#{len}s unexpected package#{pluralize score_card[:orphans], '', 's'} (orphan?) in silo pools", StoreUtils.commify(score_card[:orphans]))
-      @report_summary.warn sprintf("%#{len}s package#{pluralize score_card[:expired_fixities], '', 's'} had #{pluralize score_card[:expired_fixities], 'an expired fixity', 'expired fixities'}", StoreUtils.commify(score_card[:expired_fixities]))
+      @report_summary.warn sprintf("%#{width}s unexpected package#{pluralize counter.packages_orphaned, '', 's'} (orphan?) in silo pools", StoreUtils.commify(counter.packages_orphaned))
+      @report_summary.warn sprintf("%#{width}s package#{pluralize counter.packages_expired, '', 's'} had #{pluralize counter.packages_expired, 'an expired fixity', 'expired fixities'}", StoreUtils.commify(counter.packages_expired))
 
-      if event_counter.failures > 0      
-        n = event_counter.failures
+      if (n = counter.events_err) > 0      
         @report_summary.err "There #{n == 1 ? 'was one failure' : sprintf('were %d failures', n) } writing to the DAITSS DB"
       end
 
-      if event_counter.double_counts > 0
-        n = event_counter.double_counts
+      if (n = counter.packages_double_counted) > 0
         @report_summary.warn "Note that there were multiple events recorded for some packages (this can"
-        @report_summary.warn "happen when a package has one missing copy and another failing a fixity check)."
+        @report_summary.warn "happen when a package has a copy failing a fixity check, with the other missing)."
         if n == 1
           @report_summary.warn "There was one such double count."
         else
-          @report_summary.warn "There were #{n} such doublle counts."
+          @report_summary.warn "There were #{n} such double counts."
         end      
       end
 
@@ -533,7 +347,6 @@ module Analyzer
       # already been sent to the log, the calling program may very
       # well write all of them, in the order the reports were stored
       # on @reports above - @report_summary is first.
-
 
       self
     end
