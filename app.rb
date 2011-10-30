@@ -70,7 +70,7 @@ configure do
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
-  StoreMasterModel.setup_db(config.storemaster_db)
+  StoreMaster.setup_databases(config.storemaster_db)
 end
 
 before do

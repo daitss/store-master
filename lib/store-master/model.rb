@@ -38,18 +38,15 @@ module StoreMasterModel
 
   # We support two different styles of configuration; either a
   # yaml_file and a key into that file that yields a hash of
-  # information, or the direct connection string itself.
+  # database information, or the direct connection string itself.
+  # The two-argument version is deprecated.
 
   def self.setup_db *args
 
     connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
 
-    # dm = DataMapper.setup(:store_master, connection_string)
-
     dm = DataMapper.setup(:default, connection_string)
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
-    DataMapper.finalize
-    dm.select('select 1')  # make sure we can connect
     return dm
 
   rescue => e

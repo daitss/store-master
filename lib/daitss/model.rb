@@ -2,10 +2,9 @@ require 'data_mapper'
 require 'daitss/model/account'
 require 'daitss/model/agent'
 require 'daitss/model/aip'
-require 'daitss/model/batch'
 require 'daitss/model/copy'
 require 'daitss/model/eggheadkey'
-require 'daitss/model/entry'
+require 'daitss/model/entry'       # do we need this one?
 require 'daitss/model/event'
 require 'daitss/model/package'
 require 'daitss/model/project'
@@ -21,16 +20,15 @@ module Daitss
   # We support two different styles of configuration; either a
   # yaml_file and a key into that file that yields a hash of
   # information, or the direct connection string itself.
+  # The two-argument version is deprecated.
 
   def self.setup_db *args
 
     connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
-
     adapter = DataMapper.setup(:daitss, connection_string)
     adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
-    DataMapper.finalize
-    adapter.select('select 1 + 1')
     return adapter
+
   rescue => e
     raise StoreMaster::ConfigurationError, "Failure setting up the daitss database: #{e.message}"
   end
