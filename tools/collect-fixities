@@ -34,9 +34,9 @@ end
 
 
 def setup config
-  $0 = 'test-cf'
+  $0 = 'collect-fixities'
 
-  Datyl::Logger.setup('TestCF', config.server_address.gsub(/:.*/, ''))
+  Datyl::Logger.setup('CollectFixities', config.server_address.gsub(/:.*/, ''))
 
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Datyl::Logger.filename = config.log_filename         if config.log_filename
