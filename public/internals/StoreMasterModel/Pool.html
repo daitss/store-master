@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: StoreMasterModel::Pool</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: StoreMasterModel::Pool
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -118,9 +131,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute name.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute name.</p>
 </div></span>
   
 </li>
@@ -128,6 +140,12 @@ Returns the value of attribute name.
     
   </ul>
 
+
+
+  
+  
+  
+  
 
   
     <h2>
@@ -153,32 +171,10 @@ Returns the value of attribute name.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Create a new pool based on its services URL and optionally a read
-preference.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Create a new pool based on its services URL and optionally a read
+preference.</p>
 </div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#default_repository_name-class_method" title="default_repository_name (class method)">+ (Object) <strong>default_repository_name</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -208,6 +204,27 @@ preference.
   <span class="summary_signature">
     
       <a href="#list_active-class_method" title="list_active (class method)">+ (Object) <strong>list_active</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#list_all-class_method" title="list_all (class method)">+ (Object) <strong>list_all</strong> </a>
     
 
     
@@ -292,11 +309,10 @@ preference.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Return a URL that we can use to get fixity data from the pool: a specific
+    <span class="summary_desc"><div class='inline'>
+<p>Return a URL that we can use to get fixity data from the pool: a specific
 mime-type can be requested (at the time of this writing, deployed silos
-support text/csv and application/xml).
-</p>
+support text/csv and application/xml).</p>
 </div></span>
   
 </li>
@@ -318,12 +334,32 @@ support text/csv and application/xml).
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-return a URL we can post data directly to; we do this by requesting the
-silo&#8217;s &#8217;/service&#8217; document and parsing it for the
-&#8216;create&#8217; service.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>return a URL we can post data directly to; we do this by requesting the
+silo’s ‘/service’ document and parsing it for the ‘create’
+service.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#server_url-instance_method" title="#server_url (instance method)">- (Object) <strong>server_url</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -344,7 +380,10 @@ silo&#8217;s &#8217;/service&#8217; document and parsing it for the
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>We have a protocol that silo pools must follow: they must return a service
+document (XML) that describes where we can locate essential silo services.</p>
+</div></span>
   
 </li>
 
@@ -361,7 +400,7 @@ silo&#8217;s &#8217;/service&#8217; document and parsing it for the
   
   
   <h3 class="inherited">Methods included from <span class='object_link'><a href="../StoreMaster.html" title="StoreMaster (module)">StoreMaster</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="../StoreMaster.html#setup_databases-class_method" title="StoreMaster.setup_databases (method)">setup_databases</a></span>, <span class='object_link'><a href="../StoreMaster.html#version-class_method" title="StoreMaster.version (method)">version</a></span></p>
 
   
   <div id="instance_attr_details" class="attr_details">
@@ -379,15 +418,27 @@ silo&#8217;s &#8217;/service&#8217; document and parsing it for the
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute name
-</p>
+    
+<p>Returns the value of attribute name</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
   
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -396,13 +447,17 @@ Returns the value of attribute name
 
 31
 32
-33</pre>
+33
+34
+35</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 31</span>
 
-<span class='def def kw'>def</span> <span class='name identifier id'>name</span> 
+<span class='def def kw'>def</span> <span class='name identifier id'>name</span>
   <span class='@name ivar id'>@name</span> <span class='or or kw'>or</span> <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='host identifier id'>host</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -426,10 +481,9 @@ Returns the value of attribute name
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Create a new pool based on its services URL and optionally a read
-preference.
-</p>
+    
+<p>Create a new pool based on its services URL and optionally a read
+preference.</p>
 
 
   </div>
@@ -442,16 +496,16 @@ preference.
       <pre class="lines">
 
 
-135
-136
-137
-138
-139
-140
-141</pre>
+149
+150
+151
+152
+153
+154
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 135</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 149</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='services_location identifier id'>services_location</span><span class='comma token'>,</span> <span class='read_preference identifier id'>read_preference</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span> <span class='rbrace token'>}</span>
@@ -459,35 +513,6 @@ preference.
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='params identifier id'>params</span><span class='rparen token'>)</span>
   <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='saved? fid id'>saved?</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't create new pool record #{services_location}; DB errors: &quot;</span> <span class='plus op'>+</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='full_messages identifier id'>full_messages</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>'; '</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='rec identifier id'>rec</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="default_repository_name-class_method">
-  
-    + (<tt>Object</tt>) <strong>default_repository_name</strong> 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-10
-11
-12</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 10</span>
-
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_repository_name identifier id'>default_repository_name</span>
-  <span class='symbol val'>:store_master</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -514,8 +539,8 @@ preference.
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -529,15 +554,15 @@ preference.
       <pre class="lines">
 
 
-147
-148
-149</pre>
+165
+166
+167</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 147</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 165</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='services_location identifier id'>services_location</span>
-  <span class='not not kw'>not</span> <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
+  <span class='not not kw'>not</span> <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -558,15 +583,44 @@ preference.
       <pre class="lines">
 
 
-143
-144
-145</pre>
+157
+158
+159</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 143</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 157</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span>
   <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:required</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:read_preference</span><span class='dot token'>.</span><span class='desc identifier id'>desc</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="list_all-class_method">
+  
+    + (<tt>Object</tt>) <strong>list_all</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+161
+162
+163</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 161</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_all identifier id'>list_all</span>
+  <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:read_preference</span><span class='dot token'>.</span><span class='desc identifier id'>desc</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -587,12 +641,12 @@ preference.
       <pre class="lines">
 
 
-151
-152
-153</pre>
+169
+170
+171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 151</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 169</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='services_location identifier id'>services_location</span>
   <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span>
@@ -649,11 +703,10 @@ preference.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Return a URL that we can use to get fixity data from the pool: a specific
+    
+<p>Return a URL that we can use to get fixity data from the pool: a specific
 mime-type can be requested (at the time of this writing, deployed silos
-support text/csv and application/xml). The default mime-type is text/csv.
-</p>
+support text/csv and application/xml). The default mime-type is text/csv.</p>
 
 
   </div>
@@ -664,8 +717,8 @@ support text/csv and application/xml). The default mime-type is text/csv.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
       
       
@@ -679,20 +732,6 @@ support text/csv and application/xml). The default mime-type is text/csv.
       <pre class="lines">
 
 
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
 122
 123
 124
@@ -702,14 +741,28 @@ support text/csv and application/xml). The default mime-type is text/csv.
 128
 129
 130
-131</pre>
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 108</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 122</span>
 
 <span class='def def kw'>def</span> <span class='fixity_url identifier id'>fixity_url</span> <span class='mime_type identifier id'>mime_type</span> <span class='assign token'>=</span> <span class='string val'>'text/csv'</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
-  <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='text identifier id'>text</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
+  <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='LibXML constant id'>LibXML</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='text identifier id'>text</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
   <span class='if if kw'>if</span>  <span class='parser identifier id'>parser</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'fixity'</span><span class='rparen token'>)</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
     <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;When retreiving service information from the silo at #{services_location}, no fixity service was declared. The service document returned was was:\n#{text}.&quot;</span>
   <span class='end end kw'>end</span>
@@ -746,13 +799,11 @@ support text/csv and application/xml). The default mime-type is text/csv.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-return a URL we can post data directly to; we do this by requesting the
-silo&#8217;s &#8217;/service&#8217; document and parsing it for the
-&#8216;create&#8217; service.  we expect it to have a &#8217;%s&#8217; in
-that string into which we&#8217;ll place the name of the resource we wish
-to create.
-</p>
+    
+<p>return a URL we can post data directly to; we do this by requesting the
+silo’s ‘/service’ document and parsing it for the ‘create’
+service.  we expect it to have a ‘%s’ in that string into which we’ll
+place the name of the resource we wish to create.</p>
 
 
   </div>
@@ -763,8 +814,8 @@ to create.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
       
       
@@ -778,33 +829,35 @@ to create.
       <pre class="lines">
 
 
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
 95
 96
 97
 98
 99
 100
-101</pre>
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='post_url identifier id'>post_url</span> <span class='name identifier id'>name</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
-  <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='text identifier id'>text</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
+
+  <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='LibXML constant id'>LibXML</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='text identifier id'>text</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
   <span class='node identifier id'>node</span>  <span class='assign token'>=</span> <span class='parser identifier id'>parser</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'create'</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
 
   <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;When retreiving service information from the silo pool at #{services_location}, no create service was declared. The service document returned was was:\n#{text}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='node identifier id'>node</span>
@@ -829,31 +882,105 @@ to create.
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="server_url-instance_method">
+  
+    - (<tt>Object</tt>) <strong>server_url</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+39
+40
+41
+42
+43
+44</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 39</span>
+
+<span class='def def kw'>def</span> <span class='server_url identifier id'>server_url</span>
+  <span class='u identifier id'>u</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span>
+  <span class='u identifier id'>u</span><span class='dot token'>.</span><span class='scheme identifier id'>scheme</span> <span class='plus op'>+</span> <span class='dstring node'>&quot;://#{u.host}&quot;</span> <span class='plus op'>+</span> <span class='lparen token'>(</span><span class='u identifier id'>u</span><span class='dot token'>.</span><span class='port identifier id'>port</span> <span class='eq op'>==</span> <span class='integer val'>80</span> <span class='question op'>?</span> <span class='string val'>&quot;/&quot;</span> <span class='colon op'>:</span> <span class='dstring node'>&quot;:#{u.port}/&quot;</span><span class='rparen token'>)</span>
+<span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="service_document-instance_method">
   
     - (<tt>Object</tt>) <strong>service_document</strong> 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>We have a protocol that silo pools must follow: they must return a service
+document (XML) that describes where we can locate essential silo services.
+Here’s an example document:</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='integer val'>?x</span><span class='ml identifier id'>ml</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;1.0&quot;</span> <span class='encoding identifier id'>encoding</span><span class='assign token'>=</span><span class='string val'>&quot;UTF-8&quot;</span><span class='question op'>?</span><span class='gt op'>&gt;</span>
+<span class='lt op'>&lt;</span><span class='services identifier id'>services</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;0.0.1&quot;</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='create identifier id'>create</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;post&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://pool-one.example.com/create/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='fixity identifier id'>fixity</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;text/csv&quot;</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://pool-one.example.com/fixity.csv&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='fixity identifier id'>fixity</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;application/xml&quot;</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://pool-one.example.com/fixity.xml&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+<span class='lt op'>&lt;</span><span class='regexp val'>/services&gt;
+</span></pre>
+
+<p>We require one create service that specifies a URL template (it has a slot
+for a name) and when we POST data to that filled-in URL we’ll produce a
+new resource; the document returned from the POST will tell us where the
+resource has been place.</p>
+
+<p>We also have one or more URLs that describe where we can requester fixity
+data from; the MIME type of the returned data is provided.</p>
+
+<p>TODO: this is not the best way to do this: we should have the
+services_location return a media-type specific to our names.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
 69
 70
 71
@@ -861,13 +988,26 @@ to create.
 73
 74
 75
-76</pre>
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 56</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/model/pools.rb', line 69</span>
 
 <span class='def def kw'>def</span> <span class='service_document identifier id'>service_document</span>
-  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span> <span class='rescue rescue kw'>rescue</span> <span class='raise identifier id'>raise</span><span class='lparen token'>(</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;The silo services URL #{services_location} doesn't appear to be a valid URL&quot;</span><span class='rparen token'>)</span>
+  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span> <span class='rescue rescue kw'>rescue</span> <span class='raise identifier id'>raise</span><span class='lparen token'>(</span><span class='dstring node'>&quot;The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}&quot;</span><span class='rparen token'>)</span>
 
   <span class='begin begin kw'>begin</span> <span class='comment val'># go get information from the silo services document to determine the URLs for the sub services we'll need</span>
 
@@ -898,9 +1038,9 @@ to create.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:54 2011 by 
+  Generated on Mon Oct 31 10:37:54 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

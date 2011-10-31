@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Streams::StoreMasterPackageStream</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Streams::StoreMasterPackageStream
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -71,7 +84,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
+      <dd class="r2">CommonStreamMethods</dd>
       
     
   
@@ -83,36 +96,11 @@
 </dl>
 <div class="clear"></div>
 
-<h2>Overview</h2><div class="docstring">
-  <div class="discussion">
-    <p>
-TODO: keep the @ids as an array without shifting, keeping an offset, so we
-can reset it to zero on rewind.
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div>
-  <h2>Constant Summary</h2>
-  
-    <dl class="constants">
-      
-        <dt id="CHUNK_SIZE-constant" class="">CHUNK_SIZE =
-          
-        </dt>
-        <dd><pre class="code"><span class='integer val'>5000</span>
-</pre></dd>
-      
-    </dl>
-  
 
 
   
-  
-  
+
+
   
 
   
@@ -162,9 +150,8 @@ can reset it to zero on rewind.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of StoreMasterPackageStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of StoreMasterPackageStream.</p>
 </div></span>
   
 </li>
@@ -258,16 +245,7 @@ A new instance of StoreMasterPackageStream.
   
 
 
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -279,9 +257,8 @@ A new instance of StoreMasterPackageStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of StoreMasterPackageStream
-</p>
+    
+<p>A new instance of StoreMasterPackageStream</p>
 
 
   </div>
@@ -294,13 +271,13 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-77
-78
-79
-80</pre>
+62
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 77</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 62</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='@before ivar id'>@before</span> <span class='assign token'>=</span> <span class='before identifier id'>before</span> <span class='orop op'>||</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
@@ -338,8 +315,8 @@ A new instance of StoreMasterPackageStream
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -353,17 +330,17 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-96
-97
-98
-99</pre>
+80
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 96</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='ungetting? fid id'>ungetting?</span>
-  <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -384,29 +361,19 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112</pre>
+85
+86
+87
+88
+89
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 101</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-
-  <span class='if if kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-     <span class='@buff ivar id'>@buff</span> <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@ids ivar id'>@ids</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='lparen token'>(</span><span class='CHUNK_SIZE constant id'>CHUNK_SIZE</span><span class='rparen token'>)</span>
-  <span class='end end kw'>end</span>
-
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
   
   <span class='datum identifier id'>datum</span> <span class='assign token'>=</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
@@ -431,13 +398,13 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-82
-83
-84
-85</pre>
+67
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='setup identifier id'>setup</span>
@@ -462,17 +429,15 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-87
-88
-89
-90</pre>
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 87</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 72</span>
 
 <span class='def def kw'>def</span> <span class='setup identifier id'>setup</span>
-  <span class='@ids ivar id'>@ids</span>    <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span> <span class='@before ivar id'>@before</span>
-  <span class='@buff ivar id'>@buff</span>   <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@buff ivar id'>@buff</span>  <span class='assign token'>=</span> <span class='StoreMasterModel constant id'>StoreMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@before ivar id'>@before</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -493,12 +458,12 @@ A new instance of StoreMasterPackageStream
       <pre class="lines">
 
 
-92
-93
-94</pre>
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 92</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/store-package-stream.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class} IEIDs prior to #{@before}&gt;&quot;</span>
@@ -514,9 +479,9 @@ A new instance of StoreMasterPackageStream
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:14 2011 by 
+  Generated on Mon Oct 31 10:38:04 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

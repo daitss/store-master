@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Streams::DaitssPackageStream</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Streams::DaitssPackageStream
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -71,7 +84,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2"><span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></dd>
+      <dd class="r2">CommonStreamMethods</dd>
       
     
   
@@ -85,36 +98,38 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-This data stream returns key/value pairs of fixity information as known by
+    
+<p>This data stream returns key/value pairs of fixity information as known by
 DAITSS.  The keys are sorted, unique URLs (strings) showing the
 store-master provided location.  The values are a datamapper-provided
 struct giving the expected MD5, SHA1 and Size of the package, as well as
-its IEID.
-</p>
-<p>
-&#8216;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000">betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000</a>&#8217;
-#<Struct::DataMapper ieid=&#8220;EZQQYQMC2_6PYZMQ&#8221;, url=&#8220;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000">betastore.tarchive.fcla.edu/packages/EZQQYQMC2_6PYZMQ.000</a>&#8220;,
-md5=&#8220;7e45d204d270da0f8aab2a65f59a2429&#8221;,
-sha1=&#8220;e541c693e56edd9a7e04cab94de5740092ae3953&#8221;, size=4761600>
-&#8216;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000">betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000</a>&#8217;
-#<Struct::DataMapper ieid=&#8220;EZYNH5CZC_ZP2B9Y&#8221;, url=&#8220;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000">betastore.tarchive.fcla.edu/packages/EZYNH5CZC_ZP2B9Y.000</a>&#8220;,
-md5=&#8220;52076e3d8a9196d365c8381e135b6812&#8221;,
-sha1=&#8220;b046c58503f570ea090b8c5e46cc5f4e0c27f003&#8221;,
-size=1962598400> &#8216;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000">betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000</a>&#8217;
-#<Struct::DataMapper ieid=&#8220;EZYVXE2TV_J9MW69&#8221;, url=&#8220;<a
-href="http://betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000">betastore.tarchive.fcla.edu/packages/EZYVXE2TV_J9MW69.000</a>&#8220;,
-md5=&#8220;0959a55d2b6b46c4080bc85b10b87947&#8221;,
-sha1=&#8220;05fc20aaebad2708b91ad4c0d372ca733da7417a&#8221;,
-size=2763468800>
-</p>
-<pre class="code">
- <span class='dot3 op'>...</span>
+its IEID.</p>
+
+<p>“<a
+href="http://storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000">storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000</a>”,
+#&lt;struct ieid=“E101W4TQQ_VGD9QW”, url=“<a
+href="http://storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000">storemaster.fda.fcla.edu:70/packages/E101W4TQQ_VGD9QW.000</a>”,
+last_successful_fixity_time=“2011-10-02T03:38:38Z”,
+package_store_time=“2011-09-19T18:19:52Z”,
+md5=“f1b797725b64c4a06a81bcfac0c1f077”,
+sha1=“1a6f80fd868cda45e6f8413f8fc9dbd9c081f3f9”, size=9256960&gt; “<a
+href="http://storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000">storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000</a>”,
+#&lt;struct ieid=“E104GJTXL_KZQB6L”, url=“<a
+href="http://storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000">storemaster.fda.fcla.edu:70/packages/E104GJTXL_KZQB6L.000</a>”,
+last_successful_fixity_time=“2011-09-30T10:39:50Z”,
+package_store_time=“2011-07-28T12:05:46Z”,
+md5=“c2e481ca90d60674b2de2a1279eb2dc6”,
+sha1=“c97a9aeba05f84461be8e73fa124b4435e4fea50”, size=54087680&gt;
+“<a
+href="http://storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000">storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000</a>”,
+#&lt;struct ieid=“E1095RV78_SZTIN2”, url=“<a
+href="http://storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000">storemaster.fda.fcla.edu:70/packages/E1095RV78_SZTIN2.000</a>”,
+last_successful_fixity_time=“2011-10-09T20:22:43Z”,
+package_store_time=“2011-06-02T05:06:19Z”,
+md5=“1203fd48d996a1baf3bc93ea4543d5ea”,
+sha1=“781c8b17429c3353c93464ffe0b0484549979de2”, size=1572372480&gt;</p>
+
+<pre class="code"><span class='dot3 op'>...</span>
 </pre>
 
 
@@ -123,37 +138,10 @@ size=2763468800>
 <div class="tags">
   
 </div>
-  <h2>Constant Summary</h2>
-  
-    <dl class="constants">
-      
-        <dt id="CHUNK_SIZE-constant" class="">CHUNK_SIZE =
-          <div class="docstring">
-  <div class="discussion">
-    <p>
-TODO: we might be better off maintaining an index into @ieids and keeping
-it around, rather than shifting materials off and having to re-create it
-with another database hit.  We&#8217;ll see after how it&#8217;s used in
-practice.
-</p>
 
-
-  </div>
-</div>
-<div class="tags">
-  
-</div>
-        </dt>
-        <dd><pre class="code"><span class='integer val'>2000</span>
-</pre></dd>
-      
-    </dl>
   
 
 
-  
-  
-  
   
 
   
@@ -203,9 +191,8 @@ practice.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of DaitssPackageStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of DaitssPackageStream.</p>
 </div></span>
   
 </li>
@@ -299,16 +286,7 @@ A new instance of DaitssPackageStream.
   
 
 
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -320,9 +298,8 @@ A new instance of DaitssPackageStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of DaitssPackageStream
-</p>
+    
+<p>A new instance of DaitssPackageStream</p>
 
 
   </div>
@@ -335,10 +312,10 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-28</pre>
+22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -373,8 +350,8 @@ A new instance of DaitssPackageStream
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -388,17 +365,17 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-42
-43
-44
-45</pre>
+36
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 42</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='ungetting? fid id'>ungetting?</span>
-  <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='and and kw'>and</span> <span class='@ieids ivar id'>@ieids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -419,29 +396,19 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58</pre>
+41
+42
+43
+44
+45
+46
+47</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 47</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 41</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span> 
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
-
-  <span class='if if kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-    <span class='@buff ivar id'>@buff</span> <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@ieids ivar id'>@ieids</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='lparen token'>(</span><span class='CHUNK_SIZE constant id'>CHUNK_SIZE</span><span class='rparen token'>)</span>
-  <span class='end end kw'>end</span>
-
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 
   <span class='datum identifier id'>datum</span> <span class='assign token'>=</span> <span class='@buff ivar id'>@buff</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
@@ -466,13 +433,13 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-33
-34
-35
-36</pre>
+27
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 33</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='setup identifier id'>setup</span>
@@ -497,17 +464,15 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-62
-63
-64
-65</pre>
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 62</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 51</span>
 
 <span class='def def kw'>def</span> <span class='setup identifier id'>setup</span>
-  <span class='@ieids ivar id'>@ieids</span>  <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span> <span class='@before ivar id'>@before</span>
-  <span class='@buff ivar id'>@buff</span>   <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='@buff ivar id'>@buff</span>  <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@before ivar id'>@before</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -528,12 +493,12 @@ A new instance of DaitssPackageStream
       <pre class="lines">
 
 
-38
-39
-40</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 38</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-package-stream.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class} IEIDs prior to #{@before}&gt;&quot;</span>
@@ -549,9 +514,9 @@ A new instance of DaitssPackageStream
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:42 2011 by 
+  Generated on Mon Oct 31 10:37:58 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

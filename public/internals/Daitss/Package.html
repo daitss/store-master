@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Daitss::Package</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Daitss::Package
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -87,9 +100,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-authoritative package record
-</p>
+    
+<p>authoritative package record</p>
 
 
   </div>
@@ -108,6 +120,9 @@ authoritative package record
 </pre></dd>
       
     </dl>
+  
+
+
   
 
 
@@ -158,10 +173,8 @@ authoritative package record
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-get a package object via a URL TODO: might be better to rework our
-algorithms to get a collection of packages&#8230;
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get a package object via a URL.</p>
 </div></span>
   
 </li>
@@ -170,7 +183,7 @@ algorithms to get a collection of packages&#8230;
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#package_copies-class_method" title="package_copies (class method)">+ (Object) <strong>package_copies</strong>(ieids) </a>
+      <a href="#package_copies-class_method" title="package_copies (class method)">+ (Object) <strong>package_copies</strong>(before) </a>
     
 
     
@@ -183,34 +196,9 @@ algorithms to get a collection of packages&#8230;
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-provide a list of data mapper records for selected IEIDs  ordered by the
-copy URL.
-</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#package_copies_ids-class_method" title="package_copies_ids (class method)">+ (Object) <strong>package_copies_ids</strong>(before) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'><p>
-Provide a list of all of the package ids sorted by the copy URL.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>provide a list of data mapper records for selected IEIDs  ordered by the
+copy URL.</p>
 </div></span>
   
 </li>
@@ -304,10 +292,9 @@ Provide a list of all of the package ids sorted by the copy URL.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-event recording: return true if saved, false on error, and, in the case of
-success events, nil if unchanged.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>event recording: return true if saved, false on error, and, in the case of
+success events, nil if unchanged.</p>
 </div></span>
   
 </li>
@@ -329,9 +316,8 @@ success events, nil if unchanged.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-make an event for this package.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>makes an event for this package.</p>
 </div></span>
   
 </li>
@@ -353,10 +339,7 @@ make an event for this package.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-def migrated_from_pt?.
-</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -409,10 +392,8 @@ def migrated_from_pt?.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-get a package object via a URL TODO: might be better to rework our
-algorithms to get a collection of packages&#8230;
-</p>
+    
+<p>get a package object via a URL</p>
 
 
   </div>
@@ -425,20 +406,20 @@ algorithms to get a collection of packages&#8230;
       <pre class="lines">
 
 
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71</pre>
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 61</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 71</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup_from_url identifier id'>lookup_from_url</span> <span class='url identifier id'>url</span>
 
@@ -460,16 +441,15 @@ algorithms to get a collection of packages&#8230;
       <div class="method_details ">
   <p class="signature " id="package_copies-class_method">
   
-    + (<tt>Object</tt>) <strong>package_copies</strong>(ieids) 
+    + (<tt>Object</tt>) <strong>package_copies</strong>(before) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-provide a list of data mapper records for selected IEIDs  ordered by the
-copy URL
-</p>
+    
+<p>provide a list of data mapper records for selected IEIDs  ordered by the
+copy URL</p>
 
 
   </div>
@@ -482,6 +462,28 @@ copy URL
       <pre class="lines">
 
 
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
 46
 47
 48
@@ -492,74 +494,63 @@ copy URL
 53
 54
 55
-56</pre>
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 46</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 24</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span>  <span class='ieids identifier id'>ieids</span>
-  <span class='return return kw'>return</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='ieids identifier id'>ieids</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-  <span class='sql identifier id'>sql</span> <span class='assign token'>=</span> <span class='string val'>&quot;SELECT packages.id AS ieid, copies.url, copies.md5, copies.sha1, copies.size &quot;</span> <span class='plus op'>+</span>
-          <span class='string val'>&quot;FROM packages, aips, copies &quot;</span>                                                <span class='plus op'>+</span>
-         <span class='string val'>&quot;WHERE packages.id = aips.package_id &quot;</span>                                         <span class='plus op'>+</span>
-           <span class='string val'>&quot;AND aips.id = copies.aip_id &quot;</span>                                               <span class='plus op'>+</span>
-           <span class='dstring node'>&quot;AND packages.id in ('#{ieids.join(&quot;', '&quot;)}') &quot;</span>                              <span class='plus op'>+</span>
-      <span class='string val'>&quot;ORDER BY copies.url&quot;</span>
-
-  <span class='repository identifier id'>repository</span><span class='lparen token'>(</span><span class='symbol val'>:daitss</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='adapter identifier id'>adapter</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='sql identifier id'>sql</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="package_copies_ids-class_method">
-  
-    + (<tt>Object</tt>) <strong>package_copies_ids</strong>(before) 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-Provide a list of all of the package ids sorted by the copy URL. There will
-be on the order of 10^6 of these
-</p>
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='before identifier id'>before</span>
 
 
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
+  <span class='comment val'># The following sql is meant to provide information from the</span>
+  <span class='comment val'># DAITSS DB in the following form:</span>
+  <span class='comment val'>#</span>
+  <span class='comment val'>#        ieid       |                               url                                | last_successful_fixity_time |  package_store_time  |               md5                |                   sha1                   |    size     </span>
+  <span class='comment val'>#  E13LVY77R_4VP1BD | http://storemaster.fda.fcla.edu:70/packages/E13LVY77R_4VP1BD.000 |                             | 2011-10-29T23:04:04Z | 4108b06e33b4b742f66d2106aa58adbe | de78cfd8e8444c56b6e519cbec21d9f9c8b249e0 |   179752960</span>
+  <span class='comment val'>#  E1ADTX4PV_WPV7W3 | http://storemaster.fda.fcla.edu:70/packages/E1ADTX4PV_WPV7W3.000 | 2011-09-25T02:22:16Z        | 2011-07-14T01:41:29Z | 97E8E907719AA620B94D19AD5EB0838F | 4D9FEAB61C20AB1C20558BB11A49F72EF9F6F505 |   370350080</span>
+  <span class='comment val'>#  E1AFGE6DV_P6P6FK | http://storemaster.fda.fcla.edu:70/packages/E1AFGE6DV_P6P6FK.000 |                             | 2011-10-30T00:15:47Z | ba41f44d02fc1957085bb394f1953ff8 | 2944aeba54a190551865e5b23579ab39ed25b67f |    85872640</span>
+  <span class='comment val'>#  E1AK86W44_W77Z0G | http://storemaster.fda.fcla.edu:70/packages/E1AK86W44_W77Z0G.000 | 2011-09-06T05:02:13Z        | 2011-07-09T20:25:56Z | 241F5E2996B16C2F6E47781912ADDCBA | 73A66EA5BB5BADFDF0BA3441D18C29C71478F379 |   977510400</span>
+  <span class='comment val'># </span>
+
+  <span class='comment val'># The important bit is that last_successful_fixity time can be</span>
+  <span class='comment val'># null for the case of a new ieid, so that we can check if a</span>
+  <span class='comment val'># succesful fixity check has been repeated, and not attempt to</span>
+  <span class='comment val'># update the daitss database.  It has a bug that doesn't affect</span>
+  <span class='comment val'># our use, however: the last_successful_fixity time may refer to</span>
+  <span class='comment val'># an old version of the ieid on a recently refreshed package.</span>
 
 
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 33</span>
+  <span class='sql identifier id'>sql</span> <span class='assign token'>=</span> <span class='string val'>&quot;SELECT package_copies.id AS ieid, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;package_copies.url, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;REPLACE(TO_CHAR(fixity_success_events.timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS last_successful_fixity_time, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;REPLACE(TO_CHAR(package_copies.timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS package_store_time, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;package_copies.md5, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;package_copies.sha1, &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;package_copies.size &quot;</span> <span class='plus op'>+</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies_ids identifier id'>package_copies_ids</span>  <span class='before identifier id'>before</span>
-  <span class='sql identifier id'>sql</span> <span class='assign token'>=</span> <span class='string val'>&quot;SELECT packages.id &quot;</span>                    <span class='plus op'>+</span>
-          <span class='string val'>&quot;FROM packages, aips, copies &quot;</span>         <span class='plus op'>+</span>
-         <span class='string val'>&quot;WHERE packages.id = aips.package_id &quot;</span>  <span class='plus op'>+</span>
-           <span class='string val'>&quot;AND aips.id = copies.aip_id &quot;</span>        <span class='plus op'>+</span>
-           <span class='dstring node'>&quot;AND copies.timestamp &lt; '#{before}' &quot;</span> <span class='plus op'>+</span>               <span class='comment val'># TODO: make sure all variations of timestamps work</span>
-      <span class='string val'>&quot;ORDER BY copies.url&quot;</span>
+        <span class='string val'>&quot;FROM (SELECT packages.id, copies.url as url, copies.md5, copies.sha1, copies.size, copies.timestamp &quot;</span> <span class='plus op'>+</span>
+                <span class='string val'>&quot;FROM packages, aips, copies &quot;</span> <span class='plus op'>+</span>
+               <span class='string val'>&quot;WHERE packages.id = aips.package_id &quot;</span> <span class='plus op'>+</span>
+                 <span class='dstring node'>&quot;AND copies.timestamp &lt; '#{before}' &quot;</span> <span class='plus op'>+</span>
+                 <span class='string val'>&quot;AND aips.id = copies.aip_id) &quot;</span> <span class='plus op'>+</span>
+        <span class='string val'>&quot;AS package_copies &quot;</span> <span class='plus op'>+</span>
+
+        <span class='string val'>&quot;LEFT JOIN (SELECT package_id, timestamp FROM events WHERE name = 'fixity success') &quot;</span> <span class='plus op'>+</span>
+        <span class='string val'>&quot;AS fixity_success_events &quot;</span> <span class='plus op'>+</span>
+
+        <span class='string val'>&quot;ON package_copies.id = fixity_success_events.package_id &quot;</span> <span class='plus op'>+</span>
+        <span class='string val'>&quot;ORDER BY package_copies.url&quot;</span>
 
   <span class='repository identifier id'>repository</span><span class='lparen token'>(</span><span class='symbol val'>:daitss</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='adapter identifier id'>adapter</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='sql identifier id'>sql</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
@@ -617,17 +608,23 @@ be on the order of 10^6 of these
       <pre class="lines">
 
 
-82
-83
-84
-85
-86
-87</pre>
+95
+96
+97
+98
+99
+100
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='fixity_failure_event identifier id'>fixity_failure_event</span> <span class='note identifier id'>note</span>
+
+  <span class='comment val'>#### return true ###### </span>
+
   <span class='e identifier id'>e</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'fixity failure'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span> <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='store_master identifier id'>store_master</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span> <span class='assign token'>=</span> <span class='note identifier id'>note</span>
@@ -652,22 +649,32 @@ be on the order of 10^6 of these
       <pre class="lines">
 
 
-98
-99
-100
-101
-102
-103
-104</pre>
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 98</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='fixity_success_event identifier id'>fixity_success_event</span> <span class='datetime identifier id'>datetime</span>
+  <span class='timestamp identifier id'>timestamp</span> <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='datetime identifier id'>datetime</span><span class='rparen token'>)</span>
+
   <span class='event identifier id'>event</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='first_or_new identifier id'>first_or_new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'fixity success'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
-  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='if if_mod kw'>if</span> <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='eq op'>==</span> <span class='datetime identifier id'>datetime</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='eq op'>==</span> <span class='timestamp identifier id'>timestamp</span>
+
+  <span class='comment val'>#### return true   ###### </span>
+
   <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span>     <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='store_master identifier id'>store_master</span>
-  <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='assign token'>=</span> <span class='datetime identifier id'>datetime</span>
+  <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='assign token'>=</span> <span class='timestamp identifier id'>timestamp</span>
   <span class='return return kw'>return</span> <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -685,10 +692,9 @@ be on the order of 10^6 of these
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-event recording: return true if saved, false on error, and, in the case of
-success events, nil if unchanged
-</p>
+    
+<p>event recording: return true if saved, false on error, and, in the case of
+success events, nil if unchanged</p>
 
 
   </div>
@@ -701,17 +707,23 @@ success events, nil if unchanged
       <pre class="lines">
 
 
-75
-76
-77
-78
-79
-80</pre>
+85
+86
+87
+88
+89
+90
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 75</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='note identifier id'>note</span>
+
+  <span class='comment val'>#### return true ###### </span>
+
   <span class='e identifier id'>e</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'integrity failure'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span> <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='store_master identifier id'>store_master</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='notes identifier id'>notes</span> <span class='assign token'>=</span> <span class='note identifier id'>note</span>
@@ -732,9 +744,8 @@ success events, nil if unchanged
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-make an event for this package
-</p>
+    
+<p>makes an event for this package</p>
 
 
   </div>
@@ -747,10 +758,10 @@ make an event for this package
       <pre class="lines">
 
 
-39</pre>
+38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/package.rb', line 39</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/package.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='log identifier id'>log</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -766,47 +777,30 @@ make an event for this package
   
 
   
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-def migrated_from_pt?
-</p>
-<pre class="code">
-  <span class='events identifier id'>events</span><span class='dot token'>.</span><span class='first identifier id'>first</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;migrated from package tracker&quot;</span>
-</pre>
-<p>
-end
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
+</p><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
+49
+50
+51
+52
+53
+54
+55
+56
+57
 58
 59
 60
 61
 62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72</pre>
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/package.rb', line 58</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/package.rb', line 49</span>
 
 <span class='def def kw'>def</span> <span class='status identifier id'>status</span>
 
@@ -834,9 +828,9 @@ end
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:20 2011 by 
+  Generated on Mon Oct 31 10:38:02 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

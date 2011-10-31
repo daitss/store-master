@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Module: Analyzer</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Analyzer
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -66,18 +79,16 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Analyzers run checks over various pool and daitss fixity data streams; it
+    
+<p>Analyzers run checks over various pool and daitss fixity data streams; it
 produces reports listing warnings and errors that are provided for later
 printing or mailing; if logging has been initialized the reporter objects
-will log messages as appropriate.
-</p>
-<p>
-Analyzer objects have at least two public methods:
-</p>
-<pre class="code">
- <span class='mult op'>*</span> <span class='run identifier id'>run</span> <span class='minus op'>-</span> <span class='Runs constant id'>Runs</span> <span class='an identifier id'>an</span> <span class='analysis identifier id'>analysis</span> <span class='over identifier id'>over</span> <span class='one identifier id'>one</span> <span class='or or kw'>or</span> <span class='more identifier id'>more</span> <span class='data identifier id'>data</span> <span class='streams identifier id'>streams</span><span class='comma token'>,</span> <span class='populating identifier id'>populating</span> <span class='reporter identifier id'>reporter</span> <span class='objects identifier id'>objects</span> <span class='with identifier id'>with</span> <span class='messages identifier id'>messages</span><span class='dot token'>.</span> <span class='Returns constant id'>Returns</span> <span class='the identifier id'>the</span> <span class='analysis identifier id'>analysis</span> <span class='object identifier id'>object</span> <span class='itself identifier id'>itself</span><span class='dot token'>.</span>
- <span class='mult op'>*</span> <span class='reports identifier id'>reports</span> <span class='minus op'>-</span> <span class='Returns constant id'>Returns</span> <span class='an identifier id'>an</span> <span class='array identifier id'>array</span> <span class='containing identifier id'>containing</span> <span class='the identifier id'>the</span> <span class='reports identifier id'>reports</span> <span class='generated identifier id'>generated</span> <span class='during identifier id'>during</span> <span class='the identifier id'>the</span> <span class='run identifier id'>run</span><span class='dot token'>.</span>
+will log messages as appropriate.</p>
+
+<p>Analyzer objects have at least two public methods:</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='run identifier id'>run</span> <span class='minus op'>-</span> <span class='Runs constant id'>Runs</span> <span class='an identifier id'>an</span> <span class='analysis identifier id'>analysis</span> <span class='over identifier id'>over</span> <span class='one identifier id'>one</span> <span class='or or kw'>or</span> <span class='more identifier id'>more</span> <span class='data identifier id'>data</span> <span class='streams identifier id'>streams</span><span class='comma token'>,</span> <span class='populating identifier id'>populating</span> <span class='reporter identifier id'>reporter</span> <span class='objects identifier id'>objects</span> <span class='with identifier id'>with</span> <span class='messages identifier id'>messages</span><span class='dot token'>.</span> <span class='Returns constant id'>Returns</span> <span class='the identifier id'>the</span> <span class='analysis identifier id'>analysis</span> <span class='object identifier id'>object</span> <span class='itself identifier id'>itself</span><span class='dot token'>.</span>
+<span class='mult op'>*</span> <span class='reports identifier id'>reports</span> <span class='minus op'>-</span> <span class='Returns constant id'>Returns</span> <span class='an identifier id'>an</span> <span class='array identifier id'>array</span> <span class='containing identifier id'>containing</span> <span class='the identifier id'>the</span> <span class='reports identifier id'>reports</span> <span class='generated identifier id'>generated</span> <span class='during identifier id'>during</span> <span class='the identifier id'>the</span> <span class='run identifier id'>run</span><span class='dot token'>.</span>
 </pre>
 
 
@@ -91,7 +102,7 @@ Analyzer objects have at least two public methods:
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Analyzer/EventCounter.html" title="Analyzer::EventCounter (class)">EventCounter</a></span>, <span class='object_link'><a href="Analyzer/InterPoolAnalyzer.html" title="Analyzer::InterPoolAnalyzer (class)">InterPoolAnalyzer</a></span>, <span class='object_link'><a href="Analyzer/IntraPoolAnalyzer.html" title="Analyzer::IntraPoolAnalyzer (class)">IntraPoolAnalyzer</a></span>, <span class='object_link'><a href="Analyzer/PoolVsDaitssAnalyzer.html" title="Analyzer::PoolVsDaitssAnalyzer (class)">PoolVsDaitssAnalyzer</a></span>, <span class='object_link'><a href="Analyzer/StoreMasterAnalyzer.html" title="Analyzer::StoreMasterAnalyzer (class)">StoreMasterAnalyzer</a></span>, <span class='object_link'><a href="Analyzer/StoreMasterVsPoolAnalyzer.html" title="Analyzer::StoreMasterVsPoolAnalyzer (class)">StoreMasterVsPoolAnalyzer</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Analyzer/PoolVsDaitssAnalyzer.html" title="Analyzer::PoolVsDaitssAnalyzer (class)">PoolVsDaitssAnalyzer</a></span>, <span class='object_link'><a href="Analyzer/StatCounter.html" title="Analyzer::StatCounter (class)">StatCounter</a></span>
     
   
 </p>
@@ -100,12 +111,14 @@ Analyzer objects have at least two public methods:
 
 
 
+
+
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:15 2011 by 
+  Generated on Mon Oct 31 10:37:53 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

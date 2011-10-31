@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Streams::PoolFixityStream</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Streams::PoolFixityStream
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -53,12 +66,12 @@
   
     <dt class="r1">Inherits:</dt>
     <dd class="r1">
-      <span class="inheritName"><span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></span>
+      <span class="inheritName">DataFileStream</span>
       
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next"><span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></li>
+            <li class="next">DataFileStream</li>
           
             <li class="next">Streams::PoolFixityStream</li>
           
@@ -83,22 +96,19 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-PoolFixityStream
-</p>
-<p>
-Return a stream of all of the fixity data from one pool.  The each method
-yields two values, a package name and a struct describing those resources:
-</p>
-<pre class="code">
- <span class='EO05UJJHZ_HPDFHG constant id'>EO05UJJHZ_HPDFHG</span><span class='integer val'>.001</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001&quot;, sha1=&quot;4abc7ec5f02b946dc4812f0b60bda34940ae62f3&quot;, md5=&quot;0d736ef6585b44bf0552a61b95ad9b87&quot;, size=&quot;1313843200&quot;, fixity_time=&quot;2011-04-27T11:38:30Z&quot;, put_time=&quot;2011-04-20T20:21:33Z&quot;, status=&quot;ok&quot;&gt;</span>
- <span class='EQ93PZGKM_ER3H8G constant id'>EQ93PZGKM_ER3H8G</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000&quot;, sha1=&quot;a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4&quot;, md5=&quot;c9672d29178ee51eafef97a4b8297a5b&quot;, size=&quot;587591680&quot;, fixity_time=&quot;2011-04-27T11:38:45Z&quot;, put_time=&quot;2011-04-20T22:08:41Z&quot;, status=&quot;ok&quot;&gt;</span>
- <span class='ESKMPS0TO_7W4ASP constant id'>ESKMPS0TO_7W4ASP</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000&quot;, sha1=&quot;a1bc6134dbc4dc0beffa94235f470bb7e0e8a016&quot;, md5=&quot;9fc127a90ec6c02b094d6f656f74232c&quot;, size=&quot;1003280384&quot;, fixity_time=&quot;2011-04-27T11:39:11Z&quot;, put_time=&quot;2011-04-21T14:20:13Z&quot;, status=&quot;ok&quot;&gt;</span>
+    
+<p>PoolFixityStream</p>
+
+<p>Return a stream of all of the fixity data from one pool.  The each method
+yields two values, a package name and a struct describing those resources:</p>
+
+<pre class="code"><span class='EO05UJJHZ_HPDFHG constant id'>EO05UJJHZ_HPDFHG</span><span class='integer val'>.001</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001&quot;, sha1=&quot;4abc7ec5f02b946dc4812f0b60bda34940ae62f3&quot;, md5=&quot;0d736ef6585b44bf0552a61b95ad9b87&quot;, size=&quot;1313843200&quot;, fixity_time=&quot;2011-04-27T11:38:30Z&quot;, put_time=&quot;2011-04-20T20:21:33Z&quot;, status=&quot;ok&quot;&gt;</span>
+<span class='EQ93PZGKM_ER3H8G constant id'>EQ93PZGKM_ER3H8G</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000&quot;, sha1=&quot;a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4&quot;, md5=&quot;c9672d29178ee51eafef97a4b8297a5b&quot;, size=&quot;587591680&quot;, fixity_time=&quot;2011-04-27T11:38:45Z&quot;, put_time=&quot;2011-04-20T22:08:41Z&quot;, status=&quot;ok&quot;&gt;</span>
+<span class='ESKMPS0TO_7W4ASP constant id'>ESKMPS0TO_7W4ASP</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000&quot;, sha1=&quot;a1bc6134dbc4dc0beffa94235f470bb7e0e8a016&quot;, md5=&quot;9fc127a90ec6c02b094d6f656f74232c&quot;, size=&quot;1003280384&quot;, fixity_time=&quot;2011-04-27T11:39:11Z&quot;, put_time=&quot;2011-04-21T14:20:13Z&quot;, status=&quot;ok&quot;&gt;</span>
 </pre>
-<p>
-In the interest of speed the location and timestamp fields are simple
-strings (not a URI and DateTime as you might expect)
-</p>
+
+<p>In the interest of speed the location and timestamp fields are simple
+strings (not a URI and DateTime as you might expect)</p>
 
 
   </div>
@@ -107,13 +117,6 @@ strings (not a URI and DateTime as you might expect)
   
 </div>
 
-  
-  
-  
-  
-  
-  
-  
   
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
@@ -137,9 +140,8 @@ strings (not a URI and DateTime as you might expect)
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute url.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute url.</p>
 </div></span>
   
 </li>
@@ -147,6 +149,9 @@ Returns the value of attribute url.
     
   </ul>
 
+
+
+  
 
   
     <h2>
@@ -159,7 +164,7 @@ Returns the value of attribute url.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolFixityStream) <strong>initialize</strong>(pool) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolFixityStream) <strong>initialize</strong>(pool, options = {}) </a>
     
 
     
@@ -174,9 +179,10 @@ Returns the value of attribute url.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of PoolFixityStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The optional stored_before must produce a valid datetime when it’s
+‘to_s’ method is called TODO:  the stored_before query parameter is a
+bad way of doing things - need to be more HATEOS-driven.</p>
 </div></span>
   
 </li>
@@ -198,10 +204,30 @@ A new instance of PoolFixityStream.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-The CSV data returned by the above HTTP request is of the form:.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>The CSV data returned by the above HTTP request is of the form:.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rewind-instance_method" title="#rewind (instance method)">- (Object) <strong>rewind</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -231,40 +257,22 @@ The CSV data returned by the above HTTP request is of the form:.
   
 
 
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DataFileStream.html" title="Streams::DataFileStream (class)">DataFileStream</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="DataFileStream.html#eos%3F-instance_method" title="Streams::DataFileStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="DataFileStream.html#rewind-instance_method" title="Streams::DataFileStream#rewind (method)">#rewind</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="Streams::PoolFixityStream (class)">PoolFixityStream</a></span></tt>) <strong>initialize</strong>(pool) 
+    - (<tt><span class='object_link'><a href="" title="Streams::PoolFixityStream (class)">PoolFixityStream</a></span></tt>) <strong>initialize</strong>(pool, options = {}) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of PoolFixityStream
-</p>
+    
+<p>The optional stored_before must produce a valid datetime when it’s
+‘to_s’ method is called TODO:  the stored_before query parameter is a
+bad way of doing things - need to be more HATEOS-driven.</p>
 
 
   </div>
@@ -277,64 +285,12 @@ A new instance of PoolFixityStream
       <pre class="lines">
 
 
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58</pre>
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 32</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 37</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span>
-
-  <span class='file identifier id'>file</span> <span class='assign token'>=</span> <span class='Tempfile constant id'>Tempfile</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='dstring node'>&quot;pool-fixity-data-#{pool.name}-&quot;</span><span class='rparen token'>)</span>
-  <span class='@url ivar id'>@url</span> <span class='assign token'>=</span> <span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='fixity_url identifier id'>fixity_url</span>
-
-  <span class='get_request identifier id'>get_request</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='colon2 op'>::</span><span class='Get constant id'>Get</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
-  <span class='get_request identifier id'>get_request</span><span class='dot token'>.</span><span class='basic_auth identifier id'>basic_auth</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='or or kw'>or</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='password identifier id'>password</span>
-
-  <span class='http identifier id'>http</span> <span class='assign token'>=</span> <span class='Net constant id'>Net</span><span class='colon2 op'>::</span><span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='@url ivar id'>@url</span><span class='dot token'>.</span><span class='port identifier id'>port</span><span class='rparen token'>)</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='open_timeout identifier id'>open_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>15</span>
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='read_timeout identifier id'>read_timeout</span> <span class='assign token'>=</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span>  <span class='comment val'># TODO: get some perfomance metrics on this</span>
-
-  <span class='http identifier id'>http</span><span class='dot token'>.</span><span class='request identifier id'>request</span><span class='lparen token'>(</span><span class='get_request identifier id'>get_request</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='response identifier id'>response</span><span class='bitor op'>|</span>
-    <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Bad response when contacting the silo at #{url}, response was #{response.code} #{response.message}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='code identifier id'>code</span> <span class='eq op'>==</span> <span class='string val'>'200'</span>
-    <span class='response identifier id'>response</span><span class='dot token'>.</span><span class='read_body identifier id'>read_body</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
-      <span class='next next kw'>next</span> <span class='if if_mod kw'>if</span> <span class='buff identifier id'>buff</span> <span class='match op'>=~</span> <span class='regexp val'>/&quot;name&quot;,/</span>
-      <span class='file identifier id'>file</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='buff identifier id'>buff</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
-  <span class='file identifier id'>file</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
-  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='file identifier id'>file</span><span class='rparen token'>)</span>
-
-<span class='rescue rescue kw'>rescue</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span>
-<span class='rescue rescue kw'>rescue</span> <span class='Exception constant id'>Exception</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Error initializing pool data from #{@url}: #{e.class} - #{e.message}&quot;</span>
-<span class='end end kw'>end</span>
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
     </td>
   </tr>
@@ -358,9 +314,8 @@ A new instance of PoolFixityStream
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute url
-</p>
+    
+<p>Returns the value of attribute url</p>
 
 
   </div>
@@ -373,12 +328,12 @@ Returns the value of attribute url
       <pre class="lines">
 
 
-30
 31
-32</pre>
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 30</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 31</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='@url ivar id'>@url</span>
@@ -405,19 +360,17 @@ Returns the value of attribute url
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-The CSV data returned by the above HTTP request is of the form:
-</p>
-<pre class="code">
-  <span class='string val'>&quot;name&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;location&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;sha1&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;md5&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;size&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;fixity_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;put_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;status&quot;</span>
-  <span class='string val'>&quot;E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:25:58Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
-  <span class='string val'>&quot;E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:02Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
-  <span class='string val'>&quot;E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:04Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:06Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
- <span class='dot3 op'>...</span>
+    
+<p>The CSV data returned by the above HTTP request is of the form:</p>
+
+<pre class="code"> <span class='string val'>&quot;name&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;location&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;sha1&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;md5&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;size&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;fixity_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;put_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;status&quot;</span>
+ <span class='string val'>&quot;E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:25:58Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+ <span class='string val'>&quot;E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:02Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+ <span class='string val'>&quot;E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:04Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:06Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+<span class='dot3 op'>...</span>
 </pre>
-<p>
-key = name;  value = [ location, sha1, md5, date, status ]
-</p>
+
+<p>key = name;  value = [ location, sha1, md5, date, status ]</p>
 
 
   </div>
@@ -430,17 +383,50 @@ key = name;  value = [ location, sha1, md5, date, status ]
       <pre class="lines">
 
 
-73
-74
-75
-76</pre>
+87
+88
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 73</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='CSV constant id'>CSV</span><span class='dot token'>.</span><span class='parse_line identifier id'>parse_line</span><span class='lparen token'>(</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span><span class='comma token'>,</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='PoolFixityRecord constant id'>PoolFixityRecord</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='rec identifier id'>rec</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="rewind-instance_method">
+  
+    - (<tt>Object</tt>) <strong>rewind</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+67
+68
+69
+70
+71</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 67</span>
+
+<span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
+  <span class='super super kw'>super</span>
+  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span>        <span class='comment val'># remove initial CSV title &quot;name&quot;,&quot;location&quot;,&quot;sha1&quot;,&quot;md5&quot;,&quot;size&quot;,&quot;fixity_time&quot;,&quot;put_time&quot;,&quot;status&quot;</span>
+  <span class='self self kw'>self</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -461,15 +447,15 @@ key = name;  value = [ location, sha1, md5, date, status ]
       <pre class="lines">
 
 
-60
-61
-62</pre>
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 60</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 74</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
-  <span class='dstring node'>&quot;#&lt;#{self.class} #{@url}&gt;&quot;</span>   <span class='comment val'># TODO: double check that URL is properly sanitized</span>
+  <span class='dstring node'>&quot;#&lt;#{self.class} #{@url}&gt;&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -482,9 +468,9 @@ key = name;  value = [ location, sha1, md5, date, status ]
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:39 2011 by 
+  Generated on Mon Oct 31 10:37:57 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

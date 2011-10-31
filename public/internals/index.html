@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Storage Master Service</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  File: README
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -31,11 +41,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -59,9 +72,9 @@ config file using 'rackup config.ru' if you desired, though.</p>
 <p>In apache-speak, the environment:</p>
 
 <ul>
-<li>SetEnv LOG_FACILITY         LOG_LOCAL1              - syslog setup, or nothing if you want logging toSTDERR</li>
-<li>SetEnv DATABASE_CONFIG_FILE /opt/fda/etc/db.yml     - YAML file describing database access</li>
-<li>SetEnv DATABASE_CONFIG_KEY  store_master            - the key into the above for this service</li>
+<li>SetEnv LOG<em>FACILITY         LOG</em>LOCAL1              - syslog setup, or nothing if you want logging toSTDERR</li>
+<li>SetEnv DATABASE<em>CONFIG</em>FILE /opt/fda/etc/db.yml     - YAML file describing database access</li>
+<li>SetEnv DATABASE<em>CONFIG</em>KEY  store_master            - the key into the above for this service</li>
 <li>SetEnv TMPDIR               /var/tmp                - need plenty of headroom here</li>
 <li>PassengerUploadBufferDir    /var/tmp/phusion        - and here</li>
 </ul>
@@ -112,9 +125,9 @@ use and testing; there is a Rake task that will install the
 application documentation under public/internals.</p></div></div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:07 2011 by 
+  Generated on Mon Oct 31 10:37:53 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

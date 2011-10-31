@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Streams::PoolFixityRecordContainer</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Streams::PoolFixityRecordContainer
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,14 +96,12 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-PoolFixityRecordContainer
-</p>
-<p>
-A specialized array to hold collections of the PoolFixityRecords returned
+    
+<p>PoolFixityRecordContainer</p>
+
+<p>A specialized array to hold collections of the PoolFixityRecords returned
 by the above; PoolMultiFixities will return these arrays. This array
-provides convenience methods that map over all the records in the array.
-</p>
+provides convenience methods that map over all the records in the array.</p>
 
 
   </div>
@@ -98,6 +109,9 @@ provides convenience methods that map over all the records in the array.
 <div class="tags">
   
 </div>
+
+  
+
 
   
 
@@ -125,10 +139,9 @@ provides convenience methods that map over all the records in the array.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A boolean that indicates that, for a given field, whether all the
-PoolFixityRecords in the container have the same value.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A boolean that indicates that, for a given field, whether all the
+PoolFixityRecords in the container have the same value.</p>
 </div></span>
   
 </li>
@@ -150,9 +163,8 @@ PoolFixityRecords in the container have the same value.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A boolean that indicates the give field isn&#8217;t consistent.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A boolean that indicates the give field isn’t consistent.</p>
 </div></span>
   
 </li>
@@ -177,11 +189,10 @@ A boolean that indicates the give field isn&#8217;t consistent.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A boolean that indicates that, for a given field, whether all the
+    
+<p>A boolean that indicates that, for a given field, whether all the
 PoolFixityRecords in the container have the same value. Use with with a
-field of :size, :md5 or :sha1
-</p>
+field of :size, :md5 or :sha1</p>
 
 
   </div>
@@ -192,8 +203,8 @@ field of :size, :md5 or :sha1
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -207,14 +218,14 @@ field of :size, :md5 or :sha1
       <pre class="lines">
 
 
-94
-95
-96
-97
-98</pre>
+108
+109
+110
+111
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 108</span>
 
 <span class='def def kw'>def</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='elt identifier id'>elt</span><span class='bitor op'>|</span> <span class='elt identifier id'>elt</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='field identifier id'>field</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -236,9 +247,8 @@ field of :size, :md5 or :sha1
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A boolean that indicates the give field isn&#8217;t consistent
-</p>
+    
+<p>A boolean that indicates the give field isn’t consistent</p>
 
 
   </div>
@@ -249,8 +259,8 @@ A boolean that indicates the give field isn&#8217;t consistent
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -264,14 +274,14 @@ A boolean that indicates the give field isn&#8217;t consistent
       <pre class="lines">
 
 
-102
-103
-104
-105
-106</pre>
+116
+117
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 102</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 116</span>
 
 <span class='def def kw'>def</span> <span class='inconsistent? fid id'>inconsistent?</span> <span class='field identifier id'>field</span>
   <span class='not not kw'>not</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
@@ -289,9 +299,9 @@ A boolean that indicates the give field isn&#8217;t consistent
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:29 2011 by 
+  Generated on Mon Oct 31 10:38:00 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>

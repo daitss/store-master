@@ -62,7 +62,9 @@ module StoreMasterModel
     #
     # We also have one or more URLs that describe where we can requester fixity data from; the
     # MIME type of the returned data is provided.
-
+    #
+    # TODO: this is not the best way to do this: we should have the services_location return
+    # a media-type specific to our names.
 
     def service_document
       url = URI.parse(services_location) rescue raise("The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}")

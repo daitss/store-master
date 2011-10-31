@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Streams::PoolMultiFixities</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Streams::PoolMultiFixities
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -53,12 +66,12 @@
   
     <dt class="r1">Inherits:</dt>
     <dd class="r1">
-      <span class="inheritName"><span class='object_link'><a href="MultiStream.html" title="Streams::MultiStream (class)">MultiStream</a></span></span>
+      <span class="inheritName">MultiStream</span>
       
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next"><span class='object_link'><a href="MultiStream.html" title="Streams::MultiStream (class)">MultiStream</a></span></li>
+            <li class="next">MultiStream</li>
           
             <li class="next">Streams::PoolMultiFixities</li>
           
@@ -83,22 +96,19 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-PoolMultiFixities
-</p>
-<p>
-Return a stream of key/value pairs that folds the data from a number of
+    
+<p>PoolMultiFixities</p>
+
+<p>Return a stream of key/value pairs that folds the data from a number of
 PoolFixityStreams.  It uses the same key (namely, the package-name, a
 string) and the value is a specialized array of the structs from the
 constituent PoolFixityStream values. The arrays are homogenous in the type
 of elements (namely, PoolFixityRecords) but may well vary in the number of
-elements (of which there will be from one to the number of streams).
-</p>
-<p>
-This stream is used to determine both the consisitency of fixities across
+elements (of which there will be from one to the number of streams).</p>
+
+<p>This stream is used to determine both the consisitency of fixities across
 muiltiple pools, as well as confirming the required number of copies of
-packages across those pools.
-</p>
+packages across those pools.</p>
 
 
   </div>
@@ -108,12 +118,8 @@ packages across those pools.
 </div>
 
   
-  
-  
-  
-  
-  
-  
+
+
   
 
   
@@ -142,9 +148,8 @@ packages across those pools.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of PoolMultiFixities.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of PoolMultiFixities.</p>
 </div></span>
   
 </li>
@@ -154,26 +159,7 @@ A new instance of PoolMultiFixities.
   
 
 
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="MultiStream.html" title="Streams::MultiStream (class)">MultiStream</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="MultiStream.html#eos%3F-instance_method" title="Streams::MultiStream#eos? (method)">#eos?</a></span>, <span class='object_link'><a href="MultiStream.html#read-instance_method" title="Streams::MultiStream#read (method)">#read</a></span>, <span class='object_link'><a href="MultiStream.html#rewind-instance_method" title="Streams::MultiStream#rewind (method)">#rewind</a></span>, <span class='object_link'><a href="MultiStream.html#to_s-instance_method" title="Streams::MultiStream#to_s (method)">#to_s</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../CommonStreamMethods.html" title="CommonStreamMethods (module)">CommonStreamMethods</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../CommonStreamMethods.html#%3C%3D%3E-instance_method" title="CommonStreamMethods#<=> (method)">#<=></a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#_passes_filters-instance_method" title="CommonStreamMethods#_passes_filters (method)">#_passes_filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#each-instance_method" title="CommonStreamMethods#each (method)">#each</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#filters-instance_method" title="CommonStreamMethods#filters (method)">#filters</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#get-instance_method" title="CommonStreamMethods#get (method)">#get</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#unget-instance_method" title="CommonStreamMethods#unget (method)">#unget</a></span>, <span class='object_link'><a href="../CommonStreamMethods.html#ungetting%3F-instance_method" title="CommonStreamMethods#ungetting? (method)">#ungetting?</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -185,9 +171,8 @@ A new instance of PoolMultiFixities.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of PoolMultiFixities
-</p>
+    
+<p>A new instance of PoolMultiFixities</p>
 
 
   </div>
@@ -200,13 +185,13 @@ A new instance of PoolMultiFixities
       <pre class="lines">
 
 
-125
-126
-127
-128</pre>
+139
+140
+141
+142</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 125</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/pool-stream.rb', line 139</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='streams identifier id'>streams</span>
   <span class='@values_container ivar id'>@values_container</span> <span class='assign token'>=</span> <span class='PoolFixityRecordContainer constant id'>PoolFixityRecordContainer</span>
@@ -224,9 +209,9 @@ A new instance of PoolMultiFixities
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:37:14 2011 by 
+  Generated on Mon Oct 31 10:38:02 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.2 (ruby-1.8.7).
 </div>
 
   </body>
