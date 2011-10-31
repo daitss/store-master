@@ -20,7 +20,7 @@ module Analyzer
 
   class StatCounter
 
-    attr_accessor :packages_double_counted, :packages_orphaned, :packages_missing, :packages_checked, :packages_fixity_success, :packages_fixity_failure, :packages_wrong_number, :packages_expired, :packages_total, :packages_fixity_unchanged
+    attr_accessor :packages_double_counted, :packages_orphaned, :packages_missing, :packages_fixity_success, :packages_fixity_failure, :packages_wrong_number, :packages_expired, :packages_total, :packages_fixity_unchanged
     attr_accessor :events_new, :events_old, :events_err
     def initialize
 
@@ -28,7 +28,6 @@ module Analyzer
       @events_new   = 0    
       @events_old   = 0 
 
-      @packages_checked          = 0
       @packages_double_counted   = 0
       @packages_expired          = 0
       @packages_fixity_failure   = 0
@@ -47,7 +46,7 @@ module Analyzer
     def format_max_width
 
       StoreUtils.commify([ @events_new, @events_old, @events_err, @packages_double_counted,
-                           @packages_orphaned, @packages_missing, @packages_checked,
+                           @packages_orphaned, @packages_missing,
                            @packages_fixity_success, @packages_fixity_failure,
                            @packages_fixity_unchanged, @packages_wrong_number, @packages_expired,
                            @packages_total ].max).length    
@@ -164,8 +163,6 @@ module Analyzer
           
         elsif not daitss_data        # ..but we do have pool_data for this URL, so we may have some sort of 'orphan'.
 
-          next if get_package(url)   # double check: has it appeared in the DAITSS DB?  The store may have been in progress, and invisible, just as we started
-
           counter.packages_orphaned += 1
           @report_orphaned.warn *(pool_data.map { |cp| cp.location })
 
@@ -176,7 +173,7 @@ module Analyzer
           case             
           when pool_data.length < @required_copies
 
-            next unless pkg = get_package(url)
+            next unless pkg = get_package(url)    # Has it dissappeared from DAITSS due to an in-progress delete, perhaps from a refresh?
 
             counter.packages_total += 1
             counter.packages_missing += 1
@@ -190,7 +187,7 @@ module Analyzer
 
           when pool_data.length > @required_copies
 
-            next unless pkg = get_package(url)
+            next unless pkg = get_package(url)   
 
             counter.packages_total += 1
             counter.packages_wrong_number += 1
@@ -216,6 +213,7 @@ module Analyzer
             
             next unless pkg = get_package(url)
 
+            counter.packages_total += 1
             counter.packages_fixity_failure += 1
 
             @report_fixity.err *(fixity_issue_messages + [ '' ])
@@ -229,6 +227,7 @@ module Analyzer
 
             next unless pkg = get_package(url)
 
+            counter.packages_total += 1
             counter.packages_missing += 1
 
             @report_integrity.err *(missing_issue_messages + [ '' ])
@@ -238,11 +237,14 @@ module Analyzer
             all_good = false
           end
 
-          # we're using counter to keep track of the total number of packages; in the following
-          # very unlikely case we'd be double counting, so let's flag it and display a note when reporting.
+          # we're using counter to keep track of the total number of
+          # packages; in the following very unlikely case we'd be
+          # double counting, so let's subtract one from total count
+          # and flag that missing + fixity errors will be off by one.
 
           if missing_issue_messages and fixity_issue_messages
             counter.packages_double_counted += 1
+            counter.packages_total -= 1
           end
 
           if all_good
@@ -256,7 +258,6 @@ module Analyzer
               counter.packages_fixity_unchanged += 1
               counter.events_old += 1
               counter.packages_total += 1
-              counter.packages_checked += 1
               next
             end
 
@@ -265,9 +266,8 @@ module Analyzer
             pkg.fixity_success_event(pool_fixity_time) ? counter.events_new += 1 : counter.events_err += 1
             counter.packages_fixity_success += 1
             counter.packages_total += 1
-            counter.packages_checked += 1
           end
-        end
+        end  # end of if .. elsif .. else   # .. we have records for both
       end
 
       expiration_date = (DateTime.now - @expiration_days).to_s
@@ -294,7 +294,6 @@ module Analyzer
       # :::::::::::::::::::::::::::::::::::::::
       #
       # 1,242 ingested package records as of 2011-12-01 04:15:00
-      # 1,242 ingested package records were checked against fixity data.
       #
       # 1,240 correct fixities
       #     1 incorrect fixity
@@ -314,22 +313,22 @@ module Analyzer
       width = counter.format_max_width
 
       @report_summary.warn sprintf("%#{width}s ingested package records as of %s", StoreUtils.commify(counter.packages_total), @cutoff_time.strftime('%F %T'))
-      @report_summary.warn sprintf("%#{width}s of these records were checked against fixity data", StoreUtils.commify(counter.packages_checked))
       @report_summary.warn
-      @report_summary.warn sprintf("%#{width}s correct #{pluralize counter.packages_fixity_success, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_success))
-      @report_summary.warn sprintf("%#{width}s had missing copies", StoreUtils.commify(counter.packages_missing))
+      @report_summary.warn sprintf("%#{width}s new correct #{pluralize counter.packages_fixity_success, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_success))
+      @report_summary.warn sprintf("%#{width}s old correct #{pluralize counter.packages_fixity_success, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_unchanged))
       @report_summary.warn sprintf("%#{width}s incorrect #{pluralize counter.packages_fixity_failure, 'fixity', 'fixities'}", StoreUtils.commify(counter.packages_fixity_failure))
+      @report_summary.warn sprintf("%#{width}s had missing copies", StoreUtils.commify(counter.packages_missing))
       @report_summary.warn sprintf("%#{width}s with the wrong number of copies in pools", StoreUtils.commify(counter.packages_wrong_number))
       @report_summary.warn '-' * width
-      @report_summary.warn sprintf("%#{width}s total events, %s new", StoreUtils.commify(counter.events_total), StoreUtils.commify(counter.events_total - counter.events_old))
+      @report_summary.warn sprintf("%#{width}s total events, %s of which are new", StoreUtils.commify(counter.events_total), StoreUtils.commify(counter.events_total - counter.events_old))
 
       @report_summary.warn
       @report_summary.warn 'Additionally:'
-      @report_summary.warn sprintf("%#{width}s unexpected package#{pluralize counter.packages_orphaned, '', 's'} (orphan?) in silo pools", StoreUtils.commify(counter.packages_orphaned))
+      @report_summary.warn sprintf("%#{width}s unexpected package#{pluralize counter.packages_orphaned, '', 's'} (orphaned?) in silo pools", StoreUtils.commify(counter.packages_orphaned))
       @report_summary.warn sprintf("%#{width}s package#{pluralize counter.packages_expired, '', 's'} had #{pluralize counter.packages_expired, 'an expired fixity', 'expired fixities'}", StoreUtils.commify(counter.packages_expired))
 
       if (n = counter.events_err) > 0      
-        @report_summary.err "There #{n == 1 ? 'was one failure' : sprintf('were %d failures', n) } writing to the DAITSS DB"
+        @report_summary.err "There #{n == 1 ? 'was one failure' : sprintf('were %d failures', n) } writing new events to the DAITSS DB"
       end
 
       if (n = counter.packages_double_counted) > 0
