@@ -1,3 +1,24 @@
+
+Version 1.3.6 - 2011-10-31
+
+  * Gemfile updated to DataMapper 1.2.0
+
+  * Unused daitss/model/batch.rb removed, was confusing DataMapper
+
+  * DataMapper finalize moved from the two repository setup in
+    store-master/model.rb and daitss/model.rb to common utility.
+
+  * Removed outdated alternative fixity checks from analyzer.
+  
+  * Collect fixities substantially reworked, speed improved (8+ hours
+    to 30 minutes). Mods to analyzer.rb, daitss-model-extensions.rb,
+    daitss-package-stream.rb, and pool-stream.rb as well as the
+    collect-fixities script proper.
+
+  * Manny did mods to views to remove misleading 'by name' text, added
+    support for new connection string initialization to tools/create-db
+
+
 Version 1.3.5 - 2011-10-06
 
  * Refreshed bundler's Gemfile.lock to pull in new datyl code, removed Gemfile.development
