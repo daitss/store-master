@@ -1,14 +1,14 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store-master/model'
+require 'storage-master/model'
 require 'spec_helpers'
 
 def datamapper_setup
-  StoreMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
-  StoreMasterModel.create_tables
+  StorageMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
+  StorageMasterModel.create_tables
 end
 
-include StoreMasterModel
+include StorageMasterModel
 
 describe Pool do
 

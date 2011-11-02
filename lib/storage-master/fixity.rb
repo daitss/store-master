@@ -1,0 +1,5 @@
+require 'storage-master/fixity/analyzer'
+require 'storage-master/fixity/daitss-package-stream'
+require 'storage-master/fixity/pool-stream'
+require 'storage-master/fixity/store-package-stream'
+require 'storage-master/fixity/utils'

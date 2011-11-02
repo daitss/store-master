@@ -16,7 +16,7 @@ defaults:
 
 database:
 
-    storemaster_db:              postgres://storemaster:topsecret@localhost/storemaster_db
+    storage_master_db:           postgres://storemaster:topsecret@localhost/storemaster_db
     daitss_db:                   postgres://daitss:topsecret@localhost/daitss_db
 
 # We normally name sections after the virtual hostname used by an
@@ -26,7 +26,7 @@ database:
 # appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
 # the same place that the DAITSS_CONFIG environment is set.
 
-storemaster.example.org:
+storage-master.example.org:
 
     log_syslog_facility:         LOG_LOCAL0
     log_filename:                /path/to/name/of/file.log
@@ -39,7 +39,7 @@ collect-fixities:
     log_filename:                /path/to/name/of/file.log
     log_database_queries:        false
     pid_directory:               /var/run/fixty
-    server_address:              storemaster.example.org:8080
+    server_address:              storage-master.example.org:8080
 
 
 # defaults
@@ -57,7 +57,7 @@ collect-fixities:
 
 
 
-# database:storemaster_db
+# database:storage_master_db
 # -----------------------
 # Required, the database connection string for storemaster database
 # string.  Supported vendors: postgres. Some fields are optional - for
@@ -79,7 +79,7 @@ collect-fixities:
 # storemaster
 # ===========
 #
-# The storemaster service requires variables database:storemaster_db,
+# The storemaster service requires variables database:storage_master_db,
 # defaults:required_pools, as well as the following:
 # 
 # storemaster:log_database_queries

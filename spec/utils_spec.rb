@@ -1,4 +1,4 @@
-require 'store-master/utils'
+require 'storage-master/utils'
 require 'fileutils'
 require 'tempfile'
 require 'find'

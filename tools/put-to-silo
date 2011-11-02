@@ -7,10 +7,10 @@ require 'time'
 require 'net/http'
 require 'uri'
 require 'xml'
-require 'store-master/utils'
+require 'storage-master/utils'
 
 
-# Put a file to a silo server, in exactly the way store-master might
+# Put a file to a silo server, in exactly the way storage-master might
     
 
 
@@ -20,7 +20,7 @@ def parse_command args
   conf = Struct::Config.new
 
   opts   = OptionParser.new do |opt|
-    opt.on("--put-location url",  String, "The location to PUT a file to, e.g. http://store-master.fcla.edu/packages/E20051012_AAAAAB.001") do |url|
+    opt.on("--put-location url",  String, "The location to PUT a file to, e.g. http://storage-master.fcla.edu/packages/E20051012_AAAAAB.001") do |url|
       conf.put_location = url
     end
     opt.on("--filepath filepath",  String, "The path to the file you want put to the webserver") do |path|

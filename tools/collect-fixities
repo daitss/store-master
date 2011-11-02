@@ -9,20 +9,20 @@ require 'datyl/logger'
 require 'datyl/reporter'
 require 'datyl/streams'
 require 'optparse'
-require 'store-master'
+require 'storage-master'
 
 
 def get_config
-  raise StoreMaster::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
-  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
-  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
-  raise StoreMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
   
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'collect-fixities')
 
 
-  [ 'daitss_db', 'storemaster_db', 'server_address', 'fixity_expired_days', 'fixity_stale_days', 'required_pools'].each do |option|
-    raise StoreMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
+  [ 'daitss_db', 'storage_master_db', 'server_address', 'fixity_expired_days', 'fixity_stale_days', 'required_pools'].each do |option|
+    raise StorageMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
   end
 
   return config
@@ -45,7 +45,7 @@ def setup config
   config.keys.sort.each do |option|
 
     next unless [ 'fixity_expired_days', 'fixity_stale_days', 'log_database_queries', 'pid_directory',
-                  'required_pools', 'server_address', 'daitss_db', 'storemaster_db' ].include? option
+                  'required_pools', 'server_address', 'daitss_db', 'storage_master_db' ].include? option
 
     Datyl::Logger.info "Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option].to_s)}"
   end
@@ -64,12 +64,12 @@ def setup config
   DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   Datyl::Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
-  StoreMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
+  StorageMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
 
-  # StoreMasterModel.setup_db(config.storemaster_db)
+  # StorageMasterModel.setup_db(config.storage_master_db)
   # Daitss.setup_db(config.daitss_db)
 
-  StoreMaster.setup_databases(config.storemaster_db, config.daitss_db)
+  StorageMaster.setup_databases(config.storage_master_db, config.daitss_db)
 
 
 rescue => e
@@ -109,7 +109,7 @@ begin
   
 
   daitss_fixity_stream = Streams::DaitssPackageStream.new(:before => start_time)
-  pool_fixity_streams  = StoreMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool, { 'stored-before' => start_time } ) }
+  pool_fixity_streams  = StorageMasterModel::Pool.list_active.map { |pool| Streams::PoolFixityStream.new(pool, { 'stored-before' => start_time } ) }
 
   reports = []
 
@@ -117,12 +117,14 @@ begin
 
   # TODO: these turn out to be somewhat redundant, maybe put into their own script?
   #
-  # store_master_stream  = Streams::StoreMasterPackageStream.new
+  # store_master_stream  = Streams::StorageMasterPackageStream.new
+  #
+  # these are older reports I used to run, they've been deprecated:
   #
   # reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   # reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports
-  # reports.concat Analyzer::StoreMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
-  # reports.concat Analyzer::StoreMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
+  # reports.concat Analyzer::StorageMasterAnalyzer.new(store_master_stream, config.required_copies).run.reports
+  # reports.concat Analyzer::StorageMasterVsPoolAnalyzer.new(store_master_stream, pool_fixity_streams).run.reports
 
   reports.each { |report| report.write if report.interesting? }
 

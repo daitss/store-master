@@ -1,19 +1,19 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store-master/model'
-require 'store-master/exceptions'
+require 'storage-master/model'
+require 'storage-master/exceptions'
 require 'spec_helpers'
 
 
 def datamapper_setup
-  StoreMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
-  StoreMasterModel.create_tables
+  StorageMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_mysql')
+  StorageMasterModel.create_tables
 end
 
 BAD_IEID  = 'X-RAY'
 GOOD_IEID = 'E20100101_FOOBAR'
 
-include StoreMasterModel
+include StorageMasterModel
 
 describe Reservation do
 
@@ -57,7 +57,7 @@ describe Reservation do
   # it "should fail with a DB error after 1000 names created for an IEID" do
   #   ieid = GOOD_IEID.succ.succ.succ
   #   1000.times {  Reservation.make(ieid) }
-  #   lambda { Reservation.make(ieid) }.should_raise StoreMaster::DatabaseError
+  #   lambda { Reservation.make(ieid) }.should_raise StorageMaster::DatabaseError
   # end
 
 end 

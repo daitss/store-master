@@ -72,7 +72,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb</dd>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -543,7 +543,7 @@ returning the corresponding hex string.</p>
 78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 75</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 75</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='base64_to_md5hex identifier id'>base64_to_md5hex</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span> <span class='and and kw'>and</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>24</span><span class='rparen token'>)</span>
@@ -584,7 +584,7 @@ Rails</p>
 113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 111</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
@@ -652,7 +652,7 @@ configuration file + key technique; This will probably go away.</p>
 148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 118</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 118</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
 
@@ -709,7 +709,7 @@ configuration file + key technique; This will probably go away.</p>
 42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 40</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='csv_escape identifier id'>csv_escape</span> <span class='str identifier id'>str</span>
   <span class='string val'>'&quot;'</span> <span class='plus op'>+</span> <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&quot;&quot;'</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'&quot;'</span>   <span class='comment val'># 'fo,o&quot;bar' =&gt;  '&quot;fo,o&quot;&quot;bar&quot;'</span>
@@ -739,7 +739,7 @@ configuration file + key technique; This will probably go away.</p>
 20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 17</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 17</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_free identifier id'>disk_free</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -769,7 +769,7 @@ configuration file + key technique; This will probably go away.</p>
 15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 13</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_id identifier id'>disk_id</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='dev identifier id'>dev</span>
@@ -821,7 +821,7 @@ configuration file + key technique; This will probably go away.</p>
 61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 46</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_mount_point identifier id'>disk_mount_point</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -864,7 +864,7 @@ configuration file + key technique; This will probably go away.</p>
 25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 22</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 22</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_size identifier id'>disk_size</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -907,7 +907,7 @@ return the group name who owns it as a string.</p>
 107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 104</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 104</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='group identifier id'>group</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='gid identifier id'>gid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -938,7 +938,7 @@ return the group name who owns it as a string.</p>
 83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 80</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 80</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath identifier id'>hashpath</span> <span class='name identifier id'>name</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -968,7 +968,7 @@ return the group name who owns it as a string.</p>
 87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 85</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath_parent identifier id'>hashpath_parent</span> <span class='name identifier id'>name</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>2</span><span class='rbrack token'>]</span>
@@ -1011,7 +1011,7 @@ representation.</p>
 70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 67</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='hexstring identifier id'>hexstring</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='hexstring identifier id'>hexstring</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>32</span>
@@ -1052,7 +1052,7 @@ currently running process name</p>
 154</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 152</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 152</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='pid_file identifier id'>pid_file</span> <span class='dir identifier id'>dir</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='$0 gvar id'>$0</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span> <span class='plus op'>+</span> <span class='string val'>'.pid'</span><span class='rparen token'>)</span>
@@ -1101,7 +1101,7 @@ currently running process name</p>
 171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 159</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 159</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='safen_connection_string identifier id'>safen_connection_string</span> <span class='str identifier id'>str</span>
 
@@ -1141,7 +1141,7 @@ currently running process name</p>
 30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 27</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='strip_trailing_slash_maybe identifier id'>strip_trailing_slash_maybe</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='string identifier id'>string</span> <span class='if if_mod kw'>if</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -1184,7 +1184,7 @@ return the user name who owns it as a string.</p>
 97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -1235,7 +1235,7 @@ return the user name who owns it as a string.</p>
 34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 32</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='valid_ieid_name? fid id'>valid_ieid_name?</span> <span class='string identifier id'>string</span>
   <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/^E[A-Z0-9]{8}_[A-Z0-9]{6}$/</span> <span class='question op'>?</span> <span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span>
@@ -1264,7 +1264,7 @@ return the user name who owns it as a string.</p>
 38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/utils.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='xml_escape identifier id'>xml_escape</span> <span class='str identifier id'>str</span>
   <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&amp;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;amp;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&lt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;lt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&gt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;gt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>&quot;'&quot;</span><span class='comma token'>,</span> <span class='string val'>'&amp;apos;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;quot;'</span><span class='rparen token'>)</span>
@@ -1280,7 +1280,7 @@ return the user name who owns it as a string.</p>
 </div>
     
     <div id="footer">
-  Generated on Mon Oct 31 10:37:59 2011 by 
+  Generated on Wed Nov  2 13:49:32 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.2 (ruby-1.8.7).
 </div>

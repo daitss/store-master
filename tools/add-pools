@@ -3,7 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'store-master'
+require 'storage-master'
 require 'optparse'
 require 'ostruct'
 require 'uri'
@@ -38,9 +38,9 @@ end
 conf = parse_command_line ARGV
 
 if conf.db_string
-  StoreMasterModel.setup_db(conf.db_string)
+  StorageMasterModel.setup_db(conf.db_string)
 else
-  StoreMasterModel.setup_db(conf.file, conf.key)
+  StorageMasterModel.setup_db(conf.file, conf.key)
 end
 
 
@@ -55,5 +55,5 @@ ARGV.each do |pool_server|
     next
   end
 
-  StoreMasterModel::Pool.add(url)
+  StorageMasterModel::Pool.add(url)
 end

@@ -10,7 +10,7 @@ error do
 
   request.body.rewind if request.body.respond_to?('rewind')
 
-  if e.is_a? StoreMaster::Http401
+  if e.is_a? StorageMaster::Http401
     Logger.warn e.client_message, @env
     response['WWW-Authenticate'] = "Basic realm=\"Password-Protected Area for Storage Master\""
 
@@ -20,7 +20,7 @@ error do
   # HTTP status codes; it's safe to return these to a client.  These will
   # not need backtraces, since they are reasonably diagnostic.
 
-  elsif e.is_a? StoreMaster::HttpError
+  elsif e.is_a? StorageMaster::HttpError
 
     if e.status_code >= 500
       Logger.err e.client_message, @env
@@ -34,7 +34,7 @@ error do
   # something hasn't been set up correctly. They have sensitive
   # information,  but are transient by nature, pre-production
 
-  elsif e.is_a? StoreMaster::ConfigurationError
+  elsif e.is_a? StorageMaster::ConfigurationError
     Logger.err e.client_message, @env
     halt 500, { 'Content-Type' => 'text/plain' }, e.client_message
 
@@ -60,7 +60,7 @@ not_found  do
   e = @env['sinatra.error']
   request.body.rewind if request.body.respond_to?(:rewind)
 
-  message = if e.is_a? StoreMaster::Http404
+  message = if e.is_a? StorageMaster::Http404
               e.client_message
             else
               "404 Not Found - #{request.url} doesn't exist.\n"
