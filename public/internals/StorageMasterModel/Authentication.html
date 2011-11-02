@@ -1,0 +1,460 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: StorageMasterModel::Authentication
+  
+    &mdash; Storage Master Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (A)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../StorageMasterModel.html" title="StorageMasterModel (module)">StorageMasterModel</a></span></span>
+     &raquo; 
+    <span class="title">Authentication</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: StorageMasterModel::Authentication
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">StorageMasterModel::Authentication</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2">DataMapper::Resource, <span class='object_link'><a href="../StorageMaster.html" title="StorageMaster (module)">StorageMaster</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+  <h2>Constant Summary</h2>
+  
+
+
+  
+  
+  
+  
+  
+  <h3 class="inherited">Constants included from <span class='object_link'><a href="../StorageMaster.html" title="StorageMaster (module)">StorageMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StorageMaster.html#NAME-constant" title="StorageMaster::NAME (constant)">NAME</a></span>, <span class='object_link'><a href="../StorageMaster.html#RELEASE-constant" title="StorageMaster::RELEASE (constant)">RELEASE</a></span>, <span class='object_link'><a href="../StorageMaster.html#REVISION-constant" title="StorageMaster::REVISION (constant)">REVISION</a></span>, <span class='object_link'><a href="../StorageMaster.html#VERSION-constant" title="StorageMaster::VERSION (constant)">VERSION</a></span></p>
+
+
+
+  
+  
+  
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#clear-class_method" title="clear (class method)">+ (Object) <strong>clear</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create-class_method" title="create (class method)">+ (Object) <strong>create</strong>(username, password) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#lookup-class_method" title="lookup (class method)">+ (Object) <strong>lookup</strong>(username) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authenticate-instance_method" title="#authenticate (instance method)">- (Object) <strong>authenticate</strong>(password) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#password%3D-instance_method" title="#password= (instance method)">- (Object) <strong>password=</strong>(password) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="../StorageMaster.html" title="StorageMaster (module)">StorageMaster</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../StorageMaster.html#setup_databases-class_method" title="StorageMaster.setup_databases (method)">setup_databases</a></span>, <span class='object_link'><a href="../StorageMaster.html#version-class_method" title="StorageMaster.version (method)">version</a></span></p>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="clear-class_method">
+  
+    + (<tt>Object</tt>) <strong>clear</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 47</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
+  <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="create-class_method">
+  
+    + (<tt>Object</tt>) <strong>create</strong>(username, password) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29
+30
+31
+32
+33</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 27</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='username identifier id'>username</span><span class='comma token'>,</span> <span class='password identifier id'>password</span>
+  <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span>
+  
+  <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='password identifier id'>password</span> <span class='assign token'>=</span> <span class='password identifier id'>password</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't create new credentials for #{administrator}: #{rec.errors.full_messages.join('; ')}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+  <span class='rec identifier id'>rec</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lookup-class_method">
+  
+    + (<tt>Object</tt>) <strong>lookup</strong>(username) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+23
+24
+25</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 23</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='username identifier id'>username</span>
+  <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='username identifier id'>username</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="authenticate-instance_method">
+  
+    - (<tt>Object</tt>) <strong>authenticate</strong>(password) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 43</span>
+
+<span class='def def kw'>def</span> <span class='authenticate identifier id'>authenticate</span> <span class='password identifier id'>password</span>
+  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='salt identifier id'>salt</span> <span class='plus op'>+</span> <span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='eq op'>==</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password_hash identifier id'>password_hash</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="password=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>password=</strong>(password) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Raises:</h3>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StorageMaster/BadPassword.html" title="StorageMaster::BadPassword (class)">BadPassword</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+35
+36
+37
+38
+39
+40
+41</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 35</span>
+
+<span class='def def kw'>def</span> <span class='password= identifier id'>password=</span> <span class='password identifier id'>password</span>
+  <span class='raise identifier id'>raise</span> <span class='BadPassword constant id'>BadPassword</span><span class='comma token'>,</span> <span class='string val'>&quot;No password supplied&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='password identifier id'>password</span> <span class='and and kw'>and</span> <span class='password identifier id'>password</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
+
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='salt identifier id'>salt</span> <span class='assign token'>=</span> <span class='rand identifier id'>rand</span><span class='lparen token'>(</span><span class='integer val'>1_000_000_000_000_000_000</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='lparen token'>(</span><span class='integer val'>36</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password_hash identifier id'>password_hash</span> <span class='assign token'>=</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='salt identifier id'>salt</span> <span class='plus op'>+</span> <span class='password identifier id'>password</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't create new password for #{self.name}: #{self.errors.full_messages.join('; ')}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='save identifier id'>save</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Nov  2 13:49:59 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.7.2 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

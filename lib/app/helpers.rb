@@ -148,7 +148,7 @@ helpers do
 
   def needs_authentication?
 
-    admin_credentials = StoreMasterModel::Authentication.lookup('admin')
+    admin_credentials = StorageMasterModel::Authentication.lookup('admin')
 
     return false if admin_credentials.nil?                    # we don't require authentication
 

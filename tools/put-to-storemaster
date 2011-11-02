@@ -6,7 +6,7 @@ require 'net/http'
 require 'uri'
 require 'xml'
 
-# Put a file to a store-master server, which will attempt to store it in multiple
+# Put a file to a storage-master server, which will attempt to store it in multiple
 # pool servers. Run w/o arguments to get usage.
 
 def ieid
@@ -35,7 +35,7 @@ def parse_command args
   conf = Struct::Config.new
 
   opts   = OptionParser.new do |opt|
-    opt.on("--store-master hostname",  String, "The hostname for the store master to use, e.g. store-master.local") do |hostname|
+    opt.on("--storage-master hostname",  String, "The hostname for the store master to use, e.g. storage-master.local") do |hostname|
       conf.location = 'http://' + hostname + '/reserve'
     end
     opt.on("--filepath filepath",  String, "The path to the file you want put to the webserver") do |path|

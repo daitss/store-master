@@ -1,17 +1,17 @@
-require 'store-master/fixity/utils'
+require 'storage-master/fixity/utils'
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 class CommandLine
   # everything but --server-address
   @@options =  {
-    "--db-config-file"        =>  "/dev/null",
-    "--db-daitss-key"         =>  "ps_daitss_2",
-    "--db-store-master-key"   =>  "ps_store_master",
-    "--expiration-days"       =>  "45",
-    "--pid-directory"         =>  "/var/tmp",
-    "--required-copies"       =>  "1",
-    "--syslog-facility"       =>  "LOCAL3"
+    "--db-config-file"          =>  "/dev/null",
+    "--db-daitss-key"           =>  "ps_daitss_2",
+    "--db-storage-master-key"   =>  "ps_storage_master",
+    "--expiration-days"         =>  "45",
+    "--pid-directory"           =>  "/var/tmp",
+    "--required-copies"         =>  "1",
+    "--syslog-facility"         =>  "LOCAL3"
   }
 
   def self.options
@@ -35,16 +35,16 @@ describe FixityUtils do
 
     conf.should_not be_nil
 
-    conf.db_config_file.should      ==  opts['--db-config-file']
-    conf.db_daitss_key.should       ==  opts['--db-daitss-key']
-    conf.db_store_master_key.should ==  opts['--db-store-master-key']
-    conf.pid_directory.should       ==  opts['--pid-directory']
-    conf.syslog_facility.should     ==  opts['--syslog-facility']
+    conf.db_config_file.should        ==  opts['--db-config-file']
+    conf.db_daitss_key.should         ==  opts['--db-daitss-key']
+    conf.db_storage_master_key.should ==  opts['--db-storage-master-key']
+    conf.pid_directory.should         ==  opts['--pid-directory']
+    conf.syslog_facility.should       ==  opts['--syslog-facility']
 
-    conf.expiration_days.should     ==  opts['--expiration-days'].to_i
-    conf.required_copies.should     ==  opts['--required-copies'].to_i
+    conf.expiration_days.should       ==  opts['--expiration-days'].to_i
+    conf.required_copies.should       ==  opts['--required-copies'].to_i
 
-    conf.server_address.should      ==  "betastore.tarchive.fcla.edu"
+    conf.server_address.should        ==  "betastore.tarchive.fcla.edu"
   end
 
 

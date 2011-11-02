@@ -8,7 +8,7 @@
 #   <?xml version="1.0" encoding="UTF-8"?>
 #   <reserved
 #        ieid="E20000000_AAAAAA"
-#    location="http://store-master.example.com/packages/E20000000_AAAAAA.001"
+#    location="http://storage-master.example.com/packages/E20000000_AAAAAA.001"
 #   />
 
 
@@ -33,7 +33,7 @@ end
 #  <?xml version="1.0" encoding="UTF-8"?>
 #  <created
 #        ieid="E20000000_AAAAAA"
-#    location="http://store-master.example.com/packages/E20000000_AAAAAA.001"
+#    location="http://storage-master.example.com/packages/E20000000_AAAAAA.001"
 #         md5="4732518c5fe6dbeb8429cdda11d65c3d"
 #        name="E20000000_AAAAAA.001"
 #        sha1="ccd53fa068173b4f5e52e55e3f1e863fc0e0c201"
@@ -102,11 +102,11 @@ end
 # Return an XML report of all the packages we know about, ordered by package name. For
 # example:
 #
-#  <packages location="http://store-master.example.com/packages" time="2011-01-22T16:32:11-05:00">
-#    <package name="E20000000_AAAAAA.001" ieid="E20000000_AAAAAA" location="http://store-master.example.com/packages/E20000000_AAAAAA.001"/>
-#    <package name="E20100727_AAAAAA.008" ieid="E20100727_AAAAAA" location="http://store-master.example.com/packages/E20100727_AAAAAA.008"/>
-#    <package name="E20111201_AAAAAA.000" ieid="E20111201_AAAAAA" location="http://store-master.example.com/packages/E20111201_AAAAAA.000"/>
-#    <package name="E20111201_AAAAAA.001" ieid="E20111201_AAAAAA" location="http://store-master.example.com/packages/E20111201_AAAAAA.001"/>
+#  <packages location="http://storage-master.example.com/packages" time="2011-01-22T16:32:11-05:00">
+#    <package name="E20000000_AAAAAA.001" ieid="E20000000_AAAAAA" location="http://storage-master.example.com/packages/E20000000_AAAAAA.001"/>
+#    <package name="E20100727_AAAAAA.008" ieid="E20100727_AAAAAA" location="http://storage-master.example.com/packages/E20100727_AAAAAA.008"/>
+#    <package name="E20111201_AAAAAA.000" ieid="E20111201_AAAAAA" location="http://storage-master.example.com/packages/E20111201_AAAAAA.000"/>
+#    <package name="E20111201_AAAAAA.001" ieid="E20111201_AAAAAA" location="http://storage-master.example.com/packages/E20111201_AAAAAA.001"/>
 #  </packages>
 
 get '/packages.xml' do
@@ -117,10 +117,10 @@ end
 # Return a CSV report of all the packages we know about, ordered by package name
 #
 #   "name","location","ieid"
-#   "E20000000_AAAAAA.001","http://store-master.local/packages/E20000000_AAAAAA.001","E20000000_AAAAAA"
-#   "E20100727_AAAAAA.008","http://store-master.local/packages/E20100727_AAAAAA.008","E20100727_AAAAAA"
-#   "E20111201_AAAAAA.000","http://store-master.local/packages/E20111201_AAAAAA.000","E20111201_AAAAAA"
-#   "E20111201_AAAAAA.001","http://store-master.local/packages/E20111201_AAAAAA.001","E20111201_AAAAAA"
+#   "E20000000_AAAAAA.001","http://storage-master.local/packages/E20000000_AAAAAA.001","E20000000_AAAAAA"
+#   "E20100727_AAAAAA.008","http://storage-master.local/packages/E20100727_AAAAAA.008","E20100727_AAAAAA"
+#   "E20111201_AAAAAA.000","http://storage-master.local/packages/E20111201_AAAAAA.000","E20111201_AAAAAA"
+#   "E20111201_AAAAAA.001","http://storage-master.local/packages/E20111201_AAAAAA.001","E20111201_AAAAAA"
 
 get '/packages.csv' do
   log_start_of_request

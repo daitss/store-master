@@ -12,8 +12,8 @@ require 'daitss/model/request'
 require 'daitss/model/sip'
 require 'libxml'
 require 'net/http'
-require 'store-master/exceptions'
-require 'store-master/utils'
+require 'storage-master/exceptions'
+require 'storage-master/utils'
 
 module Daitss
 
@@ -30,7 +30,7 @@ module Daitss
     return adapter
 
   rescue => e
-    raise StoreMaster::ConfigurationError, "Failure setting up the daitss database: #{e.message}"
+    raise StorageMaster::ConfigurationError, "Failure setting up the daitss database: #{e.message}"
   end
 
   def self.tables

@@ -1,12 +1,12 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib')) # for spec_helpers
 
-require 'store-master/model'
+require 'storage-master/model'
 require 'fileutils'
 require 'spec_helpers'
 require 'digest/md5'
 require 'digest/sha1'
 
-# store-master needs a few pools, on my development host I've set two up,
+# storage-master needs a few pools, on my development host I've set two up,
 # pool.a.dev and pool.b.dev - each is made up of two silos, defined
 # as .dmg images 
 #
@@ -30,17 +30,17 @@ require 'digest/sha1'
 #   done
 # done
 
-include StoreMasterModel
+include StorageMasterModel
 
 def datamapper_setup
   ## DataMapper::Logger.new(STDERR, :debug)
 
-  StoreMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
-  StoreMasterModel.create_tables
+  StorageMasterModel.setup_db(File.join(File.dirname(__FILE__), 'db.yml'), 'store_master_postgres')
+  StorageMasterModel.create_tables
 end
 
 def test_pools
-  # [ 'http://storage.dev/store-master-test-silo-1/data/', 'http://storage.dev/store-master-test-silo-2/data/' ]
+  # [ 'http://storage.dev/storage-master-test-silo-1/data/', 'http://storage.dev/storage-master-test-silo-2/data/' ]
   # [ 'http://silos.sake.fcla.edu/002/data/', 'http://silos.sake.fcla.edu/003/data/' ]
 
   [ 'http://pool.a.dev/services', 'http://pool.b.dev/services' ]

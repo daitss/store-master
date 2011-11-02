@@ -3,7 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'store-master'
+require 'storage-master'
 require 'optparse'
 require 'ostruct'
 
@@ -29,19 +29,19 @@ else
   return conf
 end
 
-# To setup an instance of storemaster, create a new postgres database and enter 
+# To setup an instance of storage master, create a new postgres database and enter 
 # the configuration information in a yaml file. 
 #
 # The yaml file consists of lines of account information similar to the following
 # (quote anything with white space in it):
 #
-# your_new_db: { vendor: postgres, hostname: localhost, database: storemaster, username: dbuser, password: "top secret!" }
+# your_new_db: { vendor: postgres, hostname: localhost, database: storagemaster, username: dbuser, password: "top secret!" }
 
 
 conf = parse_command_line ARGV
 
-StoreMasterModel.setup_db(conf.file, conf.key)
-StoreMasterModel::Authentication.auto_migrate!
+StorageMasterModel.setup_db(conf.file, conf.key)
+StorageMasterModel::Authentication.auto_migrate!
 
 
 

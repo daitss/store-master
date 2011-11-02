@@ -72,8 +72,8 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model.rb<span class="defines">,<br />
-  /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/sip.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/aip.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/copy.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/entry.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/event.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/agent.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/package.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/account.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/project.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/request.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model/eggheadkey.rb,<br /> /Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/daitss-model-extensions.rb</span>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb<span class="defines">,<br />
+  /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/sip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/aip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/copy.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/event.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/entry.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/agent.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/project.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/account.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/request.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/eggheadkey.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb</span>
 </dd>
   
 </dl>
@@ -217,7 +217,7 @@ connection string itself.</p>
 42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 40</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_migrate!</span> <span class='rbrace token'>}</span>
@@ -252,7 +252,7 @@ connection string itself. The two-argument version is deprecated.</p>
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="StoreMaster/ConfigurationError.html" title="StoreMaster::ConfigurationError (class)">StoreMaster::ConfigurationError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="StorageMaster/ConfigurationError.html" title="StorageMaster::ConfigurationError (class)">StorageMaster::ConfigurationError</a></span></tt>)</span>
       
       
       
@@ -278,7 +278,7 @@ connection string itself. The two-argument version is deprecated.</p>
 34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model.rb', line 25</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 25</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
 
@@ -288,7 +288,7 @@ connection string itself. The two-argument version is deprecated.</p>
   <span class='return return kw'>return</span> <span class='adapter identifier id'>adapter</span>
 
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='StoreMaster constant id'>StoreMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Failure setting up the daitss database: #{e.message}&quot;</span>
+  <span class='raise identifier id'>raise</span> <span class='StorageMaster constant id'>StorageMaster</span><span class='colon2 op'>::</span><span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Failure setting up the daitss database: #{e.message}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -314,7 +314,7 @@ connection string itself. The two-argument version is deprecated.</p>
 38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
   <span class='lbrack token'>[</span> <span class='Account constant id'>Account</span><span class='comma token'>,</span> <span class='Agent constant id'>Agent</span><span class='comma token'>,</span> <span class='Aip constant id'>Aip</span><span class='comma token'>,</span> <span class='Batch constant id'>Batch</span><span class='comma token'>,</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Entry constant id'>Entry</span><span class='comma token'>,</span> <span class='Event constant id'>Event</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Project constant id'>Project</span><span class='comma token'>,</span> <span class='ReportDelivery constant id'>ReportDelivery</span><span class='comma token'>,</span> <span class='Request constant id'>Request</span><span class='comma token'>,</span> <span class='Sip constant id'>Sip</span> <span class='rbrack token'>]</span>
@@ -343,7 +343,7 @@ connection string itself. The two-argument version is deprecated.</p>
 46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/daitss/model.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 44</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_update!</span> <span class='rbrace token'>}</span>
@@ -359,7 +359,7 @@ connection string itself. The two-argument version is deprecated.</p>
 </div>
     
     <div id="footer">
-  Generated on Mon Oct 31 10:37:59 2011 by 
+  Generated on Wed Nov  2 13:49:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.2 (ruby-1.8.7).
 </div>

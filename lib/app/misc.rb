@@ -28,7 +28,7 @@ end
 PASSWORD_SENTINEL    = '*' * 16  # we don't have access to the original password; we use this to indicate a password is set in the forms
 
 get '/security' do
-  credentials = StoreMasterModel::Authentication.lookup('admin')
+  credentials = StorageMasterModel::Authentication.lookup('admin')
   @password   = (credentials.nil? ? '' : PASSWORD_SENTINEL)
   haml :security
 end
@@ -49,7 +49,7 @@ get '/password-cleared' do
 end
 
 post '/credentials-handler' do
-  credentials = StoreMasterModel::Authentication.lookup('admin')
+  credentials = StorageMasterModel::Authentication.lookup('admin')
 
   case params[:password]
 
@@ -62,7 +62,7 @@ post '/credentials-handler' do
   when /^$/                                             # no password; clear it if unset
     if not credentials.nil?
       Logger.warn "Request from #{@env['REMOTE_ADDR']} to clear the password protection for this storage master."
-      StoreMasterModel::Authentication.clear
+      StorageMasterModel::Authentication.clear
       redirect '/password-cleared'
     else
       redirect '/password-unchanged'
@@ -70,7 +70,7 @@ post '/credentials-handler' do
 
   else
     Logger.warn "Request from #{@env['REMOTE_ADDR']} to set a password for this storage master."
-    StoreMasterModel::Authentication.create('admin', params[:password]) 
+    StorageMasterModel::Authentication.create('admin', params[:password]) 
     redirect '/password-set'
   end
 

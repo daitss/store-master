@@ -72,7 +72,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb</dd>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/utils.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -212,7 +212,7 @@
 68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/utils.rb', line 13</span>
 
 <span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='parse_options identifier id'>parse_options</span> <span class='args identifier id'>args</span>
 
@@ -222,13 +222,13 @@
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--syslog-facility FACILITY&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The facility in syslog to log to (LOCAL0...LOCAL7), otherwise log to STDERR&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='facility identifier id'>facility</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='syslog_facility identifier id'>syslog_facility</span> <span class='assign token'>=</span> <span class='facility identifier id'>facility</span>
     <span class='end end kw'>end</span>
-    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--server-address HOSTNAME[:PORT]&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The address of the store-master web service - port defaults to 80&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='host_name identifier id'>host_name</span><span class='bitor op'>|</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--server-address HOSTNAME[:PORT]&quot;</span><span class='comma token'>,</span>  <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The address of the storage-master web service - port defaults to 80&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='host_name identifier id'>host_name</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='server_address identifier id'>server_address</span> <span class='assign token'>=</span> <span class='host_name identifier id'>host_name</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='regexp val'>/:80$/</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
     <span class='end end kw'>end</span>
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-config-file PATH&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='dstring node'>&quot;A database yaml configuration file, defaults to #{conf.db_config_file}&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span> <span class='assign token'>=</span> <span class='path identifier id'>path</span>
     <span class='end end kw'>end</span>
-    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-store-master-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The key for the store master database in the database yaml configuration file&quot;</span><span class='rparen token'>)</span>  <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
+    <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-storage-master-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The key for the store master database in the database yaml configuration file&quot;</span><span class='rparen token'>)</span>  <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
       <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span> <span class='assign token'>=</span> <span class='key identifier id'>key</span>
     <span class='end end kw'>end</span>
     <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='on identifier id'>on</span><span class='lparen token'>(</span><span class='string val'>&quot;--db-daitss-key KEY&quot;</span><span class='comma token'>,</span> <span class='String constant id'>String</span><span class='comma token'>,</span> <span class='string val'>&quot;The key for the daitss database in the database yaml configuration file&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='key identifier id'>key</span><span class='bitor op'>|</span>
@@ -246,10 +246,10 @@
   <span class='end end kw'>end</span>
   <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='parse! fid id'>parse!</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
 
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not found&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No store-master database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>  <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No daitss database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>        <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_daitss_key identifier id'>db_daitss_key</span>
-  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not readable&quot;</span>                                  <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not found&quot;</span>                                       <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No storage-master database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>  <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_store_master_key identifier id'>db_store_master_key</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;No daitss database key to the DB configuration file (#{conf.db_config_file}) provided&quot;</span>          <span class='unless unless_mod kw'>unless</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_daitss_key identifier id'>db_daitss_key</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Configuration yaml file #{conf.db_config_file} not readable&quot;</span>                                    <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='readable? fid id'>readable?</span> <span class='conf identifier id'>conf</span><span class='dot token'>.</span><span class='db_config_file identifier id'>db_config_file</span>
 
   <span class='comment val'># FIXME: this can be user, uucp, news, others on our system</span>
 
@@ -295,7 +295,7 @@
 9</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/store-master/lib/store-master/fixity/utils.rb', line 6</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/utils.rb', line 6</span>
 
 <span class='def def kw'>def</span> <span class='FixityUtils constant id'>FixityUtils</span><span class='dot token'>.</span><span class='pluralize identifier id'>pluralize</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='word identifier id'>word</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span>
   <span class='return return kw'>return</span> <span class='word identifier id'>word</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='eq op'>==</span> <span class='string val'>'1'</span> <span class='or or kw'>or</span> <span class='count identifier id'>count</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='eq op'>==</span> <span class='string val'>'one'</span>
@@ -312,7 +312,7 @@
 </div>
     
     <div id="footer">
-  Generated on Mon Oct 31 10:37:56 2011 by 
+  Generated on Wed Nov  2 13:49:38 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.2 (ruby-1.8.7).
 </div>

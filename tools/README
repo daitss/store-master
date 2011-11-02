@@ -5,11 +5,11 @@ development of additional DAITSS services.
 Generally applicable:
 
   collect-fixities	a script to cron, collects fixity information for the DAITSS events table
-  add-pools		utility to add silo-pools to the store master db on installation and later
+  add-pools		utility to add silo-pools to the storage master db on installation and later
   create-db		utility to initialize database tables on installation
 	
 FDA specific, no warranties expressed or implied:
 
-  ieid			generate a test IEID, a package identifier
-  put-to-silo		test script to simulate store-master's forwarding of a package to a silo pool service
-  put-to-storemaster	test script to simulate DAITSS's submission of a package to a store master service
+  ieid			    generate a test IEID, a package identifier
+  put-to-silo		    test script to simulate storage-master's forwarding of a package to a silo pool service
+  put-to-storage-emaster    test script to simulate DAITSS's submission of a package to a storage master service

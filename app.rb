@@ -1,4 +1,4 @@
-require 'store-master'
+require 'storage-master'
 require 'app/helpers'
 require 'app/package-reports'
 require 'app/misc'
@@ -10,8 +10,8 @@ require 'haml'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
-include StoreMaster
-include StoreMasterModel
+include StorageMaster
+include StorageMasterModel
 include Datyl
 
 def get_config
@@ -24,7 +24,7 @@ def get_config
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, ENV['VIRTUAL_HOSTNAME'])
 
   
-  [ 'storemaster_db', 'required_pools' ].each do |option|
+  [ 'storage_master_db', 'required_pools' ].each do |option|
     raise ConfigurationError, "The option '#{option}' was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config[option]
   end
 
@@ -46,7 +46,7 @@ configure do
 
   set :required_pools, config.required_pools
 
-  Logger.setup('StoreMaster', ENV['VIRTUAL_HOSTNAME'])
+  Logger.setup('StorageMaster', ENV['VIRTUAL_HOSTNAME'])
 
   Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Logger.filename = config.log_filename         if config.log_filename
@@ -54,7 +54,7 @@ configure do
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
 
-  Logger.info "Starting #{StoreMaster.version.name}"
+  Logger.info "Starting #{StorageMaster.version.name}"
 
   case settings.required_pools
   when 0
@@ -66,17 +66,17 @@ configure do
   end
 
   Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
-  Logger.info "Using database #{StoreUtils.safen_connection_string(config.storemaster_db)}"
+  Logger.info "Using database #{StoreUtils.safen_connection_string(config.storage_master_db)}"
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
-  StoreMaster.setup_databases(config.storemaster_db)
+  StorageMaster.setup_databases(config.storage_master_db)
 end
 
 before do
   @started = Time.now
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
-  @revision = StoreMaster.version.name
+  @revision = StorageMaster.version.name
   @service_name = service_name()
   Package.server_location = @service_name
 end
