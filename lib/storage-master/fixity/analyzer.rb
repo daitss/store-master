@@ -135,10 +135,27 @@ module Analyzer
     def get_package url
       pkg = Daitss::Package.lookup_from_url(url)
       if pkg.nil?
-        Datyl::Logger.info "#{url} is no longer in the DAITSS DB; it was deleted by DAITSS during fixity record reconciliation."
+        Datyl::Logger.warn "#{url} is no longer in the DAITSS DB. It was probably deleted by DAITSS during fixity record reconciliation."
       end
       return pkg
     end
+
+
+    def really_is_orphan? url
+
+      if Daitss::Package.lookup_from_url(url)
+        Datyl::Logger.warn "#{url} looked to be an orphan, but it's just appeared in the DAITSS DB. This is probably a race condition caused by transactions taking a long time to complete. We'll reconcile new fixity checks (if any) next time."
+        return false
+      end
+      return true
+    end
+
+
+    def known_to_storemaster? url
+      StorageMasterModel::Package.exists? url.sub(%r{^.*/}, '')
+    end
+
+
 
     def run
       counter = StatCounter.new
@@ -163,8 +180,16 @@ module Analyzer
           
         elsif not daitss_data        # ..but we do have pool_data for this URL, so we may have some sort of 'orphan'.
 
+          next unless really_is_orphan?(url)   # huh. Seems to have appeared in daitss's db (can happen because of race condition caused by eventual posting of the transaction)
+
           counter.packages_orphaned += 1
-          @report_orphaned.warn *(pool_data.map { |cp| cp.location })
+
+          if known_to_storemaster? url
+            @report_orphaned.warn *( [  url  ] + pool_data.map { |cp| indent + cp.location } )
+          else
+            @report_orphaned.warn *( [ 'n/a' ] + pool_data.map { |cp| indent + cp.location } )
+          end
+
 
         else                         # .. we have records for both
 

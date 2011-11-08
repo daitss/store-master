@@ -29,9 +29,9 @@ end
 
 # assumes git pushed out
 
-desc "Deploy to darchive's storemaster"
+desc "Deploy to darchive's storage master"
 task :darchive do
-  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
 end
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
@@ -41,12 +41,12 @@ end
 
 desc "Deploy to retsina development storemaster - storemaster.retsina.fcla.edu"
 task :retsina do
-  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
 end
 
 desc "Deploy to ripple's test storemaster"
 task :ripple do
-  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storemaster -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
 end
 
 desc "Deploy to stub-storemaster on ripple"
