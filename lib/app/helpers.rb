@@ -14,6 +14,7 @@ helpers do
     'http://' + (@env['HTTP_HOST'] || @env['SERVER_NAME']).gsub(/:\d+$/, '') + (@env['SERVER_PORT'] == '80' ? '' : ":#{@env['SERVER_PORT']}")
   end
 
+
   def good_ieid name
     StoreUtils.valid_ieid_name? name
   end
@@ -41,6 +42,7 @@ helpers do
 
   # Raise specific Http400Errors if a particular package name has never been created
   # or has been created and deleted.
+
 
   def raise_exception_if_missing name
     raise Http410, "Resource #{this_resource} has been previously created and deleted"     if Package.was_deleted?(name)
@@ -163,6 +165,10 @@ helpers do
   end
 
 
+  # helper for the guide.haml document, 
 
+  def silo_host
+    @service_name.sub(%r{(http|https)://[^\.]*},'silo-pool')
+  end
 
 end # of helpers do

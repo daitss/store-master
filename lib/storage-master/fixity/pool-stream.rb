@@ -16,23 +16,43 @@ module Streams
 
   # PoolFixityStream
   #
-  # Return a stream of all of the fixity data from one pool.  The each
-  # method yields two values, a package name and a struct describing
-  # those resources:
+  # Return a stream of all of the fixity data from one pool by
+  # querying thes ilo pool server. The inherited each method yields
+  # two values, the package names (ordered alphabetically, as the
+  # parent stream class requires) and a struct describing those
+  # resources:
   #
-  #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001", sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3", md5="0d736ef6585b44bf0552a61b95ad9b87", size="1313843200", fixity_time="2011-04-27T11:38:30Z", put_time="2011-04-20T20:21:33Z", status="ok">
-  #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000", sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4", md5="c9672d29178ee51eafef97a4b8297a5b", size="587591680", fixity_time="2011-04-27T11:38:45Z", put_time="2011-04-20T22:08:41Z", status="ok">
-  #  ESKMPS0TO_7W4ASP.000 #<struct Struct::PoolFixityRecord location="http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000", sha1="a1bc6134dbc4dc0beffa94235f470bb7e0e8a016", md5="9fc127a90ec6c02b094d6f656f74232c", size="1003280384", fixity_time="2011-04-27T11:39:11Z", put_time="2011-04-21T14:20:13Z", status="ok">
+  #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord 
+  #                                location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001",
+  #                                sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3",
+  #                                md5="0d736ef6585b44bf0552a61b95ad9b87",
+  #                                size="1313843200", 
+  #                                fixity_time="2011-04-27T11:38:30Z",
+  #                                put_time="2011-04-20T20:21:33Z", 
+  #                                status="ok">
   #
-  # In the interest of speed the location and timestamp fields are simple strings (not a URI and DateTime as you might expect)
+  #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord
+  #                                location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000",
+  #                                sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4",
+  #                                md5="c9672d29178ee51eafef97a4b8297a5b",
+  #                                size="587591680",
+  #                                fixity_time="2011-04-27T11:38:45Z",
+  #                                put_time="2011-04-20T22:08:41Z",
+  #                                status="ok">
+  #
+  #
+  # In the interest of speed the location and timestamp fields are
+  # simple strings (not URI or DateTime as you might expect). Both
+  # timestamps are always returned in UTC "Z" format so it can be
+  # simply compared as a string to other timestamps without worrying
+  # about zone conversions.
 
   class PoolFixityStream < DataFileStream
 
     attr_reader :url
 
-
     # The optional stored_before must produce a valid datetime when it's 'to_s' method is called
-    # TODO:  the stored_before query parameter is a bad way of doing things - need to be more HATEOS-driven.
+    # TODO: the stored_before query parameter is a bad way of doing things - need to be more HATEOS-driven.
 
     def initialize pool, options = {}
       file = Tempfile.new("pool-fixity-data-#{pool.name}-")
@@ -66,7 +86,7 @@ module Streams
 
     def rewind
       super
-      @io.gets        # remove initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
+      @io.gets   # remove initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
       self
     end
     
@@ -111,7 +131,7 @@ module Streams
       nil
     end
 
-    # A boolean that indicates the give field isn't consistent
+    # A boolean that indicates the given field isn't consistent
 
     def inconsistent? field
       not consistent? field
@@ -141,7 +161,6 @@ module Streams
       @streams = streams.map { |stream| UniqueStream.new(stream.rewind) }
     end
   end
-
 
   # StoreUrlMultiFixities
   #

@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# TODO:  print out configuration information in log
-
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
 
 require 'datyl/config'
@@ -64,10 +62,7 @@ def setup config
   DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   Datyl::Reporter.max_lines_to_write = 2000   # each report will have at most these lines, though everything will go to syslog
-  StorageMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: crummy backdoor way, rethink this...
-
-  # StorageMasterModel.setup_db(config.storage_master_db)
-  # Daitss.setup_db(config.daitss_db)
+  StorageMasterModel::Package.server_location = "http://#{config.server_address}"  # TODO: there should be a cleaner more obvious way to do things
 
   StorageMaster.setup_databases(config.storage_master_db, config.daitss_db)
 
@@ -115,11 +110,11 @@ begin
 
   reports.concat Analyzer::PoolVsDaitssAnalyzer.new(pool_fixity_streams, daitss_fixity_stream, config.required_pools, config.fixity_expired_days, config.fixity_stale_days, start_time).run.reports
 
-  # TODO: these turn out to be somewhat redundant, maybe put into their own script?
-  #
   # store_master_stream  = Streams::StorageMasterPackageStream.new
   #
-  # these are older reports I used to run, they've been deprecated:
+  # These are older reports I used to run, they've since been
+  # deprecated, but I've left the calls in so you can get an idea of
+  # how I'm using the analyzer classes.
   #
   # reports.concat Analyzer::IntraPoolAnalyzer.new(pool_fixity_streams, config.expiration_days).run.reports
   # reports.concat Analyzer::InterPoolAnalyzer.new(pool_fixity_streams, config.required_copies).run.reports

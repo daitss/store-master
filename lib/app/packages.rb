@@ -1,9 +1,12 @@
 # Package handling
 
-# Reserve a new name to PUT to.  Requires a well-formed parameter
-# IEID, and returns an XML document providing the named resource; If
-# the IEID E20000000_AAAAAA is provided, it might return the following
-# document:
+
+# POST /reserve { :ieid => <name> }
+#
+# Reserve a new <name> we can use to PUT to /packages/<name>.  Requires
+# a well-formed parameter IEID, and returns an XML document providing
+# the named resource; If the IEID E20000000_AAAAAA is provided, it
+# might return the following document:
 #
 #   <?xml version="1.0" encoding="UTF-8"?>
 #   <reserved
@@ -27,6 +30,8 @@ post '/reserve/?' do
 
 end
 
+#  PUT /packages/<name>
+#
 # Put a package tarfile to previously reserved name; on success returns information
 # about the created resource with an XML document. For example:
 #
@@ -82,15 +87,28 @@ put '/packages/:name' do |name|
 
 end
 
-# Delete a package by name.
+# DELETE /packages/<name>
+#
+# Delete a package by name, typically an IEID.  Note that a common
+# exception (heh) is for one or more of the downstream delete on a
+# silo-pool to fail, and will result in returning a "207 Multi-status"
+# with a text document explaining the failures.  Never the less, the
+# storage master will mark it deleted.  Our fixity checking scripts
+# will let us know when this case has occured and needs to be cleaned
+# up out of band.
 
 delete '/packages/:name' do |name|
-  raise_exception_if_missing(name)
+  raise_exception_if_missing(name)   # return 404 or 410
   Package.lookup(name).delete
   status 204
 end
 
-# Return a package via redirect
+# GET /packages/<name>
+#
+# Return the location of package <name> via redirect.  We could be
+# smarter about which of the locations we use, but it's not necessary
+# at the moment (for instance, we could ping using a HEAD for all the
+# locations for availability).
 
 get '/packages/:name' do |name|
   raise_exception_if_missing(name)
@@ -99,6 +117,8 @@ get '/packages/:name' do |name|
   redirect locations[0].to_s_with_userinfo, 303
 end
 
+# GET /packages.xml
+#
 # Return an XML report of all the packages we know about, ordered by package name. For
 # example:
 #
@@ -109,11 +129,15 @@ end
 #    <package name="E20111201_AAAAAA.001" ieid="E20111201_AAAAAA" location="http://storage-master.example.com/packages/E20111201_AAAAAA.001"/>
 #  </packages>
 
+
 get '/packages.xml' do
   log_start_of_request
-  [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]   ## TODO: use Package.server_location= in setup
+  [ 200, {'Content-Type'  => 'application/xml'}, PackageXmlReport.new(service_name + '/packages') ]
 end
 
+
+# GET /packages.csv
+#
 # Return a CSV report of all the packages we know about, ordered by package name
 #
 #   "name","location","ieid"
@@ -124,10 +148,10 @@ end
 
 get '/packages.csv' do
   log_start_of_request
-  [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]        ## TODO: use Package.server_location= in setup
+  [ 200, {'Content-Type'  => 'text/csv'}, PackageCsvReport.new(service_name + '/packages') ]
 end
 
-# Redirect from plain old /packages or /packages/
+# Redirect from plain old /packages or /packages/ to the XML document
 
 get '/packages/?' do
   redirect '/packages.xml', 303

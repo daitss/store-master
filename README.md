@@ -1,65 +1,67 @@
-StoreMaster Service
-===================
-Suppose you have an archive service, and consider that you have a
-collection of REST-based storage services.  Further suppose that your
-archive requires that you save each archived package to multiple,
-adminisitratively separated storage locations.  
-StoreMaster is a RESTful werb service that acts as a single
-point for storing and retreiving those packages.  You can think of
-it as a storage-multiplexing service, or a reverse proxy, if you like.
+Storage Master Service
+=======================
+
+Suppose you are running an archive service, and consider that you have
+a variety of REST-based storage servers.  Further suppose that your
+archive service requires that you save each archived package to
+multiple, adminisitratively-separated storage locations.  Storage
+Master is a web service that acts as a single point of contact for
+your archive to store and retrieve those packages to back-end storage
+servers.  You can think of it as a storage-multiplexing service, or a
+reverse proxy, if you like. It insulates your archival system from
+keeping track of changing back-end storage servers.  The DAITSS system
+uses the Storage Master to manage the packages on the back-end storage
+servers.  See the companion DAITSS Silo Pool project for setting up
+the back-end services.
 
 
 Environment
 -----------
+We've been using apache with passenger fusion; you could run the
+service right from the config file using 'rackup config.ru' if you
+desired, or using the thin web server, say.
 
-We use apache with passenger fusion; you could run the service right from the
-config file using 'rackup config.ru' if you desired, though.
+There are three environment variables that must be set:
 
-In apache-speak, the environment:
-
-  * SetEnv LOG_FACILITY         LOG_LOCAL1              - syslog setup, or nothing if you want logging toSTDERR
-  * SetEnv DATABASE_CONFIG_FILE /opt/fda/etc/db.yml     - YAML file describing database access
-  * SetEnv DATABASE_CONFIG_KEY  store_master            - the key into the above for this service
-  * SetEnv TMPDIR               /var/tmp                - need plenty of headroom here 
-  * PassengerUploadBufferDir    /var/tmp/phusion        - and here
+  * DAITSS_CONFIG_FILE,  a path to a yaml configuration file
+  * VIRTUAL_HOSTNAME, the name that the server will run under
+  * TMPDIR, optionally, the path to a large temporary directory
 
 Requirements
 ------------
-Known to work with with ruby 1.8.7. You can deploy using bundler version 1.0.0 or greater.
-Bundler will pull in the required libraries (see Gemfile
+Known to work with with ruby 1.8.7. You can deploy using bundler version 1.0.x or greater.
+Bundler will pull in the required libraries (see Gemfile).
 
 Quickstart
 ----------
 
- 1. Retrieve the package from this repository
- 2. Setup a MySQL or Postgres database use the (mumble) tools provided; adjust the configuration file in the spec directory
- 3. Run 'rake spec'
- 4. Adjust the capistrano configuration file; run 'cap deploy'
-
+ *  Retrieve the package from this repository
+ *  Setup a Postgres database using the tools/create-db script
+ *  Adjust the sample configuration file, daitss-config.example.yml
+ *  Run 'rake bundle' to get the packages set up
+ *  Start your web server for this application with the environment variables above set as approriate.
+ *  Set up back-end storage servers (see https://github.com/daitss/silo-pool)
 
 Directory Structure
 -------------------
-You can use the supplied Capfile to set up. Adjust
-the top few lines in that file to match your installation.
 
- * config.ru & app.rb - the Sinatra setup
- * public/            - programming docs will land in public/internals, other static assets
- * views/             - instructional erb pages and forms
- * lib/app/           - root of the sinatra-specific stuff - helpers and routes
- * lib/store/         - root of the storage libraries
- * spec/              - tests
- * tmp/               - phusion checks the restart.txt file here.  Rake has a restart target for this, capistrano uses it
- * Capfile, Rakefile  - build and deployment support
- * Gemfile*           - bundler support
+ * config.ru & app.rb     - the Sinatra setup
+ * docs/                  - miscellaneous doc sources used to generated on-line manuals
+ * lib/app/               - root of the sinatra-specific stuff - helpers and routes
+ * lib/storage-master/    - root of the storage libraries
+ * public/                - programming docs will land in public/internals, other static assets
+ * spec/                  - tests
+ * tmp/                   - phusion, pow web server checks the restart.txt file here.
+ * views/                 - instructional pages and forms
+ * Capfile, Rakefile      - build and deployment support
+ * Gemfile, Gemfile.lock  - bundler support
 
 Usage
 -----
-Configure with backend storage services; see the daitss (mumble) project; add the
-following to you pools configuration table with the (mumble) tool.
-
+See the DAITSS installation and operations manual.
 
 Documentation
 -------------
 See the root of the running service for a web page of instructions on
-use and testing; there is a Rake task that will install the
-application documentation under public/internals.
+use.  Ruby documentation tools are so poor that I've included the
+pre-generated yard output. 
