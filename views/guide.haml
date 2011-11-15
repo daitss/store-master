@@ -71,32 +71,33 @@
 
     %p
 
-      The initial request must include an IEID.  To illustrate the
-      protocol, we show how the curl program can be used to perform
-      the same sequence of events that DAITSS uses (this can
-      particularly helpful when testing a new setup).  We assume an
+      For step 1, DAITSS POSTs an HTTP request of type
+
+      %code application/x-www-form-urlencoded
+
+      to the Storage Master. The POST request must include the
+      specific key/value pair with the key having name
 
       %code IEID
 
-      of
-
+      with the name of package as its value - this document uses the package name
+      
       %code E20100727_AAAAAB
 
-      and local tarfile of our package called
+      throughout as an example.
+      
+    %p
+      
+      To illustrate the protocol, we show how the curl program can be
+      used to perform the same sequence of events that DAITSS uses
+      (this can particularly helpful when testing a new setup).  We
+      assume 
+      a local tarfile containing our package called
 
       %code my-package.tar.
 
-      The following command issues the initial
+      The following curl command issues the request:
 
-      %code POST
-
-      request to the service with an
-
-      %code IEID
-
-      of
-
-      %code E20100727_AAAAAB:
 
     .code_listing
 
@@ -112,7 +113,19 @@
       &lt;reserved ieid="E20100727_AAAAAB" location="#{@service_name}/packages/E20100727_AAAAAB.000"/&gt;
 
     %p
-      The next step is to store the package to the service; to do so we require three standard HTTP headers:
+
+      Note that the returned reserved URL includes a suffix added
+      to the package name to make it unique.  These URLs will never be repeated and
+      cannot be stored to more than once. 
+      
+    %p
+      
+      Steps 2 and 4 are the DAITSS HTTP request, and the Storage
+      Masters HTTP response, respectively (step 3, detailing the
+      Storage Master's interaction with back-end silo pools, is
+      discussed in a later section). For DAITSS to send a package to
+      the Storage Master service it must use the reserved URL and include three standard HTTP
+      headers in its request:
 
     .code_listing
 
@@ -122,7 +135,7 @@
 
     %p
 
-      The curl program supplies the
+      Again our example simulates the DAITSS request using the curl program.  Curl supplies the
 
       %code Content-Length
 
@@ -142,8 +155,11 @@
       header in an HTTP request is unusual (you usually see these in
       the HTTP response headers), but it is required for an initial
       fixity check of the package.  The entire sequence of request and
-      response headers are shown below, as well as the returned XML
-      document.
+      response headers are shown below, as well as the XML
+      document returned to DAITSS in step 4.
+
+    %p
+
 
     .code_listing
 
@@ -193,22 +209,22 @@
       successfully stored that number of copies.  The returned XML document
       includes the Storage Master's URL of the stored package, as well as
       additional information that DAITSS uses to confirm that package contents
-      was peoperly stored.
+      was properly stored.  
 
     %h2 Retrieving and Deleting Packages from the Storage Master
 
     %p
 
-      DAITSS records the
+      DAITSS has recorded the
 
       %code location
 
-      attribute in the XML document returned by the Storage Master in response to a successful PUT.
+      attribute from the XML document returned by the Storage Master in response to a successful PUT.
       In our example above, that is
 
       %code #{@service_name}/packages/E20100727_AAAAAB.000.
 
-      DAITSS will use normal HTTP
+      When DAITSS needs to retrieve the package, it will use normal HTTP
 
       %code GET
 
@@ -227,7 +243,6 @@
       will illustrate how the Storage Master handles these HTTP methods:
 
     %p
-
 
     .code_listing
 
@@ -256,8 +271,9 @@
       As you can see, the GET request to the storage master service
       results in a simple redirect to its actual location.  This
       design insulates clients if and when the storage master changes
-      locations of packages.  Clients written to interact with a
-      storage master service need to be able to handle redirects.
+      the underlying back-end locations of packages.  Clients written
+      to interact with a storage master service need to be able to
+      handle these so-called redirects.
 
     %p
 
@@ -266,39 +282,42 @@
       204 if all packages stored in the remote silo pools are successfully
       deleted, or 207 if one or more of the silo pools encounters an
       error. However, for both cases the storage master marks the package
-      as deleted and it will no longer be directly retrievable.
-
+      as deleted and it will no longer be directly retrievable.  Subsequent
+      attempts to GET a deleted package will return the status 410, 
+      permanently deleted.
+    
     %p
+
       A word is in order for the case of a status of 207. A text
-      message is returned in this case describing the issue and
-      silo pool package affected.  The log for the silo pool  should be checked
-      for details.  Fixity checks done by the Storage Master service will
-      report a so-called
+      message is returned in this case describing the issue and silo
+      pool package affected.  The log for the silo pool should be
+      checked for details.  Regularly scheduled fixity checks
+      performed by the Storage Master service will report a so-called
 
-      %i orphan
+      %i orphaned package
 
-      for the undeleted package stored on the silo pool.
-
-
-
-
-
-
+      for the undeleted package remaining on the silo pool.  Cleaning
+      up silo pools of these occasional orphaned packages is part of regular
+      maintenance.
 
 
     %h2 Forwarding Packages from the Storage Master to a Pool Server
 
     %p
-      The previous section described the protocol between a client such as DAITSS
-      and the Storage Master service.  This section describes the communication
-      between the Storage Master service and a back-storage Silo Pool server.
+      
+      The previous section described the protocol between a client
+      such as DAITSS and the Storage Master service.  This section
+      describes the communication between the Storage Master service
+      and a back-storage Silo Pool server.
 
     %p
+
       The Storage Master maintains a simple database table named
 
       %code pools
 
-      to record information about the pools it should contact.  The relevant columns are listed in the following table.
+      to record information about the pools it should contact.  The
+      relevant columns are listed in the following table.
 
     %table{ :style => "margin: 1em 1em 1em 5em;" }
       %thead
@@ -327,18 +346,18 @@
 
     %p
 
-      All values are configurable from the Storage Master's pool management page at
+      All the above values are configurable from the Storage Master's pool management page at
 
       %a{ :href => '/pools' } #{@service_name}/pools
 
     %p
 
-      The steps required to forward a package to a back-end Silo Pool are as follows:
+      The steps required to forward a package form the Storage Master to a back-end Silo Pool are as follows:
 
     %p
       %ol
-        %li GET the service XML document; parse and construct a URL for POSTing the package
-        %li POST the package; parse the returned XML document to determine status of save
+        %li GET the service XML document from the Silo Pool; construct a URL for POSTing the package to the Silo Pool
+        %li POST the package; parse the returned XML document to determine status of attempted store
 
       %img{ :src => "/Storage-Sequences.003.png", :class => "main_img" }
 
@@ -349,29 +368,29 @@
 
       %code services_location
 
-      column retrieved from the database, for example,
+      column retrieved from the database.  For our example this URL is 
+
+      %code http://#{silo_host}/services.
+
+      We again use curl to simulate the action of the Storage Master:
 
       .code_listing
 
         curl -sv http://#{silo_host}/services
         &nbsp;
-        &nbsp;
         * About to connect() to #{silo_host} port 80 (#0)
         *   Trying 127.0.0.1... connected
         * Connected to #{silo_host} (127.0.0.1) port 80 (#0)
-        &nbsp;
         &nbsp;
         &gt; GET /services HTTP/1.1
         &gt; User-Agent: curl/7.19.7 (universal-apple-darwin10.0) libcurl/7.19.7 OpenSSL/0.9.8r zlib/1.2.3
         &gt; Host: #{silo_host}
         &gt; Accept: */*
         &nbsp;
-        &nbsp;
         &lt; HTTP/1.1 200 OK
         &lt; Content-Type: application/xml
         &lt; Content-Length: 1063
         &lt; Connection: keep-alive
-        &nbsp;
         &nbsp;
         &lt;?xml version="1.0" encoding="UTF-8"?&gt;
         &lt;services version="1.1.5"&gt;
@@ -389,7 +408,6 @@
         &nbsp;&nbsp;&lt;retrieve location="http://#{silo_host}/03/data/%s" method="get"/&gt;
         &lt;/services&gt;
         &nbsp;
-        &nbsp;
         * Closing connection #0
 
     %p
@@ -399,13 +417,84 @@
       is the one of interest to us here; the IEID of the package to be stored is substituted into
       the
       %code %s
-      part of the string, and the package is POSTed to the resulting URL.
+      portion of the string, and the package is POSTed to the resulting URL - for our example
+      %code http://#{silo_host}/create/E20100727_AAAAAB.000
 
-
-
-    %h2 Fixity Checking Support...
 
     %p
+
+      An HTTP request from the Storage Master to a back-end Silo Pool is constructed as follows
+
+      .code_listing
+
+        POST /create/E20100727_AAAAAB.000 HTTP/1.1
+        Content-MD5: FeSurhBdwM/I7bLdTHlFTg==
+        Content-Type: application/x-tar
+        Content-Length: 8172435
+        Host: #{silo_host}
+        &nbsp;
+        [ ... package contents ... ]
+
+    %p
+
+      Note that this POST request does not use form data.
+
+    %p
+      On successfully storing the package, the Silo Pool returns an XML document to the Storage Master  
+      with details about the package, including a URL that identifies the location selected by the
+      Silo Pool.
+      
+      .code_listing
+
+        Location: http://#{silo_host}/002/data/E20100727_AAAAAB.000
+        Content-Type: application/xml
+        Content-Length: 365
+        &nbsp;
+        &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+        &lt;created
+        &nbsp;&nbsp;etag="4c94e9f56f1c1f56380ffa7639af2292"
+        &nbsp;&nbsp;md5="15e4aeae105dc0cfc8edb2dd4c79454e"
+        &nbsp;&nbsp;type="application/x-tar"
+        &nbsp;&nbsp;location="http://#{silo_host}/002/data/E20100727_AAAAAB.000"
+        &nbsp;&nbsp;sha1="3c1bb0cd5d67dddc02fae50bf56d3a3a4cbc7204"
+        &nbsp;&nbsp;time="2011-11-14T21:24:39-05:00"
+        &nbsp;&nbsp;size="8172435"
+        &nbsp;&nbsp;name="E20100727_AAAAAB.000"/&gt;
+
+    %p
+
+      At this point the Storage Master can record the actual URL of the package's location
+      in it database.  This URL can be used as the redirected location provided to clients
+      when GETs are requested of the Storage Master (note: in the case of multiply
+      stored copies, the database entry 
+
+      %code read_preference
+
+      mentioned above is used to determine which Silo Pool's copy should be used for the redirect).
+      
+    %p
+
+      This process is repeated for all configured silo pools; on
+      success the Storage Master constructs the XML document to DAITSS
+      as described in the first section of this document.  The process
+      is complete.
+
+    %p
+
+      On storage errors of any kind, the Storage Master
+      will attempt to delete any previously succesful stores and
+      return an error document to DAITSS.
+
+    %h2 Fixity Checking Support
+
+    %p
+    
+      The Storage Master includes a utility that reconciles the authoritative fixity data
+      recorded by DAITSS and the updated fixity checks regularly performed by the Silo Pools:
+
+      %code tools/collect-fixities.
+
+      See the operations manual for details of its use.
 
     %p{ :class => "footer" }
       =@revision
