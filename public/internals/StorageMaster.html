@@ -76,8 +76,8 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb<span class="defines">,<br />
-  /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/app/package-reports.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/exceptions.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/http-exceptions.rb</span>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/exceptions.rb<span class="defines">,<br />
+  /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/app/package-reports.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/http-exceptions.rb</span>
 </dd>
   
 </dl>
@@ -86,13 +86,31 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>TODO: remove module and get into datyl</p>
+<p>Most of the named exceptions in the service libraries we here assign to one
+of the HTTP exception classes.  Libraries are designed specifically to be
+unaware of this mapping: they should use their specific low level
+exceptions classes, and never the HttpError ones.</p>
+
+<p>In general, if we catch an HttpError at our top level sinatra error
+handler, we can blindly return the error message to the client as a
+diagnostic and log it.  The fact that we’re subclassing the particular
+following exceptions from the Http ones means we’re being careful not to
+leak information, and still be helpful to the client.  Since they provide
+very specific messages, tracebacks will not be required.</p>
+
+<p>When we get an un-named exception or a named exception that is not
+subclassed from the HttpErrors, however, the appropriate thing to do at the
+top level is to just supply a very terse message to the client (i.e., we
+wouldn’t like to expose errors from an ORM that said something like
+“password ‘topsecret’ failed in mysql open”). We <b>will</b> want
+to log the full error message, and probably the traceback to boot.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><h2>Defined Under Namespace</h2>
 <p class="children">
    
@@ -163,7 +181,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Set up DataMapper connections.</p>
+</div></span>
   
 </li>
 
@@ -171,7 +191,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#version-class_method" title="version (class method)">+ (Object) <strong>version</strong> </a>
+      <a href="#version-class_method" title="version (class method)">+ (Struct) <strong>version</strong> </a>
     
 
     
@@ -184,7 +204,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Return version information for the Storage Master service.</p>
+</div></span>
   
 </li>
 
@@ -205,24 +227,56 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Set up DataMapper connections.  Attempts to perform an operation on the
+database connections, so we’ll fail fast.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>connection</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>strings for the Storage Master and, optionally, the DAITSS databases.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-62
-63
-64
-65
-66
-67
-68
-69
-70</pre>
+71
+72
+73
+74
+75
+76
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb', line 62</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb', line 71</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_databases identifier id'>setup_databases</span><span class='lparen token'>(</span><span class='store_db_connection_string identifier id'>store_db_connection_string</span><span class='comma token'>,</span> <span class='daitss_db_connection_string identifier id'>daitss_db_connection_string</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
 
@@ -242,23 +296,52 @@
       <div class="method_details ">
   <p class="signature " id="version-class_method">
   
-    + (<tt>Object</tt>) <strong>version</strong> 
+    + (<tt>Struct</tt>) <strong>version</strong> 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Return version information for the Storage Master service.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Struct</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A struct with ‘name’ and ‘uri’ members</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-55
-56
-57
-58</pre>
+61
+62
+63
+64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb', line 55</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master.rb', line 61</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
   <span class='os identifier id'>os</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;name&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.&quot;</span><span class='comma token'>,</span>
@@ -275,9 +358,9 @@
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:38 2011 by 
+  Generated on Wed Nov 16 18:10:36 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

@@ -101,13 +101,16 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>authoritative package record</p>
+<p>This is part of a stripped-down version of the DAITSS core project’s
+model. Events created by the Storage Master are associated with packages;
+anything else in this class remains unused.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
   <h2>Constant Summary</h2>
   
@@ -317,7 +320,8 @@ success events, nil if unchanged.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>makes an event for this package.</p>
+<p>makes an event for this package: TODO: we can probably do with out this as
+well, Storage Master assembles its own events.</p>
 </div></span>
   
 </li>
@@ -367,12 +371,12 @@ success events, nil if unchanged.</p>
       <pre class="lines">
 
 
-8
-9
-10</pre>
+11
+12
+13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 8</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 11</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='default_repository_name identifier id'>default_repository_name</span>
   <span class='symbol val'>:daitss</span>
@@ -400,6 +404,7 @@ success events, nil if unchanged.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -456,6 +461,7 @@ copy URL</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -573,12 +579,12 @@ copy URL</p>
       <pre class="lines">
 
 
-14
-15
-16</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 14</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 17</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='uri_prefix identifier id'>uri_prefix</span><span class='assign token'>=</span>  <span class='prefix identifier id'>prefix</span>
   <span class='@@uri_prefix ivar id'>@@uri_prefix</span> <span class='assign token'>=</span> <span class='prefix identifier id'>prefix</span>
@@ -701,6 +707,7 @@ success events, nil if unchanged</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -745,23 +752,25 @@ success events, nil if unchanged</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>makes an event for this package</p>
+<p>makes an event for this package: TODO: we can probably do with out this as
+well, Storage Master assembles its own events.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-38</pre>
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 38</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 41</span>
 
 <span class='def def kw'>def</span> <span class='log identifier id'>log</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -783,9 +792,6 @@ success events, nil if unchanged</p>
       <pre class="lines">
 
 
-49
-50
-51
 52
 53
 54
@@ -797,10 +803,13 @@ success events, nil if unchanged</p>
 60
 61
 62
-63</pre>
+63
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 49</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='status identifier id'>status</span>
 
@@ -828,9 +837,9 @@ success events, nil if unchanged</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:45 2011 by 
+  Generated on Wed Nov 16 18:10:40 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

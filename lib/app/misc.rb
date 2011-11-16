@@ -1,5 +1,8 @@
 SEARCH_RESULTS_LIMIT = 50
 
+
+# Return a page of search results from the GET parameters
+
 get '/search' do
   @pattern  = (params[:pattern].nil? or params[:pattern] == '') ?  nil : params[:pattern]
   @packages = @pattern.nil? ? [] : Package.search(@pattern.upcase, SEARCH_RESULTS_LIMIT)
@@ -18,6 +21,7 @@ get '/search' do
   end
 end
 
+# Return a page detailing the pools
 
 get '/pools' do
   @pools    = Pool.list_all.sort { |a,b| a.name <=> b.name }
@@ -25,13 +29,17 @@ get '/pools' do
   haml :pools
 end
 
-PASSWORD_SENTINEL    = '*' * 16  # we don't have access to the original password; we use this to indicate a password is set in the forms
+PASSWORD_SENTINEL = '*' * 16  # we don't have access to the original password; we use this to indicate a password is set in the forms
+
+# Return a form for setting the service credentials (used in basic authentication)
 
 get '/security' do
   credentials = StorageMasterModel::Authentication.lookup('admin')
   @password   = (credentials.nil? ? '' : PASSWORD_SENTINEL)
   haml :security
 end
+
+# Various landing pages we go to after credential changes
 
 get '/password-set' do
   @outcome = :set
@@ -47,6 +55,8 @@ get '/password-cleared' do
   @outcome = :cleared
   haml :'password-status'
 end
+
+# Handle credentials change
 
 post '/credentials-handler' do
   credentials = StorageMasterModel::Authentication.lookup('admin')
@@ -99,7 +109,7 @@ post '/pool-handler/:id' do |id|
   redirect '/pools'
 end
 
-# testing stuff:
+# A page for checking settings
 
 get '/settings' do
   opts = {}

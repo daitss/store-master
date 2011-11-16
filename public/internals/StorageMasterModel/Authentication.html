@@ -96,7 +96,34 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Authenication maintains a username/password system that can be used to
+restrict access to the Storage Master service. Passwords are stored
+encrypted.  Currently, the rest of the Storage Master service only uses a
+username of ‘admin’, but that is not a limitation inherent in this
+class.</p>
 
+<p>Example:</p>
+
+<pre class="code"><span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='string val'>'admin'</span><span class='comma token'>,</span> <span class='string val'>'top secret'</span><span class='rparen token'>)</span>
+<span class='dot3 op'>...</span>
+<span class='user identifier id'>user</span> <span class='assign token'>=</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='string val'>'admin'</span><span class='rparen token'>)</span>
+<span class='if if kw'>if</span> <span class='user identifier id'>user</span><span class='dot token'>.</span><span class='authenticate identifier id'>authenticate</span><span class='lparen token'>(</span><span class='string val'>'top secret'</span><span class='rparen token'>)</span> 
+   <span class='comment val'># do some stuff</span>
+<span class='else else kw'>else</span> 
+   <span class='comment val'># don't</span>
+<span class='end end kw'>end</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
   <h2>Constant Summary</h2>
   
 
@@ -140,7 +167,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Authentication.clear removes all authentications from the database.</p>
+</div></span>
   
 </li>
 
@@ -199,7 +228,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#authenticate-instance_method" title="#authenticate (instance method)">- (Object) <strong>authenticate</strong>(password) </a>
+      <a href="#authenticate-instance_method" title="#authenticate (instance method)">- (Boolean) <strong>authenticate</strong>(password) </a>
     
 
     
@@ -212,7 +241,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>password checks a password for a user.</p>
+</div></span>
   
 </li>
 
@@ -233,7 +264,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>password= sets the password for this authentication object.</p>
+</div></span>
   
 </li>
 
@@ -265,18 +298,29 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Authentication.clear removes all authentications from the database</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-47
-48
-49</pre>
+88
+89
+90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 47</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 88</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
   <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
@@ -300,16 +344,16 @@
       <pre class="lines">
 
 
-27
-28
-29
-30
-31
-32
-33</pre>
+57
+58
+59
+60
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 27</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 57</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='username identifier id'>username</span><span class='comma token'>,</span> <span class='password identifier id'>password</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span>
@@ -337,12 +381,12 @@
       <pre class="lines">
 
 
-23
-24
-25</pre>
+46
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 46</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='username identifier id'>username</span>
   <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='username identifier id'>username</span><span class='rparen token'>)</span>
@@ -362,22 +406,71 @@
       <div class="method_details first">
   <p class="signature first" id="authenticate-instance_method">
   
-    - (<tt>Object</tt>) <strong>authenticate</strong>(password) 
+    - (<tt>Boolean</tt>) <strong>authenticate</strong>(password) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>password checks a password for a user</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>password,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a candidate password for this authentication object</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>true if this is the user’s password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-43
-44
-45</pre>
+82
+83
+84</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 43</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 82</span>
 
 <span class='def def kw'>def</span> <span class='authenticate identifier id'>authenticate</span> <span class='password identifier id'>password</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='salt identifier id'>salt</span> <span class='plus op'>+</span> <span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='eq op'>==</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password_hash identifier id'>password_hash</span>
@@ -398,11 +491,34 @@
 </p><div class="docstring">
   <div class="discussion">
     
+<p>password= sets the password for this authentication object</p>
+
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>password,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the new password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -422,16 +538,16 @@
       <pre class="lines">
 
 
-35
-36
-37
-38
-39
-40
-41</pre>
+69
+70
+71
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 35</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 69</span>
 
 <span class='def def kw'>def</span> <span class='password= identifier id'>password=</span> <span class='password identifier id'>password</span>
   <span class='raise identifier id'>raise</span> <span class='BadPassword constant id'>BadPassword</span><span class='comma token'>,</span> <span class='string val'>&quot;No password supplied&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='password identifier id'>password</span> <span class='and and kw'>and</span> <span class='password identifier id'>password</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
@@ -451,9 +567,9 @@
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:59 2011 by 
+  Generated on Wed Nov 16 18:10:36 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

@@ -54,80 +54,83 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><div id='filecontents'><h1>StoreMaster Service</h1>
+    <div id="content"><div id='filecontents'><h1>Storage Master Service</h1>
 
-<p>Suppose you have an archive service, and consider that you have a
-collection of REST-based storage services.  Further suppose that your
-archive requires that you save each archived package to multiple,
-adminisitratively separated storage locations.<br/>
-StoreMaster is a RESTful werb service that acts as a single
-point for storing and retreiving those packages.  You can think of
-it as a storage-multiplexing service, or a reverse proxy, if you like.</p>
+<p>Suppose you are running an archive service, and consider that you have
+a variety of REST-based storage servers.  Further suppose that your
+archive service requires that you save each archived package to
+multiple, adminisitratively-separated storage locations.  Storage
+Master is a web service that acts as a single point of contact for
+your archive to store and retrieve those packages to back-end storage
+servers.  You can think of it as a storage-multiplexing service, or a
+reverse proxy, if you like. It insulates your archival system from
+keeping track of changing back-end storage servers.  The DAITSS system
+uses the Storage Master to manage the packages on the back-end storage
+servers.  See the companion DAITSS Silo Pool project for setting up
+the back-end services.</p>
 
 <h2>Environment</h2>
 
-<p>We use apache with passenger fusion; you could run the service right from the
-config file using 'rackup config.ru' if you desired, though.</p>
+<p>We've been using apache with passenger fusion; you could run the
+service right from the config file using 'rackup config.ru' if you
+desired, or using the thin web server, say.</p>
 
-<p>In apache-speak, the environment:</p>
+<p>There are three environment variables that must be set:</p>
 
 <ul>
-<li>SetEnv LOG<em>FACILITY         LOG</em>LOCAL1              - syslog setup, or nothing if you want logging toSTDERR</li>
-<li>SetEnv DATABASE<em>CONFIG</em>FILE /opt/fda/etc/db.yml     - YAML file describing database access</li>
-<li>SetEnv DATABASE<em>CONFIG</em>KEY  store_master            - the key into the above for this service</li>
-<li>SetEnv TMPDIR               /var/tmp                - need plenty of headroom here</li>
-<li>PassengerUploadBufferDir    /var/tmp/phusion        - and here</li>
+<li>DAITSS<em>CONFIG</em>FILE,  a path to a yaml configuration file</li>
+<li>VIRTUAL_HOSTNAME, the name that the server will run under</li>
+<li>TMPDIR, optionally, the path to a large temporary directory</li>
 </ul>
 
 
 <h2>Requirements</h2>
 
-<p>Known to work with with ruby 1.8.7. You can deploy using bundler version 1.0.0 or greater.
-Bundler will pull in the required libraries (see Gemfile</p>
+<p>Known to work with with ruby 1.8.7. You can deploy using bundler version 1.0.x or greater.
+Bundler will pull in the required libraries (see Gemfile).</p>
 
 <h2>Quickstart</h2>
 
-<ol>
+<ul>
 <li>Retrieve the package from this repository</li>
-<li>Setup a MySQL or Postgres database use the (mumble) tools provided; adjust the configuration file in the spec directory</li>
-<li>Run 'rake spec'</li>
-<li>Adjust the capistrano configuration file; run 'cap deploy'</li>
-</ol>
+<li>Setup a Postgres database using the tools/create-db script</li>
+<li>Adjust the sample configuration file, daitss-config.example.yml</li>
+<li>Run 'rake bundle' to get the packages set up</li>
+<li>Start your web server for this application with the environment variables above set as approriate.</li>
+<li>Set up back-end storage servers (see https://github.com/daitss/silo-pool)</li>
+</ul>
 
 
 <h2>Directory Structure</h2>
 
-<p>You can use the supplied Capfile to set up. Adjust
-the top few lines in that file to match your installation.</p>
-
 <ul>
-<li>config.ru &amp; app.rb - the Sinatra setup</li>
-<li>public/            - programming docs will land in public/internals, other static assets</li>
-<li>views/             - instructional erb pages and forms</li>
-<li>lib/app/           - root of the sinatra-specific stuff - helpers and routes</li>
-<li>lib/store/         - root of the storage libraries</li>
-<li>spec/              - tests</li>
-<li>tmp/               - phusion checks the restart.txt file here.  Rake has a restart target for this, capistrano uses it</li>
-<li>Capfile, Rakefile  - build and deployment support</li>
-<li>Gemfile*           - bundler support</li>
+<li>config.ru &amp; app.rb     - the Sinatra setup</li>
+<li>docs/                  - miscellaneous doc sources used to generated on-line manuals</li>
+<li>lib/app/               - root of the sinatra-specific stuff - helpers and routes</li>
+<li>lib/storage-master/    - root of the storage libraries</li>
+<li>public/                - programming docs will land in public/internals, other static assets</li>
+<li>spec/                  - tests</li>
+<li>tmp/                   - phusion, pow web server checks the restart.txt file here.</li>
+<li>views/                 - instructional pages and forms</li>
+<li>Capfile, Rakefile      - build and deployment support</li>
+<li>Gemfile, Gemfile.lock  - bundler support</li>
 </ul>
 
 
 <h2>Usage</h2>
 
-<p>Configure with backend storage services; see the daitss (mumble) project; add the
-following to you pools configuration table with the (mumble) tool.</p>
+<p>See the DAITSS installation and operations manual.</p>
 
 <h2>Documentation</h2>
 
 <p>See the root of the running service for a web page of instructions on
-use and testing; there is a Rake task that will install the
-application documentation under public/internals.</p></div></div>
+use.  Ruby documentation tools are so poor that I've included the
+pre-generated yard output.</p></div></div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:31 2011 by 
+  Generated on Wed Nov 16 18:10:35 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

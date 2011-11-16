@@ -1,5 +1,9 @@
 module Daitss
 
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model.  Request is not directly used by the Storage
+  # Master service.
+
   class Request
     include DataMapper::Resource
 

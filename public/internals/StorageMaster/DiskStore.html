@@ -102,19 +102,53 @@
     <dl class="constants">
       
         <dt id="RESTRICTIVE_FILE_PERMISSIONS-constant" class="">RESTRICTIVE_FILE_PERMISSIONS =
-          
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>after we’ve saved data, we change its permission to this</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
         </dt>
         <dd><pre class="code"><span class='integer val'>0444</span>
 </pre></dd>
       
         <dt id="RESTRICTIVE_DIRECTORY_PERMISSIONS-constant" class="">RESTRICTIVE_DIRECTORY_PERMISSIONS =
-          
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>after we’ve saved all datafile, we change its directory’s permission to
+this</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
         </dt>
         <dd><pre class="code"><span class='integer val'>0555</span>
 </pre></dd>
       
         <dt id="PERMISSIVE_DIRECTORY_PERMISSIONS-constant" class="">PERMISSIVE_DIRECTORY_PERMISSIONS =
-          
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>when we need to delete, change directory permissions to this.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
         </dt>
         <dd><pre class="code"><span class='integer val'>0755</span>
 </pre></dd>
@@ -142,6 +176,7 @@
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='integer val'>1024</span> <span class='pow op'>**</span> <span class='integer val'>2</span>
@@ -158,6 +193,7 @@
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>10</span>
@@ -174,6 +210,7 @@
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='integer val'>50</span> <span class='mult op'>*</span> <span class='integer val'>1024</span> <span class='mult op'>*</span> <span class='integer val'>1024</span>
@@ -207,7 +244,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute filesystem.</p>
+<p>root of the DiskStorage.</p>
 </div></span>
   
 </li>
@@ -251,7 +288,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#datetime-instance_method" title="#datetime (instance method)">- (Object) <strong>datetime</strong>(name) </a>
+      <a href="#datetime-instance_method" title="#datetime (instance method)">- (DateTime) <strong>datetime</strong>(name) </a>
     
 
     
@@ -265,8 +302,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Return the iso8601 representation of date/time of the data described by
-name.</p>
+<p>Returns the DateTime indicating when the named package was stored.</p>
 </div></span>
   
 </li>
@@ -310,7 +346,7 @@ name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Delete data identified by name.</p>
+<p>Delete the package identified by name.</p>
 </div></span>
   
 </li>
@@ -342,7 +378,7 @@ name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#dopen-instance_method" title="#dopen (instance method)">- (Object) <strong>dopen</strong>(name) </a>
+      <a href="#dopen-instance_method" title="#dopen (instance method)">- (IO) <strong>dopen</strong>(name) </a>
     
 
     
@@ -356,7 +392,8 @@ name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>For those times when you really, really need an io object on the data.</p>
+<p>For those times when you really, really need an io object opened on the
+package.</p>
 </div></span>
   
 </li>
@@ -379,7 +416,7 @@ name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Used to mixin enumerable’s such as grep, etc.</p>
+<p>each allows us to work through all of the packages in a disk store.</p>
 </div></span>
   
 </li>
@@ -388,7 +425,7 @@ name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#etag-instance_method" title="#etag (instance method)">- (Object) <strong>etag</strong>(name) </a>
+      <a href="#etag-instance_method" title="#etag (instance method)">- (String) <strong>etag</strong>(name) </a>
     
 
     
@@ -401,7 +438,9 @@ name.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>etag returns a unique tag for a package for the HTTP response header.</p>
+</div></span>
   
 </li>
 
@@ -455,7 +494,7 @@ name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (DiskStore) <strong>initialize</strong>(storage_directory_root) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (DistStore) <strong>initialize</strong>(storage_directory_root) </a>
     
 
     
@@ -471,7 +510,8 @@ name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of DiskStore.</p>
+<p>Create a new DiskStore object in the provided directory, which must exist
+and be writable.</p>
 </div></span>
   
 </li>
@@ -503,28 +543,7 @@ name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#last_access-instance_method" title="#last_access (instance method)">- (Object) <strong>last_access</strong>(name) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#md5-instance_method" title="#md5 (instance method)">- (Object) <strong>md5</strong>(name) </a>
+      <a href="#last_access-instance_method" title="#last_access (instance method)">- (DateTime) <strong>last_access</strong>(name) </a>
     
 
     
@@ -538,7 +557,31 @@ name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the (saved) md5 hexdigest of data identified by name.</p>
+<p>Returns the DateTime indicating when the named package was last accessed.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#md5-instance_method" title="#md5 (instance method)">- (String) <strong>md5</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the original (not recomputed!) md5 hexdigest of the package
+contents.</p>
 </div></span>
   
 </li>
@@ -681,7 +724,7 @@ exclusive (write) lock.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#sha1-instance_method" title="#sha1 (instance method)">- (Object) <strong>sha1</strong>(name) </a>
+      <a href="#sha1-instance_method" title="#sha1 (instance method)">- (String) <strong>sha1</strong>(name) </a>
     
 
     
@@ -695,7 +738,8 @@ exclusive (write) lock.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the saved sha1 hexdigest of data.</p>
+<p>Returns the original (not recomputed!) SHA1 hexdigest of the package
+contents.</p>
 </div></span>
   
 </li>
@@ -739,7 +783,7 @@ exclusive (write) lock.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Return the size (in bytes) of the data described by name.</p>
+<p>Return the current size (in bytes) of the data described by name.</p>
 </div></span>
   
 </li>
@@ -769,7 +813,7 @@ exclusive (write) lock.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#type-instance_method" title="#type (instance method)">- (Object) <strong>type</strong>(name) </a>
+      <a href="#type-instance_method" title="#type (instance method)">- (String) <strong>type</strong>(name) </a>
     
 
     
@@ -783,7 +827,7 @@ exclusive (write) lock.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the content type of the data.</p>
+<p>Returns the MIME type of the package.</p>
 </div></span>
   
 </li>
@@ -844,42 +888,85 @@ else can get a lock to read (a shared lock) or write (an exclusive lock).</p>
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="StorageMaster::DiskStore (class)">DiskStore</a></span></tt>) <strong>initialize</strong>(storage_directory_root) 
+    - (<tt>DistStore</tt>) <strong>initialize</strong>(storage_directory_root) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>A new instance of DiskStore</p>
+<p>Create a new DiskStore object in the provided directory, which must exist
+and be writable.</p>
+
+<p>DiskStore lets us maintain packages on filesystems (and their backup
+tapes).  A DiskStore object has a filesystem root, let’s say /tmp/store. 
+Then, given package with name “FOO”, we compute the MD5 of the name -
+for example, in the shell:</p>
+
+<pre class="code">$ <span class='echo identifier id'>echo</span> <span class='minus op'>-</span><span class='n identifier id'>n</span> <span class='FOO constant id'>FOO</span> <span class='bitor op'>|</span> <span class='md5 identifier id'>md5</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>901890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span>
+</pre>
+
+<p>DiskStore manages the contents and metadata of the package by using this
+MD5 to construct a filesystem as so:</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span>                                            <span class='minus op'>-</span> <span class='parent identifier id'>parent</span> <span class='directory identifier id'>directory</span><span class='comma token'>,</span> <span class='lock identifier id'>lock</span> <span class='files identifier id'>files</span> <span class='get identifier id'>get</span> <span class='created identifier id'>created</span> <span class='here identifier id'>here</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span>              <span class='minus op'>-</span> <span class='package identifier id'>package</span> <span class='directory identifier id'>directory</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='data identifier id'>data</span>          <span class='minus op'>-</span> <span class='contents identifier id'>contents</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='package identifier id'>package</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='datetime identifier id'>datetime</span>      <span class='minus op'>-</span> <span class='ISO constant id'>ISO</span> <span class='integer val'>8601</span> <span class='timestamp identifier id'>timestamp</span> <span class='when when kw'>when</span> <span class='package identifier id'>package</span> <span class='was identifier id'>was</span> <span class='stored identifier id'>stored</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='md5 identifier id'>md5</span>           <span class='minus op'>-</span> <span class='MD5 constant id'>MD5</span> <span class='hexdigest identifier id'>hexdigest</span> <span class='string identifier id'>string</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='sha1 identifier id'>sha1</span>          <span class='minus op'>-</span> <span class='SHA1 constant id'>SHA1</span> <span class='hexdigest identifier id'>hexdigest</span> <span class='string identifier id'>string</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='name identifier id'>name</span>          <span class='minus op'>-</span> <span class='The constant id'>The</span> <span class='name identifier id'>name</span> <span class='of identifier id'>of</span> <span class='our identifier id'>our</span> <span class='package identifier id'>package</span><span class='colon op'>:</span> <span class='FOO constant id'>FOO</span> <span class='in in kw'>in</span> <span class='this identifier id'>this</span> <span class='example identifier id'>example</span>
+<span class='mult op'>*</span> <span class='regexp val'>/tmp/s</span><span class='tore identifier id'>tore</span><span class='div op'>/</span><span class='integer val'>901</span><span class='div op'>/</span><span class='integer val'>890</span><span class='a8e9c8cf6d5a1a542b229febff identifier id'>a8e9c8cf6d5a1a542b229febff</span><span class='div op'>/</span><span class='type identifier id'>type</span>          <span class='minus op'>-</span> <span class='The constant id'>The</span> <span class='MIME constant id'>MIME</span> <span class='type identifier id'>type</span> <span class='of identifier id'>of</span> <span class='out identifier id'>out</span> <span class='package identifier id'>package</span><span class='comma token'>,</span> <span class='should identifier id'>should</span> <span class='be identifier id'>be</span> <span class='application identifier id'>application</span><span class='div op'>/</span><span class='x identifier id'>x</span><span class='minus op'>-</span><span class='tar identifier id'>tar</span>
+</pre>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>storage_directory_root,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a directory path to a readable, writable directory</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43</pre>
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 31</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 59</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='storage_directory_root identifier id'>storage_directory_root</span><span class='rparen token'>)</span>
 
@@ -918,25 +1005,26 @@ else can get a lock to read (a shared lock) or write (an exclusive lock).</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute filesystem</p>
+<p>root of the DiskStorage</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-17
-18
-19</pre>
+19
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 17</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 19</span>
 
 <span class='def def kw'>def</span> <span class='filesystem identifier id'>filesystem</span>
   <span class='@filesystem ivar id'>@filesystem</span>
@@ -967,12 +1055,12 @@ else can get a lock to read (a shared lock) or write (an exclusive lock).</p>
       <pre class="lines">
 
 
-400
-401
-402</pre>
+474
+475
+476</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 400</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 474</span>
 
 <span class='def def kw'>def</span> <span class='data_path identifier id'>data_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;data&quot;</span><span class='rparen token'>)</span>
@@ -986,39 +1074,77 @@ else can get a lock to read (a shared lock) or write (an exclusive lock).</p>
       <div class="method_details ">
   <p class="signature " id="datetime-instance_method">
   
-    - (<tt>Object</tt>) <strong>datetime</strong>(name) 
+    - (<tt><span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>) <strong>datetime</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Return the iso8601 representation of date/time of the data described by
-name.</p>
+<p>Returns the DateTime indicating when the named package was stored.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the time the package was stored.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-283
-284
-285
-286
-287
-288
-289
-290
-291</pre>
+344
+345
+346
+347
+348
+349
+350
+351
+352</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 283</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 344</span>
 
 <span class='def def kw'>def</span> <span class='datetime identifier id'>datetime</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -1048,12 +1174,12 @@ name.</p>
       <pre class="lines">
 
 
-404
-405
-406</pre>
+478
+479
+480</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 404</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 478</span>
 
 <span class='def def kw'>def</span> <span class='datetime_path identifier id'>datetime_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;datetime&quot;</span><span class='rparen token'>)</span>
@@ -1074,39 +1200,59 @@ name.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Delete data identified by name. Deletes are done one file at a time with no
-recursion.</p>
+<p>Delete the package identified by name.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230</pre>
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 215</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 261</span>
 
 <span class='def def kw'>def</span> <span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='write_lock identifier id'>write_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -1147,18 +1293,19 @@ recursion.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-426
-427
-428</pre>
+500
+501
+502</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 426</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 500</span>
 
 <span class='def def kw'>def</span> <span class='describe identifier id'>describe</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='dstring node'>&quot;'#{name}' (located at '#{path name}')&quot;</span>
@@ -1172,39 +1319,79 @@ recursion.</p>
       <div class="method_details ">
   <p class="signature " id="dopen-instance_method">
   
-    - (<tt>Object</tt>) <strong>dopen</strong>(name) 
+    - (<tt>IO</tt>) <strong>dopen</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>For those times when you really, really need an io object on the data</p>
+<p>For those times when you really, really need an io object opened on the
+package</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>IO</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>yields an read-only open IO</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210</pre>
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 201</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 245</span>
 
 <span class='def def kw'>def</span> <span class='dopen identifier id'>dopen</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='exists? fid id'>exists?</span> <span class='name identifier id'>name</span>
@@ -1232,29 +1419,31 @@ recursion.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Used to mixin enumerable’s such as grep, etc.</p>
+<p>each allows us to work through all of the packages in a disk store. It
+yields each package name, in no particular order.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-310
-311
-312
-313
-314
-315
-316</pre>
+384
+385
+386
+387
+388
+389
+390</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 310</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 384</span>
 
 <span class='def def kw'>def</span> <span class='each identifier id'>each</span>
   <span class='Find constant id'>Find</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='path identifier id'>path</span><span class='bitor op'>|</span>
@@ -1272,22 +1461,74 @@ recursion.</p>
       <div class="method_details ">
   <p class="signature " id="etag-instance_method">
   
-    - (<tt>Object</tt>) <strong>etag</strong>(name) 
+    - (<tt>String</tt>) <strong>etag</strong>(name) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>etag returns a unique tag for a package for the HTTP response header.  It
+will be the same tag regardless of the root of the disk store location. 
+Note that etag must be further quoted to be syntactically correct by the
+HTTP spect.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the base etag</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-304
-305
-306</pre>
+377
+378
+379</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 304</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 377</span>
 
 <span class='def def kw'>def</span> <span class='etag identifier id'>etag</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span> <span class='plus op'>+</span> <span class='md5 identifier id'>md5</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -1308,14 +1549,35 @@ recursion.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns true if a data identified by name is in the silo. Warning: this is
-a read locked method, do not call when the object is write locked.</p>
+<p>Returns true if a data identified by name is in the silo. Note: this is a
+read locked method, do not call when the object is write locked.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -1324,6 +1586,11 @@ a read locked method, do not call when the object is write locked.</p>
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>whether this package exists in the disk store</p>
+</div>
       
     </li>
   
@@ -1335,19 +1602,19 @@ a read locked method, do not call when the object is write locked.</p>
       <pre class="lines">
 
 
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61</pre>
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 52</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 83</span>
 
 <span class='def def kw'>def</span> <span class='exists? fid id'>exists?</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -1376,54 +1643,59 @@ a read locked method, do not call when the object is write locked.</p>
   <div class="discussion">
     
 <p>Get data identified by name from the silo. Takes an optional block for
-reading.</p>
+reading in chunks.</p>
 
-<p>open(“MyStuff/MyFile”, “w”) do |output|</p>
+<p>Usage:</p>
 
-<pre class="code"><span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
-   <span class='output identifier id'>output</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='buff identifier id'>buff</span>
+<pre class="code"><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='string val'>&quot;MyStuff/MyFile&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;w&quot;</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='output identifier id'>output</span><span class='bitor op'>|</span>
+  <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
+     <span class='output identifier id'>output</span><span class='dot token'>.</span><span class='write identifier id'>write</span> <span class='buff identifier id'>buff</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
+
+  <span class='comment val'># or simply, if the data is not too large:</span>
+
+<span class='data identifier id'>data</span> <span class='assign token'>=</span> <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
 </pre>
 
-<p>end</p>
-
-<p>or simply:</p>
-
-<p>data = silo.get(name)</p>
+<p>@<a href="http://String">param</a> name, the name (based on the IEID) of
+the package @<a href="http://String">return</a>  yields or returns the
+package data</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196</pre>
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 178</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 219</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='exists? fid id'>exists?</span> <span class='name identifier id'>name</span>
@@ -1466,7 +1738,8 @@ reading.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -1486,12 +1759,12 @@ reading.</p>
       <pre class="lines">
 
 
-371
-372
-373</pre>
+445
+446
+447</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 371</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 445</span>
 
 <span class='def def kw'>def</span> <span class='invalid_name? fid id'>invalid_name?</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/[^ a-zA-Z\/.,0-9_+~!\'\&quot;@#*\(\)=-]/</span>
@@ -1505,28 +1778,77 @@ reading.</p>
       <div class="method_details ">
   <p class="signature " id="last_access-instance_method">
   
-    - (<tt>Object</tt>) <strong>last_access</strong>(name) 
+    - (<tt><span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>) <strong>last_access</strong>(name) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the DateTime indicating when the named package was last accessed.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the time the package was last accessed.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-293
-294
-295
-296
-297
-298
-299
-300
-301</pre>
+359
+360
+361
+362
+363
+364
+365
+366
+367</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 293</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 359</span>
 
 <span class='def def kw'>def</span> <span class='last_access identifier id'>last_access</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -1546,38 +1868,78 @@ reading.</p>
       <div class="method_details ">
   <p class="signature " id="md5-instance_method">
   
-    - (<tt>Object</tt>) <strong>md5</strong>(name) 
+    - (<tt>String</tt>) <strong>md5</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns the (saved) md5 hexdigest of data identified by name</p>
+<p>Returns the original (not recomputed!) md5 hexdigest of the package
+contents.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the md5 hexdigest</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-259
-260
-261
-262
-263
-264
-265
-266
-267</pre>
+314
+315
+316
+317
+318
+319
+320
+321
+322</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 259</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 314</span>
 
 <span class='def def kw'>def</span> <span class='md5 identifier id'>md5</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -1607,12 +1969,12 @@ reading.</p>
       <pre class="lines">
 
 
-412
-413
-414</pre>
+486
+487
+488</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 412</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 486</span>
 
 <span class='def def kw'>def</span> <span class='md5_path identifier id'>md5_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;md5&quot;</span><span class='rparen token'>)</span>
@@ -1636,12 +1998,12 @@ reading.</p>
       <pre class="lines">
 
 
-420
-421
-422</pre>
+494
+495
+496</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 420</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 494</span>
 
 <span class='def def kw'>def</span> <span class='name_path identifier id'>name_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;name&quot;</span><span class='rparen token'>)</span>
@@ -1665,13 +2027,13 @@ reading.</p>
       <pre class="lines">
 
 
-395
-396
-397
-398</pre>
+469
+470
+471
+472</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 395</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 469</span>
 
 <span class='def def kw'>def</span> <span class='parent_path identifier id'>parent_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -1715,19 +2077,20 @@ file) is “9203e38408ebed690ecdf40953558dbb”. We have the following:</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-390
-391
-392
-393</pre>
+464
+465
+466
+467</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 390</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 464</span>
 
 <span class='def def kw'>def</span> <span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -1750,55 +2113,74 @@ file) is “9203e38408ebed690ecdf40953558dbb”. We have the following:</p>
   <div class="discussion">
     
 <p>Put data identified by name in the silo.  Normally data will be some kind
-of IO object, but strings (or anything with a to_s method) will work fine.</p>
+of IO object, but strings (or anything with a to_s method) will work fine.
+Note: this is a read locked method, do not call when the object is write
+locked.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of the package</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>data,</span>
+      
+      
+        <span class='type'>(<tt>IO</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a data source (can be a immediate data)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>type,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the MIME type of the object</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
 102
 103
 104
@@ -1861,10 +2243,46 @@ of IO object, but strings (or anything with a to_s method) will work fine.</p>
 161
 162
 163
-164</pre>
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 66</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 102</span>
 
 <span class='def def kw'>def</span> <span class='put identifier id'>put</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='type identifier id'>type</span><span class='rparen token'>)</span>
 
@@ -1989,32 +2407,33 @@ exclusive (write) lock</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367</pre>
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 351</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 425</span>
 
 <span class='def def kw'>def</span> <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='begin begin kw'>begin</span>
@@ -2042,38 +2461,78 @@ exclusive (write) lock</p>
       <div class="method_details ">
   <p class="signature " id="sha1-instance_method">
   
-    - (<tt>Object</tt>) <strong>sha1</strong>(name) 
+    - (<tt>String</tt>) <strong>sha1</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns the saved sha1 hexdigest of data</p>
+<p>Returns the original (not recomputed!) SHA1 hexdigest of the package
+contents.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the sha1 hexdigest</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-271
-272
-273
-274
-275
-276
-277
-278
-279</pre>
+329
+330
+331
+332
+333
+334
+335
+336
+337</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 271</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 329</span>
 
 <span class='def def kw'>def</span> <span class='sha1 identifier id'>sha1</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -2103,12 +2562,12 @@ exclusive (write) lock</p>
       <pre class="lines">
 
 
-416
-417
-418</pre>
+490
+491
+492</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 416</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 490</span>
 
 <span class='def def kw'>def</span> <span class='sha1_path identifier id'>sha1_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;sha1&quot;</span><span class='rparen token'>)</span>
@@ -2129,31 +2588,54 @@ exclusive (write) lock</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Return the size (in bytes) of the data described by name.</p>
+<p>Return the current size (in bytes) of the data described by name.</p>
+
+<p>@<a href="http://Integer">return</a> the size of the package</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-235
-236
-237
-238
-239
-240
-241
-242
-243</pre>
+284
+285
+286
+287
+288
+289
+290
+291
+292</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 235</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 284</span>
 
 <span class='def def kw'>def</span> <span class='size identifier id'>size</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -2183,12 +2665,12 @@ exclusive (write) lock</p>
       <pre class="lines">
 
 
-45
-46
-47</pre>
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 45</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 73</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;DiskStorage: #{self.filesystem}&gt;&quot;</span>
@@ -2202,38 +2684,77 @@ exclusive (write) lock</p>
       <div class="method_details ">
   <p class="signature " id="type-instance_method">
   
-    - (<tt>Object</tt>) <strong>type</strong>(name) 
+    - (<tt>String</tt>) <strong>type</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns the content type of the data</p>
+<p>Returns the MIME type of the package</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name (based on the IEID) of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the MIME type</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-247
-248
-249
-250
-251
-252
-253
-254
-255</pre>
+299
+300
+301
+302
+303
+304
+305
+306
+307</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 247</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 299</span>
 
 <span class='def def kw'>def</span> <span class='type identifier id'>type</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='read_lock identifier id'>read_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
@@ -2263,12 +2784,12 @@ exclusive (write) lock</p>
       <pre class="lines">
 
 
-408
-409
-410</pre>
+482
+483
+484</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 408</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 482</span>
 
 <span class='def def kw'>def</span> <span class='type_path identifier id'>type_path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='string val'>&quot;type&quot;</span><span class='rparen token'>)</span>
@@ -2293,39 +2814,40 @@ exclusive (write) lock</p>
 else can get a lock to read (a shared lock) or write (an exclusive lock).
 The way it works is this: you can have as many read locks as you want, but
 the OS guarantees that there will be never more than one write lock on a
-filehandle, nor will it allow a write lock and read lock exist at the same
-time.</p>
+filehandle, nor will it allow a write lock and read lock to exist at the
+same time.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347</pre>
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 332</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/disk-store.rb', line 406</span>
 
 <span class='def def kw'>def</span> <span class='write_lock identifier id'>write_lock</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
   <span class='begin begin kw'>begin</span>
@@ -2354,9 +2876,9 @@ time.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:55 2011 by 
+  Generated on Wed Nov 16 18:10:44 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

@@ -76,27 +76,27 @@ collect-fixities:
 #
 
 
-# storemaster
-# ===========
+# storage-master
+# ==============
 #
-# The storemaster service requires variables database:storage_master_db,
+# The storage master service requires variables database:storage_master_db,
 # defaults:required_pools, as well as the following:
 # 
-# storemaster:log_database_queries
-# --------------------------------
+# storage-master:log_database_queries
+# -----------------------------------
 # Should we log database queries? defaults to false.  These generate
 # very large logs, so it's only recommended for troubleshooting and
 # learning.
 #
-# storemaster:log_filename
-# ------------------------
+# storage-master:log_filename
+# ---------------------------
 # If set, direct log information to this file. If neither log_filename
 # nor log_syslog_facility are set, log to STDERR.  log_filename should
 # be unique to this service.  If you want to share output from
 # multiple services to one file, use syslog.
 #
-# storemaster:log_syslog_facility
-# -------------------------------
+# storage-master:log_syslog_facility
+# ----------------------------------
 # If set, direct log information to this syslog facility (see
 # /etc/syslog.conf). If neither log_filename nor log_syslog_facility
 # are set, log to STDERR.

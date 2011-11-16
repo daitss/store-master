@@ -1,3 +1,6 @@
+# TODO: this has been pulled out of the Silo Pool code, it should really be refactored and shared.
+# TODO: get the lock file out of the DiskStore - need a /var/run/silos directory, or something....
+
 require 'digest/md5'
 require 'fileutils'
 require 'find'
@@ -7,18 +10,17 @@ require 'time'
 require 'storage-master/utils'
 require 'storage-master/exceptions'
 
-# TODO: get the lock file out of the DiskStore - need a /var/run/silos directory, or something....
-
 module StorageMaster
 
   class DiskStore
+
     include Enumerable
 
-    attr_reader :filesystem
+    attr_reader :filesystem    # root of the DiskStorage 
 
-    RESTRICTIVE_FILE_PERMISSIONS      = 0444
-    RESTRICTIVE_DIRECTORY_PERMISSIONS = 0555
-    PERMISSIVE_DIRECTORY_PERMISSIONS  = 0755
+    RESTRICTIVE_FILE_PERMISSIONS      = 0444     # after we've saved data, we change its permission to this
+    RESTRICTIVE_DIRECTORY_PERMISSIONS = 0555     # after we've saved all datafile, we change its directory's permission to this
+    PERMISSIVE_DIRECTORY_PERMISSIONS  = 0755     # when we need to delete, change directory permissions to this.
 
     MAX_NAME_LENGTH = 512
 
@@ -27,6 +29,32 @@ module StorageMaster
     IO_BUFFER_SIZE        = 1024 ** 2        # buffer size in bytes for reading/writing
     LOCKFILE_GRAB_TIMEOUT = 60 * 10          # seconds to wait on a lock file before we throw an error
     HEADROOM              = 50 * 1024 * 1024 # we have to have this many bytes free to perfom a PUT
+
+
+    # Create a new DiskStore object in the provided directory, which must exist and be writable.
+    #
+    # DiskStore lets us maintain packages on filesystems (and their
+    # backup tapes).  A DiskStore object has a filesystem root, let's
+    # say /tmp/store.  Then, given package with name "FOO", we compute
+    # the MD5 of the name - for example, in the shell:
+    #
+    #    $ echo -n FOO | md5 => 901890a8e9c8cf6d5a1a542b229febff
+    #
+    # DiskStore manages the contents and metadata of the package by using this MD5 to construct
+    # a filesystem as so:
+    #
+    #  * /tmp/store/901/                                            - parent directory, lock files get created here
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/              - package directory
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/data          - contents of the package
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/datetime      - ISO 8601 timestamp when package was stored
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/md5           - MD5 hexdigest string
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/sha1          - SHA1 hexdigest string
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/name          - The name of our package: FOO in this example
+    #  * /tmp/store/901/890a8e9c8cf6d5a1a542b229febff/type          - The MIME type of out package, should be application/x-tar
+    #
+    #
+    # @param [String] storage_directory_root, a directory path to a readable, writable directory
+    # @return [DistStore] the constructed object
 
     def initialize(storage_directory_root)
 
@@ -47,7 +75,10 @@ module StorageMaster
     end
 
     # Returns true if a data identified by name is in the silo.
-    # Warning: this is a read locked method, do not call when the object is write locked.
+    # Note: this is a read locked method, do not call when the object is write locked.
+    #
+    # @param [String] name, the name of the package
+    # @return [Boolean] whether this package exists in the disk store
 
     def exists?(name)
       read_lock(name) do
@@ -62,6 +93,11 @@ module StorageMaster
 
     # Put data identified by name in the silo.  Normally data will be some kind of IO object,
     # but strings (or anything with a to_s method) will work fine.
+    # Note: this is a read locked method, do not call when the object is write locked.
+    #
+    # @param [String] name, the name of the package
+    # @param [IO] data, a data source (can be a immediate data)
+    # @param [String] type, the MIME type of the object
 
     def put(name, data, type)
 
@@ -163,18 +199,23 @@ module StorageMaster
       end # write_lock
     end # def
 
-    # Get data identified by name from the silo. Takes an optional block for reading.
+    # Get data identified by name from the silo. Takes an optional block for reading in chunks.
     #
-    # open("MyStuff/MyFile", "w") do |output|
-    #   silo.get(name) do |buff|
-    #      output.write buff
-    #   end
-    # end
+    # Usage:
     #
-    # or simply:
+    #  open("MyStuff/MyFile", "w") do |output|
+    #    silo.get(name) do |buff|
+    #       output.write buff
+    #    end
+    #  end
     #
-    # data = silo.get(name)
-
+    #    # or simply, if the data is not too large:
+    #
+    #  data = silo.get(name)
+    #
+    # @param[String] name, the name (based on the IEID) of the package
+    # @return[String]  yields or returns the package data
+    
     def get(name)
       return nil unless exists? name
 
@@ -196,7 +237,10 @@ module StorageMaster
     end
 
 
-    # For those times when you really, really need an io object on the data
+    # For those times when you really, really need an io object opened on the package
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [IO]  yields an read-only open IO 
 
     def dopen(name)
       return nil unless exists? name
@@ -210,7 +254,9 @@ module StorageMaster
     end
 
 
-    # Delete data identified by name. Deletes are done one file at a time with no recursion.
+    # Delete the package identified by name.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
 
     def delete(name)
       write_lock(name) do
@@ -230,7 +276,10 @@ module StorageMaster
     end
 
 
-    # Return the size (in bytes) of the data described by name.
+    # Return the current size (in bytes) of the data described by name.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return[Integer] the size of the package
 
     def size(name)
       read_lock(name) do
@@ -242,7 +291,10 @@ module StorageMaster
       end
     end
 
-    # Returns the content type of the data
+    # Returns the MIME type of the package
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [String] the MIME type
 
     def type(name)
       read_lock(name) do
@@ -254,7 +306,10 @@ module StorageMaster
       end
     end
 
-    # Returns the (saved) md5 hexdigest of data identified by name
+    # Returns the original (not recomputed!) md5 hexdigest of the package contents.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [String] the md5 hexdigest
 
     def md5(name)
       read_lock(name) do
@@ -266,7 +321,10 @@ module StorageMaster
       end
     end
 
-    # Returns the saved sha1 hexdigest of data
+    # Returns the original (not recomputed!) SHA1 hexdigest of the package contents.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [String] the sha1 hexdigest
 
     def sha1(name)
       read_lock(name) do
@@ -278,7 +336,10 @@ module StorageMaster
       end
     end
 
-    # Return the iso8601 representation of date/time of the data described by name.
+    # Returns the DateTime indicating when the named package was stored.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [DateTime] the time the package was stored.
 
     def datetime(name)
       read_lock(name) do
@@ -290,6 +351,11 @@ module StorageMaster
       end
     end
 
+    # Returns the DateTime indicating when the named package was last accessed.
+    # 
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [DateTime] the time the package was last accessed.
+
     def last_access(name)
       read_lock(name) do
         begin
@@ -300,12 +366,20 @@ module StorageMaster
       end
     end
 
+    # etag returns a unique tag for a package for the HTTP response
+    # header.  It will be the same tag regardless of the root of the
+    # disk store location.  Note that etag must be further quoted to
+    # be syntactically correct by the HTTP spect.
+    #
+    # @param [String] name, the name (based on the IEID) of the package
+    # @return [String] the base etag
 
     def etag(name)
       Digest::MD5.hexdigest(name + md5(name))
     end
 
-    # Used to mixin enumerable's such as grep, etc.
+    # each allows us to work through all of the packages in a disk store.
+    # It yields each package name, in no particular order.
 
     def each
       Find.find(filesystem) do |path|
@@ -315,7 +389,7 @@ module StorageMaster
       end
     end
 
-    ### protected
+    # protected
 
     # The write/read_lock methods take care of opening closing the file locks; mostly, they
     # should just pass exceptions up, since they'll be wrapping specific silo operations.
@@ -327,7 +401,7 @@ module StorageMaster
     # get a lock to read (a shared lock) or write (an exclusive lock). The way it works
     # is this: you can have as many read locks as you want, but the OS guarantees that
     # there will be never more than one write lock on a filehandle, nor will it allow
-    # a write lock and read lock exist at the same time.
+    # a write lock and read lock to exist at the same time.
 
     def write_lock(name)
       begin

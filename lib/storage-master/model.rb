@@ -36,11 +36,16 @@ module StorageMasterModel
 
   include StorageMaster
 
+  # StorageMasterModel.setup_db initializes the DataMapper database connection.
+  #
   # We support two different styles of configuration; either a
   # yaml_file and a key into that file that yields a hash of
   # database information, or the direct connection string itself.
   # The two-argument version is deprecated.
-
+  #
+  # @param [String] connection_string, a database connection string, e.g. postgres://storemaster:topsecret@localhost/storemaster_db
+  # @return [DataMapper::Adapter] the DataMapper repository object
+  
   def self.setup_db *args
 
     connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
@@ -53,23 +58,32 @@ module StorageMasterModel
     raise ConfigurationError,
     "Failure setting up the storage-master database: #{e.message}"
   end
-
-  # (Re)create tables for test or setup.  We'll also provide a mysql.ddl and psql.ddl for creating
-  # the tables, which can give us a bit more flexibility (e.g., specialized indcies for some of the
-  # sql we do)
+  
+  # StorageMasterModel.tables lists all of our tables.
+  #
+  # @return [Array] a list of DataMapper table classes
 
   def self.tables
     [ Copy, Package, Pool, Reservation, Authentication ]
   end
+
+  # StorageMasterModel.tables (Re)creates tables for test or setup.  
+  # Careful - it drops all data!
 
   def self.create_tables                # drops and recreates as well
     self.tables.map &:auto_migrate!
     self.patch_tables
   end
 
-  def self.update_tables                # will make minor schema changes
+  # StorageMasterModel.tables updates tables from changes made to
+  # the DataMapper classes.
+
+  def self.update_tables
     self.tables.map &:auto_upgrade!
   end
+
+  # StorageMasterModel.patch_tables makes ad-hoc modifications to
+  # our postgress databases.
 
   def self.patch_tables                 # special purpose setup
     # db = repository(:store_master).adapter

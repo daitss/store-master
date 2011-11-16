@@ -1,4 +1,10 @@
-# TODO: remove module and get into datyl
+# TODO: this should bne moved into the Datyl project.
+
+# The following classes extend errors adding HTTP status codes
+# and status text for the variety of HTTP responses our service
+# returns. See the file 'exceptions.rb' for how we subclass these
+# for our specific needs.
+
 
 module StorageMaster
 
@@ -14,7 +20,6 @@ module StorageMaster
     def status_code; 207; end
     def status_text; "Multi-Status"; end
   end
-
 
   # Most of the following comments are pretty darn obvious - they
   # are included for easy navigation in the generated rdoc html files.

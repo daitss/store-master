@@ -108,6 +108,7 @@ provides convenience methods that map over all the records in the array.</p>
 </div>
 <div class="tags">
   
+
 </div>
 
   
@@ -164,7 +165,7 @@ PoolFixityRecords in the container have the same value.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A boolean that indicates the give field isn’t consistent.</p>
+<p>A boolean that indicates the given field isn’t consistent.</p>
 </div></span>
   
 </li>
@@ -198,7 +199,8 @@ field of :size, :md5 or :sha1</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -218,14 +220,14 @@ field of :size, :md5 or :sha1</p>
       <pre class="lines">
 
 
-108
-109
-110
-111
-112</pre>
+128
+129
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 108</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 128</span>
 
 <span class='def def kw'>def</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='elt identifier id'>elt</span><span class='bitor op'>|</span> <span class='elt identifier id'>elt</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='field identifier id'>field</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -248,13 +250,14 @@ field of :size, :md5 or :sha1</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>A boolean that indicates the give field isn’t consistent</p>
+<p>A boolean that indicates the given field isn’t consistent</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -274,14 +277,14 @@ field of :size, :md5 or :sha1</p>
       <pre class="lines">
 
 
-116
-117
-118
-119
-120</pre>
+136
+137
+138
+139
+140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 116</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 136</span>
 
 <span class='def def kw'>def</span> <span class='inconsistent? fid id'>inconsistent?</span> <span class='field identifier id'>field</span>
   <span class='not not kw'>not</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
@@ -299,9 +302,9 @@ field of :size, :md5 or :sha1</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:46 2011 by 
+  Generated on Wed Nov 16 18:10:36 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

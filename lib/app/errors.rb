@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# TODO, maybe: if we get a message with embedded newlines, break them out for the logging.
 
 error do
   e = @env['sinatra.error']
@@ -16,7 +15,7 @@ error do
 
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
-  # The StoreMastrer::HttpError classes carry along their own messages and
+  # The StorageMaster::HttpError classes carry along their own messages and
   # HTTP status codes; it's safe to return these to a client.  These will
   # not need backtraces, since they are reasonably diagnostic.
 

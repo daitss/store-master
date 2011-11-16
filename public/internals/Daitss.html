@@ -73,19 +73,33 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb<span class="defines">,<br />
-  /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/sip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/aip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/copy.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/event.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/entry.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/agent.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/project.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/account.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/request.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/eggheadkey.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb</span>
+  /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/sip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/aip.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/copy.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/event.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/agent.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/request.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/account.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/project.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/package.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model/eggheadkey.rb,<br /> /Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb</span>
 </dd>
   
 </dl>
 <div class="clear"></div>
 
-<h2>Defined Under Namespace</h2>
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>This module is a stripped-down copy of the DAITSS model from the DAITSS
+core project.  Core’s model has a problem currently with sprawling
+dependencies, and ends up pulling in a tremendous amount of unnecessary
+code if used directly.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
 <p class="children">
    
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Daitss/Account.html" title="Daitss::Account (class)">Account</a></span>, <span class='object_link'><a href="Daitss/Agent.html" title="Daitss::Agent (class)">Agent</a></span>, <span class='object_link'><a href="Daitss/Aip.html" title="Daitss::Aip (class)">Aip</a></span>, <span class='object_link'><a href="Daitss/Contact.html" title="Daitss::Contact (class)">Contact</a></span>, <span class='object_link'><a href="Daitss/Copy.html" title="Daitss::Copy (class)">Copy</a></span>, <span class='object_link'><a href="Daitss/EggHeadKey.html" title="Daitss::EggHeadKey (class)">EggHeadKey</a></span>, <span class='object_link'><a href="Daitss/Entry.html" title="Daitss::Entry (class)">Entry</a></span>, <span class='object_link'><a href="Daitss/Event.html" title="Daitss::Event (class)">Event</a></span>, <span class='object_link'><a href="Daitss/Operator.html" title="Daitss::Operator (class)">Operator</a></span>, <span class='object_link'><a href="Daitss/Package.html" title="Daitss::Package (class)">Package</a></span>, <span class='object_link'><a href="Daitss/Program.html" title="Daitss::Program (class)">Program</a></span>, <span class='object_link'><a href="Daitss/Project.html" title="Daitss::Project (class)">Project</a></span>, <span class='object_link'><a href="Daitss/Request.html" title="Daitss::Request (class)">Request</a></span>, <span class='object_link'><a href="Daitss/Service.html" title="Daitss::Service (class)">Service</a></span>, <span class='object_link'><a href="Daitss/Sip.html" title="Daitss::Sip (class)">Sip</a></span>, <span class='object_link'><a href="Daitss/User.html" title="Daitss::User (class)">User</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Daitss/Account.html" title="Daitss::Account (class)">Account</a></span>, <span class='object_link'><a href="Daitss/Agent.html" title="Daitss::Agent (class)">Agent</a></span>, <span class='object_link'><a href="Daitss/Aip.html" title="Daitss::Aip (class)">Aip</a></span>, <span class='object_link'><a href="Daitss/Contact.html" title="Daitss::Contact (class)">Contact</a></span>, <span class='object_link'><a href="Daitss/Copy.html" title="Daitss::Copy (class)">Copy</a></span>, <span class='object_link'><a href="Daitss/EggHeadKey.html" title="Daitss::EggHeadKey (class)">EggHeadKey</a></span>, <span class='object_link'><a href="Daitss/Event.html" title="Daitss::Event (class)">Event</a></span>, <span class='object_link'><a href="Daitss/Operator.html" title="Daitss::Operator (class)">Operator</a></span>, <span class='object_link'><a href="Daitss/Package.html" title="Daitss::Package (class)">Package</a></span>, <span class='object_link'><a href="Daitss/Program.html" title="Daitss::Program (class)">Program</a></span>, <span class='object_link'><a href="Daitss/Project.html" title="Daitss::Project (class)">Project</a></span>, <span class='object_link'><a href="Daitss/Request.html" title="Daitss::Request (class)">Request</a></span>, <span class='object_link'><a href="Daitss/Service.html" title="Daitss::Service (class)">Service</a></span>, <span class='object_link'><a href="Daitss/Sip.html" title="Daitss::Sip (class)">Sip</a></span>, <span class='object_link'><a href="Daitss/User.html" title="Daitss::User (class)">User</a></span>
     
   
 </p>
@@ -118,7 +132,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>(Re)creates the DAITSS table we use - don’t use this on a live system.</p>
+</div></span>
   
 </li>
 
@@ -126,7 +142,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup_db-class_method" title="setup_db (class method)">+ (Object) <strong>setup_db</strong>(*args) </a>
+      <a href="#setup_db-class_method" title="setup_db (class method)">+ (DataMapper::Adapter) <strong>setup_db</strong>(*args) </a>
     
 
     
@@ -185,7 +201,9 @@ connection string itself.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Updates existing tables, will add new (though uninitialized) columns.</p>
+</div></span>
   
 </li>
 
@@ -206,18 +224,29 @@ connection string itself.</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>(Re)creates the DAITSS table we use - don’t use this on a live system.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-40
-41
-42</pre>
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 49</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_migrate!</span> <span class='rbrace token'>}</span>
@@ -231,7 +260,7 @@ connection string itself.</p>
       <div class="method_details ">
   <p class="signature " id="setup_db-class_method">
   
-    + (<tt>Object</tt>) <strong>setup_db</strong>(*args) 
+    + (<tt>DataMapper::Adapter</tt>) <strong>setup_db</strong>(*args) 
   
 
   
@@ -246,7 +275,46 @@ connection string itself. The two-argument version is deprecated.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>arg,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A connection string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>DataMapper::Adapter</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an initialized (but not finalized) adapter object</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -266,19 +334,19 @@ connection string itself. The two-argument version is deprecated.</p>
       <pre class="lines">
 
 
-25
-26
-27
-28
-29
-30
-31
 32
 33
-34</pre>
+34
+35
+36
+37
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 25</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 32</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
 
@@ -309,15 +377,15 @@ connection string itself. The two-argument version is deprecated.</p>
       <pre class="lines">
 
 
-36
-37
-38</pre>
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 43</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
-  <span class='lbrack token'>[</span> <span class='Account constant id'>Account</span><span class='comma token'>,</span> <span class='Agent constant id'>Agent</span><span class='comma token'>,</span> <span class='Aip constant id'>Aip</span><span class='comma token'>,</span> <span class='Batch constant id'>Batch</span><span class='comma token'>,</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Entry constant id'>Entry</span><span class='comma token'>,</span> <span class='Event constant id'>Event</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Project constant id'>Project</span><span class='comma token'>,</span> <span class='ReportDelivery constant id'>ReportDelivery</span><span class='comma token'>,</span> <span class='Request constant id'>Request</span><span class='comma token'>,</span> <span class='Sip constant id'>Sip</span> <span class='rbrack token'>]</span>
+  <span class='lbrack token'>[</span> <span class='Account constant id'>Account</span><span class='comma token'>,</span> <span class='Agent constant id'>Agent</span><span class='comma token'>,</span> <span class='Aip constant id'>Aip</span><span class='comma token'>,</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Event constant id'>Event</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Project constant id'>Project</span><span class='comma token'>,</span> <span class='Request constant id'>Request</span><span class='comma token'>,</span> <span class='Sip constant id'>Sip</span> <span class='rbrack token'>]</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -332,18 +400,29 @@ connection string itself. The two-argument version is deprecated.</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Updates existing tables, will add new (though uninitialized) columns.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-44
-45
-46</pre>
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/daitss/model.rb', line 55</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='tbl identifier id'>tbl</span><span class='bitor op'>|</span>  <span class='tbl identifier id'>tbl</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='symbol val'>:auto_update!</span> <span class='rbrace token'>}</span>
@@ -359,9 +438,9 @@ connection string itself. The two-argument version is deprecated.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:47 2011 by 
+  Generated on Wed Nov 16 18:10:42 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

@@ -9,9 +9,10 @@ require 'storage-master/utils'
 require 'time'
 require 'daitss/model'
 
-# Get a properly formatted UTC string from a DateTime object. 
 
 class DateTime
+  # Get a properly formatted UTC string from a DateTime object. 
+
   def to_utc
     new_offset(0).to_s.sub(/\+00:00$/, 'Z')
   end
@@ -52,12 +53,20 @@ module StorageMaster
   VERSION  = File.read(File.expand_path("../../VERSION",__FILE__)).strip
   NAME     = 'Storage Master Service'
 
+
+  # Return version information for the Storage Master service.
+  #
+  # @return [Struct]  A struct with 'name' and 'uri' members
+
   def self.version
     os = OpenStruct.new("name" => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}.",
                         "uri"  => "info:fcla/daitss/storage-master/#{VERSION}")
   end
 
 
+  # Set up DataMapper connections.  Attempts to perform an operation on the database connections, so we'll fail fast.
+  #
+  # @param [String, String] connection strings for the Storage Master and, optionally, the DAITSS databases.
 
   def self.setup_databases(store_db_connection_string, daitss_db_connection_string = nil)
 

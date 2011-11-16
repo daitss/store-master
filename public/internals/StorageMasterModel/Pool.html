@@ -96,7 +96,58 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The StorageMasterModel::Pool class encapsulates the information about a
+Silo Pool. A Package object has one or more Copy objects, each of which are
+associated with exactly one Pool.</p>
 
+<p>The pools table includes the following columns of note:</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='required identifier id'>required</span>            <span class='minus op'>-</span> <span class='a identifier id'>a</span> <span class='boolean identifier id'>boolean</span> <span class='telling identifier id'>telling</span> <span class='us identifier id'>us</span> <span class='whether identifier id'>whether</span> <span class='we identifier id'>we</span> <span class='mult op'>*</span><span class='may identifier id'>may</span><span class='mult op'>*</span> <span class='use identifier id'>use</span> <span class='this identifier id'>this</span> <span class='silo identifier id'>silo</span> <span class='pool identifier id'>pool</span> <span class='lparen token'>(</span><span class='TODO constant id'>TODO</span><span class='colon op'>:</span> <span class='misnomer identifier id'>misnomer</span> <span class='now identifier id'>now</span><span class='rparen token'>)</span>
+<span class='mult op'>*</span> <span class='read_preference identifier id'>read_preference</span>     <span class='minus op'>-</span> <span class='an identifier id'>an</span> <span class='integer identifier id'>integer</span> <span class='giving identifier id'>giving</span> <span class='a identifier id'>a</span> <span class='preference identifier id'>preference</span> <span class='for for kw'>for</span> <span class='sorting identifier id'>sorting</span> <span class='the identifier id'>the</span> <span class='list identifier id'>list</span> <span class='of identifier id'>of</span> <span class='Copy constant id'>Copy</span> <span class='objects identifier id'>objects</span> <span class='for for kw'>for</span> <span class='a identifier id'>a</span> <span class='Package constant id'>Package</span> <span class='object identifier id'>object</span><span class='comma token'>,</span> <span class='larger identifier id'>larger</span> <span class='numbers identifier id'>numbers</span> <span class='favored identifier id'>favored</span>
+<span class='mult op'>*</span> <span class='services_location identifier id'>services_location</span>   <span class='minus op'>-</span> <span class='a identifier id'>a</span> <span class='URL constant id'>URL</span> <span class='lparen token'>(</span><span class='e identifier id'>e</span><span class='dot token'>.</span><span class='g identifier id'>g</span><span class='dot token'>.</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/silos.darchive.fcla.edu:70/s</span><span class='ervices identifier id'>ervices</span><span class='rparen token'>)</span> <span class='where identifier id'>where</span> <span class='we identifier id'>we</span> <span class='can identifier id'>can</span> <span class='information identifier id'>information</span> <span class='about identifier id'>about</span> <span class='the identifier id'>the</span> <span class='silo identifier id'>silo</span> <span class='pool identifier id'>pool</span>
+<span class='mult op'>*</span> <span class='basic_auth_password identifier id'>basic_auth_password</span> <span class='minus op'>-</span> <span class='the identifier id'>the</span> <span class='password identifier id'>password</span> <span class='in in kw'>in</span> <span class='clear identifier id'>clear</span> <span class='text identifier id'>text</span> <span class='for for kw'>for</span> <span class='accessing identifier id'>accessing</span> <span class='the identifier id'>the</span> <span class='pool identifier id'>pool</span>
+<span class='mult op'>*</span> <span class='basic_auth_username identifier id'>basic_auth_username</span> <span class='minus op'>-</span> <span class='the identifier id'>the</span> <span class='username identifier id'>username</span> <span class='for for kw'>for</span> <span class='accessing identifier id'>accessing</span> <span class='the identifier id'>the</span> <span class='pool identifier id'>pool</span>
+</pre>
+
+<p>If basic_auth_username is present then basic_auth_password must be, and
+vice versa. When both are present, we’ll use basic authentication for
+storing to the silo pool.  Use SSL, Luke.</p>
+
+<p>A GET to the services_location will return an XML document such as</p>
+
+<pre class="code"><span class='lt op'>&lt;</span><span class='integer val'>?x</span><span class='ml identifier id'>ml</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;1.0&quot;</span> <span class='encoding identifier id'>encoding</span><span class='assign token'>=</span><span class='string val'>&quot;UTF-8&quot;</span><span class='question op'>?</span><span class='gt op'>&gt;</span>
+<span class='lt op'>&lt;</span><span class='services identifier id'>services</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;1.1.4&quot;</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='create identifier id'>create</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;post&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/create/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='fixity identifier id'>fixity</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;text/csv&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/fixity.csv&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='fixity identifier id'>fixity</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;application/xml&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/fixity.xml&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='dot3 op'>...</span>
+  <span class='lt op'>&lt;</span><span class='partition_fixity identifier id'>partition_fixity</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;application/xml&quot;</span> <span class='localtion identifier id'>localtion</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/001/fixity/&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='partition_fixity identifier id'>partition_fixity</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='mime_type identifier id'>mime_type</span><span class='assign token'>=</span><span class='string val'>&quot;application/xml&quot;</span> <span class='localtion identifier id'>localtion</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/002/fixity/&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='dot3 op'>...</span>
+  <span class='lt op'>&lt;</span><span class='store identifier id'>store</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;put&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/001/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='store identifier id'>store</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;put&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/002/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='store identifier id'>store</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;put&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/003/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='dot3 op'>...</span>
+  <span class='lt op'>&lt;</span><span class='retrieve identifier id'>retrieve</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/001/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='retrieve identifier id'>retrieve</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/002/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='lt op'>&lt;</span><span class='retrieve identifier id'>retrieve</span> <span class='method identifier id'>method</span><span class='assign token'>=</span><span class='string val'>&quot;get&quot;</span> <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.darchive.fcla.edu:70/003/data/%s&quot;</span><span class='div op'>/</span><span class='gt op'>&gt;</span>
+  <span class='dot3 op'>...</span>
+<span class='lt op'>&lt;</span><span class='regexp val'>/services&gt;
+</span></pre>
+
+<p>For our purposes here, only the create and fixity elements of this document
+is of importance.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
   <h2>Constant Summary</h2>
   
 
@@ -115,7 +166,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#name-instance_method" title="#name (instance method)">- (Object) <strong>name</strong> </a>
+      <a href="#name-instance_method" title="#name (instance method)">- (String) <strong>name</strong> </a>
     
 
     
@@ -132,7 +183,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute name.</p>
+<p>name returns the hostname of this pool.</p>
 </div></span>
   
 </li>
@@ -158,7 +209,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#add-class_method" title="add (class method)">+ (Object) <strong>add</strong>(services_location, read_preference = nil) </a>
+      <a href="#add-class_method" title="add (class method)">+ (Pool) <strong>add</strong>(services_location, read_preference = nil) </a>
     
 
     
@@ -172,7 +223,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Create a new pool based on its services URL and optionally a read
+<p>Pool.add creates a new pool based on its services URL and optionally a read
 preference.</p>
 </div></span>
   
@@ -195,7 +246,9 @@ preference.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Pool.exists?.</p>
+</div></span>
   
 </li>
 
@@ -203,7 +256,7 @@ preference.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#list_active-class_method" title="list_active (class method)">+ (Object) <strong>list_active</strong> </a>
+      <a href="#list_active-class_method" title="list_active (class method)">+ (Array) <strong>list_active</strong> </a>
     
 
     
@@ -216,7 +269,9 @@ preference.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Pool.list_active.</p>
+</div></span>
   
 </li>
 
@@ -224,7 +279,7 @@ preference.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#list_all-class_method" title="list_all (class method)">+ (Object) <strong>list_all</strong> </a>
+      <a href="#list_all-class_method" title="list_all (class method)">+ (Array) <strong>list_all</strong> </a>
     
 
     
@@ -237,7 +292,9 @@ preference.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Pool.list_all.</p>
+</div></span>
   
 </li>
 
@@ -245,7 +302,7 @@ preference.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#lookup-class_method" title="lookup (class method)">+ (Object) <strong>lookup</strong>(services_location) </a>
+      <a href="#lookup-class_method" title="lookup (class method)">+ (Pool) <strong>lookup</strong>(services_location) </a>
     
 
     
@@ -258,7 +315,9 @@ preference.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Pool.lookup returns a Pool based on its services_location.</p>
+</div></span>
   
 </li>
 
@@ -288,31 +347,9 @@ preference.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#fixity_url-instance_method" title="#fixity_url (instance method)">- (Object) <strong>fixity_url</strong>(mime_type = 'text/csv') </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
     <span class="summary_desc"><div class='inline'>
-<p>Return a URL that we can use to get fixity data from the pool: a specific
-mime-type can be requested (at the time of this writing, deployed silos
-support text/csv and application/xml).</p>
+<p>assign updates our datamapper object and immediately saves or raises an
+error.</p>
 </div></span>
   
 </li>
@@ -321,7 +358,7 @@ support text/csv and application/xml).</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#post_url-instance_method" title="#post_url (instance method)">- (Object) <strong>post_url</strong>(name) </a>
+      <a href="#fixity_url-instance_method" title="#fixity_url (instance method)">- (URI) <strong>fixity_url</strong>(mime_type = 'text/csv') </a>
     
 
     
@@ -335,9 +372,7 @@ support text/csv and application/xml).</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>return a URL we can post data directly to; we do this by requesting the
-silo’s ‘/service’ document and parsing it for the ‘create’
-service.</p>
+<p>fixity_url returns a URL that we can use to GET fixity data from the pool.</p>
 </div></span>
   
 </li>
@@ -346,28 +381,7 @@ service.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#server_url-instance_method" title="#server_url (instance method)">- (Object) <strong>server_url</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#service_document-instance_method" title="#service_document (instance method)">- (Object) <strong>service_document</strong> </a>
+      <a href="#post_url-instance_method" title="#post_url (instance method)">- (URI) <strong>post_url</strong>(name) </a>
     
 
     
@@ -381,8 +395,55 @@ service.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>We have a protocol that silo pools must follow: they must return a service
-document (XML) that describes where we can locate essential silo services.</p>
+<p>post_url, given a package name, returns a URL on this silo pool to which we
+can post package data to be saved.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#server_url-instance_method" title="#server_url (instance method)">- (String) <strong>server_url</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>server_url.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#service_document-instance_method" title="#service_document (instance method)">- (String) <strong>service_document</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>service_document returns an XML document from the silo pool service, which 
+contains information about how to store packages to it.</p>
 </div></span>
   
 </li>
@@ -412,20 +473,39 @@ document (XML) that describes where we can locate essential silo services.</p>
       <div class="method_details first">
   <p class="signature first" id="name-instance_method">
   
-    - (<tt>Object</tt>) <strong>name</strong> 
+    - (<tt>String</tt>) <strong>name</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute name</p>
+<p>name returns the hostname of this pool</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the hostname of this pool server</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -445,14 +525,14 @@ document (XML) that describes where we can locate essential silo services.</p>
       <pre class="lines">
 
 
-31
-32
-33
-34
-35</pre>
+81
+82
+83
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 31</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='name identifier id'>name</span>
   <span class='@name ivar id'>@name</span> <span class='or or kw'>or</span> <span class='@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='host identifier id'>host</span>
@@ -475,37 +555,92 @@ document (XML) that describes where we can locate essential silo services.</p>
       <div class="method_details first">
   <p class="signature first" id="add-class_method">
   
-    + (<tt>Object</tt>) <strong>add</strong>(services_location, read_preference = nil) 
+    + (<tt><span class='object_link'><a href="" title="StorageMasterModel::Pool (class)">Pool</a></span></tt>) <strong>add</strong>(services_location, read_preference = nil) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Create a new pool based on its services URL and optionally a read
-preference.</p>
+<p>Pool.add creates a new pool based on its services URL and optionally a read
+preference. The higher the preference, the more it’s preferred.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>services_location,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the entry URL for this pool</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>read_preference,</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>optional, defaults to 0</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="StorageMasterModel::Pool (class)">Pool</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the created pool</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-149
-150
-151
-152
-153
-154
-155</pre>
+214
+215
+216
+217
+218
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 149</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 214</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='add identifier id'>add</span> <span class='services_location identifier id'>services_location</span><span class='comma token'>,</span> <span class='read_preference identifier id'>read_preference</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='params identifier id'>params</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span> <span class='rbrace token'>}</span>
@@ -530,11 +665,34 @@ preference.</p>
 </p><div class="docstring">
   <div class="discussion">
     
+<p>Pool.exists?</p>
+
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>services_location,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the URL entry point to the service</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -543,6 +701,11 @@ preference.</p>
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>whether it exists</p>
+</div>
       
     </li>
   
@@ -554,12 +717,12 @@ preference.</p>
       <pre class="lines">
 
 
-165
-166
-167</pre>
+243
+244
+245</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 165</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 243</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='services_location identifier id'>services_location</span>
   <span class='not not kw'>not</span> <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -573,22 +736,51 @@ preference.</p>
       <div class="method_details ">
   <p class="signature " id="list_active-class_method">
   
-    + (<tt>Object</tt>) <strong>list_active</strong> 
+    + (<tt>Array</tt>) <strong>list_active</strong> 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Pool.list_active</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>returns a list of all active Pools</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-157
-158
-159</pre>
+226
+227
+228</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 157</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 226</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_active identifier id'>list_active</span>
   <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:required</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:read_preference</span><span class='dot token'>.</span><span class='desc identifier id'>desc</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -602,22 +794,51 @@ preference.</p>
       <div class="method_details ">
   <p class="signature " id="list_all-class_method">
   
-    + (<tt>Object</tt>) <strong>list_all</strong> 
+    + (<tt>Array</tt>) <strong>list_all</strong> 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Pool.list_all</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>returns a list of all Pools, active or not</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-161
-162
-163</pre>
+234
+235
+236</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 161</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 234</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_all identifier id'>list_all</span>
   <span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:read_preference</span><span class='dot token'>.</span><span class='desc identifier id'>desc</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span>
@@ -631,22 +852,71 @@ preference.</p>
       <div class="method_details ">
   <p class="signature " id="lookup-class_method">
   
-    + (<tt>Object</tt>) <strong>lookup</strong>(services_location) 
+    + (<tt><span class='object_link'><a href="" title="StorageMasterModel::Pool (class)">Pool</a></span></tt>) <strong>lookup</strong>(services_location) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Pool.lookup returns a Pool based on its services_location</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>services_location,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the URL entry point to the service</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="StorageMasterModel::Pool (class)">Pool</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the Pool object found or nil</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-169
-170
-171</pre>
+252
+253
+254</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 169</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 252</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='services_location identifier id'>services_location</span>
   <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:services_location</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span>
@@ -670,19 +940,67 @@ preference.</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>assign updates our datamapper object and immediately saves or raises an
+error.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>field,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a column name</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>value,</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the appropriate value and type for the column</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-26
-27
-28
-29</pre>
+70
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 26</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 70</span>
 
 <span class='def def kw'>def</span> <span class='assign identifier id'>assign</span> <span class='field identifier id'>field</span><span class='comma token'>,</span> <span class='value identifier id'>value</span>
   <span class='send identifier id'>send</span> <span class='field identifier id'>field</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='plus op'>+</span> <span class='string val'>'='</span><span class='comma token'>,</span> <span class='value identifier id'>value</span>
@@ -697,22 +1015,60 @@ preference.</p>
       <div class="method_details ">
   <p class="signature " id="fixity_url-instance_method">
   
-    - (<tt>Object</tt>) <strong>fixity_url</strong>(mime_type = 'text/csv') 
+    - (<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>) <strong>fixity_url</strong>(mime_type = 'text/csv') 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Return a URL that we can use to get fixity data from the pool: a specific
-mime-type can be requested (at the time of this writing, deployed silos
-support text/csv and application/xml). The default mime-type is text/csv.</p>
+<p>fixity_url returns a URL that we can use to GET fixity data from the pool.
+Silo pools currently support CSV and XML listings of fixity data.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>mime_type,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an optional MIME type</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the location for the GET request</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -732,35 +1088,35 @@ support text/csv and application/xml). The default mime-type is text/csv.</p>
       <pre class="lines">
 
 
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145</pre>
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 122</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 182</span>
 
-<span class='def def kw'>def</span> <span class='fixity_url identifier id'>fixity_url</span> <span class='mime_type identifier id'>mime_type</span> <span class='assign token'>=</span> <span class='string val'>'text/csv'</span>
+<span class='def def kw'>def</span> <span class='fixity_url identifier id'>fixity_url</span><span class='lparen token'>(</span><span class='mime_type identifier id'>mime_type</span> <span class='assign token'>=</span> <span class='string val'>'text/csv'</span><span class='rparen token'>)</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
   <span class='parser identifier id'>parser</span> <span class='assign token'>=</span> <span class='LibXML constant id'>LibXML</span><span class='colon2 op'>::</span><span class='XML constant id'>XML</span><span class='colon2 op'>::</span><span class='Parser constant id'>Parser</span><span class='dot token'>.</span><span class='string identifier id'>string</span><span class='lparen token'>(</span><span class='text identifier id'>text</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span>
   <span class='if if kw'>if</span>  <span class='parser identifier id'>parser</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='string val'>'fixity'</span><span class='rparen token'>)</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
@@ -793,23 +1149,60 @@ support text/csv and application/xml). The default mime-type is text/csv.</p>
       <div class="method_details ">
   <p class="signature " id="post_url-instance_method">
   
-    - (<tt>Object</tt>) <strong>post_url</strong>(name) 
+    - (<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>) <strong>post_url</strong>(name) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>return a URL we can post data directly to; we do this by requesting the
-silo’s ‘/service’ document and parsing it for the ‘create’
-service.  we expect it to have a ‘%s’ in that string into which we’ll
-place the name of the resource we wish to create.</p>
+<p>post_url, given a package name, returns a URL on this silo pool to which we
+can post package data to be saved.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the name of the package to create</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the POST URL to which we can save the package.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -829,30 +1222,30 @@ place the name of the resource we wish to create.</p>
       <pre class="lines">
 
 
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115</pre>
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 95</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 154</span>
 
 <span class='def def kw'>def</span> <span class='post_url identifier id'>post_url</span> <span class='name identifier id'>name</span>
   <span class='text identifier id'>text</span> <span class='assign token'>=</span> <span class='service_document identifier id'>service_document</span>
@@ -884,18 +1277,40 @@ place the name of the resource we wish to create.</p>
       <div class="method_details ">
   <p class="signature " id="server_url-instance_method">
   
-    - (<tt>Object</tt>) <strong>server_url</strong> 
+    - (<tt>String</tt>) <strong>server_url</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
+<p>server_url</p>
+
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the base URL of this pool server, e.g. <a
+href="http://silo-pool.dev:70">silo-pool.dev:70</a>/</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -915,15 +1330,15 @@ place the name of the resource we wish to create.</p>
       <pre class="lines">
 
 
-39
-40
-41
-42
-43
-44</pre>
+91
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 39</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 91</span>
 
 <span class='def def kw'>def</span> <span class='server_url identifier id'>server_url</span>
   <span class='u identifier id'>u</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span>
@@ -940,16 +1355,17 @@ place the name of the resource we wish to create.</p>
       <div class="method_details ">
   <p class="signature " id="service_document-instance_method">
   
-    - (<tt>Object</tt>) <strong>service_document</strong> 
+    - (<tt>String</tt>) <strong>service_document</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>We have a protocol that silo pools must follow: they must return a service
-document (XML) that describes where we can locate essential silo services.
-Here’s an example document:</p>
+<p>service_document returns an XML document from the silo pool service, which 
+contains information about how to store packages to it.</p>
+
+<p>Here’s an example document:</p>
 
 <pre class="code"><span class='lt op'>&lt;</span><span class='integer val'>?x</span><span class='ml identifier id'>ml</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;1.0&quot;</span> <span class='encoding identifier id'>encoding</span><span class='assign token'>=</span><span class='string val'>&quot;UTF-8&quot;</span><span class='question op'>?</span><span class='gt op'>&gt;</span>
 <span class='lt op'>&lt;</span><span class='services identifier id'>services</span> <span class='version identifier id'>version</span><span class='assign token'>=</span><span class='string val'>&quot;0.0.1&quot;</span><span class='gt op'>&gt;</span>
@@ -960,51 +1376,71 @@ Here’s an example document:</p>
 </span></pre>
 
 <p>We require one create service that specifies a URL template (it has a slot
-for a name) and when we POST data to that filled-in URL we’ll produce a
-new resource; the document returned from the POST will tell us where the
-resource has been place.</p>
+“%s” for a name) and when we POST data to that filled-in URL we’ll
+produce a new resource; the document returned from the POST will tell us
+where the resource has been place.</p>
 
 <p>We also have one or more URLs that describe where we can requester fixity
 data from; the MIME type of the returned data is provided.</p>
 
 <p>TODO: this is not the best way to do this: we should have the
-services_location return a media-type specific to our names.</p>
+services_location return a media-type specific to our needs, in line with
+best HATEOS principles.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the XML document text.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89</pre>
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 69</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/pools.rb', line 126</span>
 
 <span class='def def kw'>def</span> <span class='service_document identifier id'>service_document</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='services_location identifier id'>services_location</span><span class='rparen token'>)</span> <span class='rescue rescue kw'>rescue</span> <span class='raise identifier id'>raise</span><span class='lparen token'>(</span><span class='dstring node'>&quot;The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}&quot;</span><span class='rparen token'>)</span>
@@ -1038,9 +1474,9 @@ services_location return a media-type specific to our names.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:34 2011 by 
+  Generated on Wed Nov 16 18:10:37 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

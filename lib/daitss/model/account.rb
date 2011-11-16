@@ -1,5 +1,8 @@
 module Daitss
 
+  # This is part of a stripped-down version of the DAITSS core project's model.
+  # Accounts are important to the Storage Master as groupings of agents.
+
   class Account
     include DataMapper::Resource
 

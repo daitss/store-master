@@ -1,6 +1,9 @@
 module Daitss
 
-  # authoritative package record
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model. Events created by the Storage Master are
+  # associated with packages; anything else in this class remains
+  # unused.
 
   class Package
     include DataMapper::Resource
@@ -19,21 +22,21 @@ module Daitss
     property :uri, String,     :unique => true, :required => true, :default => proc { |r,p| @@uri_prefix + ':' + r.id }
 
     has n,    :events
-    has n,    :requests
-    has 1,    :sip
+    has n,    :requests   # TODO: we might be able to do without this
+    has 1,    :sip        # and this
     has 0..1, :aip
 
-# These are things we don't need, since we never delete or modify packages:
+    # These are among things we don't need, since we never delete or modify packages:
 
-#   has 0..1, :intentity              # brings in way too much baggage
-#   has 0..1, :report_delivery
-#   has n, :batch_assignments
-#   has n, :batches, :through => :batch_assignments
-
+    #   has 0..1, :intentity              # brings in way too much baggage
+    #   has 0..1, :report_delivery
+    #   has n, :batch_assignments
+    #   has n, :batches, :through => :batch_assignments
 
     belongs_to :project
 
-    # makes an event for this package
+    # makes an event for this package: TODO: we can probably do with out this as well, Storage
+    # Master assembles its own events.
 
     def log name, options={}
       e = Event.new :name => name, :package => self

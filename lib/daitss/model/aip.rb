@@ -1,5 +1,10 @@
 module Daitss
 
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model.  Aip is used by the Storage Master service to
+  # determine whether a package has a copy: package => aip => copy.
+  # Lack of an aip means the package was not ingested.
+
   class Aip
     include DataMapper::Resource
 

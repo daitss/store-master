@@ -73,6 +73,12 @@ configure do
   StorageMaster.setup_databases(config.storage_master_db)
 end
 
+
+# The object variables are available throughout a request/response
+# session - in routes, error and helper sections - basically
+# everywhere in sinatra but the configuration section above.
+# If we've enabled authentication, we field access here.
+
 before do
   @started = Time.now
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
@@ -81,17 +87,25 @@ before do
   Package.server_location = @service_name
 end
 
+# Internals is the yard-generated internal documentation
+
 get '/internals?' do
   redirect '/internals/index.html'
 end
+
+# Intro page
 
 get '/' do
   haml :index
 end
 
+# Guide to Storage Master protocol
+
 get '/guide' do
   haml :guide
 end
+
+# Status gives us a hand for xymon to shake, to make sure the service is up.
 
 get '/status' do
   [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]

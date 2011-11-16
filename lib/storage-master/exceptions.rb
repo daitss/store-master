@@ -1,3 +1,6 @@
+# TODO: there should be a metaprogramming way of injecting
+# these exceptions into their parent HTTP classes.
+
 require 'storage-master/http-exceptions'
 
 # Most of the named exceptions in the service libraries we here assign
@@ -7,7 +10,7 @@ require 'storage-master/http-exceptions'
 #
 # In general, if we catch an HttpError at our top level sinatra error
 # handler, we can blindly return the error message to the client as a
-# diagnostic and log it.  The fact that we're subclassing the
+# diagnostic and log it.  The fact that we're subclassing the particular
 # following exceptions from the Http ones means we're being careful
 # not to leak information, and still be helpful to the client.  Since
 # they provide very specific messages, tracebacks will not be
@@ -68,6 +71,8 @@ module StorageMaster
   # for when we couldn't actually delete all silo copies, though we do mark StorageMaster as having deleted the package.
 
   class PartialDelete              < Http207;       end
+
+  # when a package has been stored already, and we are trying to re-store it on the same silo
 
   class PackageUsed                < Http409;       end
 

@@ -99,22 +99,41 @@
     
 <p>PoolFixityStream</p>
 
-<p>Return a stream of all of the fixity data from one pool.  The each method
-yields two values, a package name and a struct describing those resources:</p>
+<p>Return a stream of all of the fixity data from one pool by querying thes
+ilo pool server. The inherited each method yields two values, the package
+names (ordered alphabetically, as the parent stream class requires) and a
+struct describing those resources:</p>
 
-<pre class="code"><span class='EO05UJJHZ_HPDFHG constant id'>EO05UJJHZ_HPDFHG</span><span class='integer val'>.001</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001&quot;, sha1=&quot;4abc7ec5f02b946dc4812f0b60bda34940ae62f3&quot;, md5=&quot;0d736ef6585b44bf0552a61b95ad9b87&quot;, size=&quot;1313843200&quot;, fixity_time=&quot;2011-04-27T11:38:30Z&quot;, put_time=&quot;2011-04-20T20:21:33Z&quot;, status=&quot;ok&quot;&gt;</span>
-<span class='EQ93PZGKM_ER3H8G constant id'>EQ93PZGKM_ER3H8G</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000&quot;, sha1=&quot;a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4&quot;, md5=&quot;c9672d29178ee51eafef97a4b8297a5b&quot;, size=&quot;587591680&quot;, fixity_time=&quot;2011-04-27T11:38:45Z&quot;, put_time=&quot;2011-04-20T22:08:41Z&quot;, status=&quot;ok&quot;&gt;</span>
-<span class='ESKMPS0TO_7W4ASP constant id'>ESKMPS0TO_7W4ASP</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord location=&quot;http://silos.ripple.fcla.edu:70/001/data/ESKMPS0TO_7W4ASP.000&quot;, sha1=&quot;a1bc6134dbc4dc0beffa94235f470bb7e0e8a016&quot;, md5=&quot;9fc127a90ec6c02b094d6f656f74232c&quot;, size=&quot;1003280384&quot;, fixity_time=&quot;2011-04-27T11:39:11Z&quot;, put_time=&quot;2011-04-21T14:20:13Z&quot;, status=&quot;ok&quot;&gt;</span>
+<pre class="code"><span class='EO05UJJHZ_HPDFHG constant id'>EO05UJJHZ_HPDFHG</span><span class='integer val'>.001</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord </span>
+                              <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001&quot;</span><span class='comma token'>,</span>
+                              <span class='sha1 identifier id'>sha1</span><span class='assign token'>=</span><span class='string val'>&quot;4abc7ec5f02b946dc4812f0b60bda34940ae62f3&quot;</span><span class='comma token'>,</span>
+                              <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;0d736ef6585b44bf0552a61b95ad9b87&quot;</span><span class='comma token'>,</span>
+                              <span class='size identifier id'>size</span><span class='assign token'>=</span><span class='string val'>&quot;1313843200&quot;</span><span class='comma token'>,</span> 
+                              <span class='fixity_time identifier id'>fixity_time</span><span class='assign token'>=</span><span class='string val'>&quot;2011-04-27T11:38:30Z&quot;</span><span class='comma token'>,</span>
+                              <span class='put_time identifier id'>put_time</span><span class='assign token'>=</span><span class='string val'>&quot;2011-04-20T20:21:33Z&quot;</span><span class='comma token'>,</span> 
+                              <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;ok&quot;</span><span class='gt op'>&gt;</span>
+
+<span class='EQ93PZGKM_ER3H8G constant id'>EQ93PZGKM_ER3H8G</span><span class='integer val'>.000</span> <span class='comment val'>#&lt;struct Struct::PoolFixityRecord</span>
+                              <span class='location identifier id'>location</span><span class='assign token'>=</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000&quot;</span><span class='comma token'>,</span>
+                              <span class='sha1 identifier id'>sha1</span><span class='assign token'>=</span><span class='string val'>&quot;a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4&quot;</span><span class='comma token'>,</span>
+                              <span class='md5 identifier id'>md5</span><span class='assign token'>=</span><span class='string val'>&quot;c9672d29178ee51eafef97a4b8297a5b&quot;</span><span class='comma token'>,</span>
+                              <span class='size identifier id'>size</span><span class='assign token'>=</span><span class='string val'>&quot;587591680&quot;</span><span class='comma token'>,</span>
+                              <span class='fixity_time identifier id'>fixity_time</span><span class='assign token'>=</span><span class='string val'>&quot;2011-04-27T11:38:45Z&quot;</span><span class='comma token'>,</span>
+                              <span class='put_time identifier id'>put_time</span><span class='assign token'>=</span><span class='string val'>&quot;2011-04-20T22:08:41Z&quot;</span><span class='comma token'>,</span>
+                              <span class='status identifier id'>status</span><span class='assign token'>=</span><span class='string val'>&quot;ok&quot;</span><span class='gt op'>&gt;</span>
 </pre>
 
 <p>In the interest of speed the location and timestamp fields are simple
-strings (not a URI and DateTime as you might expect)</p>
+strings (not URI or DateTime as you might expect). Both timestamps are
+always returned in UTC “Z” format so it can be simply compared as a
+string to other timestamps without worrying about zone conversions.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
 
   
@@ -181,7 +200,7 @@ strings (not a URI and DateTime as you might expect)</p>
   
     <span class="summary_desc"><div class='inline'>
 <p>The optional stored_before must produce a valid datetime when it’s
-‘to_s’ method is called TODO:  the stored_before query parameter is a
+‘to_s’ method is called TODO: the stored_before query parameter is a
 bad way of doing things - need to be more HATEOS-driven.</p>
 </div></span>
   
@@ -271,7 +290,7 @@ bad way of doing things - need to be more HATEOS-driven.</p>
   <div class="discussion">
     
 <p>The optional stored_before must produce a valid datetime when it’s
-‘to_s’ method is called TODO:  the stored_before query parameter is a
+‘to_s’ method is called TODO: the stored_before query parameter is a
 bad way of doing things - need to be more HATEOS-driven.</p>
 
 
@@ -279,16 +298,17 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-37</pre>
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 37</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 57</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -322,18 +342,19 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-31
-32
-33</pre>
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 31</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 52</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='@url ivar id'>@url</span>
@@ -377,19 +398,20 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-87
-88
-89
-90</pre>
+107
+108
+109
+110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 87</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 107</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='CSV constant id'>CSV</span><span class='dot token'>.</span><span class='parse_line identifier id'>parse_line</span><span class='lparen token'>(</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='rparen token'>)</span>
@@ -414,18 +436,18 @@ bad way of doing things - need to be more HATEOS-driven.</p>
       <pre class="lines">
 
 
-67
-68
-69
-70
-71</pre>
+87
+88
+89
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 67</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='super super kw'>super</span>
-  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span>        <span class='comment val'># remove initial CSV title &quot;name&quot;,&quot;location&quot;,&quot;sha1&quot;,&quot;md5&quot;,&quot;size&quot;,&quot;fixity_time&quot;,&quot;put_time&quot;,&quot;status&quot;</span>
+  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span>   <span class='comment val'># remove initial CSV title &quot;name&quot;,&quot;location&quot;,&quot;sha1&quot;,&quot;md5&quot;,&quot;size&quot;,&quot;fixity_time&quot;,&quot;put_time&quot;,&quot;status&quot;</span>
   <span class='self self kw'>self</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -447,12 +469,12 @@ bad way of doing things - need to be more HATEOS-driven.</p>
       <pre class="lines">
 
 
-74
-75
-76</pre>
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 74</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class} #{@url}&gt;&quot;</span>
@@ -468,9 +490,9 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:38 2011 by 
+  Generated on Wed Nov 16 18:10:46 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

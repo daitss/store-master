@@ -3,6 +3,45 @@ require 'storage-master/model'
 
 module StorageMasterModel
 
+  # The StorageMasterModel::Pool class encapsulates the information about a Silo Pool.
+  # A Package object has one or more Copy objects, each of which are associated with
+  # exactly one Pool.
+  #
+  # The pools table includes the following columns of note:
+  #
+  #  * required            - a boolean telling us whether we *may* use this silo pool (TODO: misnomer now)
+  #  * read_preference     - an integer giving a preference for sorting the list of Copy objects for a Package object, larger numbers favored
+  #  * services_location   - a URL (e.g. http://silos.darchive.fcla.edu:70/services) where we can information about the silo pool
+  #  * basic_auth_password - the password in clear text for accessing the pool
+  #  * basic_auth_username - the username for accessing the pool
+  #
+  # If basic_auth_username is present then basic_auth_password must be,
+  # and vice versa. When both are present, we'll use basic
+  # authentication for storing to the silo pool.  Use SSL, Luke.
+  #
+  # A GET to the services_location will return an XML document such as
+  #
+  #   <?xml version="1.0" encoding="UTF-8"?>
+  #   <services version="1.1.4">
+  #     <create method="post" location="http://silos.darchive.fcla.edu:70/create/%s"/>
+  #     <fixity method="get" mime_type="text/csv" location="http://silos.darchive.fcla.edu:70/fixity.csv"/>
+  #     <fixity method="get" mime_type="application/xml" location="http://silos.darchive.fcla.edu:70/fixity.xml"/>
+  #     ...
+  #     <partition_fixity method="get" mime_type="application/xml" localtion="http://silos.darchive.fcla.edu:70/001/fixity/"/>
+  #     <partition_fixity method="get" mime_type="application/xml" localtion="http://silos.darchive.fcla.edu:70/002/fixity/"/>
+  #     ...
+  #     <store method="put" location="http://silos.darchive.fcla.edu:70/001/data/%s"/>
+  #     <store method="put" location="http://silos.darchive.fcla.edu:70/002/data/%s"/>
+  #     <store method="put" location="http://silos.darchive.fcla.edu:70/003/data/%s"/>
+  #     ...
+  #     <retrieve method="get" location="http://silos.darchive.fcla.edu:70/001/data/%s"/>
+  #     <retrieve method="get" location="http://silos.darchive.fcla.edu:70/002/data/%s"/>
+  #     <retrieve method="get" location="http://silos.darchive.fcla.edu:70/003/data/%s"/>
+  #     ...
+  #   </services>
+  #
+  # For our purposes here, only the create and fixity elements of this document is of importance.
+
   class Pool
     include DataMapper::Resource
     include StorageMaster
@@ -17,11 +56,16 @@ module StorageMasterModel
     property   :read_preference,      Integer,  :default  => 0
     property   :basic_auth_username,  String
     property   :basic_auth_password,  String   # note that it is an error if exactly one of basic_auth_xxx is NULL;
-                                               # it should be the empty string in that case (need a validator?)
+                                               # it should be the empty string in that case
 
     has n, :copies
 
     validates_uniqueness_of :services_location
+
+    # assign updates our datamapper object and immediately saves or raises an error.
+    #
+    # @param [String] field, a column name
+    # @param [Object] value, the appropriate value and type for the column
 
     def assign field, value
       send field.to_s + '=', value
@@ -30,11 +74,19 @@ module StorageMasterModel
 
     attr_accessor :name
 
+    # name returns the hostname of this pool 
+    #
+    # @return [String] the hostname of this pool server
+
     def name
       @name or @name = URI.parse(services_location).host
     rescue => e
       raise ConfigurationError, "The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}"
     end
+
+    # server_url 
+    #
+    # @return [String] the base URL of this pool server, e.g. http://silo-pool.dev:70/
 
     def server_url
       u = URI.parse(services_location)
@@ -42,11 +94,10 @@ module StorageMasterModel
     rescue => e
       raise ConfigurationError, "The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}"
     end
-
-
-
-    # We have a protocol that silo pools must follow: they must return a service
-    # document (XML) that describes where we can locate essential silo services.
+    
+    # service_document returns an XML document from the silo pool service, which 
+    # contains information about how to store packages to it.
+    #
     # Here's an example document:
     #
     #  <?xml version="1.0" encoding="UTF-8"?>
@@ -56,15 +107,21 @@ module StorageMasterModel
     #    <fixity mime_type="application/xml" method="get" location="http://pool-one.example.com/fixity.xml"/>
     #  </services>
     #
-    # We require one create service that specifies a URL template (it has a slot for a name)
-    # and when we POST data to that filled-in URL we'll produce a new resource; the document
-    # returned from the POST will tell us where the resource has been place.
+    # We require one create service that specifies a URL template (it
+    # has a slot "%s" for a name) and when we POST data to that
+    # filled-in URL we'll produce a new resource; the document
+    # returned from the POST will tell us where the resource has been
+    # place.
     #
-    # We also have one or more URLs that describe where we can requester fixity data from; the
-    # MIME type of the returned data is provided.
+    # We also have one or more URLs that describe where we can
+    # requester fixity data from; the MIME type of the returned data
+    # is provided.
     #
-    # TODO: this is not the best way to do this: we should have the services_location return
-    # a media-type specific to our names.
+    # TODO: this is not the best way to do this: we should have the
+    # services_location return a media-type specific to our needs, in
+    # line with best HATEOS principles.
+    #
+    # @return [String] the XML document text.
 
     def service_document
       url = URI.parse(services_location) rescue raise("The silo pool services_location '#{services_location}' was not recognized as a valid URL: #{e.class} #{e.message}")
@@ -88,9 +145,11 @@ module StorageMasterModel
       end
     end
 
-    # return a URL we can post data directly to; we do this by requesting the silo's '/service' document
-    # and parsing it for the 'create' service.  we expect it to have a '%s' in that string into which we'll
-    # place the name of the resource we wish to create.
+    # post_url, given a package name, returns a URL on this silo pool
+    # to which we can post package data to be saved.
+    #
+    # @param [String] name, the name of the package to create
+    # @return [URI] the POST URL to which we can save the package.
 
     def post_url name
       text = service_document
@@ -114,12 +173,13 @@ module StorageMasterModel
       return url
     end
 
-    # Return a URL that we can use to get fixity data from the pool: a
-    # specific mime-type can be requested (at the time of this
-    # writing, deployed silos support text/csv and application/xml).
-    # The default mime-type is text/csv.
+    # fixity_url returns a URL that we can use to GET fixity data from the pool.
+    # Silo pools currently support CSV and XML listings of fixity data.
+    #
+    # @param [String] mime_type, an optional MIME type
+    # @return [URI] the location for the GET request
 
-    def fixity_url mime_type = 'text/csv'
+    def fixity_url(mime_type = 'text/csv')
       text = service_document
       parser = LibXML::XML::Parser.string(text).parse
       if  parser.find('fixity') == 0
@@ -144,7 +204,12 @@ module StorageMasterModel
       raise ConfigurationError, "When retreiving service information from the silo at #{services_location}, no fixity service with mime type #{mime_type} could be found.  The service document returned was was:\n#{text}."
     end
 
-    # Create a new pool based on its services URL and optionally a read preference.
+    # Pool.add creates a new pool based on its services URL and optionally a read preference.
+    # The higher the preference, the more it's preferred.
+    #
+    # @param [String] services_location, the entry URL for this pool
+    # @param [Fixnum] read_preference, optional, defaults to 0
+    # @return [Pool] the created pool
 
     def self.add services_location, read_preference = nil
       params = { :services_location => services_location }
@@ -154,17 +219,35 @@ module StorageMasterModel
       return rec
     end
 
+    # Pool.list_active 
+    #
+    # @return [Array] returns a list of all active Pools
+
     def self.list_active
       all(:required => true, :order => [ :read_preference.desc ])
     end
+
+    # Pool.list_all
+    #
+    # @return [Array] returns a list of all Pools, active or not
 
     def self.list_all
       all(:order => [ :read_preference.desc ])
     end
 
+    # Pool.exists?
+    #
+    # @param [String] services_location, the URL entry point to the service
+    # @return [Boolean] whether it exists
+
     def self.exists? services_location
       not first(:services_location => services_location).nil?
     end
+
+    # Pool.lookup returns a Pool based on its services_location
+    #
+    # @param [String] services_location, the URL entry point to the service
+    # @return [Pool] the Pool object found or nil
 
     def self.lookup services_location
       first(:services_location => services_location)

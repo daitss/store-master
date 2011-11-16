@@ -95,6 +95,7 @@ that list what the silos report as present.</p>
 </div>
 <div class="tags">
   
+
 </div><h2>Defined Under Namespace</h2>
 <p class="children">
    
@@ -164,7 +165,7 @@ that list what the silos report as present.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>drops and recreates as well.</p>
+<p>StorageMasterModel.tables (Re)creates tables for test or setup.</p>
 </div></span>
   
 </li>
@@ -187,7 +188,8 @@ that list what the silos report as present.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>special purpose setup.</p>
+<p>StorageMasterModel.patch_tables makes ad-hoc modifications to our postgress
+databases.</p>
 </div></span>
   
 </li>
@@ -196,7 +198,7 @@ that list what the silos report as present.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup_db-class_method" title="setup_db (class method)">+ (Object) <strong>setup_db</strong>(*args) </a>
+      <a href="#setup_db-class_method" title="setup_db (class method)">+ (DataMapper::Adapter) <strong>setup_db</strong>(*args) </a>
     
 
     
@@ -210,9 +212,7 @@ that list what the silos report as present.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>We support two different styles of configuration; either a yaml_file and a
-key into that file that yields a hash of database information, or the
-direct connection string itself.</p>
+<p>StorageMasterModel.setup_db initializes the DataMapper database connection.</p>
 </div></span>
   
 </li>
@@ -221,7 +221,7 @@ direct connection string itself.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#tables-class_method" title="tables (class method)">+ (Object) <strong>tables</strong> </a>
+      <a href="#tables-class_method" title="tables (class method)">+ (Array) <strong>tables</strong> </a>
     
 
     
@@ -235,7 +235,7 @@ direct connection string itself.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>(Re)create tables for test or setup.</p>
+<p>StorageMasterModel.tables lists all of our tables.</p>
 </div></span>
   
 </li>
@@ -258,7 +258,8 @@ direct connection string itself.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>will make minor schema changes.</p>
+<p>StorageMasterModel.tables updates tables from changes made to the
+DataMapper classes.</p>
 </div></span>
   
 </li>
@@ -293,26 +294,28 @@ direct connection string itself.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>drops and recreates as well</p>
+<p>StorageMasterModel.tables (Re)creates tables for test or setup.   Careful -
+it drops all data!</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-65
-66
-67
-68</pre>
+73
+74
+75
+76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 65</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 73</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create_tables identifier id'>create_tables</span>                
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_migrate!</span>
@@ -334,31 +337,33 @@ direct connection string itself.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>special purpose setup</p>
+<p>StorageMasterModel.patch_tables makes ad-hoc modifications to our postgress
+databases.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-74
-75
-76
-77
-78
-79
-80
-81
-82</pre>
+88
+89
+90
+91
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 74</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 88</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='patch_tables identifier id'>patch_tables</span>                 
   <span class='comment val'># db = repository(:store_master).adapter</span>
@@ -378,13 +383,15 @@ direct connection string itself.</p>
       <div class="method_details ">
   <p class="signature " id="setup_db-class_method">
   
-    + (<tt>Object</tt>) <strong>setup_db</strong>(*args) 
+    + (<tt>DataMapper::Adapter</tt>) <strong>setup_db</strong>(*args) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
+<p>StorageMasterModel.setup_db initializes the DataMapper database connection.</p>
+
 <p>We support two different styles of configuration; either a yaml_file and a
 key into that file that yields a hash of database information, or the
 direct connection string itself. The two-argument version is deprecated.</p>
@@ -393,7 +400,47 @@ direct connection string itself. The two-argument version is deprecated.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>connection_string,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a database connection string, e.g.
+postgres://storemaster:topsecret@localhost/storemaster_db</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>DataMapper::Adapter</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the DataMapper repository object</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -413,21 +460,21 @@ direct connection string itself. The two-argument version is deprecated.</p>
       <pre class="lines">
 
 
-44
-45
-46
-47
-48
 49
 50
 51
 52
 53
 54
-55</pre>
+55
+56
+57
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 44</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 49</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup_db identifier id'>setup_db</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
 
@@ -450,34 +497,51 @@ direct connection string itself. The two-argument version is deprecated.</p>
       <div class="method_details ">
   <p class="signature " id="tables-class_method">
   
-    + (<tt>Object</tt>) <strong>tables</strong> 
+    + (<tt>Array</tt>) <strong>tables</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>(Re)create tables for test or setup.  We’ll also provide a mysql.ddl and
-psql.ddl for creating the tables, which can give us a bit more flexibility
-(e.g., specialized indcies for some of the sql we do)</p>
+<p>StorageMasterModel.tables lists all of our tables.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a list of DataMapper table classes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-61
-62
-63</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 61</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 66</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span>
   <span class='lbrack token'>[</span> <span class='Copy constant id'>Copy</span><span class='comma token'>,</span> <span class='Package constant id'>Package</span><span class='comma token'>,</span> <span class='Pool constant id'>Pool</span><span class='comma token'>,</span> <span class='Reservation constant id'>Reservation</span><span class='comma token'>,</span> <span class='Authentication constant id'>Authentication</span> <span class='rbrack token'>]</span>
@@ -498,27 +562,29 @@ psql.ddl for creating the tables, which can give us a bit more flexibility
 </p><div class="docstring">
   <div class="discussion">
     
-<p>will make minor schema changes</p>
+<p>StorageMasterModel.tables updates tables from changes made to the
+DataMapper classes.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-70
-71
-72</pre>
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 70</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model.rb', line 81</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>                
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='update_tables identifier id'>update_tables</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='tables identifier id'>tables</span><span class='dot token'>.</span><span class='map identifier id'>map</span> <span class='bitand op'>&amp;</span><span class='symbol val'>:auto_upgrade!</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -532,9 +598,9 @@ psql.ddl for creating the tables, which can give us a bit more flexibility
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:42 2011 by 
+  Generated on Wed Nov 16 18:10:39 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

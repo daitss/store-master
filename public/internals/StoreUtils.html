@@ -80,14 +80,15 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>You know the drawer in your kitchen that has all the junk in it?  This
-module is like that…</p>
+<p>You know the drawer in your kitchen that has all the junk in it?  That’s
+the StoreUtils module…</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
 
 
@@ -117,10 +118,7 @@ module is like that…</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>This function does the reverse of the above, taking the base64 string and
-returning the corresponding hex string.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -128,7 +126,7 @@ returning the corresponding hex string.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#commify-class_method" title="commify (class method)">+ (Object) <strong>commify</strong>(num) </a>
+      <a href="#commify-class_method" title="commify (class method)">+ (String) <strong>commify</strong>(num) </a>
     
 
     
@@ -142,8 +140,8 @@ returning the corresponding hex string.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Put in commas in a number (American style numeric format), lifted from
-Rails.</p>
+<p>commify turns a number into a more readable string format with commas in
+the American style.</p>
 </div></span>
   
 </li>
@@ -166,8 +164,7 @@ Rails.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Purpose here is to provide connections for datamapper using our yaml
-configuration file + key technique; This will probably go away.</p>
+<p>connection_string is deprecated.</p>
 </div></span>
   
 </li>
@@ -176,70 +173,7 @@ configuration file + key technique; This will probably go away.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#csv_escape-class_method" title="csv_escape (class method)">+ (Object) <strong>csv_escape</strong>(str) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#disk_free-class_method" title="disk_free (class method)">+ (Object) <strong>disk_free</strong>(path) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#disk_id-class_method" title="disk_id (class method)">+ (Object) <strong>disk_id</strong>(path) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#disk_mount_point-class_method" title="disk_mount_point (class method)">+ (Object) <strong>disk_mount_point</strong>(path) </a>
+      <a href="#csv_escape-class_method" title="csv_escape (class method)">+ (String) <strong>csv_escape</strong>(str) </a>
     
 
     
@@ -253,7 +187,7 @@ configuration file + key technique; This will probably go away.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>N.B.</p>
+<p>csv_escape turns a simple string into valid CSV data.</p>
 </div></span>
   
 </li>
@@ -262,28 +196,7 @@ configuration file + key technique; This will probably go away.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#disk_size-class_method" title="disk_size (class method)">+ (Object) <strong>disk_size</strong>(path) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#group-class_method" title="group (class method)">+ (Object) <strong>group</strong>(path = nil) </a>
+      <a href="#disk_free-class_method" title="disk_free (class method)">+ (Fixnum) <strong>disk_free</strong>(path) </a>
     
 
     
@@ -297,8 +210,7 @@ configuration file + key technique; This will probably go away.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Without argument, return the group of the user running this process as a
-string.</p>
+<p>disk_free returns the number of bytes free on a disk.</p>
 </div></span>
   
 </li>
@@ -307,49 +219,7 @@ string.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#hashpath-class_method" title="hashpath (class method)">+ (Object) <strong>hashpath</strong>(name) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#hashpath_parent-class_method" title="hashpath_parent (class method)">+ (Object) <strong>hashpath_parent</strong>(name) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#md5hex_to_base64-class_method" title="md5hex_to_base64 (class method)">+ (Object) <strong>md5hex_to_base64</strong>(hexstring) </a>
+      <a href="#disk_id-class_method" title="disk_id (class method)">+ (Fixnum) <strong>disk_id</strong>(path) </a>
     
 
     
@@ -363,8 +233,149 @@ string.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>We need to provide the base64 of the original binary md5 checksum; however
-we typically have only the hexstring.</p>
+<p>disk_id returns a unique device id for a disk.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#disk_mount_point-class_method" title="disk_mount_point (class method)">+ (String) <strong>disk_mount_point</strong>(path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>disk_mount_point takes a path and gives us the mount point.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#disk_size-class_method" title="disk_size (class method)">+ (Fixnum) <strong>disk_size</strong>(path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>disk_size returns the number of bytes on a disk.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#group-class_method" title="group (class method)">+ (String) <strong>group</strong>(path = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>group, without argument, give the name of the group running this process as
+a string.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#hashpath-class_method" title="hashpath (class method)">+ (String) <strong>hashpath</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>hashpath returns the pathname fragment the StorageMaster::DiskStore module
+uses when storing a package with the given name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#hashpath_parent-class_method" title="hashpath_parent (class method)">+ (String) <strong>hashpath_parent</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>hashpath_parent returns the first pathname component the
+StorageMaster::DiskStore module uses when storing a package with the given
+name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#md5hex_to_base64-class_method" title="md5hex_to_base64 (class method)">+ (String) <strong>md5hex_to_base64</strong>(hexstring) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>md5hex_to_base64 base64-encodes an md5 checksum.</p>
 </div></span>
   
 </li>
@@ -397,7 +408,7 @@ currently running process name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#safen_connection_string-class_method" title="safen_connection_string (class method)">+ (Object) <strong>safen_connection_string</strong>(str) </a>
+      <a href="#safen_connection_string-class_method" title="safen_connection_string (class method)">+ (String) <strong>safen_connection_string</strong>(str) </a>
     
 
     
@@ -411,7 +422,8 @@ currently running process name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Remove the password from the db connection string for logging.</p>
+<p>safen_connection_string removes password information from a
+DataMapper-style connection string.</p>
 </div></span>
   
 </li>
@@ -420,28 +432,7 @@ currently running process name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#strip_trailing_slash_maybe-class_method" title="strip_trailing_slash_maybe (class method)">+ (Object) <strong>strip_trailing_slash_maybe</strong>(string) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#user-class_method" title="user (class method)">+ (Object) <strong>user</strong>(path = nil) </a>
+      <a href="#strip_trailing_slash_maybe-class_method" title="strip_trailing_slash_maybe (class method)">+ (String) <strong>strip_trailing_slash_maybe</strong>(string) </a>
     
 
     
@@ -455,7 +446,31 @@ currently running process name.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Without argument, give the name of the user running this process as a
+<p>strip_trailing_slash_maybe removes the trailing slash on a directory path,
+unless it is root.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#user-class_method" title="user (class method)">+ (String) <strong>user</strong>(path = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>user, without argument, give the name of the user running this process as a
 string.</p>
 </div></span>
   
@@ -478,7 +493,9 @@ string.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>valid_ieid_name?  returns true if the argument can be used as a valid IEID.</p>
+</div></span>
   
 </li>
 
@@ -486,7 +503,7 @@ string.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#xml_escape-class_method" title="xml_escape (class method)">+ (Object) <strong>xml_escape</strong>(str) </a>
+      <a href="#xml_escape-class_method" title="xml_escape (class method)">+ (String) <strong>xml_escape</strong>(str) </a>
     
 
     
@@ -499,7 +516,9 @@ string.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>xml_escape turns a simple string into valid XML data.</p>
+</div></span>
   
 </li>
 
@@ -520,30 +539,19 @@ string.</p>
   
 
   
-</p><div class="docstring">
-  <div class="discussion">
-    
-<p>This function does the reverse of the above, taking the base64 string and
-returning the corresponding hex string.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
+</p><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-75
-76
-77
-78</pre>
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 75</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 124</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='base64_to_md5hex identifier id'>base64_to_md5hex</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span> <span class='and and kw'>and</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>24</span><span class='rparen token'>)</span>
@@ -558,33 +566,72 @@ returning the corresponding hex string.</p>
       <div class="method_details ">
   <p class="signature " id="commify-class_method">
   
-    + (<tt>Object</tt>) <strong>commify</strong>(num) 
+    + (<tt>String</tt>) <strong>commify</strong>(num) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Put in commas in a number (American style numeric format), lifted from
-Rails</p>
+<p>commify turns a number into a more readable string format with commas in
+the American style.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>num,</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a number (may also be a string)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number formated with commas</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-111
-112
-113</pre>
+179
+180
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 111</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 179</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
@@ -605,54 +652,54 @@ Rails</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Purpose here is to provide connections for datamapper using our yaml
-configuration file + key technique; This will probably go away.</p>
+<p>connection_string is deprecated</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148</pre>
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 118</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 185</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
 
@@ -694,22 +741,71 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="csv_escape-class_method">
   
-    + (<tt>Object</tt>) <strong>csv_escape</strong>(str) 
+    + (<tt>String</tt>) <strong>csv_escape</strong>(str) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>csv_escape turns a simple string into valid CSV data</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>str,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the escaped string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-40
-41
-42</pre>
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='csv_escape identifier id'>csv_escape</span> <span class='str identifier id'>str</span>
   <span class='string val'>'&quot;'</span> <span class='plus op'>+</span> <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&quot;&quot;'</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'&quot;'</span>   <span class='comment val'># 'fo,o&quot;bar' =&gt;  '&quot;fo,o&quot;&quot;bar&quot;'</span>
@@ -723,27 +819,76 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="disk_free-class_method">
   
-    + (<tt>Object</tt>) <strong>disk_free</strong>(path) 
+    + (<tt>Fixnum</tt>) <strong>disk_free</strong>(path) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>disk_free returns the number of bytes free on a disk</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a filepath to an existing directory</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number of bytes free on a disk</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-17
-18
-19
-20</pre>
+38
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 17</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 38</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_free identifier id'>disk_free</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
-  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks identifier id'>blocks</span>            <span class='comment val'># fragment_size is used in preference to block_size, which is just the OS's preference</span>
+  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks_available identifier id'>blocks_available</span>  <span class='comment val'># blocks_available &lt; blocks_free; some are reserved for root's exclusive use.</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -754,22 +899,71 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="disk_id-class_method">
   
-    + (<tt>Object</tt>) <strong>disk_id</strong>(path) 
+    + (<tt>Fixnum</tt>) <strong>disk_id</strong>(path) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>disk_id returns a unique device id for a disk</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a filepath to an existing directory</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a unique id for the disk the path is ion</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-13
-14
-15</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 13</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 18</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_id identifier id'>disk_id</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='dev identifier id'>dev</span>
@@ -783,45 +977,84 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="disk_mount_point-class_method">
   
-    + (<tt>Object</tt>) <strong>disk_mount_point</strong>(path) 
+    + (<tt>String</tt>) <strong>disk_mount_point</strong>(path) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>N.B. We depend on a trailing slash being removed</p>
+<p>disk_mount_point takes a path and gives us the mount point</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a filepath</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the filepath mountpoint, without trailing slash</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61</pre>
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 46</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 86</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_mount_point identifier id'>disk_mount_point</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -848,27 +1081,76 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="disk_size-class_method">
   
-    + (<tt>Object</tt>) <strong>disk_size</strong>(path) 
+    + (<tt>Fixnum</tt>) <strong>disk_size</strong>(path) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>disk_size returns the number of bytes on a disk</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a filepath to an existing directory</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number of bytes on a disk</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-22
-23
-24
-25</pre>
+27
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 22</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_size identifier id'>disk_size</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
-  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks_available identifier id'>blocks_available</span>  <span class='comment val'># blocks_available &lt; blocks_free; some are reserved for root's exclusive use.</span>
+  <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='fragment_size identifier id'>fragment_size</span> <span class='mult op'>*</span> <span class='fs identifier id'>fs</span><span class='dot token'>.</span><span class='blocks identifier id'>blocks</span>            <span class='comment val'># fragment_size is used in preference to block_size, which is just the OS's preference</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -879,35 +1161,74 @@ configuration file + key technique; This will probably go away.</p>
       <div class="method_details ">
   <p class="signature " id="group-class_method">
   
-    + (<tt>Object</tt>) <strong>group</strong>(path = nil) 
+    + (<tt>String</tt>) <strong>group</strong>(path = nil) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Without argument, return the group of the user running this process as a
-string.  With argument PATH, a string, assume it is a readble filepath and
-return the group name who owns it as a string.</p>
+<p>group, without argument, give the name of the group running this process as
+a string.  With argument PATH, a string, assume it is a readable filepath
+and return  its group name.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if provided, a filepath to an existing file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>username</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-104
-105
-106
-107</pre>
+169
+170
+171
+172</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 104</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 169</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='group identifier id'>group</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getgrgid identifier id'>getgrgid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='gid identifier id'>gid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -922,23 +1243,73 @@ return the group name who owns it as a string.</p>
       <div class="method_details ">
   <p class="signature " id="hashpath-class_method">
   
-    + (<tt>Object</tt>) <strong>hashpath</strong>(name) 
+    + (<tt>String</tt>) <strong>hashpath</strong>(name) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>hashpath returns the pathname fragment the StorageMaster::DiskStore module
+uses when storing a package with the given name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a package name</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the pathname</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-80
-81
-82
-83</pre>
+135
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 80</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 135</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath identifier id'>hashpath</span> <span class='name identifier id'>name</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -953,22 +1324,73 @@ return the group name who owns it as a string.</p>
       <div class="method_details ">
   <p class="signature " id="hashpath_parent-class_method">
   
-    + (<tt>Object</tt>) <strong>hashpath_parent</strong>(name) 
+    + (<tt>String</tt>) <strong>hashpath_parent</strong>(name) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>hashpath_parent returns the first pathname component the
+StorageMaster::DiskStore module uses when storing a package with the given
+name</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a package name</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the pathname</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-85
-86
-87</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 85</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 146</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath_parent identifier id'>hashpath_parent</span> <span class='name identifier id'>name</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>2</span><span class='rbrack token'>]</span>
@@ -982,13 +1404,15 @@ return the group name who owns it as a string.</p>
       <div class="method_details ">
   <p class="signature " id="md5hex_to_base64-class_method">
   
-    + (<tt>Object</tt>) <strong>md5hex_to_base64</strong>(hexstring) 
+    + (<tt>String</tt>) <strong>md5hex_to_base64</strong>(hexstring) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
+<p>md5hex_to_base64 base64-encodes an md5 checksum</p>
+
 <p>We need to provide the base64 of the original binary md5 checksum; however
 we typically have only the hexstring.  This funtion takes the hexstring,
 packs it into the binary representation, then encodes that into a base64
@@ -998,20 +1422,59 @@ representation.</p>
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>hexstring,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the 32-character hex encoding representation of an MD5 checksum</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a base64 encoding of the binary representation of an MD5 checksum</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-67
-68
-69
-70</pre>
+112
+113
+114
+115</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 67</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 112</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='hexstring identifier id'>hexstring</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='hexstring identifier id'>hexstring</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>32</span>
@@ -1041,18 +1504,19 @@ currently running process name</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-152
-153
-154</pre>
+225
+226
+227</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 152</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 225</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='pid_file identifier id'>pid_file</span> <span class='dir identifier id'>dir</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='$0 gvar id'>$0</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span> <span class='plus op'>+</span> <span class='string val'>'.pid'</span><span class='rparen token'>)</span>
@@ -1066,42 +1530,83 @@ currently running process name</p>
       <div class="method_details ">
   <p class="signature " id="safen_connection_string-class_method">
   
-    + (<tt>Object</tt>) <strong>safen_connection_string</strong>(str) 
+    + (<tt>String</tt>) <strong>safen_connection_string</strong>(str) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Remove the password from the db connection string for logging</p>
+<p>safen_connection_string removes password information from a
+DataMapper-style connection string</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>str,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a connection string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a connection string with the password obscurred, or the original string if
+no password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171</pre>
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 159</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 235</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='safen_connection_string identifier id'>safen_connection_string</span> <span class='str identifier id'>str</span>
 
@@ -1114,7 +1619,7 @@ currently running process name</p>
   <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='pass identifier id'>pass</span> <span class='assign token'>=</span> <span class='userinfo identifier id'>userinfo</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>':'</span><span class='comma token'>,</span> <span class='integer val'>2</span><span class='rparen token'>)</span>             <span class='comment val'># fischer:topsecret =&gt; [ fischer, topsecret ]</span>
   <span class='return return kw'>return</span> <span class='str identifier id'>str</span> <span class='unless unless_mod kw'>unless</span> <span class='pass identifier id'>pass</span>
 
-  <span class='return return kw'>return</span> <span class='vendor identifier id'>vendor</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span> <span class='user identifier id'>user</span> <span class='plus op'>+</span> <span class='string val'>':********@'</span> <span class='plus op'>+</span> <span class='host_and_db identifier id'>host_and_db</span>
+  <span class='return return kw'>return</span> <span class='vendor identifier id'>vendor</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span> <span class='user identifier id'>user</span> <span class='plus op'>+</span> <span class='string val'>':********@'</span> <span class='plus op'>+</span> <span class='host_and_db identifier id'>host_and_db</span>   <span class='comment val'># return postgres://fischer:********@example.org:5432/mydb</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1125,23 +1630,73 @@ currently running process name</p>
       <div class="method_details ">
   <p class="signature " id="strip_trailing_slash_maybe-class_method">
   
-    + (<tt>Object</tt>) <strong>strip_trailing_slash_maybe</strong>(string) 
+    + (<tt>String</tt>) <strong>strip_trailing_slash_maybe</strong>(string) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>strip_trailing_slash_maybe removes the trailing slash on a directory path,
+unless it is root</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>string,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a pathname, possibly non-existent</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the new pasth without unnecessary slashes</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-27
-28
-29
-30</pre>
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 27</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='strip_trailing_slash_maybe identifier id'>strip_trailing_slash_maybe</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='string identifier id'>string</span> <span class='if if_mod kw'>if</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -1156,35 +1711,74 @@ currently running process name</p>
       <div class="method_details ">
   <p class="signature " id="user-class_method">
   
-    + (<tt>Object</tt>) <strong>user</strong>(path = nil) 
+    + (<tt>String</tt>) <strong>user</strong>(path = nil) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Without argument, give the name of the user running this process as a
+<p>user, without argument, give the name of the user running this process as a
 string.  With argument PATH, a string, assume it is a readable filepath and
-return the user name who owns it as a string.</p>
+return  its owner’s username.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>path,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>if provided, a filepath to an existing file</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>username</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-94
-95
-96
-97</pre>
+157
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 157</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='return return kw'>return</span> <span class='Etc constant id'>Etc</span><span class='dot token'>.</span><span class='getpwuid identifier id'>getpwuid</span><span class='lparen token'>(</span><span class='Process constant id'>Process</span><span class='dot token'>.</span><span class='uid identifier id'>uid</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='if if_mod kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -1206,11 +1800,34 @@ return the user name who owns it as a string.</p>
 </p><div class="docstring">
   <div class="discussion">
     
+<p>valid_ieid_name?  returns true if the argument can be used as a valid IEID</p>
+
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>string,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a candidate IEID string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
@@ -1219,6 +1836,11 @@ return the user name who owns it as a string.</p>
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>true if the string can be used as an IEID</p>
+</div>
       
     </li>
   
@@ -1230,12 +1852,12 @@ return the user name who owns it as a string.</p>
       <pre class="lines">
 
 
-32
-33
-34</pre>
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 32</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 58</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='valid_ieid_name? fid id'>valid_ieid_name?</span> <span class='string identifier id'>string</span>
   <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/^E[A-Z0-9]{8}_[A-Z0-9]{6}$/</span> <span class='question op'>?</span> <span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span>
@@ -1249,22 +1871,71 @@ return the user name who owns it as a string.</p>
       <div class="method_details ">
   <p class="signature " id="xml_escape-class_method">
   
-    + (<tt>Object</tt>) <strong>xml_escape</strong>(str) 
+    + (<tt>String</tt>) <strong>xml_escape</strong>(str) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>xml_escape turns a simple string into valid XML data</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>str,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the escaped string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-36
-37
-38</pre>
+67
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/utils.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='xml_escape identifier id'>xml_escape</span> <span class='str identifier id'>str</span>
   <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&amp;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;amp;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&lt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;lt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&gt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;gt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>&quot;'&quot;</span><span class='comma token'>,</span> <span class='string val'>'&amp;apos;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;quot;'</span><span class='rparen token'>)</span>
@@ -1280,9 +1951,9 @@ return the user name who owns it as a string.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:32 2011 by 
+  Generated on Wed Nov 16 18:10:40 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

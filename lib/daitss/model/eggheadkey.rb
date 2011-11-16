@@ -1,12 +1,15 @@
 module Daitss
 
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model.  Eggheadkey creates a newly-minted random IEID.
+
   class EggHeadKey < DataMapper::Property::String
     key true
     default proc { |res, prop| EggHeadKey.new_egg_head_key }
 
     DIGITS = 36**14
 
-    # @return [String] raandomly matching /E[0-9A-Z]{8}_[0-9A-Z]{6}/
+    # @return [String] randomly matching /E[0-9A-Z]{8}_[0-9A-Z]{6}/
 
     def EggHeadKey.new_egg_head_key
       s = rand(DIGITS).to_s(36).upcase

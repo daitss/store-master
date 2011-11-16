@@ -1,5 +1,11 @@
 module Daitss
 
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model.  Our version of Agent here removes references to
+  # the Entry table.  An agent is used by us to indicate what versiom
+  # fo the Storage Master service has registered a fixity check or
+  # integrity failure.
+
   class Agent
     include DataMapper::Resource
 

@@ -1,6 +1,9 @@
 module Daitss
 
-  # Description of a submitted sip
+  # This is part of a stripped-down version of the DAITSS core
+  # project's model.  Sip is not directly used by the Storage
+  # Master service.
+
 
   class Sip
     include DataMapper::Resource

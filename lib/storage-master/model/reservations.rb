@@ -1,9 +1,20 @@
+# TODO: this class should take on more responsibilities, including constructing
+# a URL and, once used, marking it as unavailable.  Right now those functions are
+# spread around in an ad-hoc manner,
+
 require 'storage-master/exceptions'
 require 'storage-master/model'
 
 module  StorageMasterModel
 
-  # For reserving names for URLs based on IEIDs.
+  # StorageMasterModel::Reservation is used for reserving names for URLs based on IEIDs.
+  #
+  # The client protocol for interacting with the Storage Master service requires the
+  # client POST an IEID to a specific URL, /reserve/.  This class takes care to create
+  # a new unique name for the IEID, which is used elsewhere for constructing the URL.
+  #
+  # If given an IEID, say, of E20120101_AAAZZZ, say, we'll construct a name like
+  # E20120101_AAAZZZ.000.
 
   class Reservation
     include DataMapper::Resource
@@ -19,11 +30,20 @@ module  StorageMasterModel
 
     validates_uniqueness_of :name
 
+    # Reservations.find_ieid - given a reserved name, find its associated ieid.
+    #
+    # @param [String] name, a previously constructed string for an IEID
+    # @return [Strng] the associated IEID.
+    
     def self.find_ieid name
       res = first(:name => name)
       raise NoReservation, "Can't find a reservation for #{name}: make a reservation using an IEID first"  unless res
       res.ieid
     end
+
+    # Reservations.make - given an IEID, construct a new unique name for it
+    #
+    # @param [String] ieid, an IEID for which we'll construct a new name
 
     def self.make ieid
 

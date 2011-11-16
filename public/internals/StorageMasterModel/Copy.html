@@ -96,7 +96,21 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The StoreageMasterModel::Copy class associates packages stored on Silo
+Pools with a StorageMasterModel::Package object. A Package object must have
+one or  more Copy objects. A Copy object must belong to exactly one Pool
+object.</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
   <h2>Constant Summary</h2>
   
 
@@ -275,7 +289,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Copy.store is a constructor that attempts to save data for a package to a
+Silo Pool.</p>
+</div></span>
   
 </li>
 
@@ -292,7 +309,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#quiet_delete-instance_method" title="#quiet_delete (instance method)">- (Object) <strong>quiet_delete</strong> </a>
+      <a href="#quiet_delete-instance_method" title="#quiet_delete (instance method)">- (Boolean) <strong>quiet_delete</strong> </a>
     
 
     
@@ -306,8 +323,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Delete the resource at silo_resource, a URI object, with no possibilitiy of
-raising an exception.</p>
+<p>quiet_delete attempts to delete a copy of a package, with no possibilitiy
+of raising an exception.</p>
 </div></span>
   
 </li>
@@ -316,7 +333,7 @@ raising an exception.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#url-instance_method" title="#url (instance method)">- (Object) <strong>url</strong> </a>
+      <a href="#url-instance_method" title="#url (instance method)">- (URI) <strong>url</strong> </a>
     
 
     
@@ -330,8 +347,7 @@ raising an exception.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Note: storage-master/model.rb redefines the print method for URI so that
-username/password credentials won’t be exposed.</p>
+<p>url returns the location of this copy.</p>
 </div></span>
   
 </li>
@@ -375,18 +391,19 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-23
-24
-25</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='etag identifier id'>etag</span>
   <span class='@etag ivar id'>@etag</span>
@@ -417,18 +434,19 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-23
-24
-25</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='md5 identifier id'>md5</span>
   <span class='@md5 ivar id'>@md5</span>
@@ -459,18 +477,19 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-23
-24
-25</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='sha1 identifier id'>sha1</span>
   <span class='@sha1 ivar id'>@sha1</span>
@@ -501,18 +520,19 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-23
-24
-25</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='size identifier id'>size</span>
   <span class='@size ivar id'>@size</span>
@@ -543,18 +563,19 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-23
-24
-25</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 23</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 27</span>
 
 <span class='def def kw'>def</span> <span class='type identifier id'>type</span>
   <span class='@type ivar id'>@type</span>
@@ -582,11 +603,67 @@ username/password credentials won’t be exposed.</p>
 </p><div class="docstring">
   <div class="discussion">
     
+<p>Copy.store is a constructor that attempts to save data for a package to a
+Silo Pool.</p>
+
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>io,</span>
+      
+      
+        <span class='type'>(<tt>IO</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a data stream of the package contents</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>package,</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Package.html" title="StorageMasterModel::Package (class)">Package</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the package we’re trying to store</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>pool,</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Pool.html" title="StorageMasterModel::Pool (class)">Pool</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a Silo Pool object to which we’re copying</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
@@ -606,20 +683,6 @@ username/password credentials won’t be exposed.</p>
       <pre class="lines">
 
 
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
 75
 76
 77
@@ -665,10 +728,24 @@ username/password credentials won’t be exposed.</p>
 117
 118
 119
-120</pre>
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 61</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 75</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='store identifier id'>store</span> <span class='io identifier id'>io</span><span class='comma token'>,</span> <span class='package identifier id'>package</span><span class='comma token'>,</span> <span class='pool identifier id'>pool</span>
   <span class='post_address identifier id'>post_address</span> <span class='assign token'>=</span> <span class='pool identifier id'>pool</span><span class='dot token'>.</span><span class='post_url identifier id'>post_url</span><span class='lparen token'>(</span><span class='package identifier id'>package</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
@@ -745,36 +822,46 @@ username/password credentials won’t be exposed.</p>
       <div class="method_details first">
   <p class="signature first" id="quiet_delete-instance_method">
   
-    - (<tt>Object</tt>) <strong>quiet_delete</strong> 
+    - (<tt>Boolean</tt>) <strong>quiet_delete</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Delete the resource at silo_resource, a URI object, with no possibilitiy of
-raising an exception. Returns true on success, false on failure.</p>
+<p>quiet_delete attempts to delete a copy of a package, with no possibilitiy
+of raising an exception.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>returns true on success, false on failure.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-40
-41
-42
-43
-44
-45
-46
-47
-48
 49
 50
 51
@@ -784,10 +871,19 @@ raising an exception. Returns true on success, false on failure.</p>
 55
 56
 57
-58</pre>
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 40</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 49</span>
 
 <span class='def def kw'>def</span> <span class='quiet_delete identifier id'>quiet_delete</span>
 
@@ -817,13 +913,15 @@ raising an exception. Returns true on success, false on failure.</p>
       <div class="method_details ">
   <p class="signature " id="url-instance_method">
   
-    - (<tt>Object</tt>) <strong>url</strong> 
+    - (<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>) <strong>url</strong> 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
+<p>url returns the location of this copy</p>
+
 <p>Note: storage-master/model.rb redefines the print method for URI so that
 username/password credentials won’t be exposed.</p>
 
@@ -832,23 +930,42 @@ username/password credentials won’t be exposed.</p>
 </div>
 <div class="tags">
   
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../URI.html" title="URI (module)">URI</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a url giving the location of a copy on a Silo Pool.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-28
-29
-30
-31
-32
-33
-34
-35</pre>
+36
+37
+38
+39
+40
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 28</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/copies.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='store_location identifier id'>store_location</span>
@@ -869,9 +986,9 @@ username/password credentials won’t be exposed.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov  2 13:49:40 2011 by 
+  Generated on Wed Nov 16 18:10:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.2 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

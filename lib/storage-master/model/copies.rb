@@ -3,6 +3,10 @@ require 'storage-master/model'
 
 module StorageMasterModel
 
+  # The StoreageMasterModel::Copy class associates packages stored on Silo Pools
+  # with a StorageMasterModel::Package object. A Package object must have one or 
+  # more Copy objects. A Copy object must belong to exactly one Pool object.
+
   class Copy
     include DataMapper::Resource
     include StorageMaster
@@ -22,8 +26,12 @@ module StorageMasterModel
 
     attr_accessor :md5, :size, :type, :sha1, :etag   # scratch pad attributes filled in on succesful store
 
+    # url returns the location of this copy
+    #
     # Note: storage-master/model.rb redefines the print method for URI so that
-    # username/password credentials won't be exposed.
+    # username/password credentials won't be exposed.    
+    #
+    # @return [URI] a url giving the location of a copy on a Silo Pool. 
 
     def url
       url = URI.parse store_location
@@ -34,8 +42,9 @@ module StorageMasterModel
       url
     end
 
-    # Delete the resource at silo_resource, a URI object, with no possibilitiy of raising an exception.
-    # Returns true on success, false on failure.
+    # quiet_delete attempts to delete a copy of a package, with no possibilitiy of raising an exception.
+    #
+    # @return [Boolean] returns true on success, false on failure.
 
     def quiet_delete
 
@@ -57,6 +66,11 @@ module StorageMasterModel
       return false
     end
 
+    # Copy.store is a constructor that attempts to save data for a package to a Silo Pool.
+    #
+    # @param [IO] io, a data stream of the package contents
+    # @param [Package] package, the package we're trying to store
+    # @param [Pool] pool, a Silo Pool object to which we're copying
 
     def self.store io, package, pool
       post_address = pool.post_url(package.name)
