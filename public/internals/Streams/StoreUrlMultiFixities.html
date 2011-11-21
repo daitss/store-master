@@ -141,7 +141,9 @@ instead of EZQQYQMC2_6PYZMQ.000</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>adds the URL prefix to a stream record’s key, a package name.</p>
+</div></span>
   
 </li>
 
@@ -202,17 +204,17 @@ instead of EZQQYQMC2_6PYZMQ.000</p>
       <pre class="lines">
 
 
-172
-173
-174
-175
-176
-177
-178
-179</pre>
+194
+195
+196
+197
+198
+199
+200
+201</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 172</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 194</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='streams identifier id'>streams</span>
   <span class='if if kw'>if</span> <span class='StorageMasterModel constant id'>StorageMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='server_location identifier id'>server_location</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -242,20 +244,32 @@ instead of EZQQYQMC2_6PYZMQ.000</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>adds the URL prefix to a stream record’s key, a package name. The key now
+represents a valid URL for fetching the package.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-182
-183
-184
-185
-186</pre>
+206
+207
+208
+209
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 182</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 206</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span>
   <span class='k identifier id'>k</span><span class='comma token'>,</span> <span class='v identifier id'>v</span> <span class='assign token'>=</span> <span class='super super kw'>super</span>
@@ -273,7 +287,7 @@ instead of EZQQYQMC2_6PYZMQ.000</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:37 2011 by 
+  Generated on Mon Nov 21 11:54:08 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

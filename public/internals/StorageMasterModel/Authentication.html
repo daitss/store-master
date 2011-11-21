@@ -168,7 +168,7 @@ class.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Authentication.clear removes all authentications from the database.</p>
+<p>Authentication.clear removes all records from the database.</p>
 </div></span>
   
 </li>
@@ -177,7 +177,7 @@ class.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#create-class_method" title="create (class method)">+ (Object) <strong>create</strong>(username, password) </a>
+      <a href="#create-class_method" title="create (class method)">+ (Authentication) <strong>create</strong>(username, password) </a>
     
 
     
@@ -190,7 +190,10 @@ class.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Authentication.create  creates a new authentication object, associating a
+password with a username.</p>
+</div></span>
   
 </li>
 
@@ -198,7 +201,7 @@ class.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#lookup-class_method" title="lookup (class method)">+ (Object) <strong>lookup</strong>(username) </a>
+      <a href="#lookup-class_method" title="lookup (class method)">+ (Authentication) <strong>lookup</strong>(username) </a>
     
 
     
@@ -211,7 +214,9 @@ class.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Authentication.lookup returns the authentication object for username.</p>
+</div></span>
   
 </li>
 
@@ -242,7 +247,7 @@ class.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>password checks a password for a user.</p>
+<p>authenticate checks a password against a user’s authentication object.</p>
 </div></span>
   
 </li>
@@ -301,7 +306,7 @@ class.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Authentication.clear removes all authentications from the database</p>
+<p>Authentication.clear removes all records from the database</p>
 
 
   </div>
@@ -315,12 +320,12 @@ class.</p>
       <pre class="lines">
 
 
-88
-89
-90</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 88</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clear identifier id'>clear</span>
   <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
@@ -334,26 +339,93 @@ class.</p>
       <div class="method_details ">
   <p class="signature " id="create-class_method">
   
-    + (<tt>Object</tt>) <strong>create</strong>(username, password) 
+    + (<tt><span class='object_link'><a href="" title="StorageMasterModel::Authentication (class)">Authentication</a></span></tt>) <strong>create</strong>(username, password) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Authentication.create  creates a new authentication object, associating a
+password with a username</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>username,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the username</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>password,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="StorageMasterModel::Authentication (class)">Authentication</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the authentication object for this user, updated or newly created if need
+be</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
+54
+55
+56
 57
 58
 59
-60
-61
-62
-63</pre>
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 57</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 54</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='username identifier id'>username</span><span class='comma token'>,</span> <span class='password identifier id'>password</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='Authentication constant id'>Authentication</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='username identifier id'>username</span><span class='rparen token'>)</span>
@@ -371,22 +443,71 @@ class.</p>
       <div class="method_details ">
   <p class="signature " id="lookup-class_method">
   
-    + (<tt>Object</tt>) <strong>lookup</strong>(username) 
+    + (<tt><span class='object_link'><a href="" title="StorageMasterModel::Authentication (class)">Authentication</a></span></tt>) <strong>lookup</strong>(username) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Authentication.lookup returns the authentication object for username</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>username,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="StorageMasterModel::Authentication (class)">Authentication</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the authentication object for this user if available, or nil</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-46
-47
-48</pre>
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 46</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 44</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='username identifier id'>username</span>
   <span class='first identifier id'>first</span><span class='lparen token'>(</span><span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='username identifier id'>username</span><span class='rparen token'>)</span>
@@ -413,7 +534,7 @@ class.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>password checks a password for a user</p>
+<p>authenticate checks a password against a user’s authentication object</p>
 
 
   </div>
@@ -465,12 +586,12 @@ class.</p>
       <pre class="lines">
 
 
-82
-83
-84</pre>
+79
+80
+81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 82</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 79</span>
 
 <span class='def def kw'>def</span> <span class='authenticate identifier id'>authenticate</span> <span class='password identifier id'>password</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='salt identifier id'>salt</span> <span class='plus op'>+</span> <span class='password identifier id'>password</span><span class='rparen token'>)</span> <span class='eq op'>==</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='password_hash identifier id'>password_hash</span>
@@ -538,16 +659,16 @@ class.</p>
       <pre class="lines">
 
 
+66
+67
+68
 69
 70
 71
-72
-73
-74
-75</pre>
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 69</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/model/authentications.rb', line 66</span>
 
 <span class='def def kw'>def</span> <span class='password= identifier id'>password=</span> <span class='password identifier id'>password</span>
   <span class='raise identifier id'>raise</span> <span class='BadPassword constant id'>BadPassword</span><span class='comma token'>,</span> <span class='string val'>&quot;No password supplied&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='password identifier id'>password</span> <span class='and and kw'>and</span> <span class='password identifier id'>password</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
@@ -567,7 +688,7 @@ class.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:36 2011 by 
+  Generated on Mon Nov 21 11:54:02 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

@@ -92,7 +92,23 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>PoolVsDaitssAnalyzer will do the setup to perform fixity reconciliation
+between a set of pools and the authoritative fixity records kept by DAITSS.
+fixity success, failure and integrity failures are inserted into the DAITSS
+events table.  Information of interest is logged as we go, and a text
+report is available once it has completed.  This is used by the
+tools/collect-fixities script.</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
@@ -152,7 +168,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>check the array of reports to find if any have recorded something actually
+worth reporting.</p>
+</div></span>
   
 </li>
 
@@ -173,7 +192,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>fixity_issues gives us an array of error messages if there is a fixity
+mismatch.</p>
+</div></span>
   
 </li>
 
@@ -194,7 +216,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>get a Package object from the DAITSS database.</p>
+</div></span>
   
 </li>
 
@@ -202,7 +226,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#indent-instance_method" title="#indent (instance method)">- (Object) <strong>indent</strong> </a>
+      <a href="#indent-instance_method" title="#indent (instance method)">- (String) <strong>indent</strong> </a>
     
 
     
@@ -215,7 +239,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>indent is loaded with space.</p>
+</div></span>
   
 </li>
 
@@ -239,7 +265,8 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of PoolVsDaitssAnalyzer.</p>
+<p>Setup an object that will compare the fixities recorded in a set of silo
+pools with those that DAITSS believes.</p>
 </div></span>
   
 </li>
@@ -261,7 +288,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>has URL been recorded by the Storage Master?.</p>
+</div></span>
   
 </li>
 
@@ -282,7 +311,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>missing_issues gives us an array of error messages if a url is marked as
+not present on a pool.</p>
+</div></span>
   
 </li>
 
@@ -303,7 +335,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>determine whether a singular or a plural string is more appropriate.</p>
+</div></span>
   
 </li>
 
@@ -324,7 +358,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>determine if we can get a Package object from the DAITSS database; we want
+to check a race condition.</p>
+</div></span>
   
 </li>
 
@@ -345,7 +382,10 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>run is our main guy:  run the reconcilation and record results in the
+DAITSS events table, as well as storing reports on the object.</p>
+</div></span>
   
 </li>
 
@@ -366,13 +406,116 @@
 </p><div class="docstring">
   <div class="discussion">
     
-<p>A new instance of PoolVsDaitssAnalyzer</p>
+<p>Setup an object that will compare the fixities recorded in a set of silo
+pools with those that DAITSS believes.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>pool_fixity_streams,</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a list of Streams::PoolFixityStream from which we can read off current,
+collated fixity data</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>daitss_fixity_stream,</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Streams/DaitssPackageStream.html" title="Streams::DaitssPackageStream (class)">Streams::DaitssPackageStream</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A srteam from which we can read off DAITSS fixity information</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>required_copies,</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number of copies we are required to have for</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>expiration_days,</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number of days after which a fixity on a pool server has expired</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>stale_days,</span>
+      
+      
+        <span class='type'>(<tt>Fixnum</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the number of days after which a fixity on a pool server should be
+rechecked</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>no_later_than,</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>point in time at which limit fixity and integrity errors.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -380,27 +523,27 @@
       <pre class="lines">
 
 
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
 76
 77
-78</pre>
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 61</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>  <span class='pool_fixity_streams identifier id'>pool_fixity_streams</span><span class='comma token'>,</span> <span class='daitss_fixity_stream identifier id'>daitss_fixity_stream</span><span class='comma token'>,</span> <span class='required_copies identifier id'>required_copies</span><span class='comma token'>,</span> <span class='expiration_days identifier id'>expiration_days</span><span class='comma token'>,</span> <span class='stale_days identifier id'>stale_days</span><span class='comma token'>,</span> <span class='no_later_than identifier id'>no_later_than</span>
   
@@ -458,12 +601,12 @@
       <pre class="lines">
 
 
-59
-60
-61</pre>
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 59</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 64</span>
 
 <span class='def def kw'>def</span> <span class='reports identifier id'>reports</span>
   <span class='@reports ivar id'>@reports</span>
@@ -491,6 +634,9 @@
 </p><div class="docstring">
   <div class="discussion">
     
+<p>check the array of reports to find if any have recorded something actually
+worth reporting</p>
+
 
   </div>
 </div>
@@ -516,13 +662,13 @@
       <pre class="lines">
 
 
-130
-131
-132
-133</pre>
+157
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 130</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 157</span>
 
 <span class='def def kw'>def</span> <span class='anything_interesting? fid id'>anything_interesting?</span> <span class='reports identifier id'>reports</span>
   <span class='reports identifier id'>reports</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rep identifier id'>rep</span><span class='bitor op'>|</span> <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='rep identifier id'>rep</span><span class='dot token'>.</span><span class='interesting? fid id'>interesting?</span> <span class='rbrace token'>}</span>
@@ -541,33 +687,45 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>fixity_issues gives us an array of error messages if there is a fixity
+mismatch</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122</pre>
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 105</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 128</span>
 
 <span class='def def kw'>def</span> <span class='fixity_issues identifier id'>fixity_issues</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='pool_data identifier id'>pool_data</span><span class='comma token'>,</span> <span class='daitss_data identifier id'>daitss_data</span>
   <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -600,22 +758,33 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>get a Package object from the DAITSS database</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-135
-136
-137
-138
-139
-140
-141</pre>
+165
+166
+167
+168
+169
+170
+171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 135</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 165</span>
 
 <span class='def def kw'>def</span> <span class='get_package identifier id'>get_package</span> <span class='url identifier id'>url</span>
   <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='Daitss constant id'>Daitss</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='lookup_from_url identifier id'>lookup_from_url</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
@@ -633,22 +802,51 @@
       <div class="method_details ">
   <p class="signature " id="indent-instance_method">
   
-    - (<tt>Object</tt>) <strong>indent</strong> 
+    - (<tt>String</tt>) <strong>indent</strong> 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>indent is loaded with space</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>some whitespace</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-92
-93
-94</pre>
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 92</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='indent identifier id'>indent</span>
   <span class='string val'>' '</span>  <span class='mult op'>*</span> <span class='integer val'>4</span>
@@ -669,6 +867,8 @@
 </p><div class="docstring">
   <div class="discussion">
     
+<p>has URL been recorded by the Storage Master?</p>
+
 
   </div>
 </div>
@@ -694,12 +894,12 @@
       <pre class="lines">
 
 
-154
-155
-156</pre>
+187
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 154</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 187</span>
 
 <span class='def def kw'>def</span> <span class='known_to_storemaster? fid id'>known_to_storemaster?</span> <span class='url identifier id'>url</span>
   <span class='StorageMasterModel constant id'>StorageMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='regexp val'>%r{^.*/}</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
@@ -717,23 +917,35 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>missing_issues gives us an array of error messages if a url is marked as
+not present on a pool</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-96
-97
-98
-99
-100
-101
-102
-103</pre>
+117
+118
+119
+120
+121
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 96</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 117</span>
 
 <span class='def def kw'>def</span> <span class='missing_issues identifier id'>missing_issues</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='pool_data_array identifier id'>pool_data_array</span>
   <span class='messages identifier id'>messages</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -756,19 +968,30 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>determine whether a singular or a plural string is more appropriate</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-125
-126
-127
-128</pre>
+150
+151
+152
+153</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 125</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 150</span>
 
 <span class='def def kw'>def</span> <span class='pluralize identifier id'>pluralize</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='singular identifier id'>singular</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span>
   <span class='return return kw'>return</span> <span class='singular identifier id'>singular</span> <span class='if if_mod kw'>if</span> <span class='count identifier id'>count</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -790,6 +1013,9 @@
 </p><div class="docstring">
   <div class="discussion">
     
+<p>determine if we can get a Package object from the DAITSS database; we want
+to check a race condition</p>
+
 
   </div>
 </div>
@@ -815,17 +1041,17 @@
       <pre class="lines">
 
 
-144
-145
-146
-147
-148
-149
-150
-151</pre>
+176
+177
+178
+179
+180
+181
+182
+183</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 144</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 176</span>
 
 <span class='def def kw'>def</span> <span class='really_is_orphan? fid id'>really_is_orphan?</span> <span class='url identifier id'>url</span>
 
@@ -848,46 +1074,25 @@
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>run is our main guy:  run the reconcilation and record results in the
+DAITSS events table, as well as storing reports on the object. Returns
+self.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
 194
 195
 196
@@ -1070,10 +1275,44 @@
 373
 374
 375
-376</pre>
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 160</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/analyzer.rb', line 194</span>
 
 <span class='def def kw'>def</span> <span class='run identifier id'>run</span>
   <span class='counter identifier id'>counter</span> <span class='assign token'>=</span> <span class='StatCounter constant id'>StatCounter</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
@@ -1303,7 +1542,7 @@
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:41 2011 by 
+  Generated on Mon Nov 21 11:54:17 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

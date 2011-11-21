@@ -7,28 +7,34 @@ require 'storage-master/model.rb'
 
 module StorageMasterModel
 
+
   class Package
 
-    #  copies table
-    #
-    #      column     |            type          |                      modifiers
-    # ----------------+--------------------------+-----------------------------------------------------
-    #  id             | integer                  | not null default nextval('copies_id_seq'::regclass)
-    #  datetime       | timestamp with time zone |
-    #  store_location | character varying(255)   | not null
-    #  package_id     | integer                  | not null
-    #  pool_id        | integer                  | not null
-    #
-    #
-    #  packages table
-    #
-    #  column |         type          |                       modifiers
-    # --------+-----------------------+-------------------------------------------------------
-    #  id     | integer               | not null default nextval('packages_id_seq'::regclass)
-    #  extant | boolean               | default true
-    #  ieid   | character varying(50) | not null
-    #  name   | character varying(50) | not null
+    #    copies table
+    #  
+    #        column     |            type          |                      modifiers
+    #   ----------------+--------------------------+-----------------------------------------------------
+    #    id             | integer                  | not null default nextval('copies_id_seq'::regclass)
+    #    datetime       | timestamp with time zone |
+    #    store_location | character varying(255)   | not null
+    #    package_id     | integer                  | not null
+    #    pool_id        | integer                  | not null
+    #  
+    #  
+    #    packages table
+    #  
+    #    column |         type          |                       modifiers
+    #   --------+-----------------------+-------------------------------------------------------
+    #    id     | integer               | not null default nextval('packages_id_seq'::regclass)
+    #    extant | boolean               | default true
+    #    ieid   | character varying(50) | not null
+    #    name   | character varying(50) | not null
 
+
+    # package_copies opens the Package class to add one function to help getting a stream of package info.
+    #
+    # @param [DateTime] before, optional, restricts the returned list to packages stored before the supplied date.
+    # @return [Array] list of DataMapper structs of:  package's name  (ordered alphabetically), store_location, ieid
 
     def self.package_copies  before = nil
       before ||= DateTime.now
@@ -53,7 +59,6 @@ module Streams
   # E20110210_ROIUIC.000   #<struct name="E20110210_ROIUIC.000", store_location="http://one.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">
   # E20110210_ROIUIC.000   #<struct name="E20110210_ROIUIC.000", store_location="http://two.example.com/.../E20110210_ROIUIC.000", ieid="E20110210_ROIUIC">
   # ...
-
 
   class StorageMasterPackageStream
 

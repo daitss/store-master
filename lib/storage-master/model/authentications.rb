@@ -32,16 +32,14 @@ module StorageMasterModel
     include DataMapper::Resource
     
     property :id,              Serial
-    property :name,            String, :required => true
+    property :name,            String, :required => true   # TODO: make name unique, defensively
     property :salt,            String, :required => true
     property :password_hash,   String, :required => true
 
-
-    # Authentication.lookup returns an authentication object for a username
+    # Authentication.lookup returns the authentication object for username
     #
     # @param [String] username, a string 
     # @return [Authentication] the authentication object for this user if available, or nil
-
 
     def self.lookup username
       first(:name =>username)
@@ -49,10 +47,9 @@ module StorageMasterModel
 
     # Authentication.create  creates a new authentication object, associating a password with a username
     #
-    # @param [String] username, a string 
-    # @param [String] password, a string 
-    # @return [Authentication] the authentication object for this user, created if need be
-
+    # @param [String] username, the username
+    # @param [String] password, the password 
+    # @return [Authentication] the authentication object for this user, updated or newly created if need be
 
     def self.create username, password
       rec = Authentication.first(:name => username) || Authentication.new(:name => username)
@@ -74,7 +71,7 @@ module StorageMasterModel
       raise "Can't create new password for #{self.name}: #{self.errors.full_messages.join('; ')}." unless self.save
     end
 
-    # password checks a password for a user
+    # authenticate checks a password against a user's authentication object
     #
     # @param [String] password, a candidate password for this authentication object
     # @return [Boolean] true if this is the user's password
@@ -83,7 +80,7 @@ module StorageMasterModel
       Digest::MD5.hexdigest(self.salt + password) == self.password_hash
     end
 
-    # Authentication.clear removes all authentications from the database
+    # Authentication.clear removes all records from the database
 
     def self.clear
       Authentication.destroy

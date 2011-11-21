@@ -52,11 +52,26 @@ module Analyzer
                            @packages_total ].max).length    
     end
   end
-
+  
+  # PoolVsDaitssAnalyzer will do the setup to perform fixity reconciliation between a set of
+  # pools and the authoritative fixity records kept by DAITSS.  fixity success, failure and integrity
+  # failures are inserted into the DAITSS events table.  Information of interest is logged as we
+  # go, and a text report is available once it has completed.  This is used by the tools/collect-fixities
+  # script.
 
   class PoolVsDaitssAnalyzer
 
     attr_reader :reports
+
+    # Setup an object that will compare the fixities recorded in a set of silo pools with those that DAITSS
+    # believes.
+    #
+    # @param [Array] pool_fixity_streams, a list of Streams::PoolFixityStream from which we can read off current, collated fixity data
+    # @param [Streams::DaitssPackageStream] daitss_fixity_stream, A srteam from which we can read off DAITSS fixity information
+    # @param [Fixnum] required_copies, the number of copies we are required to have for 
+    # @param [Fixnum] expiration_days, the number of days after which a fixity on a pool server has expired
+    # @param [Fixnum] stale_days, the number of days after which a fixity on a pool server should be rechecked
+    # @param [DateTime] no_later_than, point in time at which limit fixity and integrity errors.
 
     def initialize  pool_fixity_streams, daitss_fixity_stream, required_copies, expiration_days, stale_days, no_later_than
       
@@ -89,9 +104,15 @@ module Analyzer
     # ...
 
 
+    # indent is loaded with space
+    #
+    # @return [String] some whitespace
+
     def indent
       ' '  * 4
     end
+
+    # missing_issues gives us an array of error messages if a url is marked as not present on a pool
 
     def missing_issues url, pool_data_array
       messages = []
@@ -101,6 +122,8 @@ module Analyzer
       return if messages.empty?
       return messages.unshift "#{url} missing #{messages.length} #{messages.length == 1 ? 'copy' : 'copies'}:"
     end
+
+    # fixity_issues gives us an array of error messages if there is a fixity mismatch
 
     def fixity_issues url, pool_data, daitss_data
       messages = []
@@ -122,15 +145,22 @@ module Analyzer
     end
 
 
+    # determine whether a singular or a plural string is more appropriate
+
     def pluralize count, singular, plural
       return singular if count == 1
       return plural
     end
 
+    # check the array of reports to find if any have recorded something actually worth reporting
+
     def anything_interesting? reports
       reports.each { |rep| return true if rep.interesting? }
       return false
     end
+
+
+    # get a Package object from the DAITSS database
 
     def get_package url
       pkg = Daitss::Package.lookup_from_url(url)
@@ -141,6 +171,8 @@ module Analyzer
     end
 
 
+    # determine if we can get a Package object from the DAITSS database; we want to check a race condition
+
     def really_is_orphan? url
 
       if Daitss::Package.lookup_from_url(url)
@@ -150,12 +182,14 @@ module Analyzer
       return true
     end
 
+    # has URL been recorded by the Storage Master?
 
     def known_to_storemaster? url
       StorageMasterModel::Package.exists? url.sub(%r{^.*/}, '')
     end
 
-
+    # run is our main guy:  run the reconcilation and record results in the DAITSS events table,
+    # as well as storing reports on the object. Returns self.
 
     def run
       counter = StatCounter.new

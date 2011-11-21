@@ -96,7 +96,33 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>StorageMasterPackageStream returns information about what the StorageMaster
+thinks should be on the silos:</p>
 
+<p>E20110210_ROGMBP.000   #&lt;struct name=“E20110210_ROGMBP.000”,
+store_location=“<a
+href="http://one.example.com/.../E20110210_ROGMBP.000">one.example.com/…/E20110210_ROGMBP.000</a>”,
+ieid=“E20110210_ROGMBP”&gt; E20110210_ROGMBP.000   #&lt;struct
+name=“E20110210_ROGMBP.000”, store_location=“<a
+href="http://two.example.com/.../E20110210_ROGMBP.000">two.example.com/…/E20110210_ROGMBP.000</a>”,
+ieid=“E20110210_ROGMBP”&gt; E20110210_ROIUIC.000   #&lt;struct
+name=“E20110210_ROIUIC.000”, store_location=“<a
+href="http://one.example.com/.../E20110210_ROIUIC.000">one.example.com/…/E20110210_ROIUIC.000</a>”,
+ieid=“E20110210_ROIUIC”&gt; E20110210_ROIUIC.000   #&lt;struct
+name=“E20110210_ROIUIC.000”, store_location=“<a
+href="http://two.example.com/.../E20110210_ROIUIC.000">two.example.com/…/E20110210_ROIUIC.000</a>”,
+ieid=“E20110210_ROIUIC”&gt; …</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
   
 
@@ -272,13 +298,13 @@
       <pre class="lines">
 
 
-62
-63
-64
-65</pre>
+67
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 62</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='before identifier id'>before</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='@before ivar id'>@before</span> <span class='assign token'>=</span> <span class='before identifier id'>before</span> <span class='orop op'>||</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
@@ -332,13 +358,13 @@
       <pre class="lines">
 
 
-80
-81
-82
-83</pre>
+85
+86
+87
+88</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 80</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 85</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='ungetting? fid id'>ungetting?</span>
@@ -363,16 +389,16 @@
       <pre class="lines">
 
 
-85
-86
-87
-88
-89
 90
-91</pre>
+91
+92
+93
+94
+95
+96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 85</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 90</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='eos? fid id'>eos?</span>
@@ -400,13 +426,13 @@
       <pre class="lines">
 
 
-67
-68
-69
-70</pre>
+72
+73
+74
+75</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 67</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 72</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='setup identifier id'>setup</span>
@@ -431,12 +457,12 @@
       <pre class="lines">
 
 
-72
-73
-74</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 72</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='setup identifier id'>setup</span>
   <span class='@buff ivar id'>@buff</span>  <span class='assign token'>=</span> <span class='StorageMasterModel constant id'>StorageMasterModel</span><span class='colon2 op'>::</span><span class='Package constant id'>Package</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='@before ivar id'>@before</span>
@@ -460,12 +486,12 @@
       <pre class="lines">
 
 
-76
-77
-78</pre>
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 76</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/store-package-stream.rb', line 81</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class} IEIDs prior to #{@before}&gt;&quot;</span>
@@ -481,7 +507,7 @@
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:48 2011 by 
+  Generated on Mon Nov 21 11:54:00 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

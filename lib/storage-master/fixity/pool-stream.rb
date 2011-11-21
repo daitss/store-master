@@ -17,42 +17,52 @@ module Streams
   # PoolFixityStream
   #
   # Return a stream of all of the fixity data from one pool by
-  # querying thes ilo pool server. The inherited each method yields
+  # querying thes silo pool server. The inherited each method yields
   # two values, the package names (ordered alphabetically, as the
   # parent stream class requires) and a struct describing those
   # resources:
   #
-  #  EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord 
-  #                                location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001",
-  #                                sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3",
-  #                                md5="0d736ef6585b44bf0552a61b95ad9b87",
-  #                                size="1313843200", 
-  #                                fixity_time="2011-04-27T11:38:30Z",
-  #                                put_time="2011-04-20T20:21:33Z", 
-  #                                status="ok">
-  #
-  #  EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord
-  #                                location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000",
-  #                                sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4",
-  #                                md5="c9672d29178ee51eafef97a4b8297a5b",
-  #                                size="587591680",
-  #                                fixity_time="2011-04-27T11:38:45Z",
-  #                                put_time="2011-04-20T22:08:41Z",
-  #                                status="ok">
-  #
+  #    EO05UJJHZ_HPDFHG.001 #<struct Struct::PoolFixityRecord 
+  #                                  location="http://silos.ripple.fcla.edu:70/001/data/EO05UJJHZ_HPDFHG.001",
+  #                                  sha1="4abc7ec5f02b946dc4812f0b60bda34940ae62f3",
+  #                                  md5="0d736ef6585b44bf0552a61b95ad9b87",
+  #                                  size="1313843200", 
+  #                                  fixity_time="2011-04-27T11:38:30Z",
+  #                                  put_time="2011-04-20T20:21:33Z", 
+  #                                  status="ok">
+  #  
+  #    EQ93PZGKM_ER3H8G.000 #<struct Struct::PoolFixityRecord
+  #                                  location="http://silos.ripple.fcla.edu:70/001/data/EQ93PZGKM_ER3H8G.000",
+  #                                  sha1="a6ec8b7415e1a4fdfacbd42d1a7c0e3435ea2dd4",
+  #                                  md5="c9672d29178ee51eafef97a4b8297a5b",
+  #                                  size="587591680",
+  #                                  fixity_time="2011-04-27T11:38:45Z",
+  #                                  put_time="2011-04-20T22:08:41Z",
+  #                                  status="ok">
   #
   # In the interest of speed the location and timestamp fields are
   # simple strings (not URI or DateTime as you might expect). Both
   # timestamps are always returned in UTC "Z" format so it can be
   # simply compared as a string to other timestamps without worrying
-  # about zone conversions.
+  # about zone/dst conversions.
 
   class PoolFixityStream < DataFileStream
 
     attr_reader :url
 
-    # The optional stored_before must produce a valid datetime when it's 'to_s' method is called
-    # TODO: the stored_before query parameter is a bad way of doing things - need to be more HATEOS-driven.
+    # The constructor creates a stream of fixity information from a
+    # remote Silo Pool. The stream so produced has a key of package
+    # name, and a PoolFixityRecord struct as value.  The
+    # PoolFixityRecord has string-valued members of location, sha1,
+    # md5, size, fixity_time and put_time (Z-style UTC times) and
+    # status (indicating ok, missing, and failure).
+    #
+    # TODO: the stored_before query parameter is a bad way of doing
+    # things - need to be more HATEOS-driven.
+    #
+    # @param [StorageMasterModel::Pool] pool, a Pool to contact for fixity information about its packages
+    # @param [Hash] options, optional, query-params for the HTTP request to the remote silo pool (currently only stored_before is supported, and must produce a DateTime-parseable string)
+    # @return [PoolFixityStream] a rewindable stream of fixity information
 
     def initialize pool, options = {}
       file = Tempfile.new("pool-fixity-data-#{pool.name}-")
@@ -75,7 +85,7 @@ module Streams
         response.read_body { |buff| file.write buff }
       end
       file.rewind
-      file.gets        # remove initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
+      file.gets   # discard initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
       super(file)
 
     rescue StorageMaster::ConfigurationError => e
@@ -84,24 +94,31 @@ module Streams
       raise "Error initializing pool data from #{@url}: #{e.class} - #{e.message}"
     end
 
+    # rewind is required by the Streams mixin.
+
     def rewind
       super
-      @io.gets   # remove initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
+      @io.gets    # discard the initial CSV title "name","location","sha1","md5","size","fixity_time","put_time","status"
       self
     end
     
+    # to_s produces a reasonable string describing the stream.
 
     def to_s
       "#<#{self.class} #{@url}>"
     end
 
-    # The CSV data returned by the above HTTP request is of the form:
+    # read is required for the streams mixin.  It's not meant to be used directly - instead use the
+    # 'each', '<=>', etc. streams methods.
     #
-    #   "name","location","sha1","md5","size","fixity_time","put_time","status"
-    #   "E20110420_OOJGPX.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:25:58Z","ok"
-    #   "E20110420_OOKCET.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:26:02Z","ok"
-    #   "E20110420_OOKUHK.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:04Z","2011-04-20T17:26:06Z","ok"
-    #  ...
+    # The CSV data returned by the HTTP request from the silo is of the form:
+    #
+    #    "name","location","sha1","md5","size","fixity_time","put_time","status"
+    #    "E20110420_OOJGPX.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:25:58Z","ok"
+    #    "E20110420_OOKCET.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:03Z","2011-04-20T17:26:02Z","ok"
+    #    "E20110420_OOKUHK.000","http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000","a5ffd229992586461450851d434e3ce51debb626","15e4aeae105dc0cfc8edb2dd4c79454e","8192","2011-04-27T11:36:04Z","2011-04-20T17:26:06Z","ok"
+    #    ...
+    #
     # key = name;  value = [ location, sha1, md5, date, status ]
 
     def read
@@ -121,9 +138,11 @@ module Streams
 
   class PoolFixityRecordContainer < Array
 
-    # A boolean that indicates that, for a given field, whether all the
-    # PoolFixityRecords in the container have the same value. Use with
-    # with a field of :size, :md5 or :sha1
+    # consistent? is a boolean function that indicates that, for a given field of a PoolFixityRecord, whether all the
+    # PoolFixityRecords in the container have the same value. Use with  with a field of :size, :md5 or :sha1
+    #
+    # @param [String|Symbol] field, a member field in a PoolFixityRecord
+    # @return [Boolean] true if all PoolFixityRecords in this container are consistent
 
     def consistent? field
       self.map{ |elt| elt.send field }.uniq.length == 1
@@ -131,8 +150,11 @@ module Streams
       nil
     end
 
-    # A boolean that indicates the given field isn't consistent
-
+    # inconsistent? is boolean that indicates the given field isn't consistent (see consistent?)
+    #
+    # @param [String|Symbol] field, a member field in a PoolFixityRecord
+    # @return [Boolean] true if any of the PoolFixityRecords in this container differ from one another
+   
     def inconsistent? field
       not consistent? field
     rescue => e
@@ -178,6 +200,8 @@ module Streams
       @prefix = StorageMasterModel::Package.server_location + '/packages/'
     end
 
+    # adds the URL prefix to a stream record's key, a package name.
+    # The key now represents a valid URL for fetching the package.
 
     def get
       k, v = super

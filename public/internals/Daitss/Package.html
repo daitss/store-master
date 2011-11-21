@@ -177,7 +177,7 @@ anything else in this class remains unused.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>get a package object via a URL.</p>
+<p>return a package object by looking up a URL.</p>
 </div></span>
   
 </li>
@@ -186,7 +186,7 @@ anything else in this class remains unused.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#package_copies-class_method" title="package_copies (class method)">+ (Object) <strong>package_copies</strong>(before) </a>
+      <a href="#package_copies-class_method" title="package_copies (class method)">+ (Array) <strong>package_copies</strong>(before) </a>
     
 
     
@@ -200,8 +200,8 @@ anything else in this class remains unused.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>provide a list of data mapper records for selected IEIDs  ordered by the
-copy URL.</p>
+<p>package_copies provides a list of data mapper records for selected IEIDs,
+ordered by the copy URL.</p>
 </div></span>
   
 </li>
@@ -240,49 +240,7 @@ copy URL.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#fixity_failure_event-instance_method" title="#fixity_failure_event (instance method)">- (Object) <strong>fixity_failure_event</strong>(note) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#fixity_success_event-instance_method" title="#fixity_success_event (instance method)">- (Object) <strong>fixity_success_event</strong>(datetime) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#integrity_failure_event-instance_method" title="#integrity_failure_event (instance method)">- (Object) <strong>integrity_failure_event</strong>(note) </a>
+      <a href="#fixity_failure_event-instance_method" title="#fixity_failure_event (instance method)">- (Boolean) <strong>fixity_failure_event</strong>(note) </a>
     
 
     
@@ -296,8 +254,54 @@ copy URL.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>event recording: return true if saved, false on error, and, in the case of
-success events, nil if unchanged.</p>
+<p>fixity_failure_event records a fixity failure, inserting a new one.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fixity_success_event-instance_method" title="#fixity_success_event (instance method)">- (Boolean) <strong>fixity_success_event</strong>(datetime) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>fixity_success_event records a new successful fixity check, updating an
+existing one if it exists.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#integrity_failure_event-instance_method" title="#integrity_failure_event (instance method)">- (Boolean) <strong>integrity_failure_event</strong>(note) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>fixity_failure_event records an integrity failure, inserting a new one.</p>
 </div></span>
   
 </li>
@@ -397,13 +401,51 @@ well, Storage Master assembles its own events.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>get a package object via a URL</p>
+<p>return a package object by looking up a URL</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>url,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the url of the package</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a DataMapper struct</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -411,20 +453,20 @@ well, Storage Master assembles its own events.</p>
       <pre class="lines">
 
 
-71
-72
-73
-74
-75
 76
 77
 78
 79
 80
-81</pre>
+81
+82
+83
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 71</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 76</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup_from_url identifier id'>lookup_from_url</span> <span class='url identifier id'>url</span>
 
@@ -446,21 +488,63 @@ well, Storage Master assembles its own events.</p>
       <div class="method_details ">
   <p class="signature " id="package_copies-class_method">
   
-    + (<tt>Object</tt>) <strong>package_copies</strong>(before) 
+    + (<tt>Array</tt>) <strong>package_copies</strong>(before) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>provide a list of data mapper records for selected IEIDs  ordered by the
-copy URL</p>
+<p>package_copies provides a list of data mapper records for selected IEIDs,
+ordered by the copy URL. Note that timestamps are strings in UTC ‘Z’
+format.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>before,</span>
+      
+      
+        <span class='type'>(<tt>String|<span class='object_link'><a href="../DateTime.html" title="DateTime (class)">DateTime</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a timestamp that limits the returned packages to those stored before the
+given time.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a list of DataMapper structs, having members ieid, url,
+last_successful_fixity_time, package_store_time, md5, sha1, and size.  Size
+is a number, all the rest are strings.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -468,10 +552,6 @@ copy URL</p>
       <pre class="lines">
 
 
-24
-25
-26
-27
 28
 29
 30
@@ -511,31 +591,31 @@ copy URL</p>
 64
 65
 66
-67</pre>
+67
+68
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 24</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 28</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='package_copies identifier id'>package_copies</span> <span class='before identifier id'>before</span>
-
 
   <span class='comment val'># The following sql is meant to provide information from the</span>
   <span class='comment val'># DAITSS DB in the following form:</span>
   <span class='comment val'>#</span>
-  <span class='comment val'>#        ieid       |                                  url                                | last_successful_fixity_time |  package_store_time  |               md5                |                   sha1                   |    size     </span>
-  <span class='comment val'>#  E13LVY77R_4VP1BD | http://storage-master.fda.fcla.edu:70/packages/E13LVY77R_4VP1BD.000 |                             | 2011-10-29T23:04:04Z | 4108b06e33b4b742f66d2106aa58adbe | de78cfd8e8444c56b6e519cbec21d9f9c8b249e0 |   179752960</span>
-  <span class='comment val'>#  E1ADTX4PV_WPV7W3 | http://storage-master.fda.fcla.edu:70/packages/E1ADTX4PV_WPV7W3.000 | 2011-09-25T02:22:16Z        | 2011-07-14T01:41:29Z | 97E8E907719AA620B94D19AD5EB0838F | 4D9FEAB61C20AB1C20558BB11A49F72EF9F6F505 |   370350080</span>
-  <span class='comment val'>#  E1AFGE6DV_P6P6FK | http://storage-master.fda.fcla.edu:70/packages/E1AFGE6DV_P6P6FK.000 |                             | 2011-10-30T00:15:47Z | ba41f44d02fc1957085bb394f1953ff8 | 2944aeba54a190551865e5b23579ab39ed25b67f |    85872640</span>
-  <span class='comment val'>#  E1AK86W44_W77Z0G | http://storage-master.fda.fcla.edu:70/packages/E1AK86W44_W77Z0G.000 | 2011-09-06T05:02:13Z        | 2011-07-09T20:25:56Z | 241F5E2996B16C2F6E47781912ADDCBA | 73A66EA5BB5BADFDF0BA3441D18C29C71478F379 |   977510400</span>
+  <span class='comment val'>#          ieid       |                                  url                                | last_successful_fixity_time |  package_store_time  |               md5                |                   sha1                   |    size     </span>
+  <span class='comment val'>#    E13LVY77R_4VP1BD | http://storage-master.fda.fcla.edu:70/packages/E13LVY77R_4VP1BD.000 |                             | 2011-10-29T23:04:04Z | 4108b06e33b4b742f66d2106aa58adbe | de78cfd8e8444c56b6e519cbec21d9f9c8b249e0 |   179752960</span>
+  <span class='comment val'>#    E1ADTX4PV_WPV7W3 | http://storage-master.fda.fcla.edu:70/packages/E1ADTX4PV_WPV7W3.000 | 2011-09-25T02:22:16Z        | 2011-07-14T01:41:29Z | 97E8E907719AA620B94D19AD5EB0838F | 4D9FEAB61C20AB1C20558BB11A49F72EF9F6F505 |   370350080</span>
+  <span class='comment val'>#    E1AFGE6DV_P6P6FK | http://storage-master.fda.fcla.edu:70/packages/E1AFGE6DV_P6P6FK.000 |                             | 2011-10-30T00:15:47Z | ba41f44d02fc1957085bb394f1953ff8 | 2944aeba54a190551865e5b23579ab39ed25b67f |    85872640</span>
+  <span class='comment val'>#    E1AK86W44_W77Z0G | http://storage-master.fda.fcla.edu:70/packages/E1AK86W44_W77Z0G.000 | 2011-09-06T05:02:13Z        | 2011-07-09T20:25:56Z | 241F5E2996B16C2F6E47781912ADDCBA | 73A66EA5BB5BADFDF0BA3441D18C29C71478F379 |   977510400</span>
   <span class='comment val'># </span>
-
+  <span class='comment val'>#</span>
   <span class='comment val'># The important bit is that last_successful_fixity time can be</span>
   <span class='comment val'># null for the case of a new ieid, so that we can check if a</span>
   <span class='comment val'># succesful fixity check has been repeated, and not attempt to</span>
   <span class='comment val'># update the daitss database.  It has a bug that doesn't affect</span>
   <span class='comment val'># our use, however: the last_successful_fixity time may refer to</span>
   <span class='comment val'># an old version of the ieid on a recently refreshed package.</span>
-
 
   <span class='sql identifier id'>sql</span> <span class='assign token'>=</span> <span class='string val'>&quot;SELECT package_copies.id AS ieid, &quot;</span> <span class='plus op'>+</span>
                <span class='string val'>&quot;package_copies.url, &quot;</span> <span class='plus op'>+</span>
@@ -604,32 +684,81 @@ copy URL</p>
       <div class="method_details first">
   <p class="signature first" id="fixity_failure_event-instance_method">
   
-    - (<tt>Object</tt>) <strong>fixity_failure_event</strong>(note) 
+    - (<tt>Boolean</tt>) <strong>fixity_failure_event</strong>(note) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>fixity_failure_event records a fixity failure, inserting a new one. We use
+the default datetime.</p>
+
+<p>TODO: we should be keeping track of the date of the fixity event and not
+just add an pre-existing failure</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>note,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a comment for the events table</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the status of the database save opertaion.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-95
-96
-97
-98
-99
-100
-101
-102
-103</pre>
+111
+112
+113
+114
+115
+116
+117</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 95</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='fixity_failure_event identifier id'>fixity_failure_event</span> <span class='note identifier id'>note</span>
-
-  <span class='comment val'>#### return true ###### </span>
 
   <span class='e identifier id'>e</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'fixity failure'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span> <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='storage_master identifier id'>storage_master</span>
@@ -645,39 +774,85 @@ copy URL</p>
       <div class="method_details ">
   <p class="signature " id="fixity_success_event-instance_method">
   
-    - (<tt>Object</tt>) <strong>fixity_success_event</strong>(datetime) 
+    - (<tt>Boolean</tt>) <strong>fixity_success_event</strong>(datetime) 
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>fixity_success_event records a new successful fixity check, updating an
+existing one if it exists.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>datetime,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the time of the fixity check</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the status of the database save opertaion.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122</pre>
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 111</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 126</span>
 
 <span class='def def kw'>def</span> <span class='fixity_success_event identifier id'>fixity_success_event</span> <span class='datetime identifier id'>datetime</span>
   <span class='timestamp identifier id'>timestamp</span> <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='datetime identifier id'>datetime</span><span class='rparen token'>)</span>
 
   <span class='event identifier id'>event</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='first_or_new identifier id'>first_or_new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'fixity success'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
   <span class='return return kw'>return</span> <span class='false false kw'>false</span> <span class='if if_mod kw'>if</span> <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='eq op'>==</span> <span class='timestamp identifier id'>timestamp</span>
-
-  <span class='comment val'>#### return true   ###### </span>
 
   <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span>     <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='storage_master identifier id'>storage_master</span>
   <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='assign token'>=</span> <span class='timestamp identifier id'>timestamp</span>
@@ -692,21 +867,59 @@ copy URL</p>
       <div class="method_details ">
   <p class="signature " id="integrity_failure_event-instance_method">
   
-    - (<tt>Object</tt>) <strong>integrity_failure_event</strong>(note) 
+    - (<tt>Boolean</tt>) <strong>integrity_failure_event</strong>(note) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>event recording: return true if saved, false on error, and, in the case of
-success events, nil if unchanged</p>
+<p>fixity_failure_event records an integrity failure, inserting a new one. We
+use the default datetime.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>note,</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a comment for the events table</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the status of the database save opertaion.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -714,22 +927,18 @@ success events, nil if unchanged</p>
       <pre class="lines">
 
 
-85
-86
-87
-88
-89
-90
-91
-92
-93</pre>
+94
+95
+96
+97
+98
+99
+100</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 85</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/daitss-model-extensions.rb', line 94</span>
 
 <span class='def def kw'>def</span> <span class='integrity_failure_event identifier id'>integrity_failure_event</span> <span class='note identifier id'>note</span>
-
-  <span class='comment val'>#### return true ###### </span>
 
   <span class='e identifier id'>e</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='new identifier id'>new</span> <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'integrity failure'</span><span class='comma token'>,</span> <span class='symbol val'>:package</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='self self kw'>self</span>
   <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='agent identifier id'>agent</span> <span class='assign token'>=</span> <span class='Agent constant id'>Agent</span><span class='dot token'>.</span><span class='storage_master identifier id'>storage_master</span>
@@ -837,7 +1046,7 @@ well, Storage Master assembles its own events.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:40 2011 by 
+  Generated on Mon Nov 21 11:53:56 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

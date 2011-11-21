@@ -141,8 +141,9 @@ provides convenience methods that map over all the records in the array.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A boolean that indicates that, for a given field, whether all the
-PoolFixityRecords in the container have the same value.</p>
+<p>consistent? is a boolean function that indicates that, for a given field of
+a PoolFixityRecord, whether all the PoolFixityRecords in the container have
+the same value.</p>
 </div></span>
   
 </li>
@@ -165,7 +166,8 @@ PoolFixityRecords in the container have the same value.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A boolean that indicates the given field isn’t consistent.</p>
+<p>inconsistent? is boolean that indicates the given field isn’t consistent
+(see consistent?).</p>
 </div></span>
   
 </li>
@@ -191,15 +193,35 @@ PoolFixityRecords in the container have the same value.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>A boolean that indicates that, for a given field, whether all the
-PoolFixityRecords in the container have the same value. Use with with a
-field of :size, :md5 or :sha1</p>
+<p>consistent? is a boolean function that indicates that, for a given field of
+a PoolFixityRecord, whether all the PoolFixityRecords in the container have
+the same value. Use with  with a field of :size, :md5 or :sha1</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>field,</span>
+      
+      
+        <span class='type'>(<tt>String|Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a member field in a PoolFixityRecord</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
@@ -209,6 +231,11 @@ field of :size, :md5 or :sha1</p>
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>true if all PoolFixityRecords in this container are consistent</p>
+</div>
       
     </li>
   
@@ -220,14 +247,14 @@ field of :size, :md5 or :sha1</p>
       <pre class="lines">
 
 
-128
-129
-130
-131
-132</pre>
+147
+148
+149
+150
+151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 128</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 147</span>
 
 <span class='def def kw'>def</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='elt identifier id'>elt</span><span class='bitor op'>|</span> <span class='elt identifier id'>elt</span><span class='dot token'>.</span><span class='send identifier id'>send</span> <span class='field identifier id'>field</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -250,13 +277,34 @@ field of :size, :md5 or :sha1</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>A boolean that indicates the given field isn’t consistent</p>
+<p>inconsistent? is boolean that indicates the given field isn’t consistent
+(see consistent?)</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>field,</span>
+      
+      
+        <span class='type'>(<tt>String|Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a member field in a PoolFixityRecord</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
@@ -266,6 +314,12 @@ field of :size, :md5 or :sha1</p>
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>true if any of the PoolFixityRecords in this container differ from one
+another</p>
+</div>
       
     </li>
   
@@ -277,14 +331,14 @@ field of :size, :md5 or :sha1</p>
       <pre class="lines">
 
 
-136
-137
-138
-139
-140</pre>
+158
+159
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 136</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 158</span>
 
 <span class='def def kw'>def</span> <span class='inconsistent? fid id'>inconsistent?</span> <span class='field identifier id'>field</span>
   <span class='not not kw'>not</span> <span class='consistent? fid id'>consistent?</span> <span class='field identifier id'>field</span>
@@ -302,7 +356,7 @@ field of :size, :md5 or :sha1</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:36 2011 by 
+  Generated on Mon Nov 21 11:54:01 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>

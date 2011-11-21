@@ -100,7 +100,7 @@
 <p>PoolFixityStream</p>
 
 <p>Return a stream of all of the fixity data from one pool by querying thes
-ilo pool server. The inherited each method yields two values, the package
+silo pool server. The inherited each method yields two values, the package
 names (ordered alphabetically, as the parent stream class requires) and a
 struct describing those resources:</p>
 
@@ -126,7 +126,7 @@ struct describing those resources:</p>
 <p>In the interest of speed the location and timestamp fields are simple
 strings (not URI or DateTime as you might expect). Both timestamps are
 always returned in UTC “Z” format so it can be simply compared as a
-string to other timestamps without worrying about zone conversions.</p>
+string to other timestamps without worrying about zone/dst conversions.</p>
 
 
   </div>
@@ -199,9 +199,8 @@ string to other timestamps without worrying about zone conversions.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>The optional stored_before must produce a valid datetime when it’s
-‘to_s’ method is called TODO: the stored_before query parameter is a
-bad way of doing things - need to be more HATEOS-driven.</p>
+<p>The constructor creates a stream of fixity information from a remote Silo
+Pool.</p>
 </div></span>
   
 </li>
@@ -224,7 +223,7 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>The CSV data returned by the above HTTP request is of the form:.</p>
+<p>read is required for the streams mixin.</p>
 </div></span>
   
 </li>
@@ -246,7 +245,9 @@ bad way of doing things - need to be more HATEOS-driven.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>rewind is required by the Streams mixin.</p>
+</div></span>
   
 </li>
 
@@ -267,7 +268,9 @@ bad way of doing things - need to be more HATEOS-driven.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>to_s produces a reasonable string describing the stream.</p>
+</div></span>
   
 </li>
 
@@ -289,15 +292,58 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>The optional stored_before must produce a valid datetime when it’s
-‘to_s’ method is called TODO: the stored_before query parameter is a
-bad way of doing things - need to be more HATEOS-driven.</p>
+<p>The constructor creates a stream of fixity information from a remote Silo
+Pool. The stream so produced has a key of package name, and a
+PoolFixityRecord struct as value.  The PoolFixityRecord has string-valued
+members of location, sha1, md5, size, fixity_time and put_time (Z-style UTC
+times) and status (indicating ok, missing, and failure).</p>
+
+<p>TODO: the stored_before query parameter is a bad way of doing things - need
+to be more HATEOS-driven.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>pool,</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../StorageMasterModel/Pool.html" title="StorageMasterModel::Pool (class)">StorageMasterModel::Pool</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a Pool to contact for fixity information about its packages</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options,</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>optional, query-params for the HTTP request to the remote silo pool
+(currently only stored_before is supported, and must produce a
+DateTime-parseable string)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -305,10 +351,10 @@ bad way of doing things - need to be more HATEOS-driven.</p>
       <pre class="lines">
 
 
-57</pre>
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 57</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 67</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='pool identifier id'>pool</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -349,12 +395,12 @@ bad way of doing things - need to be more HATEOS-driven.</p>
       <pre class="lines">
 
 
+51
 52
-53
-54</pre>
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 52</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 51</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span>
   <span class='@url ivar id'>@url</span>
@@ -382,12 +428,16 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </p><div class="docstring">
   <div class="discussion">
     
-<p>The CSV data returned by the above HTTP request is of the form:</p>
+<p>read is required for the streams mixin.  It’s not meant to be used
+directly - instead use the ‘each’, ‘&lt;=&gt;’, etc. streams
+methods.</p>
 
-<pre class="code"> <span class='string val'>&quot;name&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;location&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;sha1&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;md5&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;size&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;fixity_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;put_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;status&quot;</span>
- <span class='string val'>&quot;E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:25:58Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
- <span class='string val'>&quot;E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:02Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
- <span class='string val'>&quot;E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:04Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:06Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+<p>The CSV data returned by the HTTP request from the silo is of the form:</p>
+
+<pre class="code"><span class='string val'>&quot;name&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;location&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;sha1&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;md5&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;size&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;fixity_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;put_time&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;status&quot;</span>
+<span class='string val'>&quot;E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOJGPX.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:25:58Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+<span class='string val'>&quot;E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKCET.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:03Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:02Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
+<span class='string val'>&quot;E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;http://silos.ripple.fcla.edu:70/004/data/E20110420_OOKUHK.000&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;a5ffd229992586461450851d434e3ce51debb626&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;15e4aeae105dc0cfc8edb2dd4c79454e&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;8192&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-27T11:36:04Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;2011-04-20T17:26:06Z&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;ok&quot;</span>
 <span class='dot3 op'>...</span>
 </pre>
 
@@ -405,13 +455,13 @@ bad way of doing things - need to be more HATEOS-driven.</p>
       <pre class="lines">
 
 
-107
-108
-109
-110</pre>
+124
+125
+126
+127</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 107</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 124</span>
 
 <span class='def def kw'>def</span> <span class='read identifier id'>read</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='CSV constant id'>CSV</span><span class='dot token'>.</span><span class='parse_line identifier id'>parse_line</span><span class='lparen token'>(</span><span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span><span class='rparen token'>)</span>
@@ -430,24 +480,35 @@ bad way of doing things - need to be more HATEOS-driven.</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>rewind is required by the Streams mixin.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-87
-88
-89
-90
-91</pre>
+99
+100
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 87</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 99</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='super super kw'>super</span>
-  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span>   <span class='comment val'># remove initial CSV title &quot;name&quot;,&quot;location&quot;,&quot;sha1&quot;,&quot;md5&quot;,&quot;size&quot;,&quot;fixity_time&quot;,&quot;put_time&quot;,&quot;status&quot;</span>
+  <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='gets identifier id'>gets</span>    <span class='comment val'># discard the initial CSV title &quot;name&quot;,&quot;location&quot;,&quot;sha1&quot;,&quot;md5&quot;,&quot;size&quot;,&quot;fixity_time&quot;,&quot;put_time&quot;,&quot;status&quot;</span>
   <span class='self self kw'>self</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -463,18 +524,29 @@ bad way of doing things - need to be more HATEOS-driven.</p>
   
 
   
-</p><table class="source_code">
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>to_s produces a reasonable string describing the stream.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-94
-95
-96</pre>
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/storage-master/lib/storage-master/fixity/pool-stream.rb', line 107</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;#{self.class} #{@url}&gt;&quot;</span>
@@ -490,7 +562,7 @@ bad way of doing things - need to be more HATEOS-driven.</p>
 </div>
     
     <div id="footer">
-  Generated on Wed Nov 16 18:10:46 2011 by 
+  Generated on Mon Nov 21 11:53:54 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.3 (ruby-1.8.7).
 </div>
