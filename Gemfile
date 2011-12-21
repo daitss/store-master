@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "datyl", :git => "git://github.com/daitss/datyl.git"
+gem "datyl", :git => "git@github.com:daitss/datyl.git"
 
 gem 'i18n'
 gem 'libxml-ruby', :require => 'libxml'
