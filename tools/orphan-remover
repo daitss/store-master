@@ -142,16 +142,16 @@ end
 Datyl::Logger.setup('OrphanRemover', ENV['VIRTUAL_HOSTNAME'])
 Datyl::Logger.stderr # log to STDERR
 
-options = get_options ARGV
+@options = get_options ARGV
 config = get_config
 
 StorageMaster.setup_databases(config.storage_master_db, config.daitss_db)
 
-authenticate options.username, options.password
+authenticate @options.username, @options.password
 
-if options.file
-  process_file options.file
-elsif options.url
-  process_url options.url
+if @options.file
+  process_file @options.file
+elsif @options.url
+  process_url @options.url
 end
 
