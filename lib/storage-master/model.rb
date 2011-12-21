@@ -65,7 +65,7 @@ module StorageMasterModel
   # @return [Array] a list of DataMapper table classes
 
   def self.tables
-    [ Copy, Package, Pool, Reservation, Authentication ]
+    [ Copy, Package, Pool, Reservation, Authentication, Log ]
   end
 
   # StorageMasterModel.tables (Re)creates tables for test or setup.  
