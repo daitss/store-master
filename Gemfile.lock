@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/daitss/datyl.git
-  revision: b994723b0066b26af242b06dde3d7b33350c13fa
+  remote: git@github.com:daitss/datyl.git
+  revision: 426c36df31f415632daf31f1194d5aeb3e1008de
   specs:
     datyl (0.1.4)
 
