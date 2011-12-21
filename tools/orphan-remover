@@ -1,0 +1,157 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '../lib/')
+
+require 'datyl/config'
+require 'datyl/logger'
+require 'storage-master'
+require 'uri'
+
+#TODO: get this from the config file somehow
+STOREMASTER_URL = "http://storage-master.fda.fcla.edu:70"
+CURL_COMMAND = "curl -sv -X DELETE"
+
+def get_config
+  raise StorageMaster::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise StorageMaster::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+  
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database')
+
+  [ 'daitss_db', 'storage_master_db'].each do |option|
+    raise StorageMaster::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
+  end
+
+  return config
+
+rescue => e
+  STDERR.puts e.message
+  exit 1
+end
+
+def get_options(args)
+  options = OpenStruct.new("file" => nil, "url" => nil, "username" => nil, "password" => nil, "note" => nil)
+
+  cmd = $0
+  begin
+    opts = OptionParser.new do |opt|
+
+      cmd += ' ' + opt.default_argv.join(' ')
+      opt.banner << "\nDeletes Orphans from D2 Storage"
+      opt.on_tail("--help", "Show this message") { puts opts; exit }
+
+      opt.on("--file FILE", String, "Path to file containing list of orphan URLs to delete from D2 storage, either --file or --url required") { |file| options.file = file }
+      opt.on("--url URL", String, "URL of a single orphan to delete from D2 storage, either --url or --file required") { |url| options.url = url }
+      opt.on("--username USERNAME", String, "Operations agent username, required") { |username| options.username = username }
+      opt.on("--password PASSWORD", String, "Operations agent password, required") { |password| options.password = password }
+      opt.on("--note NOTE", String, "Note (should be in quotes)") { |note| options.note = note }
+    end
+
+    opts.parse!(args)
+
+    raise StandardError, "Either --url or --file must be specified" unless options.url or options.file
+    raise StandardError, "Only --url or --file can be specified, but not both" if options.url and options.file
+    raise StandardError, "Username not specified" unless options.username
+    raise StandardError, "Password not specified" unless options.password
+
+    if options.file
+      raise StandardError, "Specified file is not a file" unless File.file? options.file
+      raise StandardError, "Specified file is not readable" unless File.readable? options.file
+    end
+
+  rescue => e # catch the error from opts.parse! and display
+    STDERR.puts "Error parsing command line options:\n#{e.message}\n#{opts}"
+    exit 1
+  end
+
+  $0 = cmd.sub(options.password, '.' * options.password.length)
+  return options
+end
+
+# iterate over file line by line, calling process_url for each line
+def process_file file
+  f = File.open file, "r" 
+
+  while line = f.gets do 
+    process_url line
+  end
+end
+
+# orphan removing processing for specified url
+def process_url url
+  uri = URI url
+
+  # verify line is a url
+  unless uri.scheme == "http"
+    Datyl::Logger.err "#{url} is not an http URL."
+    return false
+  end
+
+  # extract out IEID+version
+  ieid, version = File.basename(uri.path).split(".")
+
+  # check IEID+version in daitss copy table.
+  # If record exists for the ieid+version, skip without deleting
+  if daitss_copy = Daitss::Copy.first(:url.like => "%#{ieid}.#{version}%")
+    Datyl::Logger.err "Skipping #{url}: It appears to be in the DAITSS copy table as: #{daitss_copy.url}"
+  end
+
+  # check IEID+version in storage-master copy table. If there, issue curl command to delete from storemaster. 
+  # Otherwise, issue curl to delete url directly. 
+  # After curl, log deletion.
+
+  name = version ? "#{ieid}.#{version}" : ieid
+
+  url_to_delete = if StorageMasterModel::Package.first(:extant => true, :name => name) 
+                    storemaster_url(name) 
+                  else
+                    url.to_s
+                  end
+
+
+  delete_via_curl url_to_delete
+  Datyl::Logger.info "Deleted resource at #{url_to_delete}"
+  log_delete url_to_delete
+end
+
+# generates a storemaster url 
+def storemaster_url name
+  STOREMASTER_URL + "/packages/" + name
+end
+
+# executes a curl command to delete resource at url
+def delete_via_curl url
+  puts "#{CURL_COMMAND} #{url}"
+end
+
+def authenticate username, password
+  raise StandardError, "Unknown user #{username}" unless u = Daitss::Agent.get(username)
+  raise StandardError, "Password incorrect" unless u.authenticate password
+rescue => e
+  STDERR.puts "Error authenticating user: #{e.message}"
+  exit 1
+end
+
+# logs the deletion of a resource to the storemaster logs table
+def log_delete url
+  log_entry = StorageMasterModel::Log.new(:action => "Delete orphan", :user => @options.username, :note => "URL: #{url}")
+  log_entry.save
+end
+
+Datyl::Logger.setup('OrphanRemover', ENV['VIRTUAL_HOSTNAME'])
+Datyl::Logger.stderr # log to STDERR
+
+options = get_options ARGV
+config = get_config
+
+StorageMaster.setup_databases(config.storage_master_db, config.daitss_db)
+
+authenticate options.username, options.password
+
+if options.file
+  process_file options.file
+elsif options.url
+  process_url options.url
+end
+
