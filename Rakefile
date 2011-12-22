@@ -2,10 +2,13 @@
 
 require 'fileutils'
 require 'rake'
+require 'rake/dsl_definition'
 require 'rspec'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 require 'socket'
+
+include Rake::DSL
 
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
