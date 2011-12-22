@@ -74,7 +74,7 @@ def process_file file
   f = File.open file, "r" 
 
   while line = f.gets do 
-    process_url line
+    process_url line.chomp
   end
 end
 
@@ -122,7 +122,21 @@ end
 
 # executes a curl command to delete resource at url
 def delete_via_curl url
-  puts "#{CURL_COMMAND} #{url}"
+  delete_command = CURL_COMMAND + " " + url + " 2>&1"
+  Datyl::Logger.info "Executing: #{delete_command}"
+  output = `#{delete_command}`
+
+  if $? == 0
+    if output =~ /204 No Content/
+      Datyl::Logger.info "Resource at #{url} successfully deleted"
+    elsif output =~ /404 Not Found/
+      Datyl::Logger.info "Resource at #{url} not found, 404 returned when attempting to delete"
+    elsif output =~ /410 Gone/
+      Datyl::Logger.info "Resource at #{url} already deleted, 410 returned when attempting to delete"
+    end
+  else
+    Datyl::Logger.info "Error deleting resource at #{url}: #{output}"
+  end
 end
 
 def authenticate username, password
