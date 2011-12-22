@@ -95,6 +95,7 @@ def process_url url
   # If record exists for the ieid+version, skip without deleting
   if daitss_copy = Daitss::Copy.first(:url.like => "%#{ieid}.#{version}%")
     Datyl::Logger.err "Skipping #{url}: It appears to be in the DAITSS copy table as: #{daitss_copy.url}"
+    return false
   end
 
   # check IEID+version in storage-master copy table. If there, issue curl command to delete from storemaster. 
@@ -111,8 +112,6 @@ def process_url url
 
 
   delete_via_curl url_to_delete
-  Datyl::Logger.info "Deleted resource at #{url_to_delete}"
-  log_delete url_to_delete
 end
 
 # generates a storemaster url 
@@ -129,6 +128,7 @@ def delete_via_curl url
   if $? == 0
     if output =~ /204 No Content/
       Datyl::Logger.info "Resource at #{url} successfully deleted"
+      log_delete url
     elsif output =~ /404 Not Found/
       Datyl::Logger.info "Resource at #{url} not found, 404 returned when attempting to delete"
     elsif output =~ /410 Gone/
