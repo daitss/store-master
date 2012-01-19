@@ -61,8 +61,6 @@ namespace :deploy do
 
   desc "Update files and directories target host, granting broad privleges to members of the group"
   task :layout, :roles => :app do
-    run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"
-    run "find #{shared_path} #{release_path} -type d -print0 | xargs -0 chmod g+swrx"
   end
   
 end

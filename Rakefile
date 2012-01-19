@@ -32,31 +32,36 @@ end
 
 # assumes git pushed out
 
+if ENV["USER"] == "Carol"
+  user = "cchou"
+else
+  user = ENV["USER"]
+end
+
 desc "Deploy to darchive's storage master"
 task :darchive do
-  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
+  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
 end
 
 desc "Deploy to tarchive's test storemaster - betastore.tarchive.fcla.edu"
 task :betastore do
-  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betastore -S who=daitss:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betastore -S who=#{user}:#{user}"
 end
 
 desc "Deploy to retsina development storemaster - storemaster.retsina.fcla.edu"
 task :retsina do
-  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
+  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
 end
 
 desc "Deploy to ripple's test storemaster"
 task :ripple do
-  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storage-master -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
 end
 
 desc "Deploy to stub-storemaster on ripple"
 task :ripple_stub do
-  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/stub-master -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/stub-master -S who=#{user}:#{user}"
 end
-
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
