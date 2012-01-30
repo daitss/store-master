@@ -89,18 +89,18 @@ def process_url url
   end
 
   # extract the resource name, i.e. either ieid + version or only ieid
-  resource-name = File.basename(uri.path)
+  resource = File.basename(uri.path)
    
-  # check resource-name in daitss copy table.
-  # If record exists for the resource-name, skip without deleting
-  if daitss_copy = Daitss::Copy.first(:url.like => "%#{resource-name}")
+  # check resource in daitss copy table.
+  # If record exists for the resource, skip without deleting
+  if daitss_copy = Daitss::Copy.first(:url.like => "%#{resource}")
     Datyl::Logger.err "Skipping #{url}: It appears to be in the DAITSS copy table as: #{daitss_copy.url}"
     return false
   end
   
 
   # extract out IEID+version
-  #ieid, version = resource-name.split(".")
+  #ieid, version = resource.split(".")
 
   # check IEID+version in storage-master copy table. If there, issue curl command to delete from storemaster. 
   # Otherwise, issue curl to delete url directly. 
@@ -108,7 +108,7 @@ def process_url url
 
   #name = version ? "#{ieid}.#{version}" : ieid
 
-  url_to_delete = if StorageMasterModel::Package.first(:extant => true, :name => resource-name) 
+  url_to_delete = if StorageMasterModel::Package.first(:extant => true, :name => resource) 
                     storemaster_url(name) 
                   else
                     url.to_s
@@ -126,7 +126,7 @@ end
 # executes a curl command to delete resource at url
 def delete_via_curl url
   delete_command = CURL_COMMAND + " " + url + " 2>&1"
-  puts delete_command
+ 
   Datyl::Logger.info "Executing: #{delete_command}"
   output = `#{delete_command}`
 
