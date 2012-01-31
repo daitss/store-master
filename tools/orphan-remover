@@ -154,7 +154,8 @@ end
 
 # logs the deletion of a resource to the storemaster logs table
 def log_delete url
-  log_entry = StorageMasterModel::Log.new(:action => "Delete orphan", :user => @options.username, :note => "URL: #{url}")
+  log_entry = StorageMasterModel::Log.new(:action => "Delete orphan", 
+    :user => @options.username, :url => "#{url}", :note => @options.note)
   log_entry.save
 end
 
