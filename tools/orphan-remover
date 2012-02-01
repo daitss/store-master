@@ -131,7 +131,6 @@ def delete_via_curl url
   output = `#{delete_command}`
 
   if $? == 0
-    puts output
     if output =~ /204 No Content/
       Datyl::Logger.info "Resource at #{url} successfully deleted"
       log_delete url
