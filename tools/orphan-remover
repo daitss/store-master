@@ -131,6 +131,7 @@ def delete_via_curl url
   output = `#{delete_command}`
 
   if $? == 0
+    puts output
     if output =~ /204 No Content/
       Datyl::Logger.info "Resource at #{url} successfully deleted"
       log_delete url
@@ -139,7 +140,7 @@ def delete_via_curl url
     elsif output =~ /410 Gone/
       Datyl::Logger.err "Resource at #{url} already deleted, 410 returned when attempting to delete"
       
-     elsif output =~ /405  Method Not Allowed/
+     elsif output =~ /405 Method Not Allowed/
        Datyl::Logger.err "Resource at #{url} cannot be deleted, 405 returned when attempting to delete"       
     end
   else
