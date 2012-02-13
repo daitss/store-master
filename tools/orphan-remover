@@ -109,7 +109,7 @@ def process_url url
   #name = version ? "#{ieid}.#{version}" : ieid
 
   url_to_delete = if StorageMasterModel::Package.first(:extant => true, :name => resource) 
-                    storemaster_url(name) 
+                    storemaster_url(resource) 
                   else
                     url.to_s
                   end
