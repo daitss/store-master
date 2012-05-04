@@ -52,6 +52,7 @@ module StorageMasterModel
     connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
 
     dm = DataMapper.setup(:default, connection_string)
+    DataMapper.finalize
     dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
     return dm
 
