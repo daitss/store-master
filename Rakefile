@@ -53,6 +53,11 @@ task :retsina do
   sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
 end
 
+desc "Deploy to marsala development storemaster - storemaster.marsala.fcla.edu"
+task :marsala do
+  sh "cap deploy -S target=marsala.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
+end
+
 desc "Deploy to ripple's test storemaster"
 task :ripple do
   sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/storage-master -S who=#{user}:#{user}"
