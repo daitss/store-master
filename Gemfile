@@ -16,6 +16,7 @@ gem 'sinatra'
 gem 'rack'
 gem 'sys-filesystem'
 gem 'haml'
+gem 'thin'
 
 # development
 
