@@ -23,5 +23,9 @@ gem 'rake'
 gem 'rcov'
 gem 'cucumber'
 gem 'rspec'
+ 
+group :test do
+  gem 'ruby-debug'
+end
 
 
