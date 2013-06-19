@@ -14,6 +14,9 @@ uses the Storage Master to manage the packages on the back-end storage
 servers.  See the companion DAITSS Silo Pool project for setting up
 the back-end services.
 
+Current Production code
+-----------------------
+git commit sha1 - 3eb506c7909ddd7536a2c89f433e4331b889a3be
 
 Environment
 -----------
