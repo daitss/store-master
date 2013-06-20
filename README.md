@@ -16,7 +16,7 @@ the back-end services.
 
 Current Production code
 -----------------------
-git commit sha1 - 3eb506c7909ddd7536a2c89f433e4331b889a3be
+* https://github.com/daitss/store-master/tree/3eb506c7909ddd7536a2c89f433e4331b889a3be
 
 Environment
 -----------
