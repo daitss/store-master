@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'storage-master'
 require 'app/helpers'
 require 'app/package-reports'
@@ -33,7 +34,6 @@ end
 
 
 configure do
-  $KCODE = 'UTF8'
 
   config = get_config
 

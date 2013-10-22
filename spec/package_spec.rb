@@ -114,7 +114,7 @@ def index_of_pool_that_best_matches_url(pools, url)
 end
 
 
-@@all_package_names = []
+StorageMasterModel.class_variable_set(:@@all_package_names,[])
 
 def nimby
   pending "No active pools are available; can't run this test" unless test_pools
@@ -127,9 +127,9 @@ end
 describe Package do
 
   before(:all) do
-    @@pools = []
+    StorageMasterModel.class_variable_set(:@@pools,[])
     datamapper_setup
-    test_pools.each { |pool| p = Pool.add(pool); @@pools.push p }
+    test_pools.each { |pool| p = Pool.add(pool); StorageMasterModel.class_variable_get(:@@pools).push p }
   end
 
   it "should let us determine that a package doesn't exist" do
@@ -223,16 +223,15 @@ describe Package do
   it "should list all of the package names we've stored" do    
     names = []
     Package.list { |pkg| names.push pkg.name }
-    (names - @@all_package_names).should == []
-    (@@all_package_names - names).should == []
+    (names - StorageMasterModel.class_variable_get(:@@all_package_names)).should == []
+    (StorageMasterModel.class_variable_get(:@@all_package_names) - names).should == []
   end
-
 
   it "should allow us to delete packages" do
 
     # get all the locations for all the names
 
-    @@all_package_names.each do |name|
+    StorageMasterModel.class_variable_get(:@@all_package_names).each do |name|
       Package.exists?(name).should == true
       pkg = Package.lookup(name)
       pkg.nil?.should == false
@@ -240,5 +239,4 @@ describe Package do
       Package.exists?(name).should == false
     end
   end
-
 end
