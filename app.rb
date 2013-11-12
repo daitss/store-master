@@ -46,29 +46,29 @@ configure do
 
   set :required_pools, config.required_pools
 
-  Logger.setup('StorageMaster', ENV['VIRTUAL_HOSTNAME'])
+  Datyl::Logger.setup('StorageMaster', ENV['VIRTUAL_HOSTNAME'])
 
-  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
-  Logger.filename = config.log_filename         if config.log_filename
-  Logger.stderr     unless (config.log_filename or config.log_syslog_facility)
+  Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.stderr     unless (config.log_filename or config.log_syslog_facility)
 
-  use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
+  use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
 
-  Logger.info "Starting #{StorageMaster.version.name}"
+  Datyl::Logger.info "Starting #{StorageMaster.version.name}"
 
   case settings.required_pools
   when 0
-    Logger.info "No silo pools are required: this storage master will act as a testing-only stub server and not actually store to any silo-pools."
+    Datyl::Logger.info "No silo pools are required: this storage master will act as a testing-only stub server and not actually store to any silo-pools."
   when 1
-    Logger.info "Requiring one silo pool for storage."
+    Datyl::Logger.info "Requiring one silo pool for storage."
   else
-    Logger.info "Requiring #{settings.required_pools} silo pools for storage."
+    Datyl::Logger.info "Requiring #{settings.required_pools} silo pools for storage."
   end
 
-  Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
-  Logger.info "Using database #{StoreUtils.safen_connection_string(config.storage_master_db)}"
+  Datyl::Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
+  Datyl::Logger.info "Using database #{StoreUtils.safen_connection_string(config.storage_master_db)}"
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
+  DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   StorageMaster.setup_databases(config.storage_master_db)
 end

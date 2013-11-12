@@ -9,7 +9,6 @@ gem 'libxml-ruby', :require => 'libxml'
 
 gem 'data_mapper'
 gem 'dm-postgres-adapter'
-gem 'dm-mysql-adapter'
 
 gem 'builder'
 gem 'log4r'
