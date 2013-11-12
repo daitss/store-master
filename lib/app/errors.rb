@@ -10,7 +10,7 @@ error do
   request.body.rewind if request.body.respond_to?('rewind')
 
   if e.is_a? StorageMaster::Http401
-    Logger.warn e.client_message, @env
+    Datyl::Logger.warn e.client_message, @env
     response['WWW-Authenticate'] = "Basic realm=\"Password-Protected Area for Storage Master\""
 
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
@@ -22,9 +22,9 @@ error do
   elsif e.is_a? StorageMaster::HttpError
 
     if e.status_code >= 500
-      Logger.err e.client_message, @env
+      Datyl::Logger.err e.client_message, @env
     else
-      Logger.warn e.client_message, @env   # 4xx and 207 both get logged this way
+      Datyl::Logger.warn e.client_message, @env   # 4xx and 207 both get logged this way
     end
 
     halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message
@@ -34,7 +34,7 @@ error do
   # information,  but are transient by nature, pre-production
 
   elsif e.is_a? StorageMaster::ConfigurationError
-    Logger.err e.client_message, @env
+    Datyl::Logger.err e.client_message, @env
     halt 500, { 'Content-Type' => 'text/plain' }, e.client_message
 
   # Anything else we raise is unexpected and likely to have sensitive
@@ -45,8 +45,8 @@ error do
   # refactoring.)
 
   else
-    Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
-    e.backtrace.each { |line| Logger.err line, @env }
+    Datyl::Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
+    e.backtrace.each { |line| Datyl::Logger.err line, @env }
     halt 500, { 'Content-Type' => 'text/plain' }, "Internal Service Error - See system logs for more information\n"
   end
 end
@@ -64,7 +64,7 @@ not_found  do
             else
               "404 Not Found - #{request.url} doesn't exist.\n"
             end
-  Logger.warn message, @env
+  Datyl::Logger.warn message, @env
   content_type 'text/plain'
   message
 end

@@ -180,7 +180,7 @@ helpers do
   # block, or in selected routes.
 
   def log_start_of_request
-    Logger.info 'Request Received: ' + (request.content_length ? "#{request.content_length}" :  '-'), env
+    Datyl::Logger.info 'Request Received: ' + (request.content_length ? "#{request.content_length}" :  '-'), env
   end
 
   # needs_authentication? returns true when the resource is password-protected and the
