@@ -26,9 +26,9 @@ RSpec::Core::RakeTask.new do |task|
   ## task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
 end
 
-Cucumber::Rake::Task.new do |task|
-   task.rcov = true
-end
+# Cucumber::Rake::Task.new do |task|
+#    task.rcov = true
+# end
 
 # assumes git pushed out
 
