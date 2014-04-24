@@ -71,7 +71,7 @@ post '/credentials-handler' do
 
   when /^$/                                             # no password; clear it if unset
     if not credentials.nil?
-      Logger.warn "Request from #{@env['REMOTE_ADDR']} to clear the password protection for this storage master."
+      Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to clear the password protection for this storage master."
       StorageMasterModel::Authentication.clear
       redirect '/password-cleared'
     else
@@ -79,7 +79,7 @@ post '/credentials-handler' do
     end
 
   else
-    Logger.warn "Request from #{@env['REMOTE_ADDR']} to set a password for this storage master."
+    Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to set a password for this storage master."
     StorageMasterModel::Authentication.create('admin', params[:password]) 
     redirect '/password-set'
   end
@@ -102,7 +102,7 @@ post '/pool-handler/:id' do |id|
 
   changes = pool_parameters_to_change(pool, params)
 
-  Logger.warn "Request from #{@env['REMOTE_ADDR']} modified the silo pool '#{pool.name}': #{display_params_safely changes}"
+  Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} modified the silo pool '#{pool.name}': #{display_params_safely changes}"
 
   changes.each { |method, new_value| pool.assign(method, new_value) }
 

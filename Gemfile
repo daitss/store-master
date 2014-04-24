@@ -21,12 +21,12 @@ gem 'thin'
 # development
 
 gem 'rake'
-gem 'rcov'
+gem 'simplecov'
 gem 'cucumber'
 gem 'rspec'
  
 group :test do
-  gem 'ruby-debug'
+  gem 'debugger'
 end
 
 
