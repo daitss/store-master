@@ -24,7 +24,10 @@ gem 'rake'
 gem 'simplecov'
 gem 'cucumber'
 gem 'rspec'
- 
+gem 'rspec-collection_matchers'
+gem 'do_mysql'
+gem 'dm-mysql-adapter'
+
 group :test do
   gem 'debugger'
 end

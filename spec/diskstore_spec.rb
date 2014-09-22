@@ -30,23 +30,23 @@ describe StorageMaster::DiskStore do
   end
   
   it "should create a diskstore based on a directory" do
-    lambda { StorageMaster::DiskStore.new @disk_root }.should_not raise_error
+    expect{ StorageMaster::DiskStore.new @disk_root }.not_to raise_error
   end
   
   it "should not create a diskstore on anything but a directory" do
     t = Tempfile.new('testtmp')
     regular_file = t.path
-    lambda { StorageMaster::DiskStore.new regular_file }.should raise_error(StorageMaster::ConfigurationError)
+    expect{ StorageMaster::DiskStore.new regular_file }.to raise_error(StorageMaster::ConfigurationError)
   end
 
   it "should not create a diskstore on an unwritable directory" do
-    lambda { StorageMaster::DiskStore.new '/etc'}.should raise_error(StorageMaster::ConfigurationError)
+    expect{ StorageMaster::DiskStore.new '/etc'}.to raise_error(StorageMaster::ConfigurationError)
   end
 
   it "should take a object name and some data to store an object" do
     name = "test object"
     data =  "some data"
-    lambda { @diskstore.put name, data, 'my-type' }.should_not raise_error
+    expect{ @diskstore.put name, data, 'my-type' }.not_to raise_error
   end
 
   it "should find an existing object given an object name" do
@@ -78,7 +78,7 @@ describe StorageMaster::DiskStore do
     name = some_name
     data = some_data
     @diskstore.put name, data, 'my-type'
-    lambda {@diskstore.put(name, data, 'my-type')}.should raise_error(StorageMaster::DiskStoreResourceExists)
+    expect{@diskstore.put(name, data, 'my-type')}.to raise_error(StorageMaster::DiskStoreResourceExists)
   end
 
   it "should have size for an object" do
@@ -97,7 +97,7 @@ describe StorageMaster::DiskStore do
 
   it "should raise DiskStoreError on requests for size for non-existant objects" do
     name = some_name
-    lambda {@diskstore.size(name)}.should raise_error(StorageMaster::DiskStoreError)
+    expect{@diskstore.size(name)}.to raise_error(StorageMaster::DiskStoreError)
   end
 
   it "should return size of zero, empty string, and specific md5 checksum on reading a zero length file" do
@@ -132,14 +132,14 @@ describe StorageMaster::DiskStore do
 
   it "datetime should raise an error if the object does not exist" do
     name = "bogus name"
-    lambda{ @diskstore.datetime(name)}.should raise_error(StorageMaster::DiskStoreError)	
+    expect{ @diskstore.datetime(name)}.to raise_error(StorageMaster::DiskStoreError)	
   end
 
   it "datetime should not raise error if the object does exist"	do
     name = "the name"
     data = "some data"
     @diskstore.put name, data, 'my-type'
-    lambda{ @diskstore.datetime(name)}.should_not raise_error(StorageMaster::DiskStoreError)				
+    expect{ @diskstore.datetime(name)}.not_to raise_error				
   end
 
   it "datetime should return the time an object was created" do
@@ -179,7 +179,7 @@ describe StorageMaster::DiskStore do
     data  = "Now is the time for all good men to come to the aid of their country!\n"
     name  = "George Washington!?"
 
-    lambda{ @diskstore.put(name, data, 'my-type')}.should raise_error(StorageMaster::BadName)
+    expect{ @diskstore.put(name, data, 'my-type')}.to raise_error(StorageMaster::BadName)
   end  			
 
   it "should allow grep of all the names in the collection" do

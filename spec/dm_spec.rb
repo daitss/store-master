@@ -31,7 +31,7 @@ def mysql_setup
   StorageMasterModel.create_tables
 end
 
-share_examples_for "DataMapper Package class with any DB, when it" do
+shared_examples "DataMapper Package class with any DB, when it" do
   
   it "should let us a create a new package" do
     package  = StorageMasterModel::Package.create(:ieid => IEID, :name => name(1)) 

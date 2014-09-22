@@ -232,11 +232,11 @@ describe Package do
     # get all the locations for all the names
 
     StorageMasterModel.class_variable_get(:@@all_package_names).each do |name|
-      Package.exists?(name).should == true
+      Package.exists?(name).should be true
       pkg = Package.lookup(name)
-      pkg.nil?.should == false
+      pkg.nil?.should be false
       pkg.delete
-      Package.exists?(name).should == false
+      Package.exists?(name).should be false
     end
   end
 end

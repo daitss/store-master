@@ -4,6 +4,13 @@ require 'digest/sha1'
 require 'fileutils'
 require 'socket'
 require 'yaml'
+require 'rspec/collection_matchers'
+
+RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+end
 
 def my_host
   Socket.gethostname
