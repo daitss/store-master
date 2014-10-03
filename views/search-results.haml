@@ -39,7 +39,8 @@
           - pkg.copies.each do |cpy|
             %tr
               %td
-              %td #{cpy.store_location}
+              %td 
+                %a{:href => "#{cpy.store_location}/"} #{cpy.store_location}
               %td #{cpy.datetime.strftime('%F %T')}
           %tr
             %td{ :colspan => 3 }
