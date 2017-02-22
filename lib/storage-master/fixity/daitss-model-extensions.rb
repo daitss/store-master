@@ -81,7 +81,7 @@ module Daitss
                "AND copies.url = '#{url}' "    +
              "LIMIT 1"
 
-      id = repository(:daitss).adapter.select(sql)
+      id = repository(:daitss).adapter.select(sql).first()
       Package.get(id)
     end
 
@@ -124,6 +124,7 @@ module Daitss
     # @return [Boolean]  the status of the database save opertaion.
 
     def fixity_success_event datetime
+      debugger
       timestamp = DateTime.parse(datetime)
 
       event = Event.first_or_new :name => 'fixity success', :package => self
