@@ -124,7 +124,6 @@ module Daitss
     # @return [Boolean]  the status of the database save opertaion.
 
     def fixity_success_event datetime
-      debugger
       timestamp = DateTime.parse(datetime)
 
       event = Event.first_or_new :name => 'fixity success', :package => self
